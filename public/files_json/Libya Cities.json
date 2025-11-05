@@ -1,0 +1,877 @@
+[
+    {
+        "english": "Tripoli",
+        "arabic": "طرابلس",
+        "chinese": "的黎波里"
+    },
+    {
+        "english": "Qasr al-Akhiyar",
+        "arabic": "قصر الاخيار",
+        "chinese": "阿赫亚尔宫"
+    },
+    {
+        "english": "Tajoura",
+        "arabic": "تاجوراء",
+        "chinese": "塔祖拉"
+    },
+    {
+        "english": "Ghanzour",
+        "arabic": "جنزور",
+        "chinese": "吉恩祖尔"
+    },
+    {
+        "english": "Al-Sawani",
+        "arabic": "السواني",
+        "chinese": "萨瓦尼"
+    },
+    {
+        "english": "Al-Sabiah",
+        "arabic": "السبيعه",
+        "chinese": "萨比亚"
+    },
+    {
+        "english": "Qasr Ben Ghashir",
+        "arabic": "قصر بن غشير",
+        "chinese": "本格希尔宫"
+    },
+    {
+        "english": "Al-Kremia",
+        "arabic": "الكريمية",
+        "chinese": "克雷米亚"
+    },
+    {
+        "english": "Sidi Al-Saeh",
+        "arabic": "سيدي السائح",
+        "chinese": "西迪·萨赫"
+    },
+    {
+        "english": "Souq Al-Thurs",
+        "arabic": "سوق الخميس",
+        "chinese": "周四市场"
+    },
+    {
+        "english": "Al-Aziziyah",
+        "arabic": "العزيزية",
+        "chinese": "阿齐齐亚"
+    },
+    {
+        "english": "Al-Amariya",
+        "arabic": "العامرية",
+        "chinese": "阿马里亚"
+    },
+    {
+        "english": "Zawiya",
+        "arabic": "الزاوية",
+        "chinese": "扎维亚"
+    },
+    {
+        "english": "Al-Zahra",
+        "arabic": "الزهراء",
+        "chinese": "扎赫拉"
+    },
+    {
+        "english": "Al-Sabariyah",
+        "arabic": "الصابرية",
+        "chinese": "萨巴里亚"
+    },
+    {
+        "english": "Bir Al-Ghanam",
+        "arabic": "بئر الغنم",
+        "chinese": "羊泉"
+    },
+    {
+        "english": "Al-Matard",
+        "arabic": "المطرد",
+        "chinese": "马塔德"
+    },
+    {
+        "english": "Al-Harsha",
+        "arabic": "الحرشة",
+        "chinese": "哈尔沙"
+    },
+    {
+        "english": "Al-Mamoura",
+        "arabic": "المعمورة",
+        "chinese": "马穆拉"
+    },
+    {
+        "english": "Al-Nasriyah",
+        "arabic": "الناصرية",
+        "chinese": "纳斯里亚"
+    },
+    {
+        "english": "Al-Maya",
+        "arabic": "الماية",
+        "chinese": "马亚"
+    },
+    {
+        "english": "Sabratha",
+        "arabic": "صبراته",
+        "chinese": "萨布拉特"
+    },
+    {
+        "english": "Tleel",
+        "arabic": "تليل",
+        "chinese": "特利尔"
+    },
+    {
+        "english": "Sorman",
+        "arabic": "صرمان",
+        "chinese": "索尔曼"
+    },
+    {
+        "english": "Um Al-Hishan",
+        "arabic": "ام الحشان",
+        "chinese": "乌姆哈沙"
+    },
+    {
+        "english": "Zuwara",
+        "arabic": "زوارة",
+        "chinese": "祖瓦拉"
+    },
+    {
+        "english": "Zliten",
+        "arabic": "زلطن",
+        "chinese": "兹利滕"
+    },
+    {
+        "english": "Ras Jedir",
+        "arabic": "راس جدير",
+        "chinese": "拉斯杰迪尔"
+    },
+    {
+        "english": "Al-Jamil",
+        "arabic": "الجميل",
+        "chinese": "美丽的"
+    },
+    {
+        "english": "Al-Raqdalin",
+        "arabic": "الرقدالين",
+        "chinese": "拉克达林"
+    },
+    {
+        "english": "Al-Tawila",
+        "arabic": "الطويلة",
+        "chinese": "塔维拉"
+    },
+    {
+        "english": "Abu Kmesh",
+        "arabic": "ابوكماش",
+        "chinese": "阿布克马什"
+    },
+    {
+        "english": "Al-Ajilat",
+        "arabic": "العجيلات",
+        "chinese": "阿吉拉特"
+    },
+    {
+        "english": "Al-Jadidah",
+        "arabic": "الجديدة",
+        "chinese": "新城"
+    },
+    {
+        "english": "Gharyan",
+        "arabic": "غريان",
+        "chinese": "盖尔扬"
+    },
+    {
+        "english": "Al-Arban",
+        "arabic": "العربان",
+        "chinese": "阿尔班"
+    },
+    {
+        "english": "Al-Rabita",
+        "arabic": "الرابطة",
+        "chinese": "拉比塔"
+    },
+    {
+        "english": "Al-Qaryat Al-Sharqiya",
+        "arabic": "القريات الشرقية",
+        "chinese": "东卡里亚特"
+    },
+    {
+        "english": "Al-Qaryat Al-Gharbiyya",
+        "arabic": "القريات الغربية",
+        "chinese": "西卡里亚特"
+    },
+    {
+        "english": "Mizda",
+        "arabic": "مزدة",
+        "chinese": "米兹达"
+    },
+    {
+        "english": "Al-Shuwairf",
+        "arabic": "الشويرف",
+        "chinese": "阿尔舒韦尔夫"
+    },
+    {
+        "english": "Yafran",
+        "arabic": "يفرن",
+        "chinese": "亚夫兰"
+    },
+    {
+        "english": "Al-Awainya",
+        "arabic": "العوينية",
+        "chinese": "阿尔阿维尼亚"
+    },
+    {
+        "english": "Al-Asabia",
+        "arabic": "الاصابعة",
+        "chinese": "阿萨比亚"
+    },
+    {
+        "english": "Kaklah",
+        "arabic": "ككله",
+        "chinese": "卡克拉"
+    },
+    {
+        "english": "Al-Qala'a",
+        "arabic": "القلعة",
+        "chinese": "城堡"
+    },
+    {
+        "english": "Jadu",
+        "arabic": "جادو",
+        "chinese": "贾杜"
+    },
+    {
+        "english": "Qasr Al-Hajj",
+        "arabic": "قصرالحاج",
+        "chinese": "哈吉宫"
+    },
+    {
+        "english": "Mizghura",
+        "arabic": "مزغورة",
+        "chinese": "穆兹古拉"
+    },
+    {
+        "english": "Al-Zintan",
+        "arabic": "الزنتان",
+        "chinese": "津坦"
+    },
+    {
+        "english": "Al-Rajban",
+        "arabic": "الرجبان",
+        "chinese": "拉贾班"
+    },
+    {
+        "english": "Al-Riyaina",
+        "arabic": "رياينة",
+        "chinese": "利亚纳"
+    },
+    {
+        "english": "Al-Ruhaybat",
+        "arabic": "الرحيبات",
+        "chinese": "鲁海巴特"
+    },
+    {
+        "english": "Nalut",
+        "arabic": "نالوت",
+        "chinese": "纳卢特"
+    },
+    {
+        "english": "Wazin",
+        "arabic": "وازن",
+        "chinese": "瓦津"
+    },
+    {
+        "english": "Kabaw",
+        "arabic": "كاباو",
+        "chinese": "卡巴沃"
+    },
+    {
+        "english": "Tiji",
+        "arabic": "تيجي",
+        "chinese": "提基"
+    },
+    {
+        "english": "Al-Haraba",
+        "arabic": "الحرابة",
+        "chinese": "哈拉巴"
+    },
+    {
+        "english": "Tandamira",
+        "arabic": "تندميرة",
+        "chinese": "坦达米拉"
+    },
+    {
+        "english": "Badr",
+        "arabic": "بدر",
+        "chinese": "巴德尔"
+    },
+    {
+        "english": "Ghadames",
+        "arabic": "غدامس",
+        "chinese": "哈达梅斯"
+    },
+    {
+        "english": "Derg",
+        "arabic": "درج",
+        "chinese": "德尔格"
+    },
+    {
+        "english": "Sinaon",
+        "arabic": "سيناون",
+        "chinese": "西南"
+    },
+    {
+        "english": "Al-Khums",
+        "arabic": "الخمس",
+        "chinese": "五"
+    },
+    {
+        "english": "Ghanima",
+        "arabic": "غنيمة",
+        "chinese": "加尼马"
+    },
+    {
+        "english": "Al-Alous",
+        "arabic": "العلous",
+        "chinese": "阿尔阿鲁斯"
+    },
+    {
+        "english": "Silin",
+        "arabic": "سيلين",
+        "chinese": "西林"
+    },
+    {
+        "english": "Souq Al-Khamis Misihil",
+        "arabic": "سوق الخميس امسيحل",
+        "chinese": "米西希尔周四市场"
+    },
+    {
+        "english": "Wadi Kkaam",
+        "arabic": "وادي كعام",
+        "chinese": "卡阿姆河"
+    },
+    {
+        "english": "Bani Walid",
+        "arabic": "بني وليد",
+        "chinese": "巴尼瓦利德"
+    },
+    {
+        "english": "Tarhuna",
+        "arabic": "ترهونة",
+        "chinese": "塔尔胡纳"
+    },
+    {
+        "english": "Mislata",
+        "arabic": "مسلاته",
+        "chinese": "米斯拉塔"
+    },
+    {
+        "english": "Misrata",
+        "arabic": "مصراته",
+        "chinese": "米苏拉特"
+    },
+    {
+        "english": "Zliten",
+        "arabic": "زليطن",
+        "chinese": "兹利滕"
+    },
+    {
+        "english": "Tawergha",
+        "arabic": "تاورغاء",
+        "chinese": "塔沃尔加"
+    },
+    {
+        "english": "Al-Mardum",
+        "arabic": "المردوم",
+        "chinese": "马尔杜姆"
+    },
+    {
+        "english": "Al-Karrarim",
+        "arabic": "الكراريم",
+        "chinese": "卡拉里姆"
+    },
+    {
+        "english": "Sirt",
+        "arabic": "سرت",
+        "chinese": "锡尔特"
+    },
+    {
+        "english": "Abu Hadi",
+        "arabic": "ابوهادي",
+        "chinese": "阿布哈迪"
+    },
+    {
+        "english": "Wadi Jarf",
+        "arabic": "وادي جارف",
+        "chinese": "贾夫河"
+    },
+    {
+        "english": "Al-Qubeiba",
+        "arabic": "القبيبة",
+        "chinese": "库贝巴"
+    },
+    {
+        "english": "Al-Gharbiyat",
+        "arabic": "الغربيات",
+        "chinese": "西方"
+    },
+    {
+        "english": "Al-Sawawa",
+        "arabic": "السواوة",
+        "chinese": "阿尔萨瓦"
+    },
+    {
+        "english": "Al-Qardabiya",
+        "arabic": "القرضابية",
+        "chinese": "卡尔达比亚"
+    },
+    {
+        "english": "Al-Haniwa",
+        "arabic": "الحنيوة",
+        "chinese": "哈尼瓦"
+    },
+    {
+        "english": "Al-Amira",
+        "arabic": "العامرة",
+        "chinese": "阿米拉"
+    },
+    {
+        "english": "Hrawa",
+        "arabic": "هراوة",
+        "chinese": "赫劳瓦"
+    },
+    {
+        "english": "Al-Qudahiya",
+        "arabic": "القداحية",
+        "chinese": "库达希亚"
+    },
+    {
+        "english": "Al-Haysha",
+        "arabic": "الهيشة",
+        "chinese": "海沙"
+    },
+    {
+        "english": "Al-Washka",
+        "arabic": "الوشكة",
+        "chinese": "阿尔瓦什卡"
+    },
+    {
+        "english": "Bin Jawad",
+        "arabic": "بن جواد",
+        "chinese": "本贾瓦德"
+    },
+    {
+        "english": "Al-Nufaliya",
+        "arabic": "النوفلية",
+        "chinese": "努法利亚"
+    },
+    {
+        "english": "Ras Lanuf",
+        "arabic": "راس لانوف",
+        "chinese": "拉斯拉努夫"
+    },
+    {
+        "english": "Hun",
+        "arabic": "هون",
+        "chinese": "霍恩"
+    },
+    {
+        "english": "Wadan",
+        "arabic": "ودان",
+        "chinese": "瓦丹"
+    },
+    {
+        "english": "Suknah",
+        "arabic": "سوكنه",
+        "chinese": "苏克纳"
+    },
+    {
+        "english": "Zalla",
+        "arabic": "زلة",
+        "chinese": "扎拉"
+    },
+    {
+        "english": "Ajdabiya",
+        "arabic": "اجدابيا",
+        "chinese": "阿吉达比亚"
+    },
+    {
+        "english": "Sidi Sultan",
+        "arabic": "سيدي سلطان",
+        "chinese": "西迪·苏丹"
+    },
+    {
+        "english": "Al-Zuwaitina",
+        "arabic": "الزويتينة",
+        "chinese": "阿尔祖韦蒂娜"
+    },
+    {
+        "english": "Al-Brika",
+        "arabic": "البريقة",
+        "chinese": "布里卡"
+    },
+    {
+        "english": "Jalu",
+        "arabic": "جالو",
+        "chinese": "贾卢"
+    },
+    {
+        "english": "Awjilah",
+        "arabic": "اوجلة",
+        "chinese": "阿乌吉拉"
+    },
+    {
+        "english": "Ajdharah",
+        "arabic": "اجخرة",
+        "chinese": "阿吉哈拉"
+    },
+    {
+        "english": "Bashar",
+        "arabic": "بشر",
+        "chinese": "巴沙尔"
+    },
+    {
+        "english": "Muradah",
+        "arabic": "مرادة",
+        "chinese": "穆拉达"
+    },
+    {
+        "english": "Tazirbu",
+        "arabic": "تازربو",
+        "chinese": "塔扎尔布"
+    },
+    {
+        "english": "Al-Kufra",
+        "arabic": "الكفرة",
+        "chinese": "库夫拉"
+    },
+    {
+        "english": "Benghazi",
+        "arabic": "بنغازي",
+        "chinese": "班加西"
+    },
+    {
+        "english": "Al-Sabri",
+        "arabic": "الصابري",
+        "chinese": "萨布里"
+    },
+    {
+        "english": "Benina",
+        "arabic": "بنينة",
+        "chinese": "贝尼纳"
+    },
+    {
+        "english": "Tawergha",
+        "arabic": "توكرة",
+        "chinese": "塔沃尔加"
+    },
+    {
+        "english": "Sidi Khalifa",
+        "arabic": "سيدي خليفة",
+        "chinese": "西迪·哈利法"
+    },
+    {
+        "english": "Al-Kuifia",
+        "arabic": "الكويفية",
+        "chinese": "库伊菲亚"
+    },
+    {
+        "english": "Dreiana",
+        "arabic": "دريانة",
+        "chinese": "德里亚纳"
+    },
+    {
+        "english": "Al-Fuhaitat",
+        "arabic": "الفويهات",
+        "chinese": "阿尔福海塔"
+    },
+    {
+        "english": "Al-Qaminis",
+        "arabic": "قمينس",
+        "chinese": "阿尔卡门尼斯"
+    },
+    {
+        "english": "Saluq",
+        "arabic": "سلوق",
+        "chinese": "萨卢克"
+    },
+    {
+        "english": "Al-Maqrun",
+        "arabic": "المقرون",
+        "chinese": "阿尔马克伦"
+    },
+    {
+        "english": "Al-Nuqaya",
+        "arabic": "النواقية",
+        "chinese": "阿尔努卡亚"
+    },
+    {
+        "english": "Al-Marj",
+        "arabic": "المرج",
+        "chinese": "马尔贾"
+    },
+    {
+        "english": "Jardas",
+        "arabic": "جردس",
+        "chinese": "贾尔达斯"
+    },
+    {
+        "english": "Taknas",
+        "arabic": "تاكنس",
+        "chinese": "塔克纳斯"
+    },
+    {
+        "english": "Al-Bayada",
+        "arabic": "البياضة",
+        "chinese": "阿尔巴亚达"
+    },
+    {
+        "english": "Talmitha",
+        "arabic": "طلميثة",
+        "chinese": "塔尔米萨"
+    },
+    {
+        "english": "Farzugha",
+        "arabic": "فرزوغة",
+        "chinese": "法尔祖哈"
+    },
+    {
+        "english": "Al-Bayar",
+        "arabic": "البيار",
+        "chinese": "阿尔巴亚尔"
+    },
+    {
+        "english": "Al-Bayda",
+        "arabic": "البيضاء",
+        "chinese": "白色"
+    },
+    {
+        "english": "Shahat",
+        "arabic": "شحات",
+        "chinese": "沙哈特"
+    },
+    {
+        "english": "Masa",
+        "arabic": "مسة",
+        "chinese": "马萨"
+    },
+    {
+        "english": "Susa",
+        "arabic": "سوسة",
+        "chinese": "苏萨"
+    },
+    {
+        "english": "Al-Salanta",
+        "arabic": "سلنطة",
+        "chinese": "萨兰塔"
+    },
+    {
+        "english": "Al-Faidiya",
+        "arabic": "الفائدية",
+        "chinese": "法伊迪亚"
+    },
+    {
+        "english": "Al-Abrq",
+        "arabic": "الابرق",
+        "chinese": "阿布尔克"
+    },
+    {
+        "english": "Darna",
+        "arabic": "درنة",
+        "chinese": "达尔纳"
+    },
+    {
+        "english": "Al-Qubah",
+        "arabic": "القبة",
+        "chinese": "库巴"
+    },
+    {
+        "english": "Al-Tamimi",
+        "arabic": "التميمي",
+        "chinese": "阿尔塔米米"
+    },
+    {
+        "english": "Martouba",
+        "arabic": "مرتوبة",
+        "chinese": "马尔图巴"
+    },
+    {
+        "english": "Um Al-Razm",
+        "arabic": "ام الرزم",
+        "chinese": "阿姆拉兹姆"
+    },
+    {
+        "english": "Tobruk",
+        "arabic": "طبرق",
+        "chinese": "托布鲁克"
+    },
+    {
+        "english": "Hay Nasser",
+        "arabic": "حي ناصر",
+        "chinese": "纳赛尔区"
+    },
+    {
+        "english": "Al-Tobruk",
+        "arabic": "طبرق",
+        "chinese": "托布鲁克"
+    },
+    {
+        "english": "Kambut",
+        "arabic": "كمبوت",
+        "chinese": "坎布特"
+    },
+    {
+        "english": "Al-Musaad",
+        "arabic": "امساعد",
+        "chinese": "阿穆萨德"
+    },
+    {
+        "english": "Al-Bardi",
+        "arabic": "البردي",
+        "chinese": "巴尔迪"
+    },
+    {
+        "english": "Al-Jaghbub",
+        "arabic": "الجغبوب",
+        "chinese": "阿尔贾赫布"
+    },
+    {
+        "english": "Sebha",
+        "arabic": "سبها",
+        "chinese": "塞卜哈"
+    },
+    {
+        "english": "Al-Nasriyya",
+        "arabic": "الناصرية",
+        "chinese": "纳斯里亚"
+    },
+    {
+        "english": "Al-Samanu",
+        "arabic": "سمنو",
+        "chinese": "萨曼努"
+    },
+    {
+        "english": "Tamanhint",
+        "arabic": "تمنهنت",
+        "chinese": "塔曼亨特"
+    },
+    {
+        "english": "Al-Zighin",
+        "arabic": "الزيغن",
+        "chinese": "阿尔齐亨"
+    },
+    {
+        "english": "Brak",
+        "arabic": "براك",
+        "chinese": "巴拉克"
+    },
+    {
+        "english": "Zuwiyah",
+        "arabic": "الزوية",
+        "chinese": "祖维亚"
+    },
+    {
+        "english": "Burqan",
+        "arabic": "برقن",
+        "chinese": "布尔坎"
+    },
+    {
+        "english": "Adri",
+        "arabic": "ادري",
+        "chinese": "阿德里"
+    },
+    {
+        "english": "Wanzrik",
+        "arabic": "ونزريك",
+        "chinese": "万兹里克"
+    },
+    {
+        "english": "Al-Qarda",
+        "arabic": "القرضة",
+        "chinese": "阿尔卡尔达"
+    },
+    {
+        "english": "Aqar",
+        "arabic": "اقار",
+        "chinese": "阿卡尔"
+    },
+    {
+        "english": "Ghayrat",
+        "arabic": "قيرة",
+        "chinese": "盖拉特"
+    },
+    {
+        "english": "Ashkada",
+        "arabic": "اشكدة",
+        "chinese": "阿什卡达"
+    },
+    {
+        "english": "Awbari",
+        "arabic": "اوباري",
+        "chinese": "奥巴里"
+    },
+    {
+        "english": "Al-Gharifa",
+        "arabic": "الغريفة",
+        "chinese": "阿尔格里法"
+    },
+    {
+        "english": "Al-Fakhfakhah",
+        "arabic": "الفخفاخة",
+        "chinese": "法赫法哈"
+    },
+    {
+        "english": "Al-Qusair",
+        "arabic": "القصير",
+        "chinese": "阿尔库塞尔"
+    },
+    {
+        "english": "Bin Hareth",
+        "arabic": "بن حارث",
+        "chinese": "本哈雷斯"
+    },
+    {
+        "english": "Murzuq",
+        "arabic": "مرزق",
+        "chinese": "穆尔祖克"
+    },
+    {
+        "english": "Zawilah",
+        "arabic": "زويلة",
+        "chinese": "扎维拉"
+    },
+    {
+        "english": "Um Al-Aranib",
+        "arabic": "ام الارانب",
+        "chinese": "阿姆阿拉尼布"
+    },
+    {
+        "english": "Wadi Atbah",
+        "arabic": "وادي عتبة",
+        "chinese": "阿塔巴河"
+    },
+    {
+        "english": "Taraghin",
+        "arabic": "تراغن",
+        "chinese": "塔拉金"
+    },
+    {
+        "english": "Ghadwa",
+        "arabic": "غدوة",
+        "chinese": "阿尔戈杜"
+    },
+    {
+        "english": "Jizaw",
+        "arabic": "جيزاو",
+        "chinese": "吉扎乌"
+    },
+    {
+        "english": "Ghat",
+        "arabic": "غات",
+        "chinese": "加特"
+    },
+    {
+        "english": "Al-Awaini",
+        "arabic": "العوينات",
+        "chinese": "阿尔阿维尼"
+    },
+    {
+        "english": "Al-Qatron",
+        "arabic": "القطرون",
+        "chinese": "阿尔卡特龙"
+    }
+]

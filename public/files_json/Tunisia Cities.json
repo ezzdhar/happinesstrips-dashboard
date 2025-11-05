@@ -1,0 +1,398 @@
+[
+  {
+    "english": "Tunis",
+    "arabic": "تونس",
+    "chinese": "突尼斯"
+  },
+  {
+    "english": "Sidi Bouzid",
+    "arabic": "سيدي بوزيد",
+    "chinese": "西迪布济德"
+  },
+  {
+    "english": "Sfax",
+    "arabic": "صفاقس",
+    "chinese": "斯法克斯"
+  },
+  {
+    "english": "Sousse",
+    "arabic": "سوسة",
+    "chinese": "苏塞"
+  },
+  {
+    "english": "Kairouan",
+    "arabic": "القيروان",
+    "chinese": "凯鲁万"
+  },
+  {
+    "english": "Métouia",
+    "arabic": "المطوية",
+    "chinese": "迈特维亚"
+  },
+  {
+    "english": "Kebili",
+    "arabic": "قبلي",
+    "chinese": "凯比利"
+  },
+  {
+    "english": "Sukrah",
+    "arabic": "السكره",
+    "chinese": "苏克拉"
+  },
+  {
+    "english": "Gabès",
+    "arabic": "قابس",
+    "chinese": "加贝斯"
+  },
+  {
+    "english": "Ariana",
+    "arabic": "أريانة",
+    "chinese": "阿里亚纳"
+  },
+  {
+    "english": "Sakiet ed Daier",
+    "arabic": "ساقية الدائر",
+    "chinese": "萨基特艾德戴尔"
+  },
+  {
+    "english": "Gafsa",
+    "arabic": "قفصة",
+    "chinese": "加夫萨"
+  },
+  {
+    "english": "Msaken",
+    "arabic": "مساكن",
+    "chinese": "姆萨肯"
+  },
+  {
+    "english": "Medenine",
+    "arabic": "مدنين",
+    "chinese": "梅德宁"
+  },
+  {
+    "english": "Béja",
+    "arabic": "باجة",
+    "chinese": "贝贾"
+  },
+  {
+    "english": "Kasserine",
+    "arabic": "القصرين",
+    "chinese": "卡塞林"
+  },
+  {
+    "english": "Radès",
+    "arabic": "رادس",
+    "chinese": "拉德斯"
+  },
+  {
+    "english": "Hammamet",
+    "arabic": "الحمامات",
+    "chinese": "哈马马特"
+  },
+  {
+    "english": "Tataouine",
+    "arabic": "تطاوين",
+    "chinese": "塔塔温"
+  },
+  {
+    "english": "Monastir",
+    "arabic": "المنستير",
+    "chinese": "莫纳斯提尔"
+  },
+  {
+    "english": "La Marsa",
+    "arabic": "المرسى",
+    "chinese": "拉马尔萨"
+  },
+  {
+    "english": "Ben Arous",
+    "arabic": "بن عروس",
+    "chinese": "本阿鲁斯"
+  },
+  {
+    "english": "Sakiet ez Zit",
+    "arabic": "ساقية الزيت",
+    "chinese": "萨基特埃兹齐特"
+  },
+  {
+    "english": "Zarzis",
+    "arabic": "جرجيس",
+    "chinese": "扎尔济斯"
+  },
+  {
+    "english": "Ben Gardane",
+    "arabic": "بن قردان",
+    "chinese": "本加尔丹"
+  },
+  {
+    "english": "Mahdia",
+    "arabic": "المهدية",
+    "chinese": "马赫迪耶"
+  },
+  {
+    "english": "Houmt Souk",
+    "arabic": "حومة السوق",
+    "chinese": "侯姆特苏克"
+  },
+  {
+    "english": "Fouchana",
+    "arabic": "فوشانة",
+    "chinese": "富沙纳"
+  },
+  {
+    "english": "Le Kram",
+    "arabic": "الكرم",
+    "chinese": "勒克拉姆"
+  },
+  {
+    "english": "El Kef",
+    "arabic": "الكاف",
+    "chinese": "艾尔凯夫"
+  },
+  {
+    "english": "El Hamma",
+    "arabic": "الحامة",
+    "chinese": "哈马"
+  },
+  {
+    "english": "Nabeul",
+    "arabic": "نابل",
+    "chinese": "纳布勒"
+  },
+  {
+    "english": "Le Bardo",
+    "arabic": "باردو",
+    "chinese": "巴尔杜"
+  },
+  {
+    "english": "Djemmal",
+    "arabic": "جمال",
+    "chinese": "杰马尔"
+  },
+  {
+    "english": "Korba",
+    "arabic": "قربة",
+    "chinese": "科尔巴"
+  },
+  {
+    "english": "Menzel Temime",
+    "arabic": "منزل تميم",
+    "chinese": "曼泽尔塔米姆"
+  },
+  {
+    "english": "Ghardimaou",
+    "arabic": "غار الدماء",
+    "chinese": "加尔迪毛"
+  },
+  {
+    "english": "Midoun",
+    "arabic": "ميدون",
+    "chinese": "米顿"
+  },
+  {
+    "english": "Menzel Bourguiba",
+    "arabic": "منزل بورقيبة",
+    "chinese": "曼泽尔布尔吉巴"
+  },
+  {
+    "english": "Manouba",
+    "arabic": "منوبة",
+    "chinese": "马努巴"
+  },
+  {
+    "english": "Kélibia",
+    "arabic": "قليبية",
+    "chinese": "凯利比亚"
+  },
+  {
+    "english": "Rass el Djebel",
+    "arabic": "راس الجبل",
+    "chinese": "拉斯杰贝尔"
+  },
+  {
+    "english": "Oued Lill",
+    "arabic": "وادي الليل",
+    "chinese": "瓦迪利尔"
+  },
+  {
+    "english": "Moknine",
+    "arabic": "المكنين",
+    "chinese": "莫克宁"
+  },
+  {
+    "english": "Bir Ali Ben Khalifa",
+    "arabic": "بئر علي بن خليفة",
+    "chinese": "比尔阿里本哈利法"
+  },
+  {
+    "english": "Kelaa Kebira",
+    "arabic": "القلعة الكبرى",
+    "chinese": "克拉凯比拉"
+  },
+  {
+    "english": "El Jem",
+    "arabic": "الجم",
+    "chinese": "艾尔杰姆"
+  },
+  {
+    "english": "Tebourba",
+    "arabic": "طبربة",
+    "chinese": "泰布尔巴"
+  },
+  {
+    "english": "Ksar Hellal",
+    "arabic": "قصر هلال",
+    "chinese": "克萨尔赫拉勒"
+  },
+  {
+    "english": "Douz",
+    "arabic": "دوز",
+    "chinese": "杜兹"
+  },
+  {
+    "english": "Bizerte",
+    "arabic": "بنزرت",
+    "chinese": "比塞大"
+  },
+  {
+    "english": "Jendouba",
+    "arabic": "جندوبة",
+    "chinese": "坚杜巴"
+  },
+  {
+    "english": "La Goulette",
+    "arabic": "حلق الوادي",
+    "chinese": "拉古莱特"
+  },
+  {
+    "english": "Jedeïda",
+    "arabic": "الجديدة",
+    "chinese": "杰迪达"
+  },
+  {
+    "english": "Soliman",
+    "arabic": "سليمان",
+    "chinese": "苏莱曼"
+  },
+  {
+    "english": "Hammam Sousse",
+    "arabic": "حمام سوسة",
+    "chinese": "哈马姆苏塞"
+  },
+  {
+    "english": "Sbiba",
+    "arabic": "سبيبة",
+    "chinese": "斯比巴"
+  },
+  {
+    "english": "Tabarka",
+    "arabic": "طبرقة",
+    "chinese": "塔巴尔卡"
+  },
+  {
+    "english": "Sejenane",
+    "arabic": "سجنان",
+    "chinese": "塞杰纳内"
+  },
+  {
+    "english": "Metlaoui",
+    "arabic": "المتلوي",
+    "chinese": "迈特劳伊"
+  },
+  {
+    "english": "Hammam-Lif",
+    "arabic": "حمام الأنف",
+    "chinese": "哈马姆利夫"
+  },
+  {
+    "english": "Teboulba",
+    "arabic": "طبلبة",
+    "chinese": "泰布尔巴"
+  },
+  {
+    "english": "Tozeur",
+    "arabic": "توزر",
+    "chinese": "托泽尔"
+  },
+  {
+    "english": "Beni Khiar",
+    "arabic": "بني خيار",
+    "chinese": "贝尼基亚尔"
+  },
+  {
+    "english": "Dar Chabanne",
+    "arabic": "دار شعبان",
+    "chinese": "达尔沙班"
+  },
+  {
+    "english": "Aïne Draham",
+    "arabic": "عين دراهم",
+    "chinese": "艾因德拉姆"
+  },
+  {
+    "english": "Bou Salem",
+    "arabic": "بوسالم",
+    "chinese": "布萨勒姆"
+  },
+  {
+    "english": "Ez Zahra",
+    "arabic": "الزهراء",
+    "chinese": "埃扎赫拉"
+  },
+  {
+    "english": "Kalaa Srira",
+    "arabic": "القلعة الصغرى",
+    "chinese": "克拉苏拉"
+  },
+  {
+    "english": "Skhira",
+    "arabic": "الصخيرة",
+    "chinese": "斯基拉"
+  },
+  {
+    "english": "Akouda",
+    "arabic": "أكودة",
+    "chinese": "阿库达"
+  },
+  {
+    "english": "El Ksar",
+    "arabic": "القصر",
+    "chinese": "艾尔卡塞尔"
+  },
+  {
+    "english": "Mateur",
+    "arabic": "ماطر",
+    "chinese": "马特尔"
+  },
+  {
+    "english": "Siliana",
+    "arabic": "سليانة",
+    "chinese": "西利亚纳"
+  },
+  {
+    "english": "Rhennouch",
+    "arabic": "رنانة",
+    "chinese": "雷努奇"
+  },
+  {
+    "english": "Dahmani",
+    "arabic": "الدهماني",
+    "chinese": "达赫马尼"
+  },
+  {
+    "english": "El Alia",
+    "arabic": "العالية",
+    "chinese": "艾尔阿利亚"
+  },
+  {
+    "english": "Ar Rudayyif",
+    "arabic": "الرديف",
+    "chinese": "艾尔鲁迪夫"
+  },
+  {
+    "english": "Zaghouan",
+    "arabic": "زغوان",
+    "chinese": "扎古安"
+  }
+]
+  

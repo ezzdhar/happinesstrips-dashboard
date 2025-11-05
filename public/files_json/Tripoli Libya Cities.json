@@ -1,0 +1,282 @@
+[
+    {
+        "english": "Al-Siyahiya",
+        "arabic": "السياحية",
+        "chinese": "阿尔-西亚希亚"
+    },
+    {
+        "english": "Hay Al-Andalus",
+        "arabic": "حي الأندلس",
+        "chinese": "哈伊-阿尔安达鲁斯"
+    },
+    {
+        "english": "Al-Zahra",
+        "arabic": "الظهرة",
+        "chinese": "阿尔-扎赫拉"
+    },
+    {
+        "english": "Zawiyat Al-Dahmani",
+        "arabic": "زاوية الدهماني",
+        "chinese": "扎维亚特-阿尔达赫曼尼"
+    },
+    {
+        "english": "Al-Nofliyin",
+        "arabic": "النوفليين",
+        "chinese": "阿尔-诺弗利因"
+    },
+    {
+        "english": "Ben Ashour",
+        "arabic": "بن عاشور",
+        "chinese": "本-阿舒尔"
+    },
+    {
+        "english": "Shari Al-Jaraba",
+        "arabic": "شارع الجرابة",
+        "chinese": "沙里-阿尔贾拉巴"
+    },
+    {
+        "english": "Shari Al-Zawiya",
+        "arabic": "شارع الزاوية",
+        "chinese": "沙里-阿尔扎维亚"
+    },
+    {
+        "english": "Shari Al-Jumhuriyya",
+        "arabic": "شارع الجمهورية",
+        "chinese": "沙里-阿尔吉姆赫里亚"
+    },
+    {
+        "english": "Shari Al-Nasr",
+        "arabic": "شارع النصر",
+        "chinese": "沙里-阿尔纳斯尔"
+    },
+    {
+        "english": "Bab Ben Ghashir",
+        "arabic": "باب بن غشير",
+        "chinese": "巴布-本-加希尔"
+    },
+    {
+        "english": "Qarqarsh",
+        "arabic": "قرقارش",
+        "chinese": "卡尔卡尔什"
+    },
+    {
+        "english": "Ghout Al-Sha'al",
+        "arabic": "غوط الشعال",
+        "chinese": "古特-阿尔沙阿尔"
+    },
+    {
+        "english": "Al-Siraj",
+        "arabic": "السراج",
+        "chinese": "阿尔-西拉杰"
+    },
+    {
+        "english": "Al-Duribi",
+        "arabic": "الدريبي",
+        "chinese": "阿尔-杜里比"
+    },
+    {
+        "english": "Qurji",
+        "arabic": "قرجي",
+        "chinese": "库尔吉"
+    },
+    {
+        "english": "Qadha",
+        "arabic": "قدح",
+        "chinese": "卡达赫"
+    },
+    {
+        "english": "Abu Slim",
+        "arabic": "أبوسليم",
+        "chinese": "阿布-斯利姆"
+    },
+    {
+        "english": "Al-Riyadiya",
+        "arabic": "الرياضية",
+        "chinese": "阿尔-里亚迪亚"
+    },
+    {
+        "english": "Al-Falah",
+        "arabic": "الفلاح",
+        "chinese": "阿尔-法拉赫"
+    },
+    {
+        "english": "Gharghour",
+        "arabic": "غرغور",
+        "chinese": "阿尔-格尔古尔"
+    },
+    {
+        "english": "Hay Al-Zuhour",
+        "arabic": "حي الزهور",
+        "chinese": "哈伊-阿尔祖胡尔"
+    },
+    {
+        "english": "Tariq Al-Matar",
+        "arabic": "طريق المطار",
+        "chinese": "塔里克-阿尔马塔尔"
+    },
+    {
+        "english": "Al-Hadba",
+        "arabic": "الهضبة",
+        "chinese": "阿尔-哈德巴"
+    },
+    {
+        "english": "Salah Al-Din",
+        "arabic": "صلاح الدين",
+        "chinese": "萨拉赫-阿尔丁"
+    },
+    {
+        "english": "Khallat Al-Farjan",
+        "arabic": "خلة الفرجان",
+        "chinese": "哈拉特-阿尔法尔詹"
+    },
+    {
+        "english": "Tariq Al-Shouk",
+        "arabic": "طريق الشوك",
+        "chinese": "塔里克-阿尔舒克"
+    },
+    {
+        "english": "Al-Furnaj",
+        "arabic": "الفرناج",
+        "chinese": "阿尔-弗尔纳吉"
+    },
+    {
+        "english": "Al-Hayy Al-Jami'i",
+        "arabic": "الحي الجامعي",
+        "chinese": "哈伊-阿尔贾米"
+    },
+    {
+        "english": "Sidi Al-Masri",
+        "arabic": "سيدي المصري",
+        "chinese": "西迪-阿尔马斯里"
+    },
+    {
+        "english": "Ras Hassan",
+        "arabic": "راس حسن",
+        "chinese": "拉斯-哈桑"
+    },
+    {
+        "english": "Zanata",
+        "arabic": "زناتة",
+        "chinese": "扎纳塔"
+    },
+    {
+        "english": "Jami' Al-Saqi",
+        "arabic": "جامع الصقع",
+        "chinese": "贾米-阿尔萨基"
+    },
+    {
+        "english": "Al-Hani",
+        "arabic": "الهاني",
+        "chinese": "阿尔-哈尼"
+    },
+    {
+        "english": "A'rada",
+        "arabic": "عرادة",
+        "chinese": "阿尔拉达"
+    },
+    {
+        "english": "Al-Hashan",
+        "arabic": "الحشان",
+        "chinese": "阿尔-哈香"
+    },
+    {
+        "english": "Souq Al-Jum'a",
+        "arabic": "سوق الجمعة",
+        "chinese": "苏克-阿尔朱马"
+    },
+    {
+        "english": "Kashlaf",
+        "arabic": "كشلاف",
+        "chinese": "卡什拉夫"
+    },
+    {
+        "english": "Al-Ghararat",
+        "arabic": "الغرارات",
+        "chinese": "阿尔-加拉拉特"
+    },
+    {
+        "english": "Bawsta",
+        "arabic": "بوستة",
+        "chinese": "鲍斯塔"
+    },
+    {
+        "english": "Tariq Al-Shat",
+        "arabic": "طريق الشط",
+        "chinese": "塔里克-阿尔沙特"
+    },
+    {
+        "english": "Maitiqah",
+        "arabic": "معيتيقة",
+        "chinese": "迈提卡"
+    },
+    {
+        "english": "June 11",
+        "arabic": "11 يونيو",
+        "chinese": "6月11日"
+    },
+    {
+        "english": "Al-Sab'a",
+        "arabic": "السبعة",
+        "chinese": "阿尔-萨巴"
+    },
+    {
+        "english": "Tariq Al-Mishtal",
+        "arabic": "طريق المشتل",
+        "chinese": "塔里克-阿尔米什塔尔"
+    },
+    {
+        "english": "Hay Dimashq",
+        "arabic": "حي دمشق",
+        "chinese": "哈伊-大马士革"
+    },
+    {
+        "english": "Wali Al-Ahd",
+        "arabic": "ولي العهد",
+        "chinese": "瓦利-阿尔艾哈德"
+    },
+    {
+        "english": "Al-Sadra",
+        "arabic": "السدرة",
+        "chinese": "阿尔-萨德拉"
+    },
+    {
+        "english": "Ayn Zara",
+        "arabic": "عين زارة",
+        "chinese": "阿尹-扎拉"
+    },
+    {
+        "english": "Tariq Al-Sour",
+        "arabic": "طريق السور",
+        "chinese": "塔里克-阿尔苏尔"
+    },
+    {
+        "english": "Bawabat Al-Jibs",
+        "arabic": "بوابة الجبس",
+        "chinese": "巴瓦特-阿尔吉布斯"
+    },
+    {
+        "english": "Ghabat Al-Nasr",
+        "arabic": "غابة النصر",
+        "chinese": "戈巴特-阿尔纳斯尔"
+    },
+    {
+        "english": "Shari Al-Sarim",
+        "arabic": "شارع الصريم",
+        "chinese": "沙里-阿尔萨里姆"
+    },
+    {
+        "english": "Fashlum",
+        "arabic": "فشلوم",
+        "chinese": "法什伦"
+    },
+    {
+        "english": "Al-Mansoura",
+        "arabic": "المنصورة",
+        "chinese": "阿尔-曼苏拉"
+    },
+    {
+        "english": "Omar Al-Mukhtar",
+        "arabic": "عمر المختار",
+        "chinese": "奥马尔-穆赫塔尔"
+    }
+]

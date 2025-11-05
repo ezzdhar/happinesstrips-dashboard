@@ -1,0 +1,467 @@
+[
+  {
+      "english": "Amman",
+      "arabic": "عمان",
+      "simplified_chinese": "安曼"
+  },
+  {
+      "english": "Al Mafraq",
+      "arabic": "المفرق",
+      "simplified_chinese": "马夫拉克"
+  },
+  {
+      "english": "Irbid",
+      "arabic": "إربد",
+      "simplified_chinese": "伊尔比德"
+  },
+  {
+      "english": "Az Zarqā’",
+      "arabic": "الزرقاء",
+      "simplified_chinese": "扎尔卡"
+  },
+  {
+      "english": "Ar Ruşayfah",
+      "arabic": "الرصيفة",
+      "simplified_chinese": "鲁赛法"
+  },
+  {
+      "english": "Al Juwayyidah",
+      "arabic": "الجوييدة",
+      "simplified_chinese": "朱韦达"
+  },
+  {
+      "english": "Saḩāb",
+      "arabic": "صباح",
+      "simplified_chinese": "萨哈布"
+  },
+  {
+      "english": "Ar Ramthā",
+      "arabic": "الرمثا",
+      "simplified_chinese": "拉姆萨"
+  },
+  {
+      "english": "‘Ajlūn",
+      "arabic": "عجلون",
+      "simplified_chinese": "阿杰伦"
+  },
+  {
+      "english": "Al ‘Aqabah",
+      "arabic": "العقبة",
+      "simplified_chinese": "亚喀巴"
+  },
+  {
+      "english": "Al Jīzah",
+      "arabic": "الجديدة",
+      "simplified_chinese": "吉扎"
+  },
+  {
+      "english": "As Salţ",
+      "arabic": "السلط",
+      "simplified_chinese": "萨尔特"
+  },
+  {
+      "english": "Mādabā",
+      "arabic": "مادبا",
+      "simplified_chinese": "马德巴"
+  },
+  {
+      "english": "Jarash",
+      "arabic": "جرش",
+      "simplified_chinese": "杰拉什"
+  },
+  {
+      "english": "Ma‘ān",
+      "arabic": "معان",
+      "simplified_chinese": "马安"
+  },
+  {
+      "english": "Al Ḩişn",
+      "arabic": "الحصن",
+      "simplified_chinese": "希斯"
+  },
+  {
+      "english": "Aţ Ţurrah",
+      "arabic": "الطرة",
+      "simplified_chinese": "图拉"
+  },
+  {
+      "english": "Dayr Abū Sa‘īd",
+      "arabic": "دير أبو سعيد",
+      "simplified_chinese": "德尔阿布赛义德"
+  },
+  {
+      "english": "Ash Shajarah",
+      "arabic": "الشجرة",
+      "simplified_chinese": "沙贾拉"
+  },
+  {
+      "english": "Mu’tah",
+      "arabic": "المعركة",
+      "simplified_chinese": "穆塔"
+  },
+  {
+      "english": "Ash Shūnah ash Shamālīyah",
+      "arabic": "الشونة الشمالية",
+      "simplified_chinese": "北沙瓦"
+  },
+  {
+      "english": "Aţ Ţafīlah",
+      "arabic": "الطفيلة",
+      "simplified_chinese": "塔菲拉"
+  },
+  {
+      "english": "Al Fuḩayş",
+      "arabic": "الفيض",
+      "simplified_chinese": "福哈伊斯"
+  },
+  {
+      "english": "Al Karak",
+      "arabic": "الكرك",
+      "simplified_chinese": "卡拉克"
+  },
+  {
+      "english": "Al Mazār ash Shamālī",
+      "arabic": "المزار الشمالي",
+      "simplified_chinese": "北马扎尔"
+  },
+  {
+      "english": "Muthallath al Azraq",
+      "arabic": "المثلث الأزرق",
+      "simplified_chinese": "蓝色三角"
+  },
+  {
+      "english": "Buşayrā",
+      "arabic": "بصيرا",
+      "simplified_chinese": "布萨拉"
+  },
+  {
+      "english": "Dayr ‘Allā",
+      "arabic": "دير علا",
+      "simplified_chinese": "德尔阿拉"
+  },
+  {
+      "english": "Al Qaţrānah",
+      "arabic": "القطرانة",
+      "simplified_chinese": "卡特拉纳"
+  },
+  {
+      "english": "Al Jafr",
+      "arabic": "الجفر",
+      "simplified_chinese": "贾夫尔"
+  },
+  {
+      "english": "Ash Shawbak",
+      "arabic": "الشوبك",
+      "simplified_chinese": "肖巴克"
+  },
+  {
+      "english": "Ash Shūnah al Janūbīyah",
+      "arabic": "الشونة الجنوبية",
+      "simplified_chinese": "南沙瓦"
+  },
+  {
+      "english": "Adhruḩ",
+      "arabic": "ذروه",
+      "simplified_chinese": "阿德胡尔"
+  },
+  {
+      "english": "Al ‘Abdallī",
+      "arabic": "العبدلي",
+      "simplified_chinese": "阿卜达利"
+  },
+  {
+      "english": "Mārkā",
+      "arabic": "ماركا",
+      "simplified_chinese": "马尔卡"
+  },
+  {
+      "english": "Al Jubayhah",
+      "arabic": "الجبيهة",
+      "simplified_chinese": "朱巴哈"
+  },
+  {
+      "english": "‘Ayn al Bāshā",
+      "arabic": "عين الباشا",
+      "simplified_chinese": "巴沙的眼"
+  },
+  {
+      "english": "Wādī as Sīr",
+      "arabic": "وادي السير",
+      "simplified_chinese": "赛尔谷"
+  },
+  {
+      "english": "Kafr Asad",
+      "arabic": "كفر أسد",
+      "simplified_chinese": "卡夫阿萨德"
+  },
+  {
+    "english": "Aţ Ţayyibah",
+    "arabic": "الطيبة",
+    "simplified_chinese": "阿塔提巴"
+},
+{
+    "english": "Juraynah",
+    "arabic": "جرينة",
+    "simplified_chinese": "朱赖纳"
+},
+{
+    "english": "Nā‘ūr",
+    "arabic": "ناعور",
+    "simplified_chinese": "纳阿乌尔"
+},
+{
+    "english": "‘Irjān",
+    "arabic": "إرجان",
+    "simplified_chinese": "伊尔贾恩"
+},
+{
+    "english": "Muthallath Jāmi‘at Āl al Bayt",
+    "arabic": "مُثلث جامعة آل البيت",
+    "simplified_chinese": "阿尔贝特大学三角"
+},
+{
+    "english": "Kufrinjah",
+    "arabic": "كفرنجة",
+    "simplified_chinese": "库夫林贾"
+},
+{
+    "english": "Al Hāshimīyah",
+    "arabic": "الهاشمية",
+    "simplified_chinese": "哈希米耶"
+},
+{
+    "english": "Sammā ar Rawsān",
+    "arabic": "سما الروسان",
+    "simplified_chinese": "萨马阿尔拉瓦桑"
+},
+{
+    "english": "Şakhrah",
+    "arabic": "صخرة",
+    "simplified_chinese": "萨赫拉"
+},
+{
+    "english": "Al Maşţabah",
+    "arabic": "المصطبة",
+    "simplified_chinese": "马斯塔巴"
+},
+{
+    "english": "Manshīyat Banī Ḩasan",
+    "arabic": "منشية بني حسن",
+    "simplified_chinese": "巴尼哈桑村"
+},
+{
+    "english": "Ḩisbān",
+    "arabic": "حسٌّان",
+    "simplified_chinese": "赫斯班"
+},
+{
+    "english": "‘Allān",
+    "arabic": "علّان",
+    "simplified_chinese": "阿兰"
+},
+{
+    "english": "Umm al Basātīn",
+    "arabic": "أم البساتين",
+    "simplified_chinese": "乌姆巴萨廷"
+},
+{
+    "english": "Al Khālidīyah",
+    "arabic": "الخالدية",
+    "simplified_chinese": "哈立德耶"
+},
+{
+    "english": "Samā as Sirḩān",
+    "arabic": "سما السرحان",
+    "simplified_chinese": "萨马阿斯沙尔汉"
+},
+{
+    "english": "‘Ayy",
+    "arabic": "عَيْ",
+    "simplified_chinese": "艾"
+},
+{
+    "english": "Az̧ Z̧ulayl",
+    "arabic": "الزُّلايل",
+    "simplified_chinese": "阿兹祖莱尔"
+},
+{
+    "english": "Al Mazār al Janūbī",
+    "arabic": "المزار الجنوبي",
+    "simplified_chinese": "南墓地"
+},
+{
+    "english": "Umm al Jimāl",
+    "arabic": "أم الجمال",
+    "simplified_chinese": "乌姆吉马尔"
+},
+{
+    "english": "Bal‘amā",
+    "arabic": "بلعما",
+    "simplified_chinese": "巴尔阿马"
+},
+{
+    "english": "Al Ḩusaynīyah",
+    "arabic": "الحسينية",
+    "simplified_chinese": "侯赛因耶"
+},
+{
+    "english": "Irḩāb",
+    "arabic": "الرحاب",
+    "simplified_chinese": "伊尔哈布"
+},
+{
+    "english": "Mulayḩ",
+    "arabic": "مليح",
+    "simplified_chinese": "穆拉伊赫"
+},
+{
+    "english": "Fuqū‘",
+    "arabic": "فقوع",
+    "simplified_chinese": "富夸"
+},
+{
+    "english": "Ḩawshā",
+    "arabic": "حوشا",
+    "simplified_chinese": "哈乌沙"
+},
+{
+    "english": "Burmā",
+    "arabic": "برما",
+    "simplified_chinese": "布尔马"
+},
+{
+    "english": "Aş Şubayḩī",
+    "arabic": "الشبحي",
+    "simplified_chinese": "阿什舒拜希"
+},
+{
+    "english": "Al Fayşalīyah",
+    "arabic": "الفيصلية",
+    "simplified_chinese": "费萨利耶"
+},
+{
+    "english": "Wādī Mūsá",
+    "arabic": "وادي موسى",
+    "simplified_chinese": "穆萨河谷"
+},
+{
+    "english": "Umm al Qiţţayn",
+    "arabic": "أم القيطين",
+    "simplified_chinese": "乌姆基坦"
+},
+{
+    "english": "Al Qaşr",
+    "arabic": "القصر",
+    "simplified_chinese": "卡斯尔"
+},
+{
+    "english": "Yarqā",
+    "arabic": "يرقا",
+    "simplified_chinese": "雅尔卡"
+},
+{
+    "english": "Bīrayn",
+    "arabic": "بيران",
+    "simplified_chinese": "比赖恩"
+},
+{
+    "english": "Al Mughayyir",
+    "arabic": "المغير",
+    "simplified_chinese": "穆盖尔"
+},
+{
+    "english": "Ghawr aş Şāfī",
+    "arabic": "غور الصافي",
+    "simplified_chinese": "加乌尔阿斯萨菲"
+},
+{
+    "english": "Şabḩā",
+    "arabic": "صباح",
+    "simplified_chinese": "萨布哈"
+},
+{
+    "english": "Rujm ash Shāmī al Gharbī",
+    "arabic": "رجيم الشامي الغربي",
+    "simplified_chinese": "西部沙米鲁吉姆"
+},
+{
+    "english": "Dhībān",
+    "arabic": "ذيبان",
+    "simplified_chinese": "迪班"
+},
+{
+    "english": "Mā‘īn",
+    "arabic": "معين",
+    "simplified_chinese": "马因"
+},
+{
+    "english": "Ayl",
+    "arabic": "أيل",
+    "simplified_chinese": "艾尔"
+},
+{
+    "english": "Al Muwaqqar",
+    "arabic": "الموقر",
+    "simplified_chinese": "穆瓦卡尔"
+},
+{
+    "english": "Ghawr al Mazra‘ah",
+    "arabic": "غور المزريعة",
+    "simplified_chinese": "加乌尔阿尔马兹拉"
+},
+{
+    "english": "Dayr al Kahf",
+    "arabic": "دير الكهف",
+    "simplified_chinese": "德尔卡赫夫"
+},
+{
+    "english": "Al ‘Arīḑ",
+    "arabic": "العريد",
+    "simplified_chinese": "阿尔阿里德"
+},
+{
+    "english": "Muthallath Şabḩā",
+    "arabic": "مُثلث صباح",
+    "simplified_chinese": "萨布哈三角"
+},
+{
+    "english": "Al Ḩusaynīyah",
+    "arabic": "الحسينية",
+    "simplified_chinese": "侯赛因耶"
+},
+{
+    "english": "Al Ḩasā",
+    "arabic": "الحسّا",
+    "simplified_chinese": "哈萨"
+},
+{
+    "english": "Al Murayghah",
+    "arabic": "المريغة",
+    "simplified_chinese": "穆雷赫"
+},
+{
+    "english": "Al Quwayrah",
+    "arabic": "القويره",
+    "simplified_chinese": "库韦拉"
+},
+{
+    "english": "Ad Dīsah",
+    "arabic": "الديسة",
+    "simplified_chinese": "迪萨"
+},
+{
+    "english": "Umm ar Raşāş",
+    "arabic": "أم الرشاش",
+    "simplified_chinese": "乌姆阿尔拉沙什"
+},
+{
+    "english": "Ar Rīshah",
+    "arabic": "الرشاة",
+    "simplified_chinese": "阿尔里莎"
+},
+{
+    "english": "Ar Ruwayshid",
+    "arabic": "الرويشد",
+    "simplified_chinese": "阿尔鲁维希德"
+}
+]

@@ -1,0 +1,282 @@
+[
+    {
+        "english": "Cairo",
+        "arabic": "القاهرة",
+        "chinese": "开罗"
+    },
+    {
+        "english": "Giza",
+        "arabic": "الجيزة",
+        "chinese": "吉萨"
+    },
+    {
+        "english": "Alexandria",
+        "arabic": "الإسكندرية",
+        "chinese": "亚历山大"
+    },
+    {
+        "english": "Shubrā al Khaymah",
+        "arabic": "شبرا الخيمة",
+        "chinese": "舒布拉哈凯马"
+    },
+    {
+        "english": "Sinnūris",
+        "arabic": "سنبريس",
+        "chinese": "辛努里斯"
+    },
+    {
+        "english": "Al Manşūrah",
+        "arabic": "المنصورة",
+        "chinese": "曼苏拉"
+    },
+    {
+        "english": "Ḩalwān",
+        "arabic": "حلوان",
+        "chinese": "哈卢万"
+    },
+    {
+        "english": "Al Maḩallah al Kubrá",
+        "arabic": "المحلة الكبرى",
+        "chinese": "大马哈拉"
+    },
+    {
+        "english": "Shibīn al Qanāṭir",
+        "arabic": "شبين القناطر",
+        "chinese": "希宾卡纳特尔"
+    },
+    {
+        "english": "Al Fayyūm",
+        "arabic": "الفيوم",
+        "chinese": "费尤姆"
+    },
+    {
+        "english": "Akhmīm",
+        "arabic": "اخميم",
+        "chinese": "阿赫敏"
+    },
+    {
+        "english": "Al Marāghah",
+        "arabic": "المراغة",
+        "chinese": "马拉哈"
+    },
+    {
+        "english": "Ţanţā",
+        "arabic": "طنطا",
+        "chinese": "坦塔"
+    },
+    {
+        "english": "Awsīm",
+        "arabic": "أوسيم",
+        "chinese": "奥西姆"
+    },
+    {
+        "english": "Asyūţ",
+        "arabic": "أسيوط",
+        "chinese": "阿斯尤特"
+    },
+    {
+        "english": "Az Zaqāzīq",
+        "arabic": "الزقازيق",
+        "chinese": "扎卡齐克"
+    },
+    {
+        "english": "Al ‘Ajamī",
+        "arabic": "العجمي",
+        "chinese": "阿贾米"
+    },
+    {
+        "english": "Shibīn al Kawm",
+        "arabic": "شبين الكوم",
+        "chinese": "希宾阿尔库姆"
+    },
+    {
+        "english": "Râs el-Barr",
+        "arabic": "راس البر",
+        "chinese": "拉斯艾尔巴尔"
+    },
+    {
+        "english": "Al ‘Āshir min Ramaḑān",
+        "arabic": "العاشر من رمضان",
+        "chinese": "拉马丹十号"
+    },
+    {
+        "english": "Damanhūr",
+        "arabic": "دمنهور",
+        "chinese": "德曼霍尔"
+    },
+    {
+        "english": "Al Minyā",
+        "arabic": "المنيا",
+        "chinese": "明亚"
+    },
+    {
+        "english": "Mallawī",
+        "arabic": "ملوي",
+        "chinese": "马卢维"
+    },
+    {
+        "english": "Damietta",
+        "arabic": "دمياط",
+        "chinese": "达米埃塔"
+    },
+    {
+        "english": "Qinā",
+        "arabic": "قنا",
+        "chinese": "基纳"
+    },
+    {
+        "english": "Banī Suwayf",
+        "arabic": "بني سويف",
+        "chinese": "贝尼苏维夫"
+    },
+    {
+        "english": "Banhā",
+        "arabic": "بنها",
+        "chinese": "本哈"
+    },
+    {
+        "english": "Qalyūb",
+        "arabic": "قليوب",
+        "chinese": "卡利尤布"
+    },
+    {
+        "english": "Kafr ash Shaykh",
+        "arabic": "كفر الشيخ",
+        "chinese": "卡夫尔谢赫"
+    },
+    {
+        "english": "Disūq",
+        "arabic": "دسوق",
+        "chinese": "迪苏克"
+    },
+    {
+        "english": "Mīt Ghamr",
+        "arabic": "ميت غمر",
+        "chinese": "米特加姆尔"
+    },
+    {
+        "english": "Munūf",
+        "arabic": "منوف",
+        "chinese": "穆诺夫"
+    },
+    {
+        "english": "Fāqūs",
+        "arabic": "فاقوس",
+        "chinese": "法库斯"
+    },
+    {
+        "english": "Jirjā",
+        "arabic": "جرجا",
+        "chinese": "吉尔贾"
+    },
+    {
+        "english": "Al Badrashayn",
+        "arabic": "البدرشين",
+        "chinese": "巴德拉辛"
+    },
+    {
+        "english": "Ibshawāy",
+        "arabic": "إبشواي",
+        "chinese": "伊布肖维"
+    },
+    {
+        "english": "Al Khānkah",
+        "arabic": "الخانكة",
+        "chinese": "哈恩卡"
+    },
+    {
+        "english": "‘Izbat al Burj",
+        "arabic": "عزبة البرج",
+        "chinese": "伊兹巴特阿尔布尔吉"
+    },
+    {
+        "english": "Kirdāsah",
+        "arabic": "كرداسة",
+        "chinese": "基尔达萨"
+    },
+    {
+        "english": "Abnūb",
+        "arabic": "ابنوب",
+        "chinese": "阿布努布"
+    },
+    {
+        "english": "Al Minshāh",
+        "arabic": "المنشأة",
+        "chinese": "曼沙"
+    },
+    {
+        "english": "Al Qurayn",
+        "arabic": "القُرَيْن",
+        "chinese": "库兰"
+    },
+    {
+        "english": "Abū Za‘bal",
+        "arabic": "أبو زعبل",
+        "chinese": "阿布扎比"
+    },
+    {
+        "english": "Al Balyanā",
+        "arabic": "الباليان",
+        "chinese": "巴利亚"
+    },
+    {
+        "english": "Al ‘Ayyāţ",
+        "arabic": "العياط",
+        "chinese": "阿亚特"
+    },
+    {
+        "english": "Al Badārī",
+        "arabic": "البدارى",
+        "chinese": "巴达里"
+    },
+    {
+        "english": "Kafr al Kurdī",
+        "arabic": "كفر الكردى",
+        "chinese": "卡夫尔库尔迪"
+    },
+    {
+        "english": "Abū Qīr",
+        "arabic": "أبو قير",
+        "chinese": "阿布基尔"
+    },
+    {
+        "english": "Qahā",
+        "arabic": "قها",
+        "chinese": "卡哈"
+    },
+    {
+        "english": "Al Karnak",
+        "arabic": "الكَرْنَك",
+        "chinese": "卡尔纳克"
+    },
+    {
+        "english": "Kafr Shukr",
+        "arabic": "كفر شكر",
+        "chinese": "卡夫尔舒克尔"
+    },
+    {
+        "english": "Mīt Namā",
+        "arabic": "ميت نما",
+        "chinese": "米特纳马"
+    },
+    {
+        "english": "Banī Murr",
+        "arabic": "بني مِرّ",
+        "chinese": "贝尼穆尔"
+    },
+    {
+        "english": "Al Madāmūd",
+        "arabic": "المعدّم",
+        "chinese": "马达姆德"
+    },
+    {
+        "english": "Birqāsh",
+        "arabic": "برقاش",
+        "chinese": "比尔卡什"
+    },
+    {
+        "english": "Kafr Ţaḩlah",
+        "arabic": "كفر طهلة",
+        "chinese": "卡夫尔塔哈"
+    }
+]

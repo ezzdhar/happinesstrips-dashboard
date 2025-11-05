@@ -1,0 +1,1212 @@
+[
+  {
+    "name": "Libya (+218)",
+    "phone_code": "+218",
+    "key": "LY"
+  },
+  {
+    "name": "Afghanistan (+93)",
+    "phone_code": "+93",
+    "key": "AF"
+  },
+  {
+    "name": "Albania (+355)",
+    "phone_code": "+355",
+    "key": "AL"
+  },
+  {
+    "name": "Algeria (+213)",
+    "phone_code": "+213",
+    "key": "DZ"
+  },
+  {
+    "name": "Andorra (+376)",
+    "phone_code": "+376",
+    "key": "AD"
+  },
+  {
+    "name": "Angola (+244)",
+    "phone_code": "+244",
+    "key": "AO"
+  },
+  {
+    "name": "Antarctica (+672)",
+    "phone_code": "+672",
+    "key": "AQ"
+  },
+  {
+    "name": "Antigua and Barbuda (+1)",
+    "phone_code": "+1",
+    "key": "AG"
+  },
+  {
+    "name": "Argentina (+54)",
+    "phone_code": "+54",
+    "key": "AR"
+  },
+  {
+    "name": "Armenia (+374)",
+    "phone_code": "+374",
+    "key": "AM"
+  },
+  {
+    "name": "Aruba (+297)",
+    "phone_code": "+297",
+    "key": "AW"
+  },
+  {
+    "name": "Ascension Island (+247)",
+    "phone_code": "+247",
+    "key": "AC"
+  },
+  {
+    "name": "Australia (+61)",
+    "phone_code": "+61",
+    "key": "AU"
+  },
+  {
+    "name": "Austria (+43)",
+    "phone_code": "+43",
+    "key": "AT"
+  },
+  {
+    "name": "Azerbaijan (+994)",
+    "phone_code": "+994",
+    "key": "AZ"
+  },
+  {
+    "name": "Bahamas (+1)",
+    "phone_code": "+1",
+    "key": "BS"
+  },
+  {
+    "name": "Bahrain (+973)",
+    "phone_code": "+973",
+    "key": "BH"
+  },
+  {
+    "name": "Bangladesh (+880)",
+    "phone_code": "+880",
+    "key": "BD"
+  },
+  {
+    "name": "Barbados (+1)",
+    "phone_code": "+1",
+    "key": "BB"
+  },
+  {
+    "name": "Belarus (+375)",
+    "phone_code": "+375",
+    "key": "BY"
+  },
+  {
+    "name": "Belgium (+32)",
+    "phone_code": "+32",
+    "key": "BE"
+  },
+  {
+    "name": "Belize (+501)",
+    "phone_code": "+501",
+    "key": "BZ"
+  },
+  {
+    "name": "Benin (+229)",
+    "phone_code": "+229",
+    "key": "BJ"
+  },
+  {
+    "name": "Bermuda (+1)",
+    "phone_code": "+1",
+    "key": "BM"
+  },
+  {
+    "name": "Bhutan (+975)",
+    "phone_code": "+975",
+    "key": "BT"
+  },
+  {
+    "name": "Bolivia (+591)",
+    "phone_code": "+591",
+    "key": "BO"
+  },
+  {
+    "name": "Bonaire (+599)",
+    "phone_code": "+599",
+    "key": "BQ"
+  },
+  {
+    "name": "Bosnia and Herzegovina (+387)",
+    "phone_code": "+387",
+    "key": "BA"
+  },
+  {
+    "name": "Botswana (+267)",
+    "phone_code": "+267",
+    "key": "BW"
+  },
+  {
+    "name": "Bouvet Island (+47)",
+    "phone_code": "+47",
+    "key": "BV"
+  },
+  {
+    "name": "Brazil (+55)",
+    "phone_code": "+55",
+    "key": "BR"
+  },
+  {
+    "name": "British Indian Ocean Territory (+44)",
+    "phone_code": "+44",
+    "key": "IO"
+  },
+  {
+    "name": "British Virgin Islands (+1)",
+    "phone_code": "+1",
+    "key": "VG"
+  },
+  {
+    "name": "Brunei (+673)",
+    "phone_code": "+673",
+    "key": "BN"
+  },
+  {
+    "name": "Bulgaria (+359)",
+    "phone_code": "+359",
+    "key": "BG"
+  },
+  {
+    "name": "Burkina Faso (+226)",
+    "phone_code": "+226",
+    "key": "BF"
+  },
+  {
+    "name": "Burundi (+257)",
+    "phone_code": "+257",
+    "key": "BI"
+  },
+  {
+    "name": "Cabo Verde (+238)",
+    "phone_code": "+238",
+    "key": "CV"
+  },
+  {
+    "name": "Cambodia (+855)",
+    "phone_code": "+855",
+    "key": "KH"
+  },
+  {
+    "name": "Cameroon (+237)",
+    "phone_code": "+237",
+    "key": "CM"
+  },
+  {
+    "name": "Canada (+1)",
+    "phone_code": "+1",
+    "key": "CA"
+  },
+  {
+    "name": "Cayman Islands (+1)",
+    "phone_code": "+1",
+    "key": "KY"
+  },
+  {
+    "name": "Central African Republic (+236)",
+    "phone_code": "+236",
+    "key": "CF"
+  },
+  {
+    "name": "Chad (+235)",
+    "phone_code": "+235",
+    "key": "TD"
+  },
+  {
+    "name": "Chile (+56)",
+    "phone_code": "+56",
+    "key": "CL"
+  },
+  {
+    "name": "China (+86)",
+    "phone_code": "+86",
+    "key": "CN"
+  },
+  {
+    "name": "Christmas Island (+61)",
+    "phone_code": "+61",
+    "key": "CX"
+  },
+  {
+    "name": "Cocos (Keeling) Islands (+61)",
+    "phone_code": "+61",
+    "key": "CC"
+  },
+  {
+    "name": "Colombia (+57)",
+    "phone_code": "+57",
+    "key": "CO"
+  },
+  {
+    "name": "Comoros (+269)",
+    "phone_code": "+269",
+    "key": "KM"
+  },
+  {
+    "name": "Congo (+242)",
+    "phone_code": "+242",
+    "key": "CG"
+  },
+  {
+    "name": "Congo (DRC) (+243)",
+    "phone_code": "+243",
+    "key": "CD"
+  },
+  {
+    "name": "Cook Islands (+682)",
+    "phone_code": "+682",
+    "key": "CK"
+  },
+  {
+    "name": "Costa Rica (+506)",
+    "phone_code": "+506",
+    "key": "CR"
+  },
+  {
+    "name": "Cte d'Ivoire (+225)",
+    "phone_code": "+225",
+    "key": "CI"
+  },
+  {
+    "name": "Croatia (+385)",
+    "phone_code": "+385",
+    "key": "HR"
+  },
+  {
+    "name": "Cuba (+53)",
+    "phone_code": "+53",
+    "key": "CU"
+  },
+  {
+    "name": "Curaao (+599)",
+    "phone_code": "+599",
+    "key": "CW"
+  },
+  {
+    "name": "Cyprus (+357)",
+    "phone_code": "+357",
+    "key": "CY"
+  },
+  {
+    "name": "Czechia (+420)",
+    "phone_code": "+420",
+    "key": "CZ"
+  },
+  {
+    "name": "Denmark (+45)",
+    "phone_code": "+45",
+    "key": "DK"
+  },
+  {
+    "name": "Djibouti (+253)",
+    "phone_code": "+253",
+    "key": "DJ"
+  },
+  {
+    "name": "Dominica (+1)",
+    "phone_code": "+1",
+    "key": "DM"
+  },
+  {
+    "name": "Dominican Republic (+1)",
+    "phone_code": "+1",
+    "key": "DO"
+  },
+  {
+    "name": "Ecuador (+593)",
+    "phone_code": "+593",
+    "key": "EC"
+  },
+  {
+    "name": "Egypt (+20)",
+    "phone_code": "+20",
+    "key": "EG"
+  },
+  {
+    "name": "El Salvador (+503)",
+    "phone_code": "+503",
+    "key": "SV"
+  },
+  {
+    "name": "Equatorial Guinea (+240)",
+    "phone_code": "+240",
+    "key": "GQ"
+  },
+  {
+    "name": "Eritrea (+291)",
+    "phone_code": "+291",
+    "key": "ER"
+  },
+  {
+    "name": "Estonia (+372)",
+    "phone_code": "+372",
+    "key": "EE"
+  },
+  {
+    "name": "Ethiopia (+251)",
+    "phone_code": "+251",
+    "key": "ET"
+  },
+  {
+    "name": "Falkland Islands (+500)",
+    "phone_code": "+500",
+    "key": "FK"
+  },
+  {
+    "name": "Faroe Islands (+298)",
+    "phone_code": "+298",
+    "key": "FO"
+  },
+  {
+    "name": "Fiji (+679)",
+    "phone_code": "+679",
+    "key": "FJ"
+  },
+  {
+    "name": "Finland (+358)",
+    "phone_code": "+358",
+    "key": "FI"
+  },
+  {
+    "name": "France (+33)",
+    "phone_code": "+33",
+    "key": "FR"
+  },
+  {
+    "name": "French Guiana (+594)",
+    "phone_code": "+594",
+    "key": "GF"
+  },
+  {
+    "name": "French Polynesia (+689)",
+    "phone_code": "+689",
+    "key": "PF"
+  },
+  {
+    "name": "Gabon (+241)",
+    "phone_code": "+241",
+    "key": "GA"
+  },
+  {
+    "name": "Gambia (+220)",
+    "phone_code": "+220",
+    "key": "GM"
+  },
+  {
+    "name": "Georgia (+995)",
+    "phone_code": "+995",
+    "key": "GE"
+  },
+  {
+    "name": "Germany (+49)",
+    "phone_code": "+49",
+    "key": "DE"
+  },
+  {
+    "name": "Ghana (+233)",
+    "phone_code": "+233",
+    "key": "GH"
+  },
+  {
+    "name": "Gibraltar (+350)",
+    "phone_code": "+350",
+    "key": "GI"
+  },
+  {
+    "name": "Greece (+30)",
+    "phone_code": "+30",
+    "key": "GR"
+  },
+  {
+    "name": "Greenland (+299)",
+    "phone_code": "+299",
+    "key": "GL"
+  },
+  {
+    "name": "Grenada (+1)",
+    "phone_code": "+1",
+    "key": "GD"
+  },
+  {
+    "name": "Guadeloupe (+590)",
+    "phone_code": "+590",
+    "key": "GP"
+  },
+  {
+    "name": "Guam (+1)",
+    "phone_code": "+1",
+    "key": "GU"
+  },
+  {
+    "name": "Guatemala (+502)",
+    "phone_code": "+502",
+    "key": "GT"
+  },
+  {
+    "name": "Guernsey (+44)",
+    "phone_code": "+44",
+    "key": "GG"
+  },
+  {
+    "name": "Guinea (+224)",
+    "phone_code": "+224",
+    "key": "GN"
+  },
+  {
+    "name": "Guinea-Bissau (+245)",
+    "phone_code": "+245",
+    "key": "GW"
+  },
+  {
+    "name": "Guyana (+592)",
+    "phone_code": "+592",
+    "key": "GY"
+  },
+  {
+    "name": "Haiti (+509)",
+    "phone_code": "+509",
+    "key": "HT"
+  },
+  {
+    "name": "Honduras (+504)",
+    "phone_code": "+504",
+    "key": "HN"
+  },
+  {
+    "name": "Hong Kong SAR (+852)",
+    "phone_code": "+852",
+    "key": "HK"
+  },
+  {
+    "name": "Hungary (+36)",
+    "phone_code": "+36",
+    "key": "HU"
+  },
+  {
+    "name": "Iceland (+354)",
+    "phone_code": "+354",
+    "key": "IS"
+  },
+  {
+    "name": "India (+91)",
+    "phone_code": "+91",
+    "key": "IN"
+  },
+  {
+    "name": "Indonesia (+62)",
+    "phone_code": "+62",
+    "key": "ID"
+  },
+  {
+    "name": "Iran (+98)",
+    "phone_code": "+98",
+    "key": "IR"
+  },
+  {
+    "name": "Iraq (+964)",
+    "phone_code": "+964",
+    "key": "IQ"
+  },
+  {
+    "name": "Ireland (+353)",
+    "phone_code": "+353",
+    "key": "IE"
+  },
+  {
+    "name": "Isle of Man (+44)",
+    "phone_code": "+44",
+    "key": "IM"
+  },
+  {
+    "name": "Israel (+972)",
+    "phone_code": "+972",
+    "key": "IL"
+  },
+  {
+    "name": "Italy (+39)",
+    "phone_code": "+39",
+    "key": "IT"
+  },
+  {
+    "name": "Jamaica (+1)",
+    "phone_code": "+1",
+    "key": "JM"
+  },
+  {
+    "name": "Jan Mayen (+47)",
+    "phone_code": "+47",
+    "key": "XJ"
+  },
+  {
+    "name": "Japan (+81)",
+    "phone_code": "+81",
+    "key": "JP"
+  },
+  {
+    "name": "Jersey (+44)",
+    "phone_code": "+44",
+    "key": "JE"
+  },
+  {
+    "name": "Jordan (+962)",
+    "phone_code": "+962",
+    "key": "JO"
+  },
+  {
+    "name": "Kazakhstan (+7)",
+    "phone_code": "+7",
+    "key": "KZ"
+  },
+  {
+    "name": "Kenya (+254)",
+    "phone_code": "+254",
+    "key": "KE"
+  },
+  {
+    "name": "Kiribati (+686)",
+    "phone_code": "+686",
+    "key": "KI"
+  },
+  {
+    "name": "Korea (+82)",
+    "phone_code": "+82",
+    "key": "KR"
+  },
+  {
+    "name": "Kosovo (+383)",
+    "phone_code": "+383",
+    "key": "XK"
+  },
+  {
+    "name": "Kuwait (+965)",
+    "phone_code": "+965",
+    "key": "KW"
+  },
+  {
+    "name": "Kyrgyzstan (+996)",
+    "phone_code": "+996",
+    "key": "KG"
+  },
+  {
+    "name": "Laos (+856)",
+    "phone_code": "+856",
+    "key": "LA"
+  },
+  {
+    "name": "Latvia (+371)",
+    "phone_code": "+371",
+    "key": "LV"
+  },
+  {
+    "name": "Lebanon (+961)",
+    "phone_code": "+961",
+    "key": "LB"
+  },
+  {
+    "name": "Lesotho (+266)",
+    "phone_code": "+266",
+    "key": "LS"
+  },
+  {
+    "name": "Liberia (+231)",
+    "phone_code": "+231",
+    "key": "LR"
+  },
+  {
+    "name": "Liechtenstein (+423)",
+    "phone_code": "+423",
+    "key": "LI"
+  },
+  {
+    "name": "Lithuania (+370)",
+    "phone_code": "+370",
+    "key": "LT"
+  },
+  {
+    "name": "Luxembourg (+352)",
+    "phone_code": "+352",
+    "key": "LU"
+  },
+  {
+    "name": "Macao SAR (+853)",
+    "phone_code": "+853",
+    "key": "MO"
+  },
+  {
+    "name": "Madagascar (+261)",
+    "phone_code": "+261",
+    "key": "MG"
+  },
+  {
+    "name": "Malawi (+265)",
+    "phone_code": "+265",
+    "key": "MW"
+  },
+  {
+    "name": "Malaysia (+60)",
+    "phone_code": "+60",
+    "key": "MY"
+  },
+  {
+    "name": "Maldives (+960)",
+    "phone_code": "+960",
+    "key": "MV"
+  },
+  {
+    "name": "Mali (+223)",
+    "phone_code": "+223",
+    "key": "ML"
+  },
+  {
+    "name": "Malta (+356)",
+    "phone_code": "+356",
+    "key": "MT"
+  },
+  {
+    "name": "Marshall Islands (+692)",
+    "phone_code": "+692",
+    "key": "MH"
+  },
+  {
+    "name": "Martinique (+596)",
+    "phone_code": "+596",
+    "key": "MQ"
+  },
+  {
+    "name": "Mauritania (+222)",
+    "phone_code": "+222",
+    "key": "MR"
+  },
+  {
+    "name": "Mauritius (+230)",
+    "phone_code": "+230",
+    "key": "MU"
+  },
+  {
+    "name": "Mayotte (+262)",
+    "phone_code": "+262",
+    "key": "YT"
+  },
+  {
+    "name": "Mexico (+52)",
+    "phone_code": "+52",
+    "key": "MX"
+  },
+  {
+    "name": "Micronesia (+691)",
+    "phone_code": "+691",
+    "key": "FM"
+  },
+  {
+    "name": "Moldova (+373)",
+    "phone_code": "+373",
+    "key": "MD"
+  },
+  {
+    "name": "Monaco (+377)",
+    "phone_code": "+377",
+    "key": "MC"
+  },
+  {
+    "name": "Mongolia (+976)",
+    "phone_code": "+976",
+    "key": "MN"
+  },
+  {
+    "name": "Montenegro (+382)",
+    "phone_code": "+382",
+    "key": "ME"
+  },
+  {
+    "name": "Montserrat (+1)",
+    "phone_code": "+1",
+    "key": "MS"
+  },
+  {
+    "name": "Morocco (+212)",
+    "phone_code": "+212",
+    "key": "MA"
+  },
+  {
+    "name": "Mozambique (+258)",
+    "phone_code": "+258",
+    "key": "MZ"
+  },
+  {
+    "name": "Myanmar (+95)",
+    "phone_code": "+95",
+    "key": "MM"
+  },
+  {
+    "name": "Namibia (+264)",
+    "phone_code": "+264",
+    "key": "NA"
+  },
+  {
+    "name": "Nauru (+674)",
+    "phone_code": "+674",
+    "key": "NR"
+  },
+  {
+    "name": "Nepal (+977)",
+    "phone_code": "+977",
+    "key": "NP"
+  },
+  {
+    "name": "Netherlands (+31)",
+    "phone_code": "+31",
+    "key": "NL"
+  },
+  {
+    "name": "Netherlands Antilles (Former) (+599)",
+    "phone_code": "+599",
+    "key": "AN"
+  },
+  {
+    "name": "New Caledonia (+687)",
+    "phone_code": "+687",
+    "key": "NC"
+  },
+  {
+    "name": "New Zealand (+64)",
+    "phone_code": "+64",
+    "key": "NZ"
+  },
+  {
+    "name": "Nicaragua (+505)",
+    "phone_code": "+505",
+    "key": "NI"
+  },
+  {
+    "name": "Niger (+227)",
+    "phone_code": "+227",
+    "key": "NE"
+  },
+  {
+    "name": "Nigeria (+234)",
+    "phone_code": "+234",
+    "key": "NG"
+  },
+  {
+    "name": "Niue (+683)",
+    "phone_code": "+683",
+    "key": "NU"
+  },
+  {
+    "name": "North Macedonia (+389)",
+    "phone_code": "+389",
+    "key": "MK"
+  },
+  {
+    "name": "Northern Mariana Islands (+1)",
+    "phone_code": "+1",
+    "key": "MP"
+  },
+  {
+    "name": "Norway (+47)",
+    "phone_code": "+47",
+    "key": "NO"
+  },
+  {
+    "name": "Oman (+968)",
+    "phone_code": "+968",
+    "key": "OM"
+  },
+  {
+    "name": "Pakistan (+92)",
+    "phone_code": "+92",
+    "key": "PK"
+  },
+  {
+    "name": "Palau (+680)",
+    "phone_code": "+680",
+    "key": "PW"
+  },
+  {
+    "name": "Palestinian Authority (+970)",
+    "phone_code": "+970",
+    "key": "PS"
+  },
+  {
+    "name": "Panama (+507)",
+    "phone_code": "+507",
+    "key": "PA"
+  },
+  {
+    "name": "Papua New Guinea (+675)",
+    "phone_code": "+675",
+    "key": "PG"
+  },
+  {
+    "name": "Paraguay (+595)",
+    "phone_code": "+595",
+    "key": "PY"
+  },
+  {
+    "name": "Peru (+51)",
+    "phone_code": "+51",
+    "key": "PE"
+  },
+  {
+    "name": "Philippines (+63)",
+    "phone_code": "+63",
+    "key": "PH"
+  },
+  {
+    "name": "Poland (+48)",
+    "phone_code": "+48",
+    "key": "PL"
+  },
+  {
+    "name": "Portugal (+351)",
+    "phone_code": "+351",
+    "key": "PT"
+  },
+  {
+    "name": "Qatar (+974)",
+    "phone_code": "+974",
+    "key": "QA"
+  },
+  {
+    "name": "Runion (+262)",
+    "phone_code": "+262",
+    "key": "RE"
+  },
+  {
+    "name": "Romania (+40)",
+    "phone_code": "+40",
+    "key": "RO"
+  },
+  {
+    "name": "Russia (+7)",
+    "phone_code": "+7",
+    "key": "RU"
+  },
+  {
+    "name": "Rwanda (+250)",
+    "phone_code": "+250",
+    "key": "RW"
+  },
+  {
+    "name": "Saba (+599)",
+    "phone_code": "+599",
+    "key": "XS"
+  },
+  {
+    "name": "Saint Kitts and Nevis (+1)",
+    "phone_code": "+1",
+    "key": "KN"
+  },
+  {
+    "name": "Saint Lucia (+1)",
+    "phone_code": "+1",
+    "key": "LC"
+  },
+  {
+    "name": "Saint Pierre and Miquelon (+508)",
+    "phone_code": "+508",
+    "key": "PM"
+  },
+  {
+    "name": "Saint Vincent and the Grenadines (+1)",
+    "phone_code": "+1",
+    "key": "VC"
+  },
+  {
+    "name": "Samoa (+685)",
+    "phone_code": "+685",
+    "key": "WS"
+  },
+  {
+    "name": "San Marino (+378)",
+    "phone_code": "+378",
+    "key": "SM"
+  },
+  {
+    "name": "So Tom and Prncipe (+239)",
+    "phone_code": "+239",
+    "key": "ST"
+  },
+  {
+    "name": "Saudi Arabia (+966)",
+    "phone_code": "+966",
+    "key": "SA"
+  },
+  {
+    "name": "Senegal (+221)",
+    "phone_code": "+221",
+    "key": "SN"
+  },
+  {
+    "name": "Serbia (+381)",
+    "phone_code": "+381",
+    "key": "RS"
+  },
+  {
+    "name": "Seychelles (+248)",
+    "phone_code": "+248",
+    "key": "SC"
+  },
+  {
+    "name": "Sierra Leone (+232)",
+    "phone_code": "+232",
+    "key": "SL"
+  },
+  {
+    "name": "Singapore (+65)",
+    "phone_code": "+65",
+    "key": "SG"
+  },
+  {
+    "name": "Sint Eustatius (+599)",
+    "phone_code": "+599",
+    "key": "XE"
+  },
+  {
+    "name": "Slovakia (+421)",
+    "phone_code": "+421",
+    "key": "SK"
+  },
+  {
+    "name": "Slovenia (+386)",
+    "phone_code": "+386",
+    "key": "SI"
+  },
+  {
+    "name": "Solomon Islands (+677)",
+    "phone_code": "+677",
+    "key": "SB"
+  },
+  {
+    "name": "Somalia (+252)",
+    "phone_code": "+252",
+    "key": "SO"
+  },
+  {
+    "name": "South Africa (+27)",
+    "phone_code": "+27",
+    "key": "ZA"
+  },
+  {
+    "name": "South Sudan (+211)",
+    "phone_code": "+211",
+    "key": "SS"
+  },
+  {
+    "name": "Spain (+34)",
+    "phone_code": "+34",
+    "key": "ES"
+  },
+  {
+    "name": "Sri Lanka (+94)",
+    "phone_code": "+94",
+    "key": "LK"
+  },
+  {
+    "name": "St Helena, Ascension, and Tristan da Cunha (+290)",
+    "phone_code": "+290",
+    "key": "SH"
+  },
+  {
+    "name": "Sudan (+249)",
+    "phone_code": "+249",
+    "key": "SD"
+  },
+  {
+    "name": "Suriname (+597)",
+    "phone_code": "+597",
+    "key": "SR"
+  },
+  {
+    "name": "Svalbard (+47)",
+    "phone_code": "+47",
+    "key": "SJ"
+  },
+  {
+    "name": "Swaziland (+268)",
+    "phone_code": "+268",
+    "key": "SZ"
+  },
+  {
+    "name": "Sweden (+46)",
+    "phone_code": "+46",
+    "key": "SE"
+  },
+  {
+    "name": "Switzerland (+41)",
+    "phone_code": "+41",
+    "key": "CH"
+  },
+  {
+    "name": "Syria (+963)",
+    "phone_code": "+963",
+    "key": "SY"
+  },
+  {
+    "name": "Taiwan (+886)",
+    "phone_code": "+886",
+    "key": "TW"
+  },
+  {
+    "name": "Tajikistan (+992)",
+    "phone_code": "+992",
+    "key": "TJ"
+  },
+  {
+    "name": "Tanzania (+255)",
+    "phone_code": "+255",
+    "key": "TZ"
+  },
+  {
+    "name": "Thailand (+66)",
+    "phone_code": "+66",
+    "key": "TH"
+  },
+  {
+    "name": "Timor-Leste (+670)",
+    "phone_code": "+670",
+    "key": "TL"
+  },
+  {
+    "name": "Togo (+228)",
+    "phone_code": "+228",
+    "key": "TG"
+  },
+  {
+    "name": "Tokelau (+690)",
+    "phone_code": "+690",
+    "key": "TK"
+  },
+  {
+    "name": "Tonga (+676)",
+    "phone_code": "+676",
+    "key": "TO"
+  },
+  {
+    "name": "Trinidad and Tobago (+1)",
+    "phone_code": "+1",
+    "key": "TT"
+  },
+  {
+    "name": "Tristan da Cunha (+290)",
+    "phone_code": "+290",
+    "key": "TA"
+  },
+  {
+    "name": "Tunisia (+216)",
+    "phone_code": "+216",
+    "key": "TN"
+  },
+  {
+    "name": "Turkey (+90)",
+    "phone_code": "+90",
+    "key": "TR"
+  },
+  {
+    "name": "Turkmenistan (+993)",
+    "phone_code": "+993",
+    "key": "TM"
+  },
+  {
+    "name": "Turks and Caicos Islands (+1)",
+    "phone_code": "+1",
+    "key": "TC"
+  },
+  {
+    "name": "Tuvalu (+688)",
+    "phone_code": "+688",
+    "key": "TV"
+  },
+  {
+    "name": "U.S. Outlying Islands (+1)",
+    "phone_code": "+1",
+    "key": "UM"
+  },
+  {
+    "name": "U.S. Virgin Islands (+1)",
+    "phone_code": "+1",
+    "key": "VI"
+  },
+  {
+    "name": "Uganda (+256)",
+    "phone_code": "+256",
+    "key": "UG"
+  },
+  {
+    "name": "Ukraine (+380)",
+    "phone_code": "+380",
+    "key": "UA"
+  },
+  {
+    "name": "United Arab Emirates (+971)",
+    "phone_code": "+971",
+    "key": "AE"
+  },
+  {
+    "name": "United Kingdom (+44)",
+    "phone_code": "+44",
+    "key": "UK"
+  },
+  {
+    "name": "United States (+1)",
+    "phone_code": "+1",
+    "key": "US"
+  },
+  {
+    "name": "Uruguay (+598)",
+    "phone_code": "+598",
+    "key": "UY"
+  },
+  {
+    "name": "Uzbekistan (+998)",
+    "phone_code": "+998",
+    "key": "UZ"
+  },
+  {
+    "name": "Vanuatu (+678)",
+    "phone_code": "+678",
+    "key": "VU"
+  },
+  {
+    "name": "Vatican City (+379)",
+    "phone_code": "+379",
+    "key": "VA"
+  },
+  {
+    "name": "Venezuela (+58)",
+    "phone_code": "+58",
+    "key": "VE"
+  },
+  {
+    "name": "Vietnam (+84)",
+    "phone_code": "+84",
+    "key": "VN"
+  },
+  {
+    "name": "Wallis and Futuna (+681)",
+    "phone_code": "+681",
+    "key": "WF"
+  },
+  {
+    "name": "Yemen (+967)",
+    "phone_code": "+967",
+    "key": "YE"
+  },
+  {
+    "name": "Zambia (+260)",
+    "phone_code": "+260",
+    "key": "ZM"
+  },
+  {
+    "name": "Zimbabwe (+263)",
+    "phone_code": "+263",
+    "key": "ZW"
+  }
+]

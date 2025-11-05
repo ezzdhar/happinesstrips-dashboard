@@ -1,0 +1,338 @@
+.modal-box-600 {
+    max-width: 600px !important;
+}
+
+.modal-box-650 {
+    max-width: 650px !important;
+}
+
+.modal-box-700 {
+    max-width: 700px !important;
+}
+
+.modal-box-750 {
+    max-width: 750px !important;
+}
+
+.modal-box-800 {
+    max-width: 800px !important;
+}
+
+.modal-box-850 {
+    max-width: 850px !important;
+}
+
+.fieldset-legend {
+    font-weight: bold;
+    font-size: 13px;
+    padding: 0;
+    margin-bottom: 5px !important;
+}
+
+/*.fieldset {*/
+/*    min-width: 250px !important;*/
+/*}*/
+
+.fl-wrapper {
+    z-index: 20000 !important;
+}
+
+.input:focus, .input:focus-within,
+.select:focus, .select:focus-within,
+.textarea:focus, .textarea:focus-within,
+.checkbox:focus, .checkbox:focus-within,
+.radio:focus, .radio:focus-within, .file-input:focus-within {
+    border: 2px solid #3b25c1 !important;
+    outline: 0 !important;
+}
+
+.customs-overlay-spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(255 255 255 / 12%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    user-select: none;
+}
+
+.customs-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+.bg-yellow-500 {
+    background-color: #f59e0b !important;
+    color: white;
+}
+
+.bg-green-500 {
+    background-color: #22c55e !important;
+    color: white;
+}
+
+.map-container {
+    width: 100%;
+    max-width: 900px; /* حد أقصى للعرض على الشاشات الكبيرة */
+    margin: 20px auto; /* لتوسيط الحاوية وإضافة هوامش رأسية */
+}
+
+/* اختياري: لتقليل ارتفاع الخريطة على الشاشات الصغيرة جدًا */
+@media (max-width: 600px) {
+    .map-container #regions_div {
+        height: 350px !important;
+    }
+}
+
+.loader {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 4px solid oklch(58.5% .233 277.117);
+    border-right: 4px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+.loader::after {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border-bottom: 4px solid oklch(58.5% .233 277.117);
+    border-left: 4px solid transparent;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.bg-blue-500 {
+    background-color: #3b25c1 !important;
+    color: white;
+}
+
+.badge {
+    white-space: nowrap;
+    color: white;
+}
+
+.text-secondary {
+    color: #6c757d !important;
+}
+
+.text-warning {
+    color: #ffc107 !important;
+}
+
+.text-success {
+    color: #198754 !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+.text-info {
+    color: #0dcaf0 !important;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.text-orange-500 {
+    color: #f59e0b !important;
+}
+
+.text-blue-500 {
+    color: #3b25c1 !important;
+}
+
+.trix-content ol {
+    list-style-type: decimal;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+}
+
+.trix-content ul {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+}
+
+.sun-editor {
+    width: 100% !important;
+}
+
+.se-wrapper-inner {
+    min-height: 300px !important;
+}
+
+.sun-editor-editable[dir="rtl"] ul,
+.sun-editor-editable[dir="rtl"] ol {
+    direction: rtl; /* هذه هي القاعدة الأهم لضبط اتجاه القائمة */
+    list-style-position: outside; /* يضمن أن تكون العلامات خارج كتلة النص */
+    padding-right: 40px; /* ننقل المسافة البادئة الافتراضية إلى اليمين */
+    padding-left: 0;
+}
+
+.sun-editor-editable[dir="rtl"] li {
+    text-align: right; /* يضمن محاذاة النص داخل كل عنصر في القائمة لليمين */
+}
+
+/* باقي الـ CSS الخاص بالـ Loader نفسه وبحركة الدوران كما هو */
+.loader {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 4px solid #4F46E5; /* لون Indigo 600 */
+    border-right: 4px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+.loader-overlay {
+    position: fixed; /* لتثبيته في الشاشة */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* تم التعديل هنا: خلفية شبه معتمة (80% عتامة) */
+    display: flex; /* لمركزة اللودر في المنتصف */
+    justify-content: center; /* لمركزة اللودر أفقياً */
+    align-items: center; /* لمركزة اللودر رأسياً */
+    z-index: 9999; /* لضمان ظهوره فوق كل العناصر الأخرى */
+    transition: opacity 0.3s ease-in-out; /* لجعل عملية الإخفاء سلسة */
+}
+
+.loader::after {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border-left: 4px solid #9333EA; /* لون Pink 600 */
+    border-bottom: 4px solid transparent;
+    animation: rotation 0.5s linear infinite reverse;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+/* تحسين مظهر intl-tel-input */
+.iti {
+    display: block;
+    width: 100%;
+}
+
+.iti__input,
+.iti__tel-input {
+    width: 100% !important;
+}
+
+/* تطبيق نفس أنماط DaisyUI للـ input */
+.iti__tel-input {
+    @apply input input-bordered w-full;
+}
+
+.iti__tel-input:focus {
+    border: 2px solid #3b25c1 !important;
+    outline: 0 !important;
+}
+
+/* تحسين مظهر قائمة الدول */
+.iti__country-list {
+    max-height: 200px;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.iti__country {
+    padding: 8px 12px;
+}
+
+.iti__selected-country {
+    padding: 0 8px;
+}
+
+/* تحسين عرض علم الدولة ورمز الاتصال */
+.iti__selected-dial-code {
+    margin-left: 6px;
+}
+
+/* دعم RTL */
+[dir="rtl"] .iti__selected-dial-code {
+    margin-left: 0;
+    margin-right: 6px;
+}
+
+/* تحسين المظهر في حالة الـ disabled */
+.iti__tel-input:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* تحسين الحدود عند التركيز */
+.iti--container:focus-within {
+    outline: none;
+}
+
+/* تحسين مظهر السهم */
+.iti__arrow {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #6b7280;
+}
+
+/* تحسين الـ placeholder */
+.iti__tel-input::placeholder {
+    color: #9ca3af;
+    opacity: 0.7;
+}
+
+/* توافق أفضل مع الـ grid */
+.form-control .iti {
+    width: 100%;
+}
+
+/* تحسين المظهر على الشاشات الصغيرة */
+@media (max-width: 640px) {
+    .iti__country-list {
+        max-height: 150px;
+    }
+
+    .iti__selected-country {
+        padding: 0 6px;
+    }
+}

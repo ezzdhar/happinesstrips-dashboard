@@ -1,0 +1,92 @@
+/* Phone Input Component Styles with intl-tel-input */
+
+/* Additional custom styles for intl-tel-input with DaisyUI */
+.iti {
+    display: block;
+}
+
+/* Ensure proper z-index for dropdown */
+.iti__country-list {
+    z-index: 1000;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+    .iti__country-list {
+        max-height: 180px;
+        font-size: 0.875rem;
+    }
+
+    .phone-input-field {
+        font-size: 1rem; /* Prevent zoom on iOS */
+    }
+}
+
+/* Tablet responsive */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .iti__country-list {
+        max-height: 220px;
+    }
+}
+
+/* Loading state */
+.phone-input-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Error state styling */
+.has-error .phone-input-field {
+    border-color: hsl(var(--er));
+}
+
+.has-error .iti__selected-flag {
+    border-color: hsl(var(--er));
+}
+
+/* Success state styling */
+.has-success .phone-input-field {
+    border-color: hsl(var(--su));
+}
+
+/* Focus state enhancement */
+.phone-input-field:focus {
+    outline: 2px solid hsl(var(--p));
+    outline-offset: 2px;
+}
+
+/* Disabled state */
+.phone-input-field:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.iti--disabled .iti__selected-flag {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Smooth transitions */
+.iti__country-list,
+.iti__selected-flag {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Scrollbar styling for dropdown */
+.iti__country-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.iti__country-list::-webkit-scrollbar-track {
+    background: hsl(var(--b2));
+}
+
+.iti__country-list::-webkit-scrollbar-thumb {
+    background: hsl(var(--bc) / 0.2);
+    border-radius: 3px;
+}
+
+.iti__country-list::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--bc) / 0.3);
+}
+

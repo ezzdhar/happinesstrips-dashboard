@@ -1,0 +1,742 @@
+[
+    {
+        "english": "Algiers",
+        "arabic": "الجزائر",
+        "chinese": "阿尔及尔"
+    },
+    {
+        "english": "Constantine",
+        "arabic": "قسنطينة",
+        "chinese": "康斯坦丁"
+    },
+    {
+        "english": "Batna",
+        "arabic": "باتنة",
+        "chinese": "巴特纳"
+    },
+    {
+        "english": "Sétif",
+        "arabic": "سطيف",
+        "chinese": "赛提夫"
+    },
+    {
+        "english": "Djelfa",
+        "arabic": "جلفة",
+        "chinese": "杰尔法"
+    },
+    {
+        "english": "Annaba",
+        "arabic": "عنابة",
+        "chinese": "安纳巴"
+    },
+    {
+        "english": "Sidi Aïssa",
+        "arabic": "سيدي عيسى",
+        "chinese": "西迪阿伊萨"
+    },
+    {
+        "english": "Sidi Bel Abbès",
+        "arabic": "سيدي بلعباس",
+        "chinese": "西迪贝尔阿贝斯"
+    },
+    {
+        "english": "Biskra",
+        "arabic": "بسكرة",
+        "chinese": "比斯克拉"
+    },
+    {
+        "english": "Tébessa",
+        "arabic": "تبسة",
+        "chinese": "特贝萨"
+    },
+    {
+        "english": "Ouargla",
+        "arabic": "ورقلة",
+        "chinese": "瓦尔格拉"
+    },
+    {
+        "english": "El Khroub",
+        "arabic": "الخروب",
+        "chinese": "埃尔赫鲁布"
+    },
+    {
+        "english": "Tiaret",
+        "arabic": "تيارت",
+        "chinese": "蒂亚雷特"
+    },
+    {
+        "english": "Bejaïa",
+        "arabic": "بجاية",
+        "chinese": "贝贾伊"
+    },
+    {
+        "english": "Tlemcen",
+        "arabic": "تلمسان",
+        "chinese": "特莱姆森"
+    },
+    {
+        "english": "Bir el Djir",
+        "arabic": "بير الجير",
+        "chinese": "比尔艾尔吉尔"
+    },
+    {
+        "english": "Bordj Bou Arreridj",
+        "arabic": "برج بوعريريج",
+        "chinese": "博尔日布阿里里吉"
+    },
+    {
+        "english": "Béchar",
+        "arabic": "بشار",
+        "chinese": "贝夏尔"
+    },
+    {
+        "english": "Blida",
+        "arabic": "البليدة",
+        "chinese": "布利达"
+    },
+    {
+        "english": "Skikda",
+        "arabic": "سكيكدة",
+        "chinese": "斯基克达"
+    },
+    {
+        "english": "Souk Ahras",
+        "arabic": "سوق أهراس",
+        "chinese": "苏克阿赫拉斯"
+    },
+    {
+        "english": "Chlef",
+        "arabic": "الشلف",
+        "chinese": "舍尔夫"
+    },
+    {
+        "english": "El Eulma",
+        "arabic": "العلمة",
+        "chinese": "埃尔尤尔马"
+    },
+    {
+        "english": "Bordj el Kiffan",
+        "arabic": "برج الكيفان",
+        "chinese": "博尔日凯凡"
+    },
+    {
+        "english": "Mostaganem",
+        "arabic": "مستغانم",
+        "chinese": "穆斯塔甘姆"
+    },
+    {
+        "english": "Touggourt",
+        "arabic": "تڤرت",
+        "chinese": "图格尔特"
+    },
+    {
+        "english": "Médéa",
+        "arabic": "المدية",
+        "chinese": "梅迪亚"
+    },
+    {
+        "english": "Tizi Ouzou",
+        "arabic": "تيزي وزو",
+        "chinese": "季兹乌祖"
+    },
+    {
+        "english": "El Oued",
+        "arabic": "الوادي",
+        "chinese": "厄尔瓦德"
+    },
+    {
+        "english": "Laghouat",
+        "arabic": "الأغواط",
+        "chinese": "拉格瓦特"
+    },
+    {
+        "english": "M’Sila",
+        "arabic": "مسيلة",
+        "chinese": "米西拉"
+    },
+    {
+        "english": "Jijel",
+        "arabic": "جيجل",
+        "chinese": "吉杰尔"
+    },
+    {
+        "english": "Relizane",
+        "arabic": "ريليزي",
+        "chinese": "雷利赞"
+    },
+    {
+        "english": "Saïda",
+        "arabic": "سعيدة",
+        "chinese": "萨伊达"
+    },
+    {
+        "english": "Baraki",
+        "arabic": "باركي",
+        "chinese": "巴拉基"
+    },
+    {
+        "english": "Guelma",
+        "arabic": "قالمة",
+        "chinese": "盖尔马"
+    },
+    {
+        "english": "Ghardaïa",
+        "arabic": "غرداية",
+        "chinese": "加尔达亚"
+    },
+    {
+        "english": "Aïn Beïda",
+        "arabic": "عين البيضاء",
+        "chinese": "阿因贝达"
+    },
+    {
+        "english": "Maghnia",
+        "arabic": "مغنية",
+        "chinese": "马格尼亚"
+    },
+    {
+        "english": "Bou Saâda",
+        "arabic": "بو سعادة",
+        "chinese": "布萨阿达"
+    },
+    {
+        "english": "Bou Saada",
+        "arabic": "بو سعادة",
+        "chinese": "布萨阿达"
+    },
+    {
+        "english": "Mascara",
+        "arabic": "معسكر",
+        "chinese": "马斯卡拉"
+    },
+    {
+        "english": "Khenchela",
+        "arabic": "خنشلة",
+        "chinese": "肯沙拉"
+    },
+    {
+        "english": "Barika",
+        "arabic": "بارقة",
+        "chinese": "巴里卡"
+    },
+    {
+        "english": "Messaad",
+        "arabic": "مساعد",
+        "chinese": "梅萨阿德"
+    },
+    {
+        "english": "Aflou",
+        "arabic": "أفلو",
+        "chinese": "阿夫卢"
+    },
+    {
+        "english": "Aïn Oussera",
+        "arabic": "عين وسارة",
+        "chinese": "阿因乌萨拉"
+    },
+    {
+        "english": "Oran",
+        "arabic": "وهران",
+        "chinese": "奥兰"
+    },
+    {
+        "english": "Es Senia",
+        "arabic": "السنات",
+        "chinese": "埃斯塞尼亚"
+    },
+    {
+        "english": "Bab Ezzouar",
+        "arabic": "باب الزوار",
+        "chinese": "巴布埃祖瓦尔"
+    },
+    {
+        "english": "Tamanrasset",
+        "arabic": "تمنراست",
+        "chinese": "塔曼拉塞特"
+    },
+    {
+        "english": "Arzew",
+        "arabic": "أرزيو",
+        "chinese": "阿尔泽乌"
+    },
+    {
+        "english": "Aïn M’Lila",
+        "arabic": "عين مليلة",
+        "chinese": "阿因梅利拉"
+    },
+    {
+        "english": "El Bayadh",
+        "arabic": "البيض",
+        "chinese": "贝贾德"
+    },
+    {
+        "english": "Mohammadia",
+        "arabic": "محمدية",
+        "chinese": "穆罕默迪亚"
+    },
+    {
+        "english": "Khemis Miliana",
+        "arabic": "خميس مليانة",
+        "chinese": "赫梅斯米利亚娜"
+    },
+    {
+        "english": "Hamma Bouziane",
+        "arabic": "حمام بوزيان",
+        "chinese": "哈马布齐安"
+    },
+    {
+        "english": "Dar el Beïda",
+        "arabic": "دار البيضاء",
+        "chinese": "达尔白色"
+    },
+    {
+        "english": "Oum el Bouaghi",
+        "arabic": "أم البواقي",
+        "chinese": "乌姆博阿基"
+    },
+    {
+        "english": "Taher",
+        "arabic": "طاهير",
+        "chinese": "塔赫尔"
+    },
+    {
+        "english": "Birkhadem",
+        "arabic": "بركادام",
+        "chinese": "比尔哈德姆"
+    },
+    {
+        "english": "Khemis el Khechna",
+        "arabic": "خميس الخشنة",
+        "chinese": "赫梅斯凯赫纳"
+    },
+    {
+        "english": "Aïn Temouchent",
+        "arabic": "عين تيموشنت",
+        "chinese": "阿因泰穆申特"
+    },
+    {
+        "english": "Tissemsilt",
+        "arabic": "تيسمسيلت",
+        "chinese": "蒂塞姆西尔特"
+    },
+    {
+        "english": "Sig",
+        "arabic": "سيق",
+        "chinese": "西克"
+    },
+    {
+        "english": "Mila",
+        "arabic": "ميلة",
+        "chinese": "米拉"
+    },
+    {
+        "english": "Bouira",
+        "arabic": "البويرة",
+        "chinese": "布韦拉"
+    },
+    {
+        "english": "Adrar",
+        "arabic": "أدرار",
+        "chinese": "阿德拉尔"
+    },
+    {
+        "english": "Ksar el Boukhari",
+        "arabic": "قصر البخاري",
+        "chinese": "布赫里宫"
+    },
+    {
+        "english": "Reghaïa",
+        "arabic": "الرايج",
+        "chinese": "雷加伊"
+    },
+    {
+        "english": "Aïn Defla",
+        "arabic": "عين الدفلى",
+        "chinese": "阿因德夫拉"
+    },
+    {
+        "english": "Bordj Menaïel",
+        "arabic": "برج منايل",
+        "chinese": "博尔日梅奈尔"
+    },
+    {
+        "english": "Oued Rhiou",
+        "arabic": "وادي ريحان",
+        "chinese": "瓦迪里胡"
+    },
+    {
+        "english": "Assi Bou Nif",
+        "arabic": "عصي بونيف",
+        "chinese": "阿西布尼夫"
+    },
+    {
+        "english": "Ouled Djellal",
+        "arabic": "أولاد جلال",
+        "chinese": "乌莱德贾拉尔"
+    },
+    {
+        "english": "Tighenif",
+        "arabic": "تيغنيف",
+        "chinese": "提赫尼夫"
+    },
+    {
+        "english": "Rouiba",
+        "arabic": "الرويبة",
+        "chinese": "鲁伊巴"
+    },
+    {
+        "english": "Kolea",
+        "arabic": "القل",
+        "chinese": "科莱阿"
+    },
+    {
+        "english": "Baba Hassen",
+        "arabic": "بابا حسن",
+        "chinese": "巴巴哈森"
+    },
+    {
+        "english": "Lakhdaria",
+        "arabic": "الأخضرية",
+        "chinese": "拉赫达里亚"
+    },
+    {
+        "english": "Sidi ech Chahmi",
+        "arabic": "سيدي الشحمي",
+        "chinese": "西迪沙赫米"
+    },
+    {
+        "english": "El Attaf",
+        "arabic": "العطاف",
+        "chinese": "埃尔阿塔夫"
+    },
+    {
+        "english": "Boufarik",
+        "arabic": "بوفاريك",
+        "chinese": "布法里克"
+    },
+    {
+        "english": "Boudouaou",
+        "arabic": "بودواو",
+        "chinese": "布杜阿乌"
+    },
+    {
+        "english": "Oulad Yaïch",
+        "arabic": "أولاد يحي",
+        "chinese": "乌莱德雅依赫"
+    },
+    {
+        "english": "Ksar Chellala",
+        "arabic": "قصر الشلالة",
+        "chinese": "谢拉拉宫"
+    },
+    {
+        "english": "Akbou",
+        "arabic": "أكبو",
+        "chinese": "阿克布"
+    },
+    {
+        "english": "Zeralda",
+        "arabic": "زرالدة",
+        "chinese": "泽拉尔达"
+    },
+    {
+        "english": "Aïn Merane",
+        "arabic": "عين مران",
+        "chinese": "阿因梅兰"
+    },
+    {
+        "english": "Aïn el Turk",
+        "arabic": "عين الترك",
+        "chinese": "阿因特尔克"
+    },
+    {
+        "english": "Saoula",
+        "arabic": "سول",
+        "chinese": "索拉"
+    },
+    {
+        "english": "El Meghaïer",
+        "arabic": "المغايّر",
+        "chinese": "梅加赫"
+    },
+    {
+        "english": "Oued Sly",
+        "arabic": "وادي سلي",
+        "chinese": "瓦迪斯利"
+    },
+    {
+        "english": "Douera",
+        "arabic": "دويرة",
+        "chinese": "杜埃拉"
+    },
+    {
+        "english": "Ouled Moussa",
+        "arabic": "أولاد موسى",
+        "chinese": "乌莱德穆萨"
+    },
+    {
+        "english": "Tindouf",
+        "arabic": "تندوف",
+        "chinese": "廷杜夫"
+    },
+    {
+        "english": "Miliana",
+        "arabic": "مليانة",
+        "chinese": "米利亚娜"
+    },
+    {
+        "english": "Beni Saf",
+        "arabic": "بني صاف",
+        "chinese": "贝尼萨夫"
+    },
+    {
+        "english": "El Affroun",
+        "arabic": "العفروان",
+        "chinese": "埃尔阿夫鲁"
+    },
+    {
+        "english": "Oued Fodda",
+        "arabic": "وادي فودا",
+        "chinese": "瓦迪福达"
+    },
+    {
+        "english": "Boumerdes",
+        "arabic": "بومرداس",
+        "chinese": "布梅尔德斯"
+    },
+    {
+        "english": "Meftah",
+        "arabic": "مفتاح",
+        "chinese": "梅夫塔赫"
+    },
+    {
+        "english": "Sidi Moussa",
+        "arabic": "سيدي موسى",
+        "chinese": "西迪穆萨"
+    },
+    {
+        "english": "El Golea",
+        "arabic": "الغول",
+        "chinese": "埃尔古尔"
+    },
+    {
+        "english": "Magra",
+        "arabic": "مقره",
+        "chinese": "马格拉"
+    },
+    {
+        "english": "Staoueli",
+        "arabic": "الستوالى",
+        "chinese": "斯陶埃利"
+    },
+    {
+        "english": "Draa el Mizan",
+        "arabic": "ذراع الميزان",
+        "chinese": "德拉梅赞"
+    },
+    {
+        "english": "Emîr Abdelkader",
+        "arabic": "الأمير عبد القادر",
+        "chinese": "阿米尔阿卜杜勒卡德尔"
+    },
+    {
+        "english": "Bougara",
+        "arabic": "بوغار",
+        "chinese": "布加拉"
+    },
+    {
+        "english": "Souma",
+        "arabic": "سوم",
+        "chinese": "索马"
+    },
+    {
+        "english": "Ouled Beni Messous",
+        "arabic": "أولاد بني مسوس",
+        "chinese": "乌莱德贝尼梅苏斯"
+    },
+    {
+        "english": "Collo",
+        "arabic": "قالو",
+        "chinese": "科洛"
+    },
+    {
+        "english": "Tebesbest",
+        "arabic": "تنبست",
+        "chinese": "特贝斯贝斯特"
+    },
+    {
+        "english": "Aïn Taya",
+        "arabic": "عين طاية",
+        "chinese": "阿因塔亚"
+    },
+    {
+        "english": "Beni Tamou",
+        "arabic": "بني تموشنت",
+        "chinese": "贝尼塔穆"
+    },
+    {
+        "english": "Ghazaouet",
+        "arabic": "غزوات",
+        "chinese": "加扎乌特"
+    },
+    {
+        "english": "Didouche Mourad",
+        "arabic": "ديدوش مراد",
+        "chinese": "迪杜什穆拉德"
+    },
+    {
+        "english": "El Arrouch",
+        "arabic": "العروشي",
+        "chinese": "艾尔阿鲁奇"
+    },
+    {
+        "english": "Timimoun",
+        "arabic": "تيميمون",
+        "chinese": "提米蒙"
+    },
+    {
+        "english": "Aïn el Bya",
+        "arabic": "عين البيضاء",
+        "chinese": "阿因比亚"
+    },
+    {
+        "english": "I-n-Salah",
+        "arabic": "عين صالح",
+        "chinese": "艾因萨拉赫"
+    },
+    {
+        "english": "Bougaa",
+        "arabic": "بوغاء",
+        "chinese": "布加"
+    },
+    {
+        "english": "Draa Ben Khedda",
+        "arabic": "ذراع بن خدة",
+        "chinese": "德拉本赫达"
+    },
+    {
+        "english": "Boghni",
+        "arabic": "بغني",
+        "chinese": "博赫尼"
+    },
+    {
+        "english": "Birtouta",
+        "arabic": "برج البحري",
+        "chinese": "比尔图塔"
+    },
+    {
+        "english": "Chabet el Ameur",
+        "arabic": "شابة العامر",
+        "chinese": "查贝阿美尔"
+    },
+    {
+        "english": "Tizi Gheniff",
+        "arabic": "تيزي غنيف",
+        "chinese": "蒂济格内夫"
+    },
+    {
+        "english": "L’Arbaa Naït Irathen",
+        "arabic": "الأربعاء ناث إيراثن",
+        "chinese": "阿尔巴纳伊特伊拉森"
+    },
+    {
+        "english": "Ouled Haddaj",
+        "arabic": "أولاد حداج",
+        "chinese": "乌莱德哈达吉"
+    },
+    {
+        "english": "Tazmalt",
+        "arabic": "تازمالت",
+        "chinese": "塔兹马尔特"
+    },
+    {
+        "english": "Mouzaïa",
+        "arabic": "موزاية",
+        "chinese": "穆扎伊亚"
+    },
+    {
+        "english": "Sidi Lakhdar",
+        "arabic": "سيدي لخضر",
+        "chinese": "西迪拉赫德"
+    },
+    {
+        "english": "Isser",
+        "arabic": "إيسر",
+        "chinese": "伊瑟尔"
+    },
+    {
+        "english": "Bordj el Bahri",
+        "arabic": "برج البحري",
+        "chinese": "博尔日巴赫里"
+    },
+    {
+        "english": "Ouled Fayet",
+        "arabic": "أولاد فايت",
+        "chinese": "乌莱德法耶特"
+    },
+    {
+        "english": "Ouled Slama Tahta",
+        "arabic": "أولاد سلامة تحت",
+        "chinese": "乌莱德斯拉马塔赫塔"
+    },
+    {
+        "english": "El Abadia",
+        "arabic": "العبادية",
+        "chinese": "阿尔阿巴迪亚"
+    },
+    {
+        "english": "Zemmouri",
+        "arabic": "زمرودي",
+        "chinese": "泽穆里"
+    },
+    {
+        "english": "Kaous",
+        "arabic": "كاوس",
+        "chinese": "卡乌斯"
+    },
+    {
+        "english": "El Tarf",
+        "arabic": "الطارف",
+        "chinese": "埃尔塔尔夫"
+    },
+    {
+        "english": "Tipasa",
+        "arabic": "تيبازة",
+        "chinese": "蒂帕萨"
+    },
+    {
+        "english": "Beni Amrane",
+        "arabic": "بني عمران",
+        "chinese": "贝尼阿姆兰"
+    },
+    {
+        "english": "Illizi",
+        "arabic": "إليزي",
+        "chinese": "伊利齐"
+    },
+    {
+        "english": "Bordj Mokhtar",
+        "arabic": "برج مختار",
+        "chinese": "博尔日莫赫塔"
+    },
+    {
+        "english": "Naama",
+        "arabic": "نعامة",
+        "chinese": "纳阿马"
+    },
+    {
+        "english": "Djanet",
+        "arabic": "جانت",
+        "chinese": "贾内特"
+    },
+    {
+        "english": "Beni Abbès",
+        "arabic": "بني عباس",
+        "chinese": "贝尼阿巴斯"
+    },
+    {
+        "english": "In Guezzam",
+        "arabic": "إن قزام",
+        "chinese": "因吉扎姆"
+    }
+]
