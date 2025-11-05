@@ -15,4 +15,7 @@
 	@can('show_sub_category')
 		<x-menu-item noWireNavigate title="{{__('lang.sub_categories')}}" icon="o-squares-2x2" link="{{route('sub-categories')}}"/>
 	@endcan
+	@can('show_city')
+		<x-menu-item noWireNavigate title="{{__('lang.cities')}}" icon="o-map-pin" link="{{route('cities')}}"/>
+	@endcan
 </x-menu>

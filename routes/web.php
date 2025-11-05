@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LanguageController;
+use App\Livewire\Dashboard\City\CityData;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Dashboard\Employee\EmployeeData;
 use App\Livewire\Dashboard\MainCategory\MainCategoryData;
@@ -20,7 +21,9 @@ Route::get('test', function (){
 
 Route::middleware(['web-language'])->group(function () {
     Route::get('web-language/{lang}', LanguageController::class)->name('web-language');
-    Route::view('/', 'welcome')->name('home');
+    Route::get('/', function (){
+		return to_route('login');
+    })->name('home');
 
     //authentication routes
     Route::middleware(['auth', 'verified'])->group(function () {
@@ -31,6 +34,7 @@ Route::middleware(['web-language'])->group(function () {
 	    Route::get('roles', RoleData::class)->name('roles')->middleware('permission:show_role');// roles
 	    Route::get('main-categories', MainCategoryData::class)->name('main-categories')->middleware('permission:show_main_category'); // main categories
 	    Route::get('sub-categories', SubCategoryData::class)->name('sub-categories')->middleware('permission:show_sub_category'); // sub categories
+	    Route::get('cities', CityData::class)->name('cities')->middleware('permission:show_city'); // cities
     });
 
     // guest routes

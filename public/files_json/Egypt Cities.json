@@ -15,104 +15,89 @@
         "chinese": "亚历山大"
     },
     {
-        "english": "Shubrā al Khaymah",
-        "arabic": "شبرا الخيمة",
-        "chinese": "舒布拉哈凯马"
+        "english": "Luxor",
+        "arabic": "الأقصر",
+        "chinese": "卢克索"
     },
     {
-        "english": "Sinnūris",
-        "arabic": "سنبريس",
-        "chinese": "辛努里斯"
+        "english": "Aswan",
+        "arabic": "أسوان",
+        "chinese": "阿斯旺"
     },
     {
-        "english": "Al Manşūrah",
-        "arabic": "المنصورة",
-        "chinese": "曼苏拉"
+        "english": "Hurghada",
+        "arabic": "الغردقة",
+        "chinese": "赫尔格达"
     },
     {
-        "english": "Ḩalwān",
-        "arabic": "حلوان",
-        "chinese": "哈卢万"
+        "english": "Sharm El Sheikh",
+        "arabic": "شرم الشيخ",
+        "chinese": "沙姆沙伊赫"
     },
     {
-        "english": "Al Maḩallah al Kubrá",
-        "arabic": "المحلة الكبرى",
-        "chinese": "大马哈拉"
+        "english": "Marsa Alam",
+        "arabic": "مرسى علم",
+        "chinese": "马尔萨阿拉姆"
     },
     {
-        "english": "Shibīn al Qanāṭir",
-        "arabic": "شبين القناطر",
-        "chinese": "希宾卡纳特尔"
+        "english": "Dahab",
+        "arabic": "دهب",
+        "chinese": "达哈卜"
     },
     {
-        "english": "Al Fayyūm",
+        "english": "Nuweiba",
+        "arabic": "نويبع",
+        "chinese": "努韦巴"
+    },
+    {
+        "english": "Taba",
+        "arabic": "طابا",
+        "chinese": "塔巴"
+    },
+    {
+        "english": "Saint Catherine",
+        "arabic": "سانت كاترين",
+        "chinese": "圣凯瑟琳"
+    },
+    {
+        "english": "Siwa Oasis",
+        "arabic": "واحة سيوة",
+        "chinese": "西瓦绿洲"
+    },
+    {
+        "english": "Faiyum",
         "arabic": "الفيوم",
         "chinese": "费尤姆"
     },
     {
-        "english": "Akhmīm",
-        "arabic": "اخميم",
-        "chinese": "阿赫敏"
+        "english": "Ras Sedr",
+        "arabic": "رأس سدر",
+        "chinese": "拉斯塞德尔"
     },
     {
-        "english": "Al Marāghah",
-        "arabic": "المراغة",
-        "chinese": "马拉哈"
+        "english": "Ain Sokhna",
+        "arabic": "العين السخنة",
+        "chinese": "艾因苏赫纳"
     },
     {
-        "english": "Ţanţā",
-        "arabic": "طنطا",
-        "chinese": "坦塔"
+        "english": "El Alamein",
+        "arabic": "العلمين",
+        "chinese": "阿拉曼"
     },
     {
-        "english": "Awsīm",
-        "arabic": "أوسيم",
-        "chinese": "奥西姆"
+        "english": "Marsa Matruh",
+        "arabic": "مرسى مطروح",
+        "chinese": "马特鲁"
     },
     {
-        "english": "Asyūţ",
-        "arabic": "أسيوط",
-        "chinese": "阿斯尤特"
+        "english": "Siwa",
+        "arabic": "سيوة",
+        "chinese": "西瓦"
     },
     {
-        "english": "Az Zaqāzīq",
-        "arabic": "الزقازيق",
-        "chinese": "扎卡齐克"
-    },
-    {
-        "english": "Al ‘Ajamī",
-        "arabic": "العجمي",
-        "chinese": "阿贾米"
-    },
-    {
-        "english": "Shibīn al Kawm",
-        "arabic": "شبين الكوم",
-        "chinese": "希宾阿尔库姆"
-    },
-    {
-        "english": "Râs el-Barr",
-        "arabic": "راس البر",
+        "english": "Ras El Bar",
+        "arabic": "رأس البر",
         "chinese": "拉斯艾尔巴尔"
-    },
-    {
-        "english": "Al ‘Āshir min Ramaḑān",
-        "arabic": "العاشر من رمضان",
-        "chinese": "拉马丹十号"
-    },
-    {
-        "english": "Damanhūr",
-        "arabic": "دمنهور",
-        "chinese": "德曼霍尔"
-    },
-    {
-        "english": "Al Minyā",
-        "arabic": "المنيا",
-        "chinese": "明亚"
-    },
-    {
-        "english": "Mallawī",
-        "arabic": "ملوي",
-        "chinese": "马卢维"
     },
     {
         "english": "Damietta",
@@ -120,163 +105,73 @@
         "chinese": "达米埃塔"
     },
     {
-        "english": "Qinā",
+        "english": "Port Said",
+        "arabic": "بورسعيد",
+        "chinese": "塞得港"
+    },
+    {
+        "english": "Ismailia",
+        "arabic": "الإسماعيلية",
+        "chinese": "伊斯梅利亚"
+    },
+    {
+        "english": "Suez",
+        "arabic": "السويس",
+        "chinese": "苏伊士"
+    },
+    {
+        "english": "Abu Simbel",
+        "arabic": "أبو سمبل",
+        "chinese": "阿布辛贝"
+    },
+    {
+        "english": "Qena",
         "arabic": "قنا",
         "chinese": "基纳"
     },
     {
-        "english": "Banī Suwayf",
+        "english": "Dakhla Oasis",
+        "arabic": "الواحة الداخلة",
+        "chinese": "达赫莱绿洲"
+    },
+    {
+        "english": "Kharga Oasis",
+        "arabic": "الواحة الخارجة",
+        "chinese": "哈尔加绿洲"
+    },
+    {
+        "english": "Farafra Oasis",
+        "arabic": "الواحة الفرافرة",
+        "chinese": "法拉夫拉绿洲"
+    },
+    {
+        "english": "Bawiti (Bahariya Oasis)",
+        "arabic": "الواحة البحرية",
+        "chinese": "巴哈里亚绿洲"
+    },
+    {
+        "english": "El Quseir",
+        "arabic": "القصير",
+        "chinese": "库赛尔"
+    },
+    {
+        "english": "Safaga",
+        "arabic": "سفاجا",
+        "chinese": "萨法加"
+    },
+    {
+        "english": "Minya",
+        "arabic": "المنيا",
+        "chinese": "明亚"
+    },
+    {
+        "english": "Beni Suef",
         "arabic": "بني سويف",
         "chinese": "贝尼苏维夫"
     },
     {
-        "english": "Banhā",
-        "arabic": "بنها",
-        "chinese": "本哈"
-    },
-    {
-        "english": "Qalyūb",
-        "arabic": "قليوب",
-        "chinese": "卡利尤布"
-    },
-    {
-        "english": "Kafr ash Shaykh",
-        "arabic": "كفر الشيخ",
-        "chinese": "卡夫尔谢赫"
-    },
-    {
-        "english": "Disūq",
-        "arabic": "دسوق",
-        "chinese": "迪苏克"
-    },
-    {
-        "english": "Mīt Ghamr",
-        "arabic": "ميت غمر",
-        "chinese": "米特加姆尔"
-    },
-    {
-        "english": "Munūf",
-        "arabic": "منوف",
-        "chinese": "穆诺夫"
-    },
-    {
-        "english": "Fāqūs",
-        "arabic": "فاقوس",
-        "chinese": "法库斯"
-    },
-    {
-        "english": "Jirjā",
-        "arabic": "جرجا",
-        "chinese": "吉尔贾"
-    },
-    {
-        "english": "Al Badrashayn",
-        "arabic": "البدرشين",
-        "chinese": "巴德拉辛"
-    },
-    {
-        "english": "Ibshawāy",
-        "arabic": "إبشواي",
-        "chinese": "伊布肖维"
-    },
-    {
-        "english": "Al Khānkah",
-        "arabic": "الخانكة",
-        "chinese": "哈恩卡"
-    },
-    {
-        "english": "‘Izbat al Burj",
-        "arabic": "عزبة البرج",
-        "chinese": "伊兹巴特阿尔布尔吉"
-    },
-    {
-        "english": "Kirdāsah",
-        "arabic": "كرداسة",
-        "chinese": "基尔达萨"
-    },
-    {
-        "english": "Abnūb",
-        "arabic": "ابنوب",
-        "chinese": "阿布努布"
-    },
-    {
-        "english": "Al Minshāh",
-        "arabic": "المنشأة",
-        "chinese": "曼沙"
-    },
-    {
-        "english": "Al Qurayn",
-        "arabic": "القُرَيْن",
-        "chinese": "库兰"
-    },
-    {
-        "english": "Abū Za‘bal",
-        "arabic": "أبو زعبل",
-        "chinese": "阿布扎比"
-    },
-    {
-        "english": "Al Balyanā",
-        "arabic": "الباليان",
-        "chinese": "巴利亚"
-    },
-    {
-        "english": "Al ‘Ayyāţ",
-        "arabic": "العياط",
-        "chinese": "阿亚特"
-    },
-    {
-        "english": "Al Badārī",
-        "arabic": "البدارى",
-        "chinese": "巴达里"
-    },
-    {
-        "english": "Kafr al Kurdī",
-        "arabic": "كفر الكردى",
-        "chinese": "卡夫尔库尔迪"
-    },
-    {
-        "english": "Abū Qīr",
-        "arabic": "أبو قير",
-        "chinese": "阿布基尔"
-    },
-    {
-        "english": "Qahā",
-        "arabic": "قها",
-        "chinese": "卡哈"
-    },
-    {
-        "english": "Al Karnak",
-        "arabic": "الكَرْنَك",
-        "chinese": "卡尔纳克"
-    },
-    {
-        "english": "Kafr Shukr",
-        "arabic": "كفر شكر",
-        "chinese": "卡夫尔舒克尔"
-    },
-    {
-        "english": "Mīt Namā",
-        "arabic": "ميت نما",
-        "chinese": "米特纳马"
-    },
-    {
-        "english": "Banī Murr",
-        "arabic": "بني مِرّ",
-        "chinese": "贝尼穆尔"
-    },
-    {
-        "english": "Al Madāmūd",
-        "arabic": "المعدّم",
-        "chinese": "马达姆德"
-    },
-    {
-        "english": "Birqāsh",
-        "arabic": "برقاش",
-        "chinese": "比尔卡什"
-    },
-    {
-        "english": "Kafr Ţaḩlah",
-        "arabic": "كفر طهلة",
-        "chinese": "卡夫尔塔哈"
+        "english": "Wadi El Natroun",
+        "arabic": "وادي النطرون",
+        "chinese": "瓦迪纳特龙"
     }
 ]
