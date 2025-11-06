@@ -118,7 +118,7 @@ class CreateHotel extends Component
 		];
 	}
 
-	public function saveAdd(): void
+	public function saveAdd()
 	{
 		$this->validate();
 
@@ -158,10 +158,7 @@ class CreateHotel extends Component
 				]);
 			}
 		}
-
-		$this->modalAdd = false;
-		$this->dispatch('render')->component(HotelData::class);
-		flash()->success(__('lang.added_successfully', ['attribute' => __('lang.hotel')]));
+		return to_route('hotels')->with('success', __('lang.added_successfully', ['attribute' => __('lang.hotel')]));
 	}
 
 	public function resetData(): void

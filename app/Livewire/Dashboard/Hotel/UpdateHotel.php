@@ -8,12 +8,15 @@ use App\Models\Hotel;
 use App\Models\User;
 use App\Services\FileService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
+use Livewire\Attributes\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Mary\Traits\WithMediaSync;
 
 class UpdateHotel extends Component
 {
-	use WithFileUploads;
+	use WithFileUploads, WithMediaSync;
 
 	public bool $modalUpdate = false;
 
@@ -59,6 +62,9 @@ class UpdateHotel extends Component
 
 	public $users = [];
 
+	#[Rule('required')]
+	public Collection $library;
+
 	public function mount(): void
 	{
 		$this->cities = City::get(['id', 'name'])->map(function ($city) {
@@ -67,6 +73,7 @@ class UpdateHotel extends Component
 				'name' => $city->name,
 			];
 		})->toArray();
+		$this->library = collect();
 		$this->users = User::role('hotel')->get(['id', 'name'])->toArray();
 
 		$this->user_id = $this->hotel->user_id;
@@ -86,7 +93,21 @@ class UpdateHotel extends Component
 		$this->address_en = $this->hotel->getTranslation('address', 'en');
 		$this->facilities_ar = $this->hotel->getTranslation('facilities', 'ar');
 		$this->facilities_en = $this->hotel->getTranslation('facilities', 'en');
+		view()->share('breadcrumbs', $this->breadcrumbs());
 	}
+	public function breadcrumbs(): array
+	{
+		return [
+			[
+				'label' => __('lang.hotels'),
+				'icon' => 'o-building-office-2',
+			],
+			[
+				'label' => __('lang.update_hotel'),
+			],
+		];
+	}
+
 
 	public function rules(): array
 	{
@@ -112,7 +133,7 @@ class UpdateHotel extends Component
 		];
 	}
 
-	public function saveUpdate(): void
+	public function saveUpdate()
 	{
 		$this->validate();
 
@@ -152,10 +173,7 @@ class UpdateHotel extends Component
 				]);
 			}
 		}
-
-		$this->modalUpdate = false;
-		$this->dispatch('render')->component(HotelData::class);
-		flash()->success(__('lang.updated_successfully', ['attribute' => __('lang.hotel')]));
+		return to_route('hotels')->with('success', __('lang.updated_successfully', ['attribute' => __('lang.hotel')]));
 	}
 
 	public function render(): View

@@ -1,52 +1,108 @@
 @php use App\Enums\Status;use App\Services\FileService; @endphp
+@assets()
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+<script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+@endassets()
 <div>
-	<x-button icon="o-pencil" class="btn-sm btn-ghost" @click="$wire.modalUpdate = true" wire:loading.attr="disabled" tooltip="{{__('lang.edit')}}"/>
-	<x-modal wire:model="modalUpdate" title="{{__('lang.update').' '.__('lang.hotel')}}" class="backdrop-blur modal-box-850" persistent>
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[70vh] overflow-y-auto">
-			<x-select label="{{ __('lang.user') }}" wire:model="user_id" placeholder="{{ __('lang.select') }}" icon="o-user" :options="$users" option-label="name"/>
-			<x-choices-offline label="{{ __('lang.city') }}" wire:model="city_id" :options="$cities" single clearable searchable
-			                   option-value="id" option-label="name" />
-			<x-input label="{{ __('lang.email') }}" wire:model="email" placeholder="{{ __('lang.email') }}" icon="o-envelope" class="col-span-1 md:col-span-2"/>
-			<x-input label="{{ __('lang.name').' ('.__('lang.ar').')' }}" wire:model="name_ar" placeholder="{{ __('lang.name').' ('.__('lang.ar').')' }}" icon="o-language"/>
-			<x-input label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
-			<x-select label="{{ __('lang.status') }}" wire:model="status" placeholder="{{ __('lang.select') }}" icon="o-flag" :options="[
-				['id' => Status::Active, 'name' => __('lang.active')],
-				['id' => Status::Inactive, 'name' => __('lang.inactive')],
-			]"/>
-			<x-select label="{{ __('lang.rating') }}" wire:model="rating" placeholder="{{ __('lang.select') }}" icon="o-star" :options="[
-				['id' => 1, 'name' => '1'],
-				['id' => 2, 'name' => '2'],
-				['id' => 3, 'name' => '3'],
-				['id' => 4, 'name' => '4'],
-				['id' => 5, 'name' => '5'],
-			]"/>
-			<x-input label="{{ __('lang.phone_key') }}" wire:model="phone_key" placeholder="{{ __('lang.phone_key') }}" icon="o-phone"/>
-			<x-input label="{{ __('lang.phone') }}" wire:model="phone" placeholder="{{ __('lang.phone') }}" icon="o-phone"/>
-			<x-input label="{{ __('lang.latitude') }}" wire:model="latitude" placeholder="{{ __('lang.latitude') }}" icon="o-map-pin"/>
-			<x-input label="{{ __('lang.longitude') }}" wire:model="longitude" placeholder="{{ __('lang.longitude') }}" icon="o-map-pin"/>
-			<x-textarea label="{{ __('lang.address').' ('.__('lang.ar').')' }}" wire:model="address_ar" placeholder="{{ __('lang.address').' ('.__('lang.ar').')' }}" rows="2"/>
-			<x-textarea label="{{ __('lang.address').' ('.__('lang.en').')' }}" wire:model="address_en" placeholder="{{ __('lang.address').' ('.__('lang.en').')' }}" rows="2"/>
-			<x-textarea label="{{ __('lang.facilities').' ('.__('lang.ar').')' }}" wire:model="facilities_ar" placeholder="{{ __('lang.facilities').' ('.__('lang.ar').')' }}" rows="2"/>
-			<x-textarea label="{{ __('lang.facilities').' ('.__('lang.en').')' }}" wire:model="facilities_en" placeholder="{{ __('lang.facilities').' ('.__('lang.en').')' }}" rows="2"/>
-			<x-textarea label="{{ __('lang.description').' ('.__('lang.ar').')' }}" wire:model="description_ar" placeholder="{{ __('lang.description').' ('.__('lang.ar').')' }}" rows="2"/>
-			<x-textarea label="{{ __('lang.description').' ('.__('lang.en').')' }}" wire:model="description_en" placeholder="{{ __('lang.description').' ('.__('lang.en').')' }}" rows="2"/>
-			<div class="col-span-1 md:col-span-2">
-				<div class="mb-2">
-					<label class="block text-sm font-medium mb-1">{{__('lang.current_images')}}</label>
-					<div class="flex gap-2 flex-wrap">
-						@foreach($hotel->files as $file)
-{{--							<img src="{{$file->path ? FileService::get($file->path) : null}}" alt="" class="w-20 h-20 object-cover rounded">--}}
-						@endforeach
+	<x-card title="{{ __('lang.update_hotel') }}" shadow class="mb-3">
+		<form wire:submit.prevent="saveUpdate">
+			<div class="max-h-[75vh] overflow-y-auto p-4 space-y-6">
+
+				{{-- Basic Information Section --}}
+				<div class="border-b pb-4">
+					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
+						<x-icon name="o-information-circle" class="w-5 h-5 inline"/> {{ __('lang.basic_information') }}
+					</h3>
+					<div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
+						<x-choices-offline required label="{{ __('lang.owner') }}" option-value="id" option-label="name" wire:model="user_id" placeholder="{{ __('lang.select') }}" icon="o-user"
+						                   :options="$users" option-label="name" single clearable searchable/>
+						<x-choices-offline required label="{{ __('lang.city') }}" wire:model="city_id" :options="$cities" single clearable searchable
+						                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
+						<x-input required label="{{ __('lang.email') }}" wire:model="email" placeholder="{{ __('lang.email') }}" icon="o-envelope"/>
+						<x-input required label="{{ __('lang.name').' ('.__('lang.ar').')' }}" wire:model="name_ar" placeholder="{{ __('lang.name').' ('.__('lang.ar').')' }}" icon="o-language"/>
+						<x-input required label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
+						<x-select required label="{{ __('lang.status') }}" wire:model="status" placeholder="{{ __('lang.select') }}" icon="o-flag" :options="[
+							['id' => Status::Active, 'name' => __('lang.active')],
+							['id' => Status::Inactive, 'name' => __('lang.inactive')],
+						]"/>
+						<x-select required label="{{ __('lang.rating') }}" wire:model="rating" placeholder="{{ __('lang.select') }}" icon="o-star" :options="[
+							['id' => 1, 'name' => '1'],
+							['id' => 2, 'name' => '2'],
+							['id' => 3, 'name' => '3'],
+							['id' => 4, 'name' => '4'],
+							['id' => 5, 'name' => '5'],
+						]"/>
+						<x-phone-input
+								required
+								label="{{__('lang.phone')}}"
+								phoneProperty="phone"
+								keyProperty="phone_key"
+						/>
 					</div>
 				</div>
-				<x-file wire:model="images" label="{{__('lang.add_more_images')}}" accept="image/*" multiple/>
-				<x-progress class="progress-primary h-0.5" indeterminate wire:loading wire:target="images"/>
+
+				{{-- Location & Map Section --}}
+				<div class="border-b pb-4">
+					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
+						<x-icon name="o-map-pin" class="w-5 h-5 inline"/> {{ __('lang.location_information') }}
+					</h3>
+
+					{{-- استخدام الـ Google Map Component --}}
+					<x-google-map :defaultLat="$latitude" :defaultLng="$longitude" :latitude="$latitude" :longitude="$longitude" :address-ar="$address_ar" :address-en="$address_en" latitude-property="latitude" longitude-property="longitude"
+					              address-ar-property="address_ar" address-en-property="address_en" height="500px" map-id="map-update" search-input-id="pac-input-update"/>
+				</div>
+
+				{{-- Facilities Section --}}
+				<div class="overflow-auto border-b pb-4">
+					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
+						<x-icon name="o-building-office" class="w-5 h-5 inline"/> {{ __('lang.facilities') }}
+					</h3>
+					<div class="overflow-auto grid grid-cols-1 md:grid-cols-2 gap-4">
+						<x-trix required wire:model="facilities_ar" label="{{ __('lang.facilities').' ('.__('lang.ar').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
+						<x-trix required wire:model="facilities_en" label="{{ __('lang.facilities').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
+					</div>
+				</div>
+
+				{{-- Description Section --}}
+				<div class="overflow-auto border-b pb-4">
+					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
+						<x-icon name="o-document-text" class="w-5 h-5 inline"/> {{ __('lang.description') }}
+					</h3>
+					<div class="overflow-auto grid grid-cols-1 md:grid-cols-2 gap-4">
+						<x-trix required wire:model="description_ar" label="{{ __('lang.description').' ('.__('lang.ar').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
+						<x-trix required wire:model="description_en" label="{{ __('lang.description').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
+					</div>
+				</div>
+
+				{{-- Images Section --}}
+				<div>
+					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
+						<x-icon name="o-photo" class="w-5 h-5 inline"/> {{ __('lang.images') }}
+					</h3>
+
+					{{-- Current Images --}}
+					<div class="mb-4">
+						<label class="block text-sm font-medium mb-2">{{__('lang.current_images')}}</label>
+						<div class="flex gap-2 flex-wrap">
+							@foreach($hotel->files as $file)
+								<div class="relative">
+									<img src="{{$file->path ? FileService::get($file->path) : null}}" alt="" class="w-24 h-24 object-cover rounded">
+								</div>
+							@endforeach
+						</div>
+					</div>
+
+					{{-- Add More Images --}}
+					<x-image-library wire:model="images" wire:library="library" :preview="$library" label="{{__('lang.add_more_images')}}"/>
+				</div>
+
 			</div>
-		</div>
-		<x-slot:actions>
-			<x-button label="{{__('lang.cancel')}}" @click="$wire.modalUpdate = false;$wire.resetError()" wire:loading.attr="disabled"/>
-			<x-button label="{{__('lang.update')}}" class="btn-primary" wire:click="saveUpdate" wire:loading.attr="disabled" wire:target="saveUpdate" spinner="saveUpdate"/>
-		</x-slot:actions>
-	</x-modal>
+
+			<x-slot:actions>
+				<x-button label="{{__('lang.cancel')}}" @click="$wire.modalUpdate = false;$wire.resetError()" wire:loading.attr="disabled"/>
+				<x-button label="{{__('lang.update')}}" class="btn-primary" type="submit" wire:loading.attr="disabled" wire:target="saveUpdate" spinner="saveUpdate"/>
+			</x-slot:actions>
+		</form>
+	</x-card>
 </div>
 

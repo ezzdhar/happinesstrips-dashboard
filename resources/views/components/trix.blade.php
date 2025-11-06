@@ -1,8 +1,8 @@
 @props([
 	'label' => null,
 	'required' => false,
+	'dir' => 'rtl',
 	])
-
 @php
 	$model = $attributes->wire('model')->value(); // دي اللي ترجع اسم الحقل كـ string
 @endphp
@@ -33,12 +33,12 @@
 	     {{ $attributes->whereDoesntStartWith('wire:model') }}
 	     wire:ignore
 	     class="my-1 rounded-md">
-		<input id="x-{{ $model }}" type="hidden">
-		<trix-editor x-ref="trix" input="x-{{ $model }}" class="trix-content overflow-auto" style="min-height: 15em !important;"></trix-editor>
+		<input id="x-{{ $model }}" type="hidden" dir="{{ $dir }}">
+		<trix-editor x-ref="trix" input="x-{{ $model }}" class="trix-content overflow-auto" style="min-height: 15em !important;" dir="{{ $dir }}"/>
 	</div>
 
 	@error($model)
-	<small class="text-danger mt-2">{{ $message }}</small>
+		<small class="text-danger mt-2">{{ $message }}</small>
 	@enderror
 </div>
 
