@@ -64,7 +64,15 @@ class FileService
 
     public static function get(?string $path): ?string
     {
-        return $path ? Storage::disk(self::DISK)->url($path) : null;
+        if (!$path) {
+            return null;
+        }
+        $url = Storage::disk(self::DISK)->url($path);
+        // إجبار استخدام HTTPS
+        if (config('app.env') === 'production' || request()->secure()) {
+            $url = str_replace('http://', 'https://', $url);
+        }
+        return $url;
     }
 
     public static function saveFromTemp(string $tempPath, string $folder = self::DEFAULT_FOLDER): string

@@ -14,9 +14,38 @@
     'mapId' => 'map',
     'searchInputId' => 'pac-input',
 ])
-@assets()
-<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places,geocoding" async defer></script>
-@endassets
+
+@once
+<script>
+    // تهيئة متغيرات Google Maps العامة
+    window.googleMapsCallbacks = window.googleMapsCallbacks || [];
+    window.googleMapsApiLoaded = false;
+
+    window.initGoogleMapsApi = function() {
+        window.googleMapsApiLoaded = true;
+        window.googleMapsCallbacks.forEach(callback => {
+            try {
+                callback();
+            } catch(e) {
+                console.error('Google Maps callback error:', e);
+            }
+        });
+        window.googleMapsCallbacks = [];
+    };
+
+    // تحميل Google Maps API إذا لم يكن محملاً
+    if (!document.querySelector('script[src*="maps.googleapis.com"]')) {
+        const script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places,geocoding&callback=initGoogleMapsApi';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    } else if (typeof google !== 'undefined' && google.maps) {
+        window.googleMapsApiLoaded = true;
+    }
+</script>
+@endonce
+
 <div wire:ignore x-data="{
         map: null,
         marker: null,
@@ -24,18 +53,38 @@
         autocomplete: null,
         mapId: '{{ $mapId }}',
         searchInputId: '{{ $searchInputId }}',
-        // ربط المتغيرات مع Livewire
         lat: $wire.get('{{ $latitudeProperty }}') || {{ $latitude ?? $defaultLat }},
         lng: $wire.get('{{ $longitudeProperty }}') || {{ $longitude ?? $defaultLng }},
+        initRetries: 0,
+        maxRetries: 50,
 
         // الدالة الرئيسية لتهيئة الخريطة
         initGoogleMap() {
-            // التأكد من تحميل مكتبة جوجل
-            if (typeof google === 'undefined') {
-                console.error('Google Maps script not loaded.');
+            // التحقق من تحميل Google Maps API
+            if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+                this.initRetries++;
+
+                if (this.initRetries >= this.maxRetries) {
+                    console.error('Failed to load Google Maps API after ' + this.maxRetries + ' retries');
+                    return;
+                }
+
+                // إضافة callback لتنفيذه عند تحميل API
+                window.googleMapsCallbacks = window.googleMapsCallbacks || [];
+                window.googleMapsCallbacks.push(() => {
+                    this.initMap();
+                });
+
+                // محاولة مرة أخرى بعد 100ms
+                setTimeout(() => this.initGoogleMap(), 100);
                 return;
             }
 
+            this.initMap();
+        },
+
+        // دالة تهيئة الخريطة الفعلية
+        initMap() {
             // تعيين موقع افتراضي إذا لم تكن هناك قيم
             if (!this.lat || !this.lng) {
                 this.lat = {{ $defaultLat }};
@@ -66,7 +115,6 @@
             // --- تهيئة حقل البحث ---
             const searchInput = document.getElementById(this.searchInputId);
             if (searchInput) {
-                // إزالة class hidden لإظهار الحقل
                 searchInput.classList.remove('hidden');
 
                 this.autocomplete = new google.maps.places.Autocomplete(searchInput);
@@ -87,11 +135,7 @@
             }
 
             // --- إضافة الأحداث (Listeners) ---
-
-            // حدث عند النقر على الخريطة
             this.map.addListener('click', (e) => this.updateLocation(e.latLng));
-
-            // حدث عند الانتهاء من سحب الدبوس
             this.marker.addListener('dragend', (e) => this.updateLocation(e.latLng));
         },
 
@@ -146,5 +190,4 @@
         </div>
     </div>
 </div>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places,geocoding" async defer></script>
 

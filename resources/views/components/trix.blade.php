@@ -22,7 +22,9 @@
         isFocused() { return document.activeElement !== this.$refs.trix },
         setValue() {
             if (this.$refs.trix && this.$refs.trix.editor) {
-                this.$refs.trix.editor.loadHTML(this.value);
+                // التحقق من أن القيمة ليست null قبل التحميل
+                const content = this.value || '';
+                this.$refs.trix.editor.loadHTML(content);
             }
         },
     }"

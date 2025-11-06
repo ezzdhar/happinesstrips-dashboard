@@ -20,7 +20,7 @@
 						                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
 						<x-input required label="{{ __('lang.email') }}" wire:model="email" placeholder="{{ __('lang.email') }}" icon="o-envelope"/>
 						<x-input required label="{{ __('lang.name').' ('.__('lang.ar').')' }}" wire:model="name_ar" placeholder="{{ __('lang.name').' ('.__('lang.ar').')' }}" icon="o-language"/>
-						<x-input required label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
+						<x-input required label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" dir="ltr" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
 						<x-select required label="{{ __('lang.status') }}" wire:model="status" placeholder="{{ __('lang.select') }}" icon="o-flag" :options="[
 							['id' => Status::Active, 'name' => __('lang.active')],
 							['id' => Status::Inactive, 'name' => __('lang.inactive')],
@@ -48,8 +48,8 @@
 					</h3>
 
 					{{-- استخدام الـ Google Map Component --}}
-					<x-google-map :latitude="$latitude" :longitude="$longitude" :address-ar="$address_ar" :address-en="$address_en" latitude-property="latitude" longitude-property="longitude"
-					              address-ar-property="address_ar" address-en-property="address_en" height="500px" map-id="map" search-input-id="pac-input"/>
+					<x-google-map :latitude="$latitude" :longitude="$longitude" :address-ar="$address_ar" :address-en="$address_en" dir="ltr" latitude-property="latitude" longitude-property="longitude"
+					              address-ar-property="address_ar" address-en-property="address_en" dir="ltr" height="500px" map-id="map" search-input-id="pac-input"/>
 				</div>
 
 				{{-- Facilities Section --}}
@@ -59,7 +59,7 @@
 					</h3>
 					<div class="overflow-auto grid grid-cols-1 md:grid-cols-2 gap-4">
 						<x-trix required wire:model="facilities_ar" label="{{ __('lang.facilities').' ('.__('lang.ar').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
-						<x-trix required wire:model="facilities_en" label="{{ __('lang.facilities').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
+						<x-trix required wire:model="facilities_en" dir="ltr" label="{{ __('lang.facilities').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
 					</div>
 				</div>
 
@@ -70,7 +70,7 @@
 					</h3>
 					<div class="overflow-auto grid grid-cols-1 md:grid-cols-2 gap-4">
 						<x-trix required wire:model="description_ar" label="{{ __('lang.description').' ('.__('lang.ar').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
-						<x-trix required wire:model="description_en" label="{{ __('lang.description').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
+						<x-trix required wire:model="description_en" dir="ltr" label="{{ __('lang.description').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
 					</div>
 				</div>
 

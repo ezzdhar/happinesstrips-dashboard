@@ -607,5 +607,7 @@ return [
 	'basic_information' => 'المعلومات الأساسية',
 	'location_information' => 'معلومات الموقع',
 	'search_for_a_location' => 'ابحث عن موقع',
+	'search_for_hotels' => 'ابحث عن فنادق',
+	'hotel_location' => 'موقع الفندق',
 	'owner' => 'المالك',
 ];
