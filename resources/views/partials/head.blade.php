@@ -31,6 +31,5 @@
 
 	{{-- Custom CSS --}}
 	<link rel="stylesheet" href="{{asset('dashboard-asset/css/css.css')}}">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.4/build/css/intlTelInput.css">
-	<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.4/build/js/intlTelInput.min.js"></script>
+
 </head>

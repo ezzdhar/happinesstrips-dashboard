@@ -604,5 +604,8 @@ return [
 	'employee' => 'الموظف',
 	'phone' => 'رقم الهاتف',
 	'add_hotel' => 'إضافة فندق',
-	'basic_information'
+	'basic_information' => 'المعلومات الأساسية',
+	'location_information' => 'معلومات الموقع',
+	'search_for_a_location' => 'ابحث عن موقع',
+	'owner' => 'المالك',
 ];

@@ -53,8 +53,6 @@ class CreateHotel extends Component
 
 	public $address_en;
 
-	public $address; // For temporary address from map
-
 	public $facilities_ar;
 
 	public $facilities_en;
