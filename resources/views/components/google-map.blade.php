@@ -146,6 +146,5 @@
         </div>
     </div>
 </div>
-@assets()
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places,geocoding" async defer></script>
-@endassets
+
