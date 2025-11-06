@@ -17,7 +17,7 @@ class Hotel extends Model
 
 	protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
-	public array $translatable = ['name', 'address', 'description', 'facilities','include_services'];
+	public array $translatable = ['name', 'address', 'description', 'facilities'];
 
 	protected function casts(): array
 	{

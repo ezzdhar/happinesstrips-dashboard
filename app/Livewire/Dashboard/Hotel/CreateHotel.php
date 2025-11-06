@@ -41,10 +41,6 @@ class CreateHotel extends Component
 
 	public $longitude;
 
-	public $include_services_ar;
-
-	public $include_services_en;
-
 	public $description_ar;
 
 	public $description_en;
@@ -112,8 +108,6 @@ class CreateHotel extends Component
 			'phone' => 'nullable|string|max:20',
 			'latitude' => 'nullable|numeric',
 			'longitude' => 'nullable|numeric',
-			'include_services_ar' => 'nullable|string',
-			'include_services_en' => 'nullable|string',
 			'description_ar' => 'nullable|string',
 			'description_en' => 'nullable|string',
 			'address_ar' => 'required|string',
@@ -142,10 +136,6 @@ class CreateHotel extends Component
 			'phone' => $this->phone,
 			'latitude' => $this->latitude,
 			'longitude' => $this->longitude,
-			'include_services' => [
-				'ar' => $this->include_services_ar,
-				'en' => $this->include_services_en,
-			],
 			'description' => [
 				'ar' => $this->description_ar,
 				'en' => $this->description_en,
@@ -178,8 +168,7 @@ class CreateHotel extends Component
 	{
 		$this->reset([
 			'user_id', 'city_id', 'email', 'name_ar', 'name_en', 'status', 'rating',
-			'phone_key', 'phone', 'latitude', 'longitude', 'include_services_ar',
-			'include_services_en', 'description_ar', 'description_en', 'address_ar',
+			'phone_key', 'phone', 'latitude', 'longitude', 'description_ar', 'description_en', 'address_ar',
 			'address_en', 'facilities_ar', 'facilities_en', 'images'
 		]);
 		$this->resetErrorBag();

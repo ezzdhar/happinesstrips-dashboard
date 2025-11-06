@@ -49,10 +49,6 @@ class HotelFactory extends Factory
 			],
 			'phone_key' => '+20',
 			'phone' => fake('ar_EG')->phoneNumber(),
-			'include_services' =>[
-				'ar' => fake('ar_SA')->sentence(),
-				'en' => fake('en_US')->sentence(),
-			],
 			'status' => fake()->randomElement([Status::Active, Status::Inactive]),
 		];
 	}

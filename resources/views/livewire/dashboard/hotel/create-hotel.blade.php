@@ -14,17 +14,18 @@
 						<x-icon name="o-information-circle" class="w-5 h-5 inline"/> {{ __('lang.basic_information') }}
 					</h3>
 					<div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
-						<x-select label="{{ __('lang.owner') }}" wire:model="user_id" placeholder="{{ __('lang.select') }}" icon="o-user" :options="$users" option-label="name"/>
-						<x-choices-offline label="{{ __('lang.city') }}" wire:model="city_id" :options="$cities" single clearable searchable
+						<x-choices-offline required label="{{ __('lang.owner') }}"  option-value="id" option-label="name" wire:model="user_id" placeholder="{{ __('lang.select') }}" icon="o-user"
+						                   :options="$users" option-label="name" single clearable searchable/>
+						<x-choices-offline required label="{{ __('lang.city') }}" wire:model="city_id" :options="$cities" single clearable searchable
 						                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
-						<x-input label="{{ __('lang.email') }}" wire:model="email" placeholder="{{ __('lang.email') }}" icon="o-envelope"/>
-						<x-input label="{{ __('lang.name').' ('.__('lang.ar').')' }}" wire:model="name_ar" placeholder="{{ __('lang.name').' ('.__('lang.ar').')' }}" icon="o-language"/>
-						<x-input label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
-						<x-select label="{{ __('lang.status') }}" wire:model="status" placeholder="{{ __('lang.select') }}" icon="o-flag" :options="[
+						<x-input required label="{{ __('lang.email') }}" wire:model="email" placeholder="{{ __('lang.email') }}" icon="o-envelope"/>
+						<x-input required label="{{ __('lang.name').' ('.__('lang.ar').')' }}" wire:model="name_ar" placeholder="{{ __('lang.name').' ('.__('lang.ar').')' }}" icon="o-language"/>
+						<x-input required label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
+						<x-select required label="{{ __('lang.status') }}" wire:model="status" placeholder="{{ __('lang.select') }}" icon="o-flag" :options="[
 							['id' => Status::Active, 'name' => __('lang.active')],
 							['id' => Status::Inactive, 'name' => __('lang.inactive')],
 						]"/>
-						<x-select label="{{ __('lang.rating') }}" wire:model="rating" placeholder="{{ __('lang.select') }}" icon="o-star" :options="[
+						<x-select required label="{{ __('lang.rating') }}" wire:model="rating" placeholder="{{ __('lang.select') }}" icon="o-star" :options="[
 							['id' => 1, 'name' => '1'],
 							['id' => 2, 'name' => '2'],
 							['id' => 3, 'name' => '3'],
@@ -57,19 +58,8 @@
 						<x-icon name="o-building-office" class="w-5 h-5 inline"/> {{ __('lang.facilities') }}
 					</h3>
 					<div class="overflow-auto grid grid-cols-1 md:grid-cols-2 gap-4">
-						<x-trix wire:model="facilities_ar" label="{{ __('lang.facilities').' ('.__('lang.ar').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
-						<x-trix wire:model="facilities_en" label="{{ __('lang.facilities').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
-					</div>
-				</div>
-
-				{{-- Services Section --}}
-				<div class="overflow-auto border-b pb-4">
-					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
-						<x-icon name="o-sparkles" class="w-5 h-5 inline"/> {{ __('lang.include_services') }}
-					</h3>
-					<div class="overflow-auto grid grid-cols-1 md:grid-cols-2 gap-4">
-						<x-trix wire:model="include_services_ar" label="{{ __('lang.include_services').' ('.__('lang.ar').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
-						<x-trix wire:model="include_services_en" label="{{ __('lang.include_services').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
+						<x-trix required wire:model="facilities_ar" label="{{ __('lang.facilities').' ('.__('lang.ar').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
+						<x-trix required wire:model="facilities_en" label="{{ __('lang.facilities').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
 					</div>
 				</div>
 
@@ -79,8 +69,8 @@
 						<x-icon name="o-document-text" class="w-5 h-5 inline"/> {{ __('lang.description') }}
 					</h3>
 					<div class="overflow-auto grid grid-cols-1 md:grid-cols-2 gap-4">
-						<x-trix wire:model="description_ar" label="{{ __('lang.description').' ('.__('lang.ar').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
-						<x-trix wire:model="description_en" label="{{ __('lang.description').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
+						<x-trix required wire:model="description_ar" label="{{ __('lang.description').' ('.__('lang.ar').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
+						<x-trix required wire:model="description_en" label="{{ __('lang.description').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
 					</div>
 				</div>
 

@@ -20,7 +20,6 @@ return new class extends Migration {
 			$table->string('phone')->nullable();
 			$table->string('latitude')->nullable();
 			$table->string('longitude')->nullable();
-			$table->json('include_services')->nullable();
 			$table->json('description')->nullable();
 			$table->json('address');
 			$table->json('facilities');

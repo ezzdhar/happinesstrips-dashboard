@@ -42,10 +42,6 @@ class HotelSeeder extends Seeder
 				],
 				'phone_key' => '+20',
 				'phone' => '0123456789',
-				'include_services' => [
-					'ar' => 'الإفطار مشمول',
-					'en' => 'Breakfast included',
-				],
 				'status' => Status::Active,
 			],
 			[
@@ -59,10 +55,6 @@ class HotelSeeder extends Seeder
 				'latitude' => 27.2579,
 				'phone_key' => '+20',
 				'phone' => '0123456788',
-				'include_services' => [
-					'ar' => 'الإفطار مشمول',
-					'en' => 'Breakfast included',
-				],
 				'status' => Status::Active,
 				'address' => [
 					'ar' => 'شرم الشيخ، مصر',
@@ -89,10 +81,6 @@ class HotelSeeder extends Seeder
 				'latitude' => 25.6872,
 				'phone_key' => '+20',
 				'phone' => '0123456787',
-				'include_services' => [
-					'ar' => 'الإفطار مشمول',
-					'en' => 'Breakfast included',
-				],
 				'status' => Status::Active,
 				'address' => [
 					'ar' => 'الأقصر، مصر',

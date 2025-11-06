@@ -41,10 +41,6 @@ class UpdateHotel extends Component
 
 	public $longitude;
 
-	public $include_services_ar;
-
-	public $include_services_en;
-
 	public $description_ar;
 
 	public $description_en;
@@ -84,8 +80,6 @@ class UpdateHotel extends Component
 		$this->phone = $this->hotel->phone;
 		$this->latitude = $this->hotel->latitude;
 		$this->longitude = $this->hotel->longitude;
-		$this->include_services_ar = $this->hotel->getTranslation('include_services', 'ar');
-		$this->include_services_en = $this->hotel->getTranslation('include_services', 'en');
 		$this->description_ar = $this->hotel->getTranslation('description', 'ar');
 		$this->description_en = $this->hotel->getTranslation('description', 'en');
 		$this->address_ar = $this->hotel->getTranslation('address', 'ar');
@@ -108,8 +102,6 @@ class UpdateHotel extends Component
 			'phone' => 'nullable|string|max:20',
 			'latitude' => 'nullable|numeric',
 			'longitude' => 'nullable|numeric',
-			'include_services_ar' => 'nullable|string',
-			'include_services_en' => 'nullable|string',
 			'description_ar' => 'nullable|string',
 			'description_en' => 'nullable|string',
 			'address_ar' => 'required|string',
@@ -138,10 +130,6 @@ class UpdateHotel extends Component
 			'phone' => $this->phone,
 			'latitude' => $this->latitude,
 			'longitude' => $this->longitude,
-			'include_services' => [
-				'ar' => $this->include_services_ar,
-				'en' => $this->include_services_en,
-			],
 			'description' => [
 				'ar' => $this->description_ar,
 				'en' => $this->description_en,

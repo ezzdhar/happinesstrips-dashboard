@@ -28,8 +28,6 @@
 			<x-textarea label="{{ __('lang.address').' ('.__('lang.en').')' }}" wire:model="address_en" placeholder="{{ __('lang.address').' ('.__('lang.en').')' }}" rows="2"/>
 			<x-textarea label="{{ __('lang.facilities').' ('.__('lang.ar').')' }}" wire:model="facilities_ar" placeholder="{{ __('lang.facilities').' ('.__('lang.ar').')' }}" rows="2"/>
 			<x-textarea label="{{ __('lang.facilities').' ('.__('lang.en').')' }}" wire:model="facilities_en" placeholder="{{ __('lang.facilities').' ('.__('lang.en').')' }}" rows="2"/>
-			<x-textarea label="{{ __('lang.include_services').' ('.__('lang.ar').')' }}" wire:model="include_services_ar" placeholder="{{ __('lang.include_services').' ('.__('lang.ar').')' }}" rows="2"/>
-			<x-textarea label="{{ __('lang.include_services').' ('.__('lang.en').')' }}" wire:model="include_services_en" placeholder="{{ __('lang.include_services').' ('.__('lang.en').')' }}" rows="2"/>
 			<x-textarea label="{{ __('lang.description').' ('.__('lang.ar').')' }}" wire:model="description_ar" placeholder="{{ __('lang.description').' ('.__('lang.ar').')' }}" rows="2"/>
 			<x-textarea label="{{ __('lang.description').' ('.__('lang.en').')' }}" wire:model="description_en" placeholder="{{ __('lang.description').' ('.__('lang.en').')' }}" rows="2"/>
 			<div class="col-span-1 md:col-span-2">

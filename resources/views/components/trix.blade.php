@@ -1,4 +1,7 @@
-@props(['label' => null])
+@props([
+	'label' => null,
+	'required' => false,
+	])
 
 @php
 	$model = $attributes->wire('model')->value(); // دي اللي ترجع اسم الحقل كـ string
@@ -6,7 +9,12 @@
 
 <div class="mb-3">
 	@if($label)
-		<label class="fieldset-legend mb-0.5">{{ $label }}</label>
+		<label class="font-bold mb-0.5">
+			{{ $label }}
+			@if($required)
+				<span class="text-danger">*</span>
+			@endif
+		</label>
 	@endif
 
 	<div x-data="{
