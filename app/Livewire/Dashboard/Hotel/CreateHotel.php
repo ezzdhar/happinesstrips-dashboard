@@ -9,10 +9,12 @@ use App\Models\User;
 use App\Services\FileService;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Rule;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Mary\Traits\WithMediaSync;
 
+#[Title('add_hotel')]
 class CreateHotel extends Component
 {
 	use WithFileUploads, WithMediaSync;

@@ -610,4 +610,8 @@ return [
 	'search_for_hotels' => 'ابحث عن فنادق',
 	'hotel_location' => 'موقع الفندق',
 	'owner' => 'المالك',
+	'drag_to_move' => 'اسحب لتحريك الموقع',
+	'get_current_location' => 'تحديد موقعي الحالي',
+	'geolocation_not_supported' => 'المتصفح الخاص بك لا يدعم تحديد الموقع الجغرافي',
+	'location_error' => 'حدث خطأ في تحديد موقعك الحالي',
 ];

@@ -10,10 +10,12 @@ use App\Services\FileService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Rule;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Mary\Traits\WithMediaSync;
 
+#[Title('update_hotels')]
 class UpdateHotel extends Component
 {
 	use WithFileUploads, WithMediaSync;

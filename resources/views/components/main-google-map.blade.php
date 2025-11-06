@@ -7,8 +7,8 @@
     'longitudeProperty' => 'longitude',
     'addressArProperty' => 'address_ar',
     'addressEnProperty' => 'address_en',
-    'defaultLat' => 27.9158,
-    'defaultLng' => 34.3299,
+    'defaultLat' => 30.0444,
+    'defaultLng' => 31.2357,
     'height' => '500px',
     'zoom' => 8,
     'mapId' => 'map',
@@ -51,14 +51,12 @@
         marker: null,
         geocoder: null,
         autocomplete: null,
-        infoWindow: null,
         mapId: '{{ $mapId }}',
         searchInputId: '{{ $searchInputId }}',
         lat: $wire.get('{{ $latitudeProperty }}') || {{ $latitude ?? $defaultLat }},
         lng: $wire.get('{{ $longitudeProperty }}') || {{ $longitude ?? $defaultLng }},
         initRetries: 0,
         maxRetries: 50,
-        isLocating: false,
 
         // الدالة الرئيسية لتهيئة الخريطة
         initGoogleMap() {
@@ -99,32 +97,16 @@
                 center: initialPosition,
                 zoom: {{ $zoom }},
                 mapTypeControl: true,
-                mapTypeControlOptions: {
-                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                    position: google.maps.ControlPosition.TOP_RIGHT,
-                    mapTypeIds: ['roadmap', 'satellite', 'hybrid']
-                },
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                zoomControl: true,
-                zoomControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_CENTER
-                },
-                streetViewControl: true,
-                streetViewControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_CENTER
-                },
-                fullscreenControl: true,
+                mapTypeId: google.maps.MapTypeId.HYBRID,
                 scrollwheel: true,
-                gestureHandling: 'greedy'
+                gestureHandling: 'auto'
             });
 
-            // إنشاء الدبوس (Marker) بالشكل الافتراضي
+            // إنشاء الدبوس (Marker)
             this.marker = new google.maps.Marker({
                 position: initialPosition,
                 map: this.map,
                 draggable: true,
-                title: '{{ __("lang.drag_to_move") }}',
-                animation: google.maps.Animation.DROP
             });
 
             // تهيئة Geocoder للحصول على العناوين
@@ -155,87 +137,11 @@
             // --- إضافة الأحداث (Listeners) ---
             this.map.addListener('click', (e) => this.updateLocation(e.latLng));
             this.marker.addListener('dragend', (e) => this.updateLocation(e.latLng));
-
-            // إنشاء InfoWindow للعرض
-            this.infoWindow = new google.maps.InfoWindow();
-
-            // إنشاء زر الموقع الحالي
-            this.createLocationButton();
-        },
-
-        // دالة إنشاء زر تحديد الموقع الحالي
-        createLocationButton() {
-            const locationButton = document.createElement('button');
-            locationButton.type = 'button';
-
-            // إنشاء SVG باستخدام createElementNS
-            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svg.setAttribute('fill', 'none');
-            svg.setAttribute('viewBox', '0 0 24 24');
-            svg.setAttribute('stroke-width', '2');
-            svg.setAttribute('stroke', 'currentColor');
-            svg.classList.add('w-5', 'h-5');
-
-            const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            path1.setAttribute('stroke-linecap', 'round');
-            path1.setAttribute('stroke-linejoin', 'round');
-            path1.setAttribute('d', 'M15 10.5a3 3 0 11-6 0 3 3 0 016 0z');
-
-            const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            path2.setAttribute('stroke-linecap', 'round');
-            path2.setAttribute('stroke-linejoin', 'round');
-            path2.setAttribute('d', 'M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z');
-
-            svg.appendChild(path1);
-            svg.appendChild(path2);
-            locationButton.appendChild(svg);
-
-            locationButton.classList.add('bg-white', 'rounded-lg', 'shadow-lg', 'px-3', 'py-2', 'hover:bg-gray-100', 'transition', 'cursor-pointer', 'flex', 'items-center', 'justify-center');
-            locationButton.style.margin = '10px';
-            locationButton.title = '{{ __("lang.get_current_location") }}';
-
-            this.map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(locationButton);
-
-            locationButton.addEventListener('click', () => {
-                this.getCurrentLocation();
-            });
-        },
-
-        // دالة الحصول على الموقع الحالي
-        getCurrentLocation() {
-            if (!navigator.geolocation) {
-                alert('{{ __("lang.geolocation_not_supported") }}');
-                return;
-            }
-
-            this.isLocating = true;
-
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const pos = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    };
-
-                    this.map.setCenter(pos);
-                    this.map.setZoom(17);
-                    this.updateLocation(new google.maps.LatLng(pos.lat, pos.lng));
-                    this.isLocating = false;
-                },
-                (error) => {
-                    console.error('Error getting location:', error);
-                    alert('{{ __("lang.location_error") }}');
-                    this.isLocating = false;
-                }
-            );
         },
 
         // دالة موحدة لتحديث كل شيء
         updateLocation(latLng) {
             this.marker.setPosition(latLng);
-            this.marker.setAnimation(google.maps.Animation.BOUNCE);
-            setTimeout(() => this.marker.setAnimation(null), 1400);
-
             const newLat = latLng.lat();
             const newLng = latLng.lng();
 

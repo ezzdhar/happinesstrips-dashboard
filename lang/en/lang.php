@@ -583,5 +583,9 @@ return [
     'ar' => 'Arabic',
     'en' => 'English',
     'users' => 'Users',
+    'drag_to_move' => 'Drag to move location',
+    'get_current_location' => 'Get my current location',
+    'geolocation_not_supported' => 'Your browser does not support geolocation',
+    'location_error' => 'An error occurred while determining your current location',
 
 ];
