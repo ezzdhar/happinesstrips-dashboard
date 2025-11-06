@@ -15,6 +15,7 @@ class City extends Model
 
 	protected $guarded = ['id', 'created_at', 'updated_at'];
 
+
 	public function hotels(): HasMany
 	{
 		return $this->hasMany(Hotel::class, 'city_id');

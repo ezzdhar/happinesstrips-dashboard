@@ -4,6 +4,9 @@ use App\Http\Controllers\LanguageController;
 use App\Livewire\Dashboard\City\CityData;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Dashboard\Employee\EmployeeData;
+use App\Livewire\Dashboard\Hotel\CreateHotel;
+use App\Livewire\Dashboard\Hotel\HotelData;
+use App\Livewire\Dashboard\Hotel\UpdateHotel;
 use App\Livewire\Dashboard\MainCategory\MainCategoryData;
 use App\Livewire\Dashboard\Profile\Profile;
 use App\Livewire\Dashboard\Role\RoleData;
@@ -35,6 +38,12 @@ Route::middleware(['web-language'])->group(function () {
 	    Route::get('main-categories', MainCategoryData::class)->name('main-categories')->middleware('permission:show_main_category'); // main categories
 	    Route::get('sub-categories', SubCategoryData::class)->name('sub-categories')->middleware('permission:show_sub_category'); // sub categories
 	    Route::get('cities', CityData::class)->name('cities')->middleware('permission:show_city'); // cities
+	    Route::prefix('hotels')->middleware('permission:show_hotel')->group(function () {
+		    Route::get('/', HotelData::class)->name('hotels');
+		    Route::get('/create-hotel', CreateHotel::class)->name('hotels.create')->middleware('permission:create_hotel');
+		    Route::get('/edit/{hotel}', UpdateHotel::class)->name('hotels.edit')->middleware('permission:update_hotel');
+//		    Route::get('/show/{hotel}', HotelData::class)->name('hotels.show');
+	    });
     });
 
     // guest routes
