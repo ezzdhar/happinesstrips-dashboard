@@ -21,4 +21,8 @@
 	@can('show_hotel')
 		<x-menu-item noWireNavigate title="{{__('lang.hotels')}}" icon="o-building-office-2" link="{{route('hotels')}}"/>
 	@endcan
+	@can('show_room')
+		<x-menu-item noWireNavigate title="{{__('lang.rooms')}}" icon="ionicon.bed-outline"
+		             link="{{route('rooms')}}"/>
+	@endcan
 </x-menu>

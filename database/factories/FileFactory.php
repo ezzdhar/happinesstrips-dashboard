@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\File;
+use App\Services\FileService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FileFactory extends Factory
@@ -12,7 +13,7 @@ class FileFactory extends Factory
     public function definition(): array
     {
         return [
-            'path' => fake()->imageUrl(640, 480, 'hotel', true),
+            'path' => FileService::fakeImage(name: 'name' ,folder: 'files'),
             'type' => fake()->randomElement(['image', 'document', 'video']),
         ];
     }
@@ -21,7 +22,7 @@ class FileFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'type' => 'image',
-            'path' => fake()->imageUrl(640, 480),
+            'path' => FileService::fakeImage(name: 'name' ,folder: 'files'),
         ]);
     }
 }

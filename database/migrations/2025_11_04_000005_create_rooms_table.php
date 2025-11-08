@@ -18,7 +18,7 @@ return new class extends Migration
             $table->json('name');
             $table->integer('adults_count')->default(1);
             $table->integer('children_count')->default(0);
-            $table->json('price'); // {"egp": 0, "usd": 0}
+            $table->json('weekly_prices'); // {"egp": 0, "usd": 0}
             $table->json('includes')->nullable();
             $table->enum('status', [Status::Active, Status::Inactive])->default(Status::Active);
             $table->timestamps();

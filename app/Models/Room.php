@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Status;
+use App\Traits\HasWeeklyPrices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Room extends Model
 {
-    use HasFactory, HasTranslations;
+    use HasFactory, HasTranslations,HasWeeklyPrices;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
@@ -20,7 +21,7 @@ class Room extends Model
     protected function casts(): array
     {
         return [
-            'price' => 'array',
+            'weekly_prices' => 'array',
             'status' => Status::class,
             'adults_count' => 'integer',
             'children_count' => 'integer',
@@ -42,11 +43,19 @@ class Room extends Model
         return $query->when($status, fn($q) => $q->where('status', $status));
     }
 
+	public function scopeHotelId($query, $hotel_id = null)
+	{
+		return $query->when($hotel_id, fn($q) => $q->where('hotel_id', $hotel_id));
+	}
+
+
     public function scopeFilter($query, $search = null)
     {
         return $query->when($search, function ($q) use ($search) {
             $q->where('name->ar', 'like', "%{$search}%")->orWhere('name->en', 'like', "%{$search}%");
         });
     }
+
+
 }
 
