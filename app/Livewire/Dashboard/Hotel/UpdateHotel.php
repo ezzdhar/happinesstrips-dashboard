@@ -2,13 +2,14 @@
 
 namespace App\Livewire\Dashboard\Hotel;
 
-use App\Enums\Status;
 use App\Models\City;
+use App\Models\File;
 use App\Models\Hotel;
 use App\Models\User;
 use App\Services\FileService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -187,6 +188,31 @@ class UpdateHotel extends Component
 	{
 		$this->resetErrorBag();
 		$this->resetValidation();
+	}
+
+	public function deleteSweetAlert($id): void
+	{
+		sweetalert()
+			->showDenyButton()
+			->timer(0)
+			->iconColor('#FFA500')
+			->option('confirmButtonText', __('lang.confirm'))
+			->option('denyButtonText', __('lang.cancel'))
+			->option('id', $id)
+			->info(__('lang.confirm_delete', ['attribute' => __('lang.image')]));
+	}
+
+	#[On('sweetalert:confirmed')]
+	public function delete(array $payload): void
+	{
+		$id = $payload['envelope']['options']['id'];
+		$file = File::find($id);
+		if ($file && $file->fileable_id === $this->hotel->id) {
+			FileService::delete($file->path);
+			$file->delete();
+			$this->hotel->refresh();
+			flash()->success(__('lang.deleted_successfully', ['attribute' => __('lang.image')]));
+		}
 	}
 }
 

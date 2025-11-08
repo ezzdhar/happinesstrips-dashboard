@@ -81,23 +81,27 @@
 					</h3>
 
 					{{-- Current Images --}}
-					<div class="mb-4">
+					<div class="mb-8">
 						<label class="block text-sm font-medium mb-2">{{__('lang.current_images')}}</label>
 						<div class="flex gap-2 flex-wrap">
 							@foreach($hotel->files as $file)
-								<div class="relative">
+								<div class="relative mb-4">
 									<img src="{{$file->path ? FileService::get($file->path) : null}}" alt="" class="w-24 h-24 object-cover rounded">
+									<x-button icon="o-trash" spinner="deleteSweetAlert({{$file->id}})"
+										size="w-16 h-16" class="object-cover rounded btn-sm absolute top-1 right-1 bg-red-500 text-white hover:bg-red-600 mt-2"
+										deleteLabel="{{__('lang.delete_image')}}" wire:click="deleteSweetAlert({{$file->id}})"
+										wire:loading.attr="disabled" wire:target="deleteSweetAlert({{$file->id}})"
+									/>
 								</div>
 							@endforeach
 						</div>
 					</div>
 
 					{{-- Add More Images --}}
-					<x-image-library wire:model="images" wire:library="library" :preview="$library" label="{{__('lang.add_more_images')}}"/>
+						<x-image-library wire:model="images" wire:library="library" :preview="$library" label="{{__('lang.add_more_images')}}"/>
 				</div>
 
 			</div>
-
 			<x-slot:actions>
 				<x-button label="{{__('lang.cancel')}}" @click="$wire.modalUpdate = false;$wire.resetError()" wire:loading.attr="disabled"/>
 				<x-button label="{{__('lang.update')}}" class="btn-primary" type="submit" wire:loading.attr="disabled" wire:target="saveUpdate" spinner="saveUpdate"/>

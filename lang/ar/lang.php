@@ -614,4 +614,5 @@ return [
 	'get_current_location' => 'تحديد موقعي الحالي',
 	'geolocation_not_supported' => 'المتصفح الخاص بك لا يدعم تحديد الموقع الجغرافي',
 	'location_error' => 'حدث خطأ في تحديد موقعك الحالي',
+	'are_you_sure' => 'هل أنت متأكد؟',
 ];
