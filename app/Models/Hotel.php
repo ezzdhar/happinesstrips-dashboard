@@ -48,6 +48,11 @@ class Hotel extends Model
 		return $this->belongsToMany(Trip::class, 'hotel_trip');
 	}
 
+	public function bookingHotels(): HasMany
+	{
+		return $this->hasMany(BookingHotel::class);
+	}
+
 	public function files(): MorphMany
 	{
 		return $this->morphMany(File::class, 'fileable');

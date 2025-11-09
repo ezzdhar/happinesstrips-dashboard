@@ -4,9 +4,9 @@
 	<meta name="description" content="{{config('app.name')}} - Build, showcase, and impress with your professional portfolio">
 
 	<title>{{config('app.name')}} | {{ isset($title) ? __("lang.$title") : __('lang.home') }}</title>
-	<link rel="icon" href="/favicon.ico" sizes="any">
-	<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="icon" href="{{asset('icon.ico')}}" sizes="any">
+	<link rel="icon" href="{{asset('icon.ico')}}" type="image/svg+xml">
+	<link rel="apple-touch-icon" href="{{asset('logo.svg')}}">
 
 	<link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
 	<link href='https://cdn.boxicons.com/fonts/brands/boxicons-brands.min.css' rel='stylesheet'>

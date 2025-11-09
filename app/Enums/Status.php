@@ -23,9 +23,14 @@ final class Status extends Enum
 	const Completed = 'completed';
 
 	const Closed = 'closed';
-	const Start = 'start';
-	const End = 'end';
 
+	const Start = 'start';
+
+	const End = 'end';
+	const Confirmed = 'confirmed';  // مؤكد
+	const Cancelled = 'cancelled';  // ملغي
+
+	const UnderPayment = 'under_payment';
 	public function title(): string
 	{
 		return match ($this->value) {
@@ -39,6 +44,9 @@ final class Status extends Enum
 			self::Closed => __('lang.closed'),
 			self::Start => __('lang.start'),
 			self::End => __('lang.end'),
+			self::Confirmed => __('lang.confirmed'),
+			self::Cancelled => __('lang.cancelled'),
+			self::UnderPayment => __('lang.under_payment'),
 			default => 'Unknown',
 		};
 	}
@@ -56,6 +64,9 @@ final class Status extends Enum
 			self::Closed => 'red-500',
 			self::Start => 'blue-500',
 			self::End => 'gray-500',
+			self::Confirmed => 'green-500',
+			self::Cancelled => 'red-500',
+			self::UnderPayment => 'orange-500',
 			default => 'gray-500',
 		};
 	}

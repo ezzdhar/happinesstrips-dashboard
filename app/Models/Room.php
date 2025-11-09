@@ -7,6 +7,7 @@ use App\Traits\HasWeeklyPrices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Translatable\HasTranslations;
 
@@ -31,6 +32,11 @@ class Room extends Model
     public function hotel(): BelongsTo
     {
         return $this->belongsTo(Hotel::class);
+    }
+
+    public function bookingHotels(): HasMany
+    {
+        return $this->hasMany(BookingHotel::class);
     }
 
     public function files(): MorphMany

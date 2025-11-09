@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\Status;
+use App\Enums\TripType;
 use App\Models\MainCategory;
 use App\Models\Trip;
 use App\Models\SubCategory;
@@ -32,6 +33,7 @@ class TripFactory extends Factory
             'duration_to' => $durationTo,
             'people_count' => fake()->numberBetween(1, 10),
 	        'max_people_count' => fake()->numberBetween(10, 50),
+            'type' => fake()->randomElement(TripType::cases()),
             'notes' => [
                 'ar' => fake('ar_SA')->paragraphs(2, true),
                 'en' => fake('en_US')->paragraphs(2, true),
