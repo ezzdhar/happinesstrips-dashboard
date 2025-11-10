@@ -29,7 +29,12 @@ class CreateSubCategory extends Component
 
     public function mount(): void
     {
-        $this->main_categories = MainCategory::status(Status::Active)->get(['id', 'name'])->toArray();
+        $this->main_categories = MainCategory::status(Status::Active)->get(['id', 'name']) ->map(function ($category) {
+	        return [
+		        'id' => $category->id,
+		        'name' => $category->name,
+	        ];
+        })->toArray();
     }
 
     public function render()
@@ -43,7 +48,7 @@ class CreateSubCategory extends Component
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'main_category_id' => 'required|exists:main_categories,id',
-            'status' => 'required|in:' . Status::Active->value . ',' . Status::Inactive->value,
+	        'status' => 'required|in:active,inactive',
             'image' => 'nullable|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
         ];
     }

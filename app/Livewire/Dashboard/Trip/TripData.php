@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Livewire\Dashboard\SubCategory;
+namespace App\Livewire\Dashboard\Trip;
 
-use App\Enums\Status;
-use App\Models\SubCategory;
+use App\Models\Trip;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Title('sub_categories')]
-class SubCategoryData extends Component
+#[Title('trips')]
+class TripData extends Component
 {
     use WithPagination;
 
     public $search;
 
     public $status_filter;
+
+    public $type_filter;
 
     public function mount(): void
     {
@@ -29,8 +29,8 @@ class SubCategoryData extends Component
     {
         return [
             [
-                'label' => __('lang.sub_categories'),
-                'icon' => 'o-squares-2x2',
+                'label' => __('lang.trips'),
+                'icon' => 'o-globe-alt',
             ],
         ];
     }
@@ -38,13 +38,14 @@ class SubCategoryData extends Component
     #[On('render')]
     public function render(): View
     {
-        $data['sub_categories'] = SubCategory::filter($this->search)
+        $data['trips'] = Trip::filter($this->search)
             ->status($this->status_filter)
+            ->type($this->type_filter)
+            ->with(['mainCategory', 'subCategory', 'files'])
             ->latest()
-	        ->with(['mainCategory'])
-            ->paginate(25);
+            ->paginate(20);
 
-        return view('livewire.dashboard.sub-category.sub-category-data', $data);
+        return view('livewire.dashboard.trip.trip-data', $data);
     }
 
     public function deleteSweetAlert($id): void
@@ -56,15 +57,14 @@ class SubCategoryData extends Component
             ->option('confirmButtonText', __('lang.confirm'))
             ->option('denyButtonText', __('lang.cancel'))
             ->option('id', $id)
-            ->info(__('lang.confirm_delete', ['attribute' => __('lang.sub_category')]));
+            ->info(__('lang.confirm_delete', ['attribute' => __('lang.trip')]));
     }
 
     #[On('sweetalert:confirmed')]
     public function delete(array $payload): void
     {
         $id = $payload['envelope']['options']['id'];
-        SubCategory::findOrFail($id)->delete();
-        flash()->success(__('lang.deleted_successfully', ['attribute' => __('lang.sub_category')]));
+        Trip::findOrFail($id)->delete();
+        flash()->success(__('lang.deleted_successfully', ['attribute' => __('lang.trip')]));
     }
 }
-

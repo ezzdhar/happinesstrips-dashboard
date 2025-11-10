@@ -36,7 +36,12 @@ class UpdateSubCategory extends Component
         $this->name_en = $this->subCategory->getTranslation('name', 'en');
         $this->status = $this->subCategory->status->value;
         $this->main_category_id = $this->subCategory->main_category_id;
-        $this->main_categories = MainCategory::status(Status::Active)->get(['id', 'name'])->toArray();
+        $this->main_categories = MainCategory::status(Status::Active)->get(['id', 'name']) ->map(function ($category) {
+	        return [
+		        'id' => $category->id,
+		        'name' => $category->name,
+	        ];
+        })->toArray();
     }
 
     public function rules(): array

@@ -12,40 +12,48 @@ use App\Livewire\Dashboard\Profile\Profile;
 use App\Livewire\Dashboard\Role\RoleData;
 use App\Livewire\Dashboard\Room\RoomData;
 use App\Livewire\Dashboard\SubCategory\SubCategoryData;
+use App\Livewire\Dashboard\Trip\CreateTrip;
+use App\Livewire\Dashboard\Trip\TripData;
+use App\Livewire\Dashboard\Trip\UpdateTrip;
 use App\Livewire\Dashboard\User\UserData;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
 
-Route::get('test', function (){
-	foreach (['create', 'show', 'update', 'delete'] as $action) {
-		Permission::create(['name' => $action.'_employee', 'type' => 'employees_mng']);
-	}
+Route::get('test', function () {
+    foreach (['create', 'show', 'update', 'delete'] as $action) {
+        Permission::create(['name' => $action.'_employee', 'type' => 'employees_mng']);
+    }
 
 }); // profile
 
 Route::middleware(['web-language'])->group(function () {
     Route::get('web-language/{lang}', LanguageController::class)->name('web-language');
-    Route::get('/', function (){
-		return to_route('login');
+    Route::get('/', function () {
+        return to_route('login');
     })->name('home');
 
-    //authentication routes
+    // authentication routes
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('profile', Profile::class)->name('profile'); // profile
-	    Route::get('dashboard', Dashboard::class)->name('dashboard'); // dashboard
-	    Route::get('users', UserData::class)->name('users')->middleware('permission:show_user'); // users
-	    Route::get('employees', EmployeeData::class)->name('employees')->middleware('permission:show_employee'); // employees
-	    Route::get('roles', RoleData::class)->name('roles')->middleware('permission:show_role');// roles
-	    Route::get('main-categories', MainCategoryData::class)->name('main-categories')->middleware('permission:show_main_category'); // main categories
-	    Route::get('sub-categories', SubCategoryData::class)->name('sub-categories')->middleware('permission:show_sub_category'); // sub categories
-	    Route::get('cities', CityData::class)->name('cities')->middleware('permission:show_city'); // cities
-	    Route::prefix('hotels')->middleware('permission:show_hotel')->group(function () {
-		    Route::get('/', HotelData::class)->name('hotels');
-		    Route::get('/create-hotel', CreateHotel::class)->name('hotels.create')->middleware('permission:create_hotel');
-		    Route::get('/edit/{hotel}', UpdateHotel::class)->name('hotels.edit')->middleware('permission:update_hotel');
-//		    Route::get('/show/{hotel}', HotelData::class)->name('hotels.show');
-	    });
-	    Route::get('rooms', RoomData::class)->name('rooms')->middleware('permission:show_room'); // rooms
+        Route::get('dashboard', Dashboard::class)->name('dashboard'); // dashboard
+        Route::get('users', UserData::class)->name('users')->middleware('permission:show_user'); // users
+        Route::get('employees', EmployeeData::class)->name('employees')->middleware('permission:show_employee'); // employees
+        Route::get('roles', RoleData::class)->name('roles')->middleware('permission:show_role'); // roles
+        Route::get('main-categories', MainCategoryData::class)->name('main-categories')->middleware('permission:show_main_category'); // main categories
+        Route::get('sub-categories', SubCategoryData::class)->name('sub-categories')->middleware('permission:show_sub_category'); // sub categories
+        Route::get('cities', CityData::class)->name('cities')->middleware('permission:show_city'); // cities
+        Route::prefix('hotels')->middleware('permission:show_hotel')->group(function () {
+            Route::get('/', HotelData::class)->name('hotels');
+            Route::get('/create-hotel', CreateHotel::class)->name('hotels.create')->middleware('permission:create_hotel');
+            Route::get('/edit/{hotel}', UpdateHotel::class)->name('hotels.edit')->middleware('permission:update_hotel');
+            //		    Route::get('/show/{hotel}', HotelData::class)->name('hotels.show');
+        });
+        Route::get('rooms', RoomData::class)->name('rooms')->middleware('permission:show_room'); // rooms
+        Route::prefix('trips')->middleware('permission:show_trip')->group(function () {
+            Route::get('/', TripData::class)->name('trips');
+            Route::get('/create-trip', CreateTrip::class)->name('trips.create')->middleware('permission:create_trip');
+            Route::get('/edit/{trip}', UpdateTrip::class)->name('trips.edit')->middleware('permission:update_trip');
+        });
     });
 
     // guest routes
