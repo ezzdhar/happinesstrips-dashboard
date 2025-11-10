@@ -42,7 +42,7 @@
 							<th class="text-center text-nowrap">{{$room->adults_count}}</th>
 							<th class="text-center text-nowrap">{{$room->children_count}}</th>
 							<th class="text-center text-nowrap">
-								<x-badge :value="$room->status->value" class="bg-{{$room->status->color()}}"/>
+								<x-badge :value="$room->status->title()" class="bg-{{$room->status->color()}}"/>
 							</th>
 							<th class="text-center text-nowrap">{{formatDate($room->created_at, true) }}</th>
 							<td>

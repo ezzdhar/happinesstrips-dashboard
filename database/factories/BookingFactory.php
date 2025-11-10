@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\BookingStatus;
 use App\Enums\Status;
 use App\Models\Trip;
 use App\Models\User;
@@ -29,7 +28,7 @@ class BookingFactory extends Factory
             'total_price' => fake()->numberBetween(8000, 30000),
 			'currency' => fake()->randomElement(['egp', 'usd']),
             'notes' => fake()->optional()->sentence(),
-            'status' => fake()->randomElement([Status::Pending, Status::UnderPayment, Status::Confirmed, Status::Cancelled, Status::Completed]),
+            'status' => fake()->randomElement([Status::Pending, Status::UnderPayment, Status::UnderCancellation, Status::Cancelled, Status::Completed]),
         ];
     }
 

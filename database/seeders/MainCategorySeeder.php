@@ -59,7 +59,7 @@ class MainCategorySeeder extends Seeder
         }
 
         // Create additional random categories
-        MainCategory::factory(2)->create();
+//        MainCategory::factory(2)->create();
     }
 }
 

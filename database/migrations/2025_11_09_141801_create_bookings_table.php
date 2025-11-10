@@ -28,7 +28,7 @@ return new class extends Migration
 	        $table->string('currency')->default('egp');;
 
             $table->text('notes')->nullable();
-            $table->enum('status', [Status::Pending, Status::UnderPayment, Status::Confirmed, Status::Cancelled, Status::Completed])->default(BookingStatus::Pending);
+            $table->enum('status', [Status::Pending, Status::UnderPayment, Status::UnderCancellation, Status::Cancelled, Status::Completed])->default(Status::Pending);
             $table->timestamps();
         });
     }

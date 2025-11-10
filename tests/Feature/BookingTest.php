@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\BookingStatus;
+use App\Enums\Status;
 use App\Enums\TripType;
 use App\Models\Booking;
 use App\Models\BookingHotel;
@@ -23,13 +23,13 @@ test('can create a booking for fixed trip', function () {
         'trip_id' => $trip->id,
         'trip_price' => $trip->price,
         'total_price' => $trip->price,
-        'status' => BookingStatus::Pending,
+        'status' => Status::Pending,
     ]);
 
     expect($booking)->toBeInstanceOf(Booking::class)
         ->and($booking->user_id)->toBe($user->id)
         ->and($booking->trip_id)->toBe($trip->id)
-        ->and($booking->status)->toBe(BookingStatus::Pending)
+        ->and($booking->status)->toBe(Status::Pending)
         ->and($booking->booking_number)->toStartWith('BK-');
 });
 
@@ -134,8 +134,8 @@ test('booking scopes work correctly', function () {
     Booking::factory()->confirmed()->create();
 
     expect(Booking::user($user->id)->get())->toHaveCount(3)
-        ->and(Booking::status(BookingStatus::Pending)->get())->toHaveCount(2)
-        ->and(Booking::status(BookingStatus::Confirmed)->get())->toHaveCount(1);
+        ->and(Booking::status(Status::Pending)->get())->toHaveCount(2)
+        ->and(Booking::status(Status::Confirmed)->get())->toHaveCount(1);
 });
 
 test('trip has bookings relationship', function () {

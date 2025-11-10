@@ -112,18 +112,18 @@ class HotelSeeder extends Seeder
 		}
 
 		// Create additional random hotels with files
-		Hotel::factory()
-			->count(15)
-			->create()
-			->each(function ($hotel) {
-				File::factory()
-					->count(rand(2, 6))
-					->image()
-					->create([
-						'fileable_id' => $hotel->id,
-						'fileable_type' => Hotel::class,
-					]);
-			});
+//		Hotel::factory()
+//			->count(15)
+//			->create()
+//			->each(function ($hotel) {
+//				File::factory()
+//					->count(rand(2, 6))
+//					->image()
+//					->create([
+//						'fileable_id' => $hotel->id,
+//						'fileable_type' => Hotel::class,
+//					]);
+//			});
 	}
 }
 

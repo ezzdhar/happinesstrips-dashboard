@@ -35,7 +35,6 @@ class TripSeeder extends Seeder
                 'duration_from' => now()->addDays(10),
                 'duration_to' => now()->addDays(15),
                 'people_count' => 4,
-	            'max_people_count' => 10,
                 'notes' => [
                     'ar' => 'الأسعار شاملة الإقامة والمواصلات. غير شاملة للوجبات والأنشطة الإضافية.',
                     'en' => 'Prices include accommodation and transportation. Meals and additional activities are not included.',
@@ -59,7 +58,6 @@ class TripSeeder extends Seeder
                 'duration_from' => now()->addDays(20),
                 'duration_to' => now()->addDays(23),
                 'people_count' => 2,
-	            'max_people_count' => 6,
                 'notes' => [
                     'ar' => 'العرض يشمل الإقامة في منتجع 5 نجوم مع نظام all inclusive.',
                     'en' => 'Package includes stay at 5-star resort with all inclusive system.',
@@ -83,7 +81,6 @@ class TripSeeder extends Seeder
                 'duration_from' => now()->addMonth(),
                 'duration_to' => now()->addMonth()->addDays(7),
                 'people_count' => 1,
-	            'max_people_count' => 5,
                 'notes' => [
                     'ar' => 'يشمل تذكرة الطيران، الإقامة في فندق قريب من الحرم، المواصلات، وزيارة المعالم الدينية.',
                     'en' => 'Includes flight ticket, accommodation in hotel near Haram, transportation, and religious sites visits.',
@@ -113,7 +110,6 @@ class TripSeeder extends Seeder
                 'duration_from' => $tripData['duration_from'],
                 'duration_to' => $tripData['duration_to'],
                 'people_count' => $tripData['people_count'],
-				'max_people_count' => $tripData['max_people_count'],
                 'notes' => $tripData['notes'],
                 'program' => $tripData['program'],
                 'is_featured' => $tripData['is_featured'],
@@ -136,24 +132,24 @@ class TripSeeder extends Seeder
         }
 
         // Create additional random trips
-        Trip::factory()
-            ->count(20)
-            ->create()
-            ->each(function ($trip) use ($hotels) {
-                // Attach random hotels
-                $trip->hotels()->attach(
-                    $hotels->random(rand(1, 4))->pluck('id')->toArray()
-                );
-
-                // Create images
-                File::factory()
-                    ->count(rand(3, 8))
-                    ->image()
-                    ->create([
-                        'fileable_id' => $trip->id,
-                        'fileable_type' => Trip::class,
-                    ]);
-            });
+//        Trip::factory()
+//            ->count(20)
+//            ->create()
+//            ->each(function ($trip) use ($hotels) {
+//                // Attach random hotels
+//                $trip->hotels()->attach(
+//                    $hotels->random(rand(1, 4))->pluck('id')->toArray()
+//                );
+//
+//                // Create images
+//                File::factory()
+//                    ->count(rand(3, 8))
+//                    ->image()
+//                    ->create([
+//                        'fileable_id' => $trip->id,
+//                        'fileable_type' => Trip::class,
+//                    ]);
+//            });
     }
 }
 

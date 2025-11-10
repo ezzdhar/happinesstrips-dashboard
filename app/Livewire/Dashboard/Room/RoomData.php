@@ -8,6 +8,7 @@ use App\Models\Room;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -20,6 +21,7 @@ class RoomData extends Component
 
 	public $status_filter;
 	public $hotels = [];
+	#[Url]
 	public $hotel_id_filter;
 
 

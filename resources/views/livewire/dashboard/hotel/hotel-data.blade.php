@@ -21,6 +21,7 @@
 						<th class="text-center">{{__('lang.city')}}</th>
 						<th class="text-center">{{__('lang.rating')}}</th>
 						<th class="text-center">{{__('lang.status')}}</th>
+						<th class="text-center">{{__('lang.rooms')}}</th>
 						<th class="text-center">{{__('lang.created_at')}}</th>
 						<th class="text-center">{{__('lang.action')}}</th>
 					</tr>
@@ -43,6 +44,7 @@
 							<th class="text-center text-nowrap">
 								<x-badge :value="$hotel->status->title()" class="bg-{{$hotel->status->color()}}"/>
 							</th>
+							<th class="text-center text-nowrap">{{ $hotel->rooms_count }}</th>
 							<th class="text-center text-nowrap">{{formatDate($hotel->created_at, true) }}</th>
 							<td>
 								<div class="flex gap-2 justify-center">
@@ -50,6 +52,9 @@
 									<x-button noWireNavigate icon="o-pencil" class="btn-sm btn-ghost" link="{{route('hotels.edit', $hotel->id)}}" tooltip="{{__('lang.edit')}}"/>
 									<x-button icon="o-trash" class="btn-sm btn-ghost" wire:click="deleteSweetAlert({{$hotel->id}})" wire:loading.attr="disabled"
 									          wire:target="deleteSweetAlert({{$hotel->id}})" spinner="deleteSweetAlert({{$hotel->id}})" tooltip="{{__('lang.delete')}}"/>
+									@can('show_room')
+										<x-button noWireNavigate icon="ionicon.bed-outline" class="btn-sm btn-ghost" link="{{route('rooms', ['hotel_id_filter' => $hotel->id])}}" tooltip="{{__('lang.rooms')}}"/>
+									@endcan
 								</div>
 							</td>
 						</tr>

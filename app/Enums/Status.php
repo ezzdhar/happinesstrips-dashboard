@@ -31,6 +31,7 @@ final class Status extends Enum
 	const Cancelled = 'cancelled';  // ملغي
 
 	const UnderPayment = 'under_payment';
+	const UnderCancellation = 'under_cancellation';
 	public function title(): string
 	{
 		return match ($this->value) {
@@ -47,6 +48,7 @@ final class Status extends Enum
 			self::Confirmed => __('lang.confirmed'),
 			self::Cancelled => __('lang.cancelled'),
 			self::UnderPayment => __('lang.under_payment'),
+			self::UnderCancellation => __('lang.under_cancellation'),
 			default => 'Unknown',
 		};
 	}
@@ -67,6 +69,7 @@ final class Status extends Enum
 			self::Confirmed => 'green-500',
 			self::Cancelled => 'red-500',
 			self::UnderPayment => 'orange-500',
+			self::UnderCancellation => 'orange-500',
 			default => 'gray-500',
 		};
 	}

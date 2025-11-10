@@ -38,7 +38,7 @@ class HotelData extends Component
     #[On('render')]
     public function render(): View
     {
-        $data['hotels'] = Hotel::filter($this->search)->status($this->status_filter)->with(['city', 'user','files'])->latest()->paginate(20);
+        $data['hotels'] = Hotel::filter($this->search)->status($this->status_filter)->with(['city', 'user','files'])->withCount('rooms')->latest()->paginate(20);
         return view('livewire.dashboard.hotel.hotel-data', $data);
     }
 

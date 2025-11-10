@@ -65,7 +65,7 @@ class SubCategorySeeder extends Seeder
 		}
 
 		// Create additional random sub categories
-		SubCategory::factory()->count(2)->create();
+//		SubCategory::factory()->count(2)->create();
 	}
 }
 
