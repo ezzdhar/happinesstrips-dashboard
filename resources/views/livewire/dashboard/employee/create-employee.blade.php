@@ -8,12 +8,7 @@
 				<x-input required label="{{__('lang.name')}}" wire:model="name"/>
 				<x-input label="{{__('lang.email')}}" type="email" wire:model="email"/>
 
-				<x-phone-input
-					required
-					label="{{__('lang.phone')}}"
-					phoneProperty="phone"
-					keyProperty="phone_key"
-				/>
+				<x-phone-input required label="{{__('lang.phone')}}" phoneProperty="phone" keyProperty="phone_key"/>
 				<div>
 					<x-file wire:model="image" label="{{__('lang.image')}}" accept="image/*"/>
 					<x-progress class="progress-primary h-0.5" indeterminate wire:loading wire:target="image"/>

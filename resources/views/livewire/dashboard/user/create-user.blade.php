@@ -4,6 +4,7 @@
 	<x-modal wire:model="modalAdd" title="{{__('lang.add')}}" box-class="modal-box-600">
 		<x-form wire:submit="saveAdd">
 			<x-input label="{{__('lang.name')}}" wire:model="name"/>
+			<x-phone-input required label="{{__('lang.phone')}}" phoneProperty="phone" keyProperty="phone_key"/>
 			<x-input label="{{__('lang.email')}}" type="email" wire:model="email"/>
 			<x-input label="{{__('lang.password')}}" type="password" wire:model="password"/>
 			<x-input label="{{__('lang.password_confirmation')}}" type="password" wire:model="password_confirmation"/>

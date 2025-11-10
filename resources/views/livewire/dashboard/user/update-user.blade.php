@@ -8,7 +8,7 @@
 			</div>
 			<x-input label="{{__('lang.name')}}" wire:model="name"/>
 			<x-input label="{{__('lang.email')}}" wire:model="email" type="email"/>
-			<x-input label="{{__('lang.username')}}" wire:model="username"/>
+			<x-phone-input required label="{{__('lang.phone')}}" phoneProperty="phone" keyProperty="phone_key"/>
 			<x-input label="{{__('lang.password')}}" wire:model="password" type="password"/>
 			<x-input label="{{__('lang.password_confirmation')}}" wire:model="password_confirmation" type="password"/>
 			<div>

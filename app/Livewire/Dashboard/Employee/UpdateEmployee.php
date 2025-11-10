@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Dashboard\Employee;
 
-use App\Models\Branch;
 use App\Models\User;
 use App\Services\FileService;
 use Illuminate\Contracts\View\View;
