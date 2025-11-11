@@ -27,4 +27,14 @@
 	@can('show_trip')
 		<x-menu-item noWireNavigate title="{{__('lang.trips')}}" icon="o-briefcase" link="{{route('trips')}}"/>
 	@endcan
+
+	@can('show_booking_hotel')
+		<x-menu-item noWireNavigate title="{{__('lang.hotel_bookings')}}" icon="fas.hotel" link="{{route('bookings.hotels')}}"/>
+	@endcan
+
+	@can('show_booking_trip')
+		<x-menu-item noWireNavigate title="{{__('lang.trip_bookings')}}" icon="fas.plane-departure" link="{{route('bookings.trips')}}"/>
+	@endcan
+
+
 </x-menu>

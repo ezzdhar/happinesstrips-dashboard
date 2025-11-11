@@ -1,6 +1,13 @@
 <?php
 
 use App\Http\Controllers\LanguageController;
+use App\Livewire\Dashboard\Booking\BookingHotelData;
+use App\Livewire\Dashboard\Booking\BookingTripData;
+use App\Livewire\Dashboard\Booking\CreateBookingHotel;
+use App\Livewire\Dashboard\Booking\CreateBookingTrip;
+use App\Livewire\Dashboard\Booking\ShowBooking;
+use App\Livewire\Dashboard\Booking\UpdateBookingHotel;
+use App\Livewire\Dashboard\Booking\UpdateBookingTrip;
 use App\Livewire\Dashboard\City\CityData;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Dashboard\Employee\EmployeeData;
@@ -21,9 +28,9 @@ use Spatie\Permission\Models\Permission;
 
 Route::get('test', function () {
     foreach (['create', 'show', 'update', 'delete'] as $action) {
-        Permission::create(['name' => $action.'_employee', 'type' => 'employees_mng']);
+        Permission::create(['name' => $action.'_booking', 'type' => 'bookings_mng']);
     }
-
+    return 'Booking permissions created successfully!';
 }); // profile
 
 Route::middleware(['web-language'])->group(function () {
@@ -54,6 +61,23 @@ Route::middleware(['web-language'])->group(function () {
             Route::get('/create-trip', CreateTrip::class)->name('trips.create')->middleware('permission:create_trip');
             Route::get('/edit/{trip}', UpdateTrip::class)->name('trips.edit')->middleware('permission:update_trip');
         });
+
+        // Hotel Bookings
+        Route::prefix('bookings/hotels')->middleware('permission:show_booking_hotel')->group(function () {
+            Route::get('/', BookingHotelData::class)->name('bookings.hotels');
+            Route::get('/create', CreateBookingHotel::class)->name('bookings.hotels.create')->middleware('permission:create_booking_hotel');
+            Route::get('/edit/{booking}', UpdateBookingHotel::class)->name('bookings.hotels.edit')->middleware('permission:update_booking_hotel');
+            Route::get('/show/{booking}', ShowBooking::class)->name('bookings.hotels.show');
+        });
+
+        // Trip Bookings
+        Route::prefix('bookings/trips')->middleware('permission:show_booking_trip')->group(function () {
+            Route::get('/', BookingTripData::class)->name('bookings.trips');
+            Route::get('/create', CreateBookingTrip::class)->name('bookings.trips.create')->middleware('permission:create_booking_trip');
+            Route::get('/edit/{booking}', UpdateBookingTrip::class)->name('bookings.trips.edit')->middleware('permission:update_booking_trip');
+            Route::get('/show/{booking}', ShowBooking::class)->name('bookings.trips.show');
+        });
+
     });
 
     // guest routes

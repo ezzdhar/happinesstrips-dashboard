@@ -14,6 +14,7 @@
         "bensampo/laravel-enum": "*",
         "beyondcode/laravel-query-detector": "*",
         "blade-ui-kit/blade-icons": "^1.8",
+        "codeat3/blade-fontisto-icons": "^1.5",
         "codeat3/blade-radix-icons": "^1.8",
         "davidhsianturi/blade-bootstrap-icons": "^2.1",
         "faisal50x/blade-ionicons": "^1.1",

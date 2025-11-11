@@ -32,8 +32,7 @@ class TripFactory extends Factory
             'duration_from' => $durationFrom,
             'duration_to' => $durationTo,
             'people_count' => fake()->numberBetween(1, 10),
-	        'max_people_count' => fake()->numberBetween(10, 50),
-            'type' => fake()->randomElement(TripType::cases()),
+            'type' => fake()->randomElement([TripType::Fixed, TripType::Flexible]),
             'notes' => [
                 'ar' => fake('ar_SA')->paragraphs(2, true),
                 'en' => fake('en_US')->paragraphs(2, true),
