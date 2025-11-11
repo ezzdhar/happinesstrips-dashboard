@@ -133,8 +133,8 @@
 
 					@if($hotel_id && count($rooms) > 0)
 						<div class="mt-4">
-							<h4 class="font-semibold mb-3">{{ __('lang.available_rooms') }}</h4>
-							<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+							<h4 class="font-semibold mb-3">{{ __('lang.rooms') }}</h4>
+							<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 								@foreach($rooms as $room)
 									<div wire:key="room-{{ $room->id }}"
 											class="border rounded-lg p-4 cursor-pointer transition-all {{ $room_id == $room->id ? 'border-2 border-solid' : 'border-base-300 hover:border-primary/50' }}"
@@ -161,24 +161,28 @@
 												@endphp
 
 												<div class="mt-3 pt-3 border-t border-base-300">
-													<div class="flex items-center gap-2 mb-2">
-														<x-icon name="o-calendar-days" class="w-4 h-4 text-primary"/>
-														<span class="font-semibold text-sm">{{ __('lang.price_details') }}</span>
-													</div>
-
-													<div class="space-y-1 max-h-32 overflow-y-auto bg-base-200/50 rounded p-2">
-														@foreach($breakdown['days'] as $day)
-															<div class="flex justify-between items-center text-xs">
-																<span class="text-base-content/70">
-																	{{ $day['day_name'] }}
-																	<span class="text-base-content/50">({{ \Carbon\Carbon::parse($day['date'])->format('d/m') }})</span>
-																</span>
-																<span class="font-medium">{{ number_format($day['price'], 2) }}</span>
+													{{-- Price Details --}}
+													<div class="lg:col-span-4">
+														<details class="text-sm">
+															<summary class="cursor-pointer flex items-center gap-2 text-primary hover:text-primary-focus">
+																<x-icon name="o-calendar-days" class="w-4 h-4"/>
+																<span class="font-medium">{{ __('lang.show_price_details') }}</span>
+															</summary>
+															<div class="mt-2 space-y-1 max-h-32 overflow-y-auto bg-base-200/50 rounded p-2">
+																@foreach($breakdown['days'] as $day)
+																	<div class="flex justify-between items-center text-xs">
+																	<span class="text-base-content/70">
+																		{{ $day['day_name'] }}
+																		<span class="text-base-content/50">({{ \Carbon\Carbon::parse($day['date'])->format('d/m') }})</span>
+																	</span>
+																		<span class="font-medium">{{ number_format($day['price'], 2) }}</span>
+																	</div>
+																@endforeach
 															</div>
-														@endforeach
+														</details>
 													</div>
 
-													<div class="flex items-center justify-between mt-2 pt-2 border-t border-primary/20 bg-primary/5 rounded px-2 py-1.5">
+													<div class="flex items-center justify-between mt-2 pt-2 ">
 														<div class="flex items-center gap-1">
 															<x-icon name="o-currency-dollar" class="w-4 h-4 text-primary"/>
 															<span class="font-bold text-sm">{{ __('lang.total') }}</span>
@@ -189,9 +193,18 @@
 												</div>
 
 
-												<div class="mt-2 pt-2 border-t">
-													<p class="text-xs font-semibold mb-1">{{ __('lang.includes') }}:</p>
-													{!! $room->includes !!}
+
+
+												{{-- Includes (Collapsible) --}}
+												<div class="lg:col-span-12">
+													<details class="text-sm">
+														<summary class="cursor-pointer text-xs font-semibold text-base-content/70 hover:text-base-content">
+															{{ __('lang.includes') }}
+														</summary>
+														<div class="mt-2 text-xs bg-base-200/30 rounded p-2">
+															{!! $room->includes !!}
+														</div>
+													</details>
 												</div>
 											</div>
 										</label>
