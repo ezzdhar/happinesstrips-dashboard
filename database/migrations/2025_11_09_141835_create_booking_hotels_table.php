@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('booking_id')->constrained()->cascadeOnDelete();
             $table->foreignId('hotel_id')->constrained()->cascadeOnDelete();
             $table->foreignId('room_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->json('room_price')->nullable(); // {"egp": 0, "usd": 0}
+            $table->longText('room_includes')->nullable();
             $table->timestamps();
         });
     }

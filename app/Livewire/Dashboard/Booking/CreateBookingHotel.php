@@ -28,12 +28,11 @@ class CreateBookingHotel extends Component
     public $check_in;
 
     public $check_out;
-
+	public $status;
 
     public $notes;
 
     public $currency = 'egp';
-	public $rooms_count = 1;
 
 	public $nights_count = 1;
 
@@ -113,7 +112,7 @@ class CreateBookingHotel extends Component
 			    'phone' => '',
 			    'nationality' => '',
 			    'age' => '',
-			    'id_type' => 'passport',
+			    'id_type' => '',
 			    'id_number' => '',
 			    'type' => 'adult',
 		    ];
@@ -138,17 +137,16 @@ class CreateBookingHotel extends Component
     {
         return [
             'user_id' => 'required|exists:users,id',
-            'trip_id' => 'required|exists:trips,id',
 	        'hotel_id' => 'required|exists:hotels,id',
 	        'room_id' => 'required|exists:rooms,id',
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
             'nights_count' => 'required|integer|min:1',
-	        'rooms_count' => 'required|integer|min:1',
             'currency' => 'required|in:egp,usd',
             'notes' => 'nullable|string',
             'travelers' => 'required|array|min:1',
             'travelers.*.full_name' => 'required|string',
+	        'travelers.*.phone_key' => 'required|string',
             'travelers.*.phone' => 'required|string',
             'travelers.*.nationality' => 'required|string',
             'travelers.*.age' => 'required|integer|min:1',
@@ -161,26 +159,24 @@ class CreateBookingHotel extends Component
     public function save(): void
     {
         $this->validate();
-
 	    // Get room and calculate total price
 	    $room = Room::find($this->room_id);
 	    $roomPrice = $room->weekly_prices[$this->currency] ?? 0;
-	    $totalPrice = $roomPrice * $this->rooms_count * $this->nights_count;
+	    $breakdown = $room->priceBreakdownForPeriod($this->check_in, $this->check_out, $this->currency);
 
-        // Create booking
+		// Create booking
         $booking = Booking::create([
             'user_id' => $this->user_id,
-            'trip_id' => $this->trip_id,
             'check_in' => $this->check_in,
             'check_out' => $this->check_out,
-            'nights_count' => $this->nights_count,
+            'nights_count' => $breakdown['nights_count'],
 	        'adults_count' => $room->adults_count,
 	        'children_count' => $room->children_count,
-            'price' => $totalPrice,
-            'total_price' => $totalPrice,
+            'price' => $breakdown['total'],
+            'total_price' => $breakdown['total'],
             'currency' => $this->currency,
             'notes' => $this->notes,
-            'status' => Status::Pending,
+            'status' => $this->status,
         ]);
 
 	    // Create hotel booking
@@ -188,8 +184,7 @@ class CreateBookingHotel extends Component
 		    'booking_id' => $booking->id,
 		    'hotel_id' => $this->hotel_id,
 		    'room_id' => $this->room_id,
-		    'room_price' => $room->weekly_prices,
-		    'rooms_count' => $this->rooms_count,
+		    'room_includes' => $room->includes,
 	    ]);
 
         // Create travelers

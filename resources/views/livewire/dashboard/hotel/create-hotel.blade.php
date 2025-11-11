@@ -6,7 +6,6 @@
 <div>
 	<x-card title="{{ __('lang.add_hotel') }}" shadow class="mb-3">
 		<form wire:submit.prevent="saveAdd">
-			<div class="max-h-[75vh] overflow-y-auto p-4 space-y-6">
 
 				{{-- Basic Information Section --}}
 				<div class="border-b pb-4">
@@ -81,9 +80,6 @@
 					</h3>
 					<x-image-library wire:model="images" wire:library="library" :preview="$library" label="{{__('lang.project_images')}}"/>
 				</div>
-
-			</div>
-
 
 			<div class="mt-6 flex justify-end gap-2 px-4 pb-4">
 				<x-button label="{{__('lang.cancel')}}" @click="window.location='{{route('hotels')}}'" wire:loading.attr="disabled"/>

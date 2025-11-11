@@ -174,13 +174,7 @@
             }
         "
     >
-        <input
-            x-ref="phoneInput"
-            type="tel"
-            id="{{ $uuid }}"
-            {{ $attributes->merge(['class' => 'input input-bordered w-full ']) }}
-            @if($required) required @endif
-        />
+        <input x-ref="phoneInput" type="tel" id="{{ $uuid }}" {{ $attributes->merge(['class' => 'input input-bordered w-full ']) }}@if($required) required @endif/>
     </div>
 
     {{-- Error Messages --}}

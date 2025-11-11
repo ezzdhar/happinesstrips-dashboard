@@ -23,7 +23,7 @@
                         <th class="text-center">#</th>
                         <th class="text-center">{{__('lang.booking_number')}}</th>
                         <th class="text-center">{{__('lang.user')}}</th>
-                        <th class="text-center">{{__('lang.trip')}}</th>
+                        <th class="text-center">{{__('lang.room')}}</th>
                         <th class="text-center">{{__('lang.hotels')}}</th>
                         <th class="text-center">{{__('lang.check_in')}}</th>
                         <th class="text-center">{{__('lang.check_out')}}</th>
@@ -38,7 +38,7 @@
                             <th class="text-center">{{$bookings->firstItem() + $loop->index}}</th>
                             <th class="text-nowrap">{{$booking->booking_number}}</th>
                             <th class="text-nowrap">{{$booking->user->name}}</th>
-                            <th class="text-nowrap">{{$booking->trip->name}}</th>
+                            <th class="text-nowrap">{{$booking->bookingHotels->room->name}}</th>
                             <th class="text-center">{{$booking->bookingHotels->count()}}</th>
                             <th class="text-center text-nowrap">{{formatDate($booking->check_in)}}</th>
                             <th class="text-center text-nowrap">{{formatDate($booking->check_out)}}</th>

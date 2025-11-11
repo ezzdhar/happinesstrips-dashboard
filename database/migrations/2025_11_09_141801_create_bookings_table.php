@@ -23,8 +23,8 @@ return new class extends Migration
             $table->integer('adults_count')->default(1);
             $table->integer('children_count')->default(0);
 
-            $table->decimal('price',2);
-            $table->decimal('total_price',2);
+            $table->decimal('price',8);
+            $table->decimal('total_price',8);
 	        $table->string('currency')->default('egp');;
 
             $table->text('notes')->nullable();
