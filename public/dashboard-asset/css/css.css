@@ -239,11 +239,11 @@
     animation: rotation 0.5s linear infinite reverse;
 }
 
-.badge {
-    white-space: nowrap !important;
-    color: white !important;
-    background-color: #3b25c1 !important;
-}
+/*.badge {*/
+/*    white-space: nowrap !important;*/
+/*    color: white !important;*/
+/*    background-color: #3b25c1 !important;*/
+/*}*/
 
 @keyframes rotation {
     0% {

@@ -14,7 +14,6 @@ return new class extends Migration
             $table->foreignId('hotel_id')->constrained()->cascadeOnDelete();
             $table->foreignId('room_id')->nullable()->constrained()->cascadeOnDelete();
             $table->json('room_price')->nullable(); // {"egp": 0, "usd": 0}
-            $table->integer('rooms_count')->default(1); // عدد الغرف من نفس النوع
             $table->timestamps();
         });
     }

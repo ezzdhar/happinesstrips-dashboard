@@ -749,4 +749,7 @@ return [
     'date_to' => 'إلى تاريخ',
     'hotels' => 'الفنادق',
     'trips' => 'الرحلات',
+	'hotel_and_room' => 'الفندق والغرفة',
+	'available_rooms' => 'الغرف المتاحة',
+	'select_hotel_and_dates_to_see_available_rooms' => 'اختر الفندق والتواريخ لرؤية الغرف المتاحة',
 ];

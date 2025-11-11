@@ -115,7 +115,7 @@
     {{-- Label --}}
     @if($label)
         <label for="{{ $uuid }}" class="label">
-            <span class="label-text">
+            <span class="label-text fieldset-legend mb-0.5">
                 {{ $label }}
                 @if($required)
                     <span class="text-error">*</span>
@@ -178,7 +178,7 @@
             x-ref="phoneInput"
             type="tel"
             id="{{ $uuid }}"
-            {{ $attributes->merge(['class' => 'input input-bordered w-full']) }}
+            {{ $attributes->merge(['class' => 'input input-bordered w-full ']) }}
             @if($required) required @endif
         />
     </div>

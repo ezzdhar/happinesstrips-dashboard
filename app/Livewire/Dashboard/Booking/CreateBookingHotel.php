@@ -20,51 +20,47 @@ class CreateBookingHotel extends Component
 {
     public $user_id;
 
-	public $trip_id;
 	public $hotel_id;
+
+	public $room_id;
+	public $selected_room;
 
     public $check_in;
 
     public $check_out;
 
-    public $nights_count = 1;
-
-    public $adults_count = 1;
-
-    public $children_count = 0;
 
     public $notes;
 
     public $currency = 'egp';
+	public $rooms_count = 1;
 
-    // Hotel booking details
-    public $hotels = [];
+	public $nights_count = 1;
 
-
-    // Travelers
 	public $travelers = [];
+	public $hotels = [];
 	public $users = [];
-
-
+	public $rooms = [];
 
     public function mount(): void
     {
-	    $this->users = User::get(['id', 'name'])->toArray();
-	    $this->hotels = Hotel::status(Status::Active)->with('rooms')->get()->map(function ($hotel) {
+	    $this->hotels = Hotel::status(Status::Active)->get()->map(function ($hotel) {
 		    return [
 			    'id' => $hotel->id,
 			    'name' => $hotel->name,
-			    'rooms' => $hotel->rooms->map(function ($room) {
-				    return [
-					    'id' => $room->id,
-					    'name' => $room->name,
-					    'weekly_prices' => $room->weekly_prices,
-				    ];
-			    })->toArray(),
 		    ];
 	    })->toArray();
+	    $this->users = User::role('user')->get(['id', 'name','phone'])->toArray();
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
+
+	//get rooms based on selected hotel
+	public function updatedHotelId(): void
+	{
+		$this->room_id = null;
+		$this->travelers = [];
+		$this->rooms = Room::where('hotel_id', $this->hotel_id)->status(Status::Active)->get();
+	}
 
     public function breadcrumbs(): array
     {
@@ -94,35 +90,48 @@ class CreateBookingHotel extends Component
         $this->updatedCheckIn();
     }
 
-    public function addHotel(): void
+	public function updatedRoomId(): void
     {
-        $this->selected_hotels[] = ['hotel_id' => '', 'room_id' => '', 'rooms_count' => 1];
+	    if ($this->room_id) {
+		    $room = Room::find($this->room_id);
+		    if ($room) {
+			    $this->selected_room = $room;
+			    $this->initializeTravelers($room->adults_count, $room->children_count);
+		    }
+	    }
     }
 
-    public function removeHotel($index): void
+	public function initializeTravelers(int $adultsCount, int $childrenCount): void
     {
-        unset($this->selected_hotels[$index]);
-        $this->selected_hotels = array_values($this->selected_hotels);
-    }
+	    $this->travelers = [];
 
-    public function addTraveler(): void
-    {
-        $this->travelers[] = [
-            'full_name' => '',
-            'phone_key' => '+20',
-            'phone' => '',
-            'nationality' => '',
-            'age' => '',
-            'id_type' => 'passport',
-            'id_number' => '',
-            'type' => 'adult',
-        ];
-    }
+	    // Add adults
+	    for ($i = 0; $i < $adultsCount; $i++) {
+		    $this->travelers[] = [
+			    'full_name' => '',
+			    'phone_key' => '+20',
+			    'phone' => '',
+			    'nationality' => '',
+			    'age' => '',
+			    'id_type' => 'passport',
+			    'id_number' => '',
+			    'type' => 'adult',
+		    ];
+	    }
 
-    public function removeTraveler($index): void
-    {
-        unset($this->travelers[$index]);
-        $this->travelers = array_values($this->travelers);
+	    // Add children
+	    for ($i = 0; $i < $childrenCount; $i++) {
+		    $this->travelers[] = [
+			    'full_name' => '',
+			    'phone_key' => '+20',
+			    'phone' => '',
+			    'nationality' => '',
+			    'age' => '',
+			    'id_type' => 'passport',
+			    'id_number' => '',
+			    'type' => 'child',
+		    ];
+	    }
     }
 
     public function rules(): array
@@ -130,17 +139,14 @@ class CreateBookingHotel extends Component
         return [
             'user_id' => 'required|exists:users,id',
             'trip_id' => 'required|exists:trips,id',
+	        'hotel_id' => 'required|exists:hotels,id',
+	        'room_id' => 'required|exists:rooms,id',
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
             'nights_count' => 'required|integer|min:1',
-            'adults_count' => 'required|integer|min:1',
-            'children_count' => 'nullable|integer|min:0',
+	        'rooms_count' => 'required|integer|min:1',
             'currency' => 'required|in:egp,usd',
             'notes' => 'nullable|string',
-            'selected_hotels' => 'required|array|min:1',
-            'selected_hotels.*.hotel_id' => 'required|exists:hotels,id',
-            'selected_hotels.*.room_id' => 'required|exists:rooms,id',
-            'selected_hotels.*.rooms_count' => 'required|integer|min:1',
             'travelers' => 'required|array|min:1',
             'travelers.*.full_name' => 'required|string',
             'travelers.*.phone' => 'required|string',
@@ -156,13 +162,10 @@ class CreateBookingHotel extends Component
     {
         $this->validate();
 
-        // Calculate total price
-        $totalPrice = 0;
-        foreach ($this->selected_hotels as $hotelData) {
-            $room = Room::find($hotelData['room_id']);
-            $roomPrice = $room->weekly_prices[$this->currency] ?? 0;
-            $totalPrice += $roomPrice * $hotelData['rooms_count'] * $this->nights_count;
-        }
+	    // Get room and calculate total price
+	    $room = Room::find($this->room_id);
+	    $roomPrice = $room->weekly_prices[$this->currency] ?? 0;
+	    $totalPrice = $roomPrice * $this->rooms_count * $this->nights_count;
 
         // Create booking
         $booking = Booking::create([
@@ -171,8 +174,8 @@ class CreateBookingHotel extends Component
             'check_in' => $this->check_in,
             'check_out' => $this->check_out,
             'nights_count' => $this->nights_count,
-            'adults_count' => $this->adults_count,
-            'children_count' => $this->children_count,
+	        'adults_count' => $room->adults_count,
+	        'children_count' => $room->children_count,
             'price' => $totalPrice,
             'total_price' => $totalPrice,
             'currency' => $this->currency,
@@ -180,17 +183,14 @@ class CreateBookingHotel extends Component
             'status' => Status::Pending,
         ]);
 
-        // Create hotel bookings
-        foreach ($this->selected_hotels as $hotelData) {
-            $room = Room::find($hotelData['room_id']);
-            BookingHotel::create([
-                'booking_id' => $booking->id,
-                'hotel_id' => $hotelData['hotel_id'],
-                'room_id' => $hotelData['room_id'],
-                'room_price' => $room->weekly_prices,
-                'rooms_count' => $hotelData['rooms_count'],
-            ]);
-        }
+	    // Create hotel booking
+	    BookingHotel::create([
+		    'booking_id' => $booking->id,
+		    'hotel_id' => $this->hotel_id,
+		    'room_id' => $this->room_id,
+		    'room_price' => $room->weekly_prices,
+		    'rooms_count' => $this->rooms_count,
+	    ]);
 
         // Create travelers
         foreach ($this->travelers as $travelerData) {
@@ -215,7 +215,14 @@ class CreateBookingHotel extends Component
     {
         $data['users'] = User::get(['id', 'name'])->toArray();
         $data['trips'] = Trip::status(Status::Active)->get(['id', 'name'])->toArray();
-        $data['hotels'] = Hotel::status(Status::Active)->with('rooms')->get();
+	    $data['hotels'] = Hotel::status(Status::Active)->get(['id', 'name']);
+	    $data['rooms'] = [];
+
+	    if ($this->hotel_id) {
+		    $data['rooms'] = Room::where('hotel_id', $this->hotel_id)
+			    ->status(Status::Active)
+			    ->get();
+	    }
 
         return view('livewire.dashboard.booking.create-booking-hotel', $data);
     }
