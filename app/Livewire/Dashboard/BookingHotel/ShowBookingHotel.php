@@ -14,13 +14,13 @@ class ShowBookingHotel extends Component
 
     public function mount(Booking $booking): void
     {
-        $this->booking = $booking->load(['user', 'trip', 'bookingHotel.hotel', 'bookingHotel.room', 'travelers']);
+        $this->booking = $booking->load(['user', 'bookingHotel.hotel', 'bookingHotel.room', 'travelers']);
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
     public function breadcrumbs(): array
     {
-        $isHotelBooking = $this->booking->bookingHotel->count() > 0;
+        $isHotelBooking = $this->booking->bookingHotel !== null;
 
         return [
             [

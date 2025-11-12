@@ -17,15 +17,10 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-sm font-medium text-gray-600">{{ __('lang.user') }}</label>
-                        <p class="text-base">{{ $booking->user->name }}</p>
-                    </div>
-                    <div>
-                        <label class="text-sm font-medium text-gray-600">{{ __('lang.trip') }}</label>
-                        <p class="text-base">{{ $booking->trip->name }}</p>
-                    </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-600">{{ __('lang.user') }}</label>
+                    <p class="text-base">{{ $booking->user->name }}</p>
+                    <p class="text-sm text-gray-500" dir="ltr">{{ $booking->user->full_phone }}</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
@@ -73,22 +68,42 @@
                 @endif
             </div>
 
-            <!-- Hotels Information (if exists) -->
-            @if($booking->bookingHotels->count() > 0)
+            <!-- Hotel Information -->
+            @if($booking->bookingHotel)
                 <div class="space-y-4">
-                    <h3 class="text-lg font-semibold border-b pb-2">{{ __('lang.hotels') }}</h3>
-                    @foreach($booking->bookingHotels as $bookingHotel)
-                        <div class="bg-base-200 p-4 rounded-lg">
-                            <h4 class="font-semibold mb-2">{{ $bookingHotel->hotel->name }}</h4>
-                            <div class="space-y-1">
-                                <p class="text-sm"><span class="font-medium">{{ __('lang.room') }}:</span> {{ $bookingHotel->room->name }}</p>
-                                <p class="text-sm"><span class="font-medium">{{ __('lang.rooms_count') }}:</span> {{ $bookingHotel->rooms_count }}</p>
-                                <p class="text-sm"><span class="font-medium">{{ __('lang.price') }}:</span>
-                                    {{ $bookingHotel->room_price[$booking->currency] ?? 0 }} {{ strtoupper($booking->currency) }} / {{ __('lang.night') }}
+                    <h3 class="text-lg font-semibold border-b pb-2">{{ __('lang.hotel_information') }}</h3>
+
+                    <div class="bg-base-200 p-4 rounded-lg space-y-3">
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">{{ __('lang.hotel') }}</label>
+                            <p class="text-base font-semibold">{{ $booking->bookingHotel->hotel->name }}</p>
+                        </div>
+
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">{{ __('lang.room') }}</label>
+                            <p class="text-base">{{ $booking->bookingHotel->room->name }}</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">{{ __('lang.room_capacity') }}</label>
+                                <p class="text-sm">
+                                    {{ $booking->bookingHotel->room->adults_count }} {{ __('lang.adults') }}
+                                    @if($booking->bookingHotel->room->children_count > 0)
+                                        + {{ $booking->bookingHotel->room->children_count }} {{ __('lang.children') }}
+                                    @endif
                                 </p>
                             </div>
+                            <div>
                         </div>
-                    @endforeach
+
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">{{ __('lang.room_includes') }}</label>
+                                <div class="mt-1 flex flex-wrap gap-2">
+                                    <small class="">{!! $booking->bookingHotel->room_includes !!}</small>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             @endif
         </div>
@@ -116,7 +131,7 @@
                                 <tr class="bg-base-200">
                                     <th class="text-center">{{ $loop->iteration }}</th>
                                     <td>{{ $traveler->full_name }}</td>
-                                    <td>{{ $traveler->phone_key }} {{ $traveler->phone }}</td>
+                                    <td dir="ltr">{{ $traveler->phone_key }} {{ $traveler->phone }}</td>
                                     <td>{{ $traveler->nationality }}</td>
                                     <td class="text-center">{{ $traveler->age }}</td>
                                     <td>{{ __('lang.' . $traveler->id_type) }}</td>
@@ -133,14 +148,10 @@
         @endif
 
         <x-slot:actions>
-            @php
-                $isHotelBooking = $booking->bookingHotels->count() > 0;
-                $backRoute = $isHotelBooking ? route('bookings.hotels') : route('bookings.trips');
-                $editRoute = $isHotelBooking ? route('bookings.hotels.edit', $booking->id) : route('bookings.trips.edit', $booking->id);
-            @endphp
-            <x-button noWireNavigate label="{{ __('lang.back') }}" icon="o-arrow-left" link="{{ $backRoute }}"/>
-            <x-button noWireNavigate label="{{ __('lang.edit') }}" icon="o-pencil" class="btn-primary" link="{{ $editRoute }}"/>
+            <x-button noWireNavigate label="{{ __('lang.back') }}" icon="o-arrow-left" link="{{ route('bookings.hotels') }}"/>
+            <x-button noWireNavigate label="{{ __('lang.edit') }}" icon="o-pencil" class="btn-primary" link="{{ route('bookings.hotels.edit', $booking->id) }}"/>
         </x-slot:actions>
+        </div>
     </x-card>
 </div>
 

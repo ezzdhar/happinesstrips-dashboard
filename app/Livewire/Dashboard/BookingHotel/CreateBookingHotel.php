@@ -51,7 +51,6 @@ class CreateBookingHotel extends Component
 		    ];
 	    })->toArray();
 	    $this->users = User::role('user')->get(['id', 'name','phone'])->toArray();
-	    $this->hotels = Hotel::status(Status::Active)->get(['id', 'name']);
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 

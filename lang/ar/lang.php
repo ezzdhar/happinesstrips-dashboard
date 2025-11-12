@@ -722,5 +722,9 @@ return [
 	'available_rooms' => 'الغرف المتاحة',
 	'select_hotel_and_dates_to_see_available_rooms' => 'اختر الفندق والتواريخ لرؤية الغرف المتاحة',
 	'show_price_details' => 'عرض تفاصيل السعر',
+	'room_capacity' => 'سعة الغرفة',
+	'room_includes' => 'تتضمن الغرفة',
+	'type' => 'النوع',
+	'back' => 'رجوع',
 
 ];

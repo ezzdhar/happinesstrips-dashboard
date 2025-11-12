@@ -4,13 +4,13 @@ namespace App\Livewire\Dashboard\BookingHotel;
 
 use App\Enums\Status;
 use App\Models\Booking;
-use App\Models\BookingHotel;
 use App\Models\BookingTraveler;
 use App\Models\Hotel;
 use App\Models\Room;
-use App\Models\Trip;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -21,53 +21,49 @@ class UpdateBookingHotel extends Component
 
     public $user_id;
 
-    public $trip_id;
+    public $hotel_id;
+
+    public $room_id;
+
+    public $selected_room;
 
     public $check_in;
 
     public $check_out;
 
-    public $nights_count = 1;
-
-    public $adults_count = 1;
-
-    public $children_count = 0;
+    public $status;
 
     public $notes;
 
     public $currency = 'egp';
 
-    public $status;
+    public $nights_count = 1;
 
-    // Hotel booking details
-    public $selected_hotels = [];
-
-    // Travelers
     public $travelers = [];
+
+    public $hotels = [];
+
+    public $users = [];
+
+    public $rooms = [];
 
     public function mount(Booking $booking): void
     {
         $this->booking = $booking->load(['bookingHotel', 'travelers']);
 
         $this->user_id = $booking->user_id;
-        $this->trip_id = $booking->trip_id;
         $this->check_in = $booking->check_in?->format('Y-m-d');
         $this->check_out = $booking->check_out?->format('Y-m-d');
         $this->nights_count = $booking->nights_count;
-        $this->adults_count = $booking->adults_count;
-        $this->children_count = $booking->children_count;
         $this->notes = $booking->notes;
         $this->currency = $booking->currency;
         $this->status = $booking->status->value;
 
-        // Load hotel bookings
-        foreach ($booking->bookingHotels as $bookingHotel) {
-            $this->selected_hotels[] = [
-                'id' => $bookingHotel->id,
-                'hotel_id' => $bookingHotel->hotel_id,
-                'room_id' => $bookingHotel->room_id,
-                'rooms_count' => $bookingHotel->rooms_count,
-            ];
+        // Load hotel booking (single)
+        if ($booking->bookingHotel) {
+            $this->hotel_id = $booking->bookingHotel->hotel_id;
+            $this->room_id = $booking->bookingHotel->room_id;
+            $this->selected_room = $booking->bookingHotel->room;
         }
 
         // Load travelers
@@ -83,6 +79,20 @@ class UpdateBookingHotel extends Component
                 'id_number' => $traveler->id_number,
                 'type' => $traveler->type,
             ];
+        }
+
+        // Load data for dropdowns
+	    $this->hotels = Hotel::status(Status::Active)->get()->map(function ($hotel) {
+		    return [
+			    'id' => $hotel->id,
+			    'name' => $hotel->name,
+		    ];
+	    })->toArray();
+		$this->users = User::role('user')->get(['id', 'name', 'phone'])->toArray();
+
+        // Load rooms for selected hotel
+        if ($this->hotel_id) {
+            $this->rooms = Room::where('hotel_id', $this->hotel_id)->status(Status::Active)->get();
         }
 
         view()->share('breadcrumbs', $this->breadcrumbs());
@@ -102,6 +112,27 @@ class UpdateBookingHotel extends Component
         ];
     }
 
+    // get rooms based on selected hotel
+    public function updatedHotelId(): void
+    {
+        $this->room_id = null;
+        $this->rooms = [];
+        $this->selected_room = null;
+        if ($this->hotel_id) {
+            $this->rooms = Room::where('hotel_id', $this->hotel_id)->status(Status::Active)->get();
+        }
+    }
+
+    public function updatedRoomId(): void
+    {
+        if ($this->room_id) {
+            $room = Room::find($this->room_id);
+            if ($room) {
+                $this->selected_room = $room;
+            }
+        }
+    }
+
     public function updatedCheckIn(): void
     {
         if ($this->check_in && $this->check_out) {
@@ -116,62 +147,20 @@ class UpdateBookingHotel extends Component
         $this->updatedCheckIn();
     }
 
-    public function addHotel(): void
-    {
-        $this->selected_hotels[] = ['hotel_id' => '', 'room_id' => '', 'rooms_count' => 1];
-    }
-
-    public function removeHotel($index): void
-    {
-        if (isset($this->selected_hotels[$index]['id'])) {
-            BookingHotel::destroy($this->selected_hotels[$index]['id']);
-        }
-        unset($this->selected_hotels[$index]);
-        $this->selected_hotels = array_values($this->selected_hotels);
-    }
-
-    public function addTraveler(): void
-    {
-        $this->travelers[] = [
-            'full_name' => '',
-            'phone_key' => '+20',
-            'phone' => '',
-            'nationality' => '',
-            'age' => '',
-            'id_type' => 'passport',
-            'id_number' => '',
-            'type' => 'adult',
-        ];
-    }
-
-    public function removeTraveler($index): void
-    {
-        if (isset($this->travelers[$index]['id'])) {
-            BookingTraveler::destroy($this->travelers[$index]['id']);
-        }
-        unset($this->travelers[$index]);
-        $this->travelers = array_values($this->travelers);
-    }
-
     public function rules(): array
     {
         return [
             'user_id' => 'required|exists:users,id',
-            'trip_id' => 'required|exists:trips,id',
+            'hotel_id' => 'required|exists:hotels,id',
+            'room_id' => 'required|exists:rooms,id',
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
             'nights_count' => 'required|integer|min:1',
-            'adults_count' => 'required|integer|min:1',
-            'children_count' => 'nullable|integer|min:0',
             'currency' => 'required|in:egp,usd',
-            'status' => 'required|in:'.implode(',', array_column(Status::cases(), 'value')),
             'notes' => 'nullable|string',
-            'selected_hotels' => 'required|array|min:1',
-            'selected_hotels.*.hotel_id' => 'required|exists:hotels,id',
-            'selected_hotels.*.room_id' => 'required|exists:rooms,id',
-            'selected_hotels.*.rooms_count' => 'required|integer|min:1',
             'travelers' => 'required|array|min:1',
             'travelers.*.full_name' => 'required|string',
+            'travelers.*.phone_key' => 'required|string',
             'travelers.*.phone' => 'required|string',
             'travelers.*.nationality' => 'required|string',
             'travelers.*.age' => 'required|integer|min:1',
@@ -185,107 +174,86 @@ class UpdateBookingHotel extends Component
     {
         $this->validate();
 
-        // Calculate total price
-        $totalPrice = 0;
-        foreach ($this->selected_hotels as $hotelData) {
-            $room = Room::find($hotelData['room_id']);
-            $roomPrice = $room->weekly_prices[$this->currency] ?? 0;
-            $totalPrice += $roomPrice * $hotelData['rooms_count'] * $this->nights_count;
-        }
+        // Get room and calculate total price
+        $room = Room::find($this->room_id);
+        $breakdown = $room->priceBreakdownForPeriod($this->check_in, $this->check_out, $this->currency);
 
-        // Update booking
-        $this->booking->update([
-            'user_id' => $this->user_id,
-            'trip_id' => $this->trip_id,
-            'check_in' => $this->check_in,
-            'check_out' => $this->check_out,
-            'nights_count' => $this->nights_count,
-            'adults_count' => $this->adults_count,
-            'children_count' => $this->children_count,
-            'price' => $totalPrice,
-            'total_price' => $totalPrice,
-            'currency' => $this->currency,
-            'notes' => $this->notes,
-            'status' => $this->status,
-        ]);
+        try {
+            DB::beginTransaction();
 
-        // Update hotel bookings
-        $existingIds = [];
-        foreach ($this->selected_hotels as $hotelData) {
-            $room = Room::find($hotelData['room_id']);
+            // Update booking
+            $this->booking->update([
+                'user_id' => $this->user_id,
+                'check_in' => $this->check_in,
+                'check_out' => $this->check_out,
+                'nights_count' => $breakdown['nights_count'],
+                'adults_count' => $room->adults_count,
+                'children_count' => $room->children_count,
+                'price' => $breakdown['total'],
+                'total_price' => $breakdown['total'],
+                'currency' => $this->currency,
+                'notes' => $this->notes,
+                'status' => $this->status,
+            ]);
 
-            if (isset($hotelData['id'])) {
-                BookingHotel::find($hotelData['id'])->update([
-                    'hotel_id' => $hotelData['hotel_id'],
-                    'room_id' => $hotelData['room_id'],
-                    'room_price' => $room->weekly_prices,
-                    'rooms_count' => $hotelData['rooms_count'],
-                ]);
-                $existingIds[] = $hotelData['id'];
-            } else {
-                $newBookingHotel = BookingHotel::create([
-                    'booking_id' => $this->booking->id,
-                    'hotel_id' => $hotelData['hotel_id'],
-                    'room_id' => $hotelData['room_id'],
-                    'room_price' => $room->weekly_prices,
-                    'rooms_count' => $hotelData['rooms_count'],
-                ]);
-                $existingIds[] = $newBookingHotel->id;
+            // Update or create hotel booking
+            $this->booking->bookingHotel()->updateOrCreate(
+                ['booking_id' => $this->booking->id],
+                [
+                    'hotel_id' => $this->hotel_id,
+                    'room_id' => $this->room_id,
+                    'room_includes' => $room->includes,
+                ]
+            );
+
+            // Update travelers
+            $existingTravelerIds = [];
+            foreach ($this->travelers as $travelerData) {
+                if (isset($travelerData['id'])) {
+                    BookingTraveler::find($travelerData['id'])->update([
+                        'full_name' => $travelerData['full_name'],
+                        'phone_key' => $travelerData['phone_key'] ?? '+20',
+                        'phone' => $travelerData['phone'],
+                        'nationality' => $travelerData['nationality'],
+                        'age' => $travelerData['age'],
+                        'id_type' => $travelerData['id_type'],
+                        'id_number' => $travelerData['id_number'],
+                        'type' => $travelerData['type'],
+                    ]);
+                    $existingTravelerIds[] = $travelerData['id'];
+                } else {
+                    $newTraveler = BookingTraveler::create([
+                        'booking_id' => $this->booking->id,
+                        'full_name' => $travelerData['full_name'],
+                        'phone_key' => $travelerData['phone_key'] ?? '+20',
+                        'phone' => $travelerData['phone'],
+                        'nationality' => $travelerData['nationality'],
+                        'age' => $travelerData['age'],
+                        'id_type' => $travelerData['id_type'],
+                        'id_number' => $travelerData['id_number'],
+                        'type' => $travelerData['type'],
+                    ]);
+                    $existingTravelerIds[] = $newTraveler->id;
+                }
             }
+
+            // Delete removed travelers
+            BookingTraveler::where('booking_id', $this->booking->id)
+                ->whereNotIn('id', $existingTravelerIds)
+                ->delete();
+
+            DB::commit();
+            flash()->success(__('lang.updated_successfully', ['attribute' => __('lang.booking')]));
+            $this->redirectIntended(default: route('bookings.hotels'), navigate: true);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            flash()->error(__('lang.error_occurred'));
+            Log::error($e->getMessage());
         }
-
-        // Delete removed hotels
-        BookingHotel::where('booking_id', $this->booking->id)
-            ->whereNotIn('id', $existingIds)
-            ->delete();
-
-        // Update travelers
-        $existingTravelerIds = [];
-        foreach ($this->travelers as $travelerData) {
-            if (isset($travelerData['id'])) {
-                BookingTraveler::find($travelerData['id'])->update([
-                    'full_name' => $travelerData['full_name'],
-                    'phone_key' => $travelerData['phone_key'] ?? '+20',
-                    'phone' => $travelerData['phone'],
-                    'nationality' => $travelerData['nationality'],
-                    'age' => $travelerData['age'],
-                    'id_type' => $travelerData['id_type'],
-                    'id_number' => $travelerData['id_number'],
-                    'type' => $travelerData['type'],
-                ]);
-                $existingTravelerIds[] = $travelerData['id'];
-            } else {
-                $newTraveler = BookingTraveler::create([
-                    'booking_id' => $this->booking->id,
-                    'full_name' => $travelerData['full_name'],
-                    'phone_key' => $travelerData['phone_key'] ?? '+20',
-                    'phone' => $travelerData['phone'],
-                    'nationality' => $travelerData['nationality'],
-                    'age' => $travelerData['age'],
-                    'id_type' => $travelerData['id_type'],
-                    'id_number' => $travelerData['id_number'],
-                    'type' => $travelerData['type'],
-                ]);
-                $existingTravelerIds[] = $newTraveler->id;
-            }
-        }
-
-        // Delete removed travelers
-        BookingTraveler::where('booking_id', $this->booking->id)
-            ->whereNotIn('id', $existingTravelerIds)
-            ->delete();
-
-        flash()->success(__('lang.updated_successfully', ['attribute' => __('lang.booking')]));
-        $this->redirectIntended(default: route('bookings.hotels'), navigate: true);
     }
 
     public function render(): View
     {
-        $data['users'] = User::get(['id', 'name'])->toArray();
-        $data['trips'] = Trip::status(Status::Active)->get(['id', 'name'])->toArray();
-        $data['hotels'] = Hotel::status(Status::Active)->with('rooms')->get();
-        $data['statuses'] = Status::cases();
-
-        return view('livewire.dashboard.booking-hotel.update-booking-hotel', $data);
+        return view('livewire.dashboard.booking-hotel.update-booking-hotel');
     }
 }
