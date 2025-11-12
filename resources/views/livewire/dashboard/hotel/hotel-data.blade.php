@@ -2,7 +2,9 @@
 <div>
 	<x-card title="{{ __('lang.hotels') }}" shadow class="mb-3">
 		<x-slot:menu>
-			<x-button noWireNavigate label="{{ __('lang.add') }}" icon="o-plus" class="btn-primary btn-sm" link="{{route('hotels.create')}}"/>
+			@can('create_hotel')
+				<x-button noWireNavigate label="{{ __('lang.add') }}" icon="o-plus" class="btn-primary btn-sm" link="{{route('hotels.create')}}"/>
+			@endcan
 		</x-slot:menu>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
 			<x-input label="{{ __('lang.search') }}" wire:model.live="search" placeholder="{{ __('lang.search') }}" icon="o-magnifying-glass" clearable/>
@@ -48,10 +50,13 @@
 							<th class="text-center text-nowrap">{{formatDate($hotel->created_at, true) }}</th>
 							<td>
 								<div class="flex gap-2 justify-center">
-{{--									<x-button noWireNavigate icon="o-eye" class="btn-sm btn-ghost" link="{{route('hotels.show', $hotel->id)}}" tooltip="{{__('lang.view')}}"/>--}}
+									@can('update_hotel')
 									<x-button noWireNavigate icon="o-pencil" class="btn-sm btn-ghost" link="{{route('hotels.edit', $hotel->id)}}" tooltip="{{__('lang.edit')}}"/>
+									@endcan
+									@can('delete_hotel')
 									<x-button icon="o-trash" class="btn-sm btn-ghost" wire:click="deleteSweetAlert({{$hotel->id}})" wire:loading.attr="disabled"
 									          wire:target="deleteSweetAlert({{$hotel->id}})" spinner="deleteSweetAlert({{$hotel->id}})" tooltip="{{__('lang.delete')}}"/>
+									@endcan
 									@can('show_room')
 										<x-button noWireNavigate icon="ionicon.bed-outline" class="btn-sm btn-ghost" link="{{route('rooms', ['hotel_id_filter' => $hotel->id])}}" tooltip="{{__('lang.rooms')}}"/>
 									@endcan

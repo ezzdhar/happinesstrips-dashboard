@@ -7,14 +7,14 @@ use App\Models\Hotel;
 use App\Models\Room;
 use App\Services\FileService;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+#[Title('update_room')]
 class UpdateRoom extends Component
 {
     use WithFileUploads;
-
-    public bool $modalUpdate = false;
 
     public Room $room;
 
@@ -42,6 +42,11 @@ class UpdateRoom extends Component
 
     public function mount(): void
     {
+	    if (auth()->user()->hasRole('hotel')) {
+		    if ($this->room->hotel->user_id != auth()->id()) {
+			    abort(403);
+		    }
+	    }
         $this->name_ar = $this->room->getTranslation('name', 'ar');
         $this->name_en = $this->room->getTranslation('name', 'en');
         $this->status = $this->room->status->value;
@@ -57,8 +62,21 @@ class UpdateRoom extends Component
 		    ];
 	    })->toArray();
 		$this->loadWeeklyPrices();
+	    view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
+	public function breadcrumbs(): array
+	{
+		return [
+			[
+				'label' => __('lang.rooms'),
+				'icon' => 'ionicon.bed-outline',
+			],
+			[
+				'label' => __('lang.update_room'),
+			],
+		];
+	}
     public function loadWeeklyPrices(): void
     {
         $existingPrices = $this->room->weekly_prices ?? [];
@@ -101,7 +119,7 @@ class UpdateRoom extends Component
         ];
     }
 
-    public function saveUpdate(): void
+	public function saveUpdate()
     {
         $this->validate();
 
@@ -130,9 +148,8 @@ class UpdateRoom extends Component
             }
         }
 
-        $this->modalUpdate = false;
-        $this->dispatch('render')->component(RoomData::class);
-        flash()->success(__('lang.updated_successfully', ['attribute' => __('lang.room')]));
+	    return to_route('rooms')->with('success', __('lang.updated_successfully', ['attribute' => __('lang.room')]));
+
     }
 
     public function deleteImage($imageId): void

@@ -18,7 +18,9 @@ use App\Livewire\Dashboard\Hotel\UpdateHotel;
 use App\Livewire\Dashboard\MainCategory\MainCategoryData;
 use App\Livewire\Dashboard\Profile\Profile;
 use App\Livewire\Dashboard\Role\RoleData;
+use App\Livewire\Dashboard\Room\CreateRoom;
 use App\Livewire\Dashboard\Room\RoomData;
+use App\Livewire\Dashboard\Room\UpdateRoom;
 use App\Livewire\Dashboard\SubCategory\SubCategoryData;
 use App\Livewire\Dashboard\Trip\CreateTrip;
 use App\Livewire\Dashboard\Trip\TripData;
@@ -56,7 +58,15 @@ Route::middleware(['web-language'])->group(function () {
             Route::get('/edit/{hotel}', UpdateHotel::class)->name('hotels.edit')->middleware('permission:update_hotel');
             //		    Route::get('/show/{hotel}', HotelData::class)->name('hotels.show');
         });
-        Route::get('rooms', RoomData::class)->name('rooms')->middleware('permission:show_room'); // rooms
+
+	    // rooms
+	    Route::prefix('rooms')->middleware('permission:show_room')->group(function () {
+		    Route::get('/', RoomData::class)->name('rooms');
+		    Route::get('/create-room', CreateRoom::class)->name('rooms.create')->middleware('permission:create_room');
+		    Route::get('/edit/{room}', UpdateRoom::class)->name('rooms.edit')->middleware('permission:update_room');
+	    });
+
+	    // Trips
         Route::prefix('trips')->middleware('permission:show_trip')->group(function () {
             Route::get('/', TripData::class)->name('trips');
             Route::get('/create-trip', CreateTrip::class)->name('trips.create')->middleware('permission:create_trip');

@@ -6,14 +6,14 @@ use App\Enums\Status;
 use App\Models\Hotel;
 use App\Models\Room;
 use App\Services\FileService;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+#[Title('add_room')]
 class CreateRoom extends Component
 {
     use WithFileUploads;
-
-    public bool $modalAdd = false;
 
     public $name_ar;
 
@@ -46,7 +46,21 @@ class CreateRoom extends Component
 	        ];
         })->toArray();
         $this->initializeWeeklyPrices();
+	    view()->share('breadcrumbs', $this->breadcrumbs());
     }
+
+	public function breadcrumbs(): array
+	{
+		return [
+			[
+				'label' => __('lang.rooms'),
+				'icon' => 'ionicon.bed-outline',
+			],
+			[
+				'label' => __('lang.add_room'),
+			],
+		];
+	}
 
     public function initializeWeeklyPrices(): void
     {
@@ -82,7 +96,7 @@ class CreateRoom extends Component
         ];
     }
 
-    public function saveAdd(): void
+    public function saveAdd()
     {
         $this->validate();
         $room = Room::create([
@@ -110,9 +124,7 @@ class CreateRoom extends Component
             }
         }
 
-        $this->modalAdd = false;
-        $this->dispatch('render')->component(RoomData::class);
-        flash()->success(__('lang.added_successfully', ['attribute' => __('lang.room')]));
+		return to_route('rooms')->with('success', __('lang.added_successfully', ['attribute' => __('lang.room')]));
     }
 
     public function resetData(): void

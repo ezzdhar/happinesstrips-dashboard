@@ -727,5 +727,5 @@ return [
 	'type' => 'النوع',
 	'back' => 'رجوع',
 	'search_booking_number' => 'بحث برقم الحجز',
-
+	'add_room' => 'إضافة غرفة',
 ];

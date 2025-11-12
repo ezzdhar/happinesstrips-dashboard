@@ -1,8 +1,13 @@
 @php use App\Enums\Status;use App\Services\FileService; @endphp
+@assets()
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+<script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+@endassets()
 <div>
-	<x-button icon="o-pencil" class="btn-sm btn-ghost" @click="$wire.modalUpdate = true" wire:loading.attr="disabled" tooltip="{{__('lang.edit')}}"/>
-	<x-modal wire:model="modalUpdate" title="{{__('lang.update').' '.__('lang.room')}}" box-class="modal-box-700" persistent>
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+	<x-card title="{{ __('lang.add_room') }}" shadow class="mb-3">
+		<form wire:submit.prevent="saveUpdate">
+
+		<div class="grid grid-cols-1 sm-only:grid-cols-2 md:grid-cols-3 gap-3">
 			<x-input label="{{ __('lang.name').' ('.__('lang.ar').')' }}" wire:model="name_ar" placeholder="{{ __('lang.name').' ('.__('lang.ar').')' }}" icon="o-language"/>
 			<x-input label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
 
@@ -18,14 +23,14 @@
 			<x-input label="{{ __('lang.children_count') }}" wire:model="children_count" type="number" min="0" placeholder="{{ __('lang.children_count') }}" icon="o-user-group"/>
 		</div>
 
-		<div class="grid grid-cols-1 gap-3 mt-3">
-			<x-textarea label="{{ __('lang.includes').' ('.__('lang.ar').')' }}" wire:model="includes_ar" placeholder="{{ __('lang.includes').' ('.__('lang.ar').')' }}" rows="3"/>
-			<x-textarea label="{{ __('lang.includes').' ('.__('lang.en').')' }}" wire:model="includes_en" placeholder="{{ __('lang.includes').' ('.__('lang.en').')' }}" rows="3"/>
-		</div>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+				<x-trix required wire:model="includes_ar" label="{{ __('lang.includes').' ('.__('lang.ar').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
+				<x-trix dir="ltr" required wire:model="includes_en" label="{{ __('lang.includes').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
+			</div>
 
 		<div class="mt-4">
 			<h3 class="font-bold text-lg mb-3">{{ __('lang.weekly_prices') }}</h3>
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+			<div class="grid grid-cols-1 sm-only:grid-cols-2 md:grid-cols-4 gap-3">
 				@foreach(['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as $day)
 					<div class="card bg-base-200 p-3">
 						<h4 class="font-semibold mb-2">{{ __('lang.'.$day) }}</h4>
@@ -59,10 +64,10 @@
 			<x-progress class="progress-primary h-0.5" indeterminate wire:loading wire:target="images"/>
 		</div>
 
-		<x-slot:actions>
-			<x-button label="{{__('lang.cancel')}}" @click="$wire.modalUpdate = false;$wire.resetError()" wire:loading.attr="disabled"/>
-			<x-button label="{{__('lang.update')}}" class="btn-primary" wire:click="saveUpdate" wire:loading.attr="disabled" wire:target="saveUpdate" spinner="saveUpdate"/>
-		</x-slot:actions>
-	</x-modal>
+			<div class="mt-6 flex justify-end gap-2 px-4 pb-4">
+				<x-button label="{{__('lang.cancel')}}" @click="window.location='{{route('hotels')}}'" wire:loading.attr="disabled"/>
+				<x-button label="{{__('lang.save')}}" class="btn-primary" type="submit" wire:loading.attr="disabled" wire:target="saveAdd,images" spinner="saveAdd"/>
+			</div>
+		</form>
+	</x-card>
 </div>
-

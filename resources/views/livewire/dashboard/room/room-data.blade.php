@@ -2,12 +2,14 @@
 <div>
 	<x-card title="{{ __('lang.rooms') }}" shadow class="mb-3">
 		<x-slot:menu>
-				<livewire:dashboard.room.create-room wire:key="{{\Illuminate\Support\Str::random(20)}}"></livewire:dashboard.room.create-room>
+			@can('create_room')
+				<x-button noWireNavigate label="{{ __('lang.add') }}" icon="o-plus" class="btn-sm btn-primary" link="{{route('rooms.create')}}"/>
+			@endcan
 		</x-slot:menu>
 		<div class="grid grid-cols-2 sm-only:grid-cols-3 md:grid-cols-3 gap-4 mb-6">
-			<x-stat title="{{ __('lang.rooms') }}" value="{{ $rooms->total() }}" icon="fas.list" color="text-primary"/>
-			<x-stat title="{{ __('lang.rooms_active') }}" value="{{ $rooms_active }}" icon="fas.check-circle" color="text-green-500"/>
-			<x-stat title="{{ __('lang.rooms_inactive') }}" value="{{ $rooms_inactive }}" icon="fas.times-circle" color="text-red-500"/>
+			<x-stat title="{{ __('lang.rooms') }}" value="{{ $rooms->total() }}" icon="fas.list" class="border" color="text-primary"/>
+			<x-stat title="{{ __('lang.rooms_active') }}" value="{{ $rooms_active }}" icon="fas.check-circle" class="border" color="text-{{Status::fromValue(Status::Active)->color()}}"/>
+			<x-stat title="{{ __('lang.rooms_inactive') }}" value="{{ $rooms_inactive }}" icon="fas.times-circle" class="border" color="text-{{Status::fromValue(Status::Inactive)->color()}}"/>
 		</div>
 		<div class="grid grid-cols-1 sm-only:grid-cols-3 md:grid-cols-3 gap-3 mb-3">
 			<x-input label="{{ __('lang.search') }}" wire:model.live.debounce="search" placeholder="{{ __('lang.search') }}" icon="o-magnifying-glass" clearable/>
@@ -47,9 +49,14 @@
 							<th class="text-center text-nowrap">{{formatDate($room->created_at, true) }}</th>
 							<td>
 								<div class="flex gap-2 justify-center">
-									<livewire:dashboard.room.update-room :room="$room" :key="\Illuminate\Support\Str::random(10)"/>
-									<x-button icon="o-trash" class="btn-sm btn-ghost" wire:click="deleteSweetAlert({{$room->id}})" wire:loading.attr="disabled"
+									@can('update_room')
+										<x-button noWireNavigate tooltip="{{ __('lang.update') }}" icon="o-pencil" class="btn-sm btn-ghost" link="{{route('rooms.edit',$room->id)}}"/>
+									@endcan
+
+									@can('delete_room')
+										<x-button icon="o-trash" class="btn-sm btn-ghost" wire:click="deleteSweetAlert({{$room->id}})" wire:loading.attr="disabled"
 									          wire:target="deleteSweetAlert({{$room->id}})" spinner="deleteSweetAlert({{$room->id}})" tooltip="{{__('lang.delete')}}"/>
+									@endcan
 								</div>
 							</td>
 						</tr>

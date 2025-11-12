@@ -2,7 +2,9 @@
 <div>
 	<x-card title="{{ __('lang.trips') }}" shadow class="mb-3">
 		<x-slot:menu>
-			<x-button noWireNavigate label="{{ __('lang.add') }}" icon="o-plus" class="btn-primary btn-sm" link="{{route('trips.create')}}"/>
+			@can('create_trip')
+				<x-button noWireNavigate label="{{ __('lang.add') }}" icon="o-plus" class="btn-primary btn-sm" link="{{route('trips.create')}}"/>
+			@endcan
 		</x-slot:menu>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
 			<x-input label="{{ __('lang.search') }}" wire:model.live="search" placeholder="{{ __('lang.search') }}" icon="o-magnifying-glass" clearable/>
@@ -63,9 +65,13 @@
 							<th class="text-center text-nowrap">{{formatDate($trip->created_at, true) }}</th>
 							<td>
 								<div class="flex gap-2 justify-center">
-									<x-button noWireNavigate icon="o-pencil" class="btn-sm btn-ghost" link="{{route('trips.edit', $trip->id)}}" tooltip="{{__('lang.edit')}}"/>
+									@can('update_trip')
+										<x-button noWireNavigate icon="o-pencil" class="btn-sm btn-ghost" link="{{route('trips.edit', $trip->id)}}" tooltip="{{__('lang.edit')}}"/>
+									@endcan
+									@can('delete_trip')
 									<x-button icon="o-trash" class="btn-sm btn-ghost" wire:click="deleteSweetAlert({{$trip->id}})" wire:loading.attr="disabled"
 									          wire:target="deleteSweetAlert({{$trip->id}})" spinner="deleteSweetAlert({{$trip->id}})" tooltip="{{__('lang.delete')}}"/>
+									@endcan
 								</div>
 							</td>
 						</tr>
