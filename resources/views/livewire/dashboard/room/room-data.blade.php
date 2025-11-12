@@ -30,7 +30,7 @@
 						<th class="text-center">{{__('lang.hotel')}}</th>
 						<th class="text-center">{{__('lang.adults_count')}}</th>
 						<th class="text-center">{{__('lang.children_count')}}</th>
-						<th class="text-center">{{__('lang.amenities')}}</th>
+{{--						<th class="text-center">{{__('lang.amenities')}}</th>--}}
 						<th class="text-center">{{__('lang.status')}}</th>
 						<th class="text-center">{{__('lang.created_at')}}</th>
 						<th class="text-center">{{__('lang.action')}}</th>
@@ -44,15 +44,15 @@
 							<th class="text-center text-nowrap">{{$room->hotel->name}}</th>
 							<th class="text-center text-nowrap">{{$room->adults_count}}</th>
 							<th class="text-center text-nowrap">{{$room->children_count}}</th>
-							<th class="text-center">
-								<div class="flex gap-1 flex-wrap justify-center">
-									@forelse($room->amenities as $amenity)
-										<x-icon :name="$amenity->icon" class="w-5 h-5" :tooltip="$amenity->name"/>
-									@empty
-										<span class="text-gray-400">-</span>
-									@endforelse
-								</div>
-							</th>
+{{--							<th class="text-center">--}}
+{{--								<div class="flex gap-1 flex-wrap justify-center">--}}
+{{--									@forelse($room->amenities as $amenity)--}}
+{{--										<x-icon :name="$amenity->icon" class="w-5 h-5" :tooltip="$amenity->name"/>--}}
+{{--									@empty--}}
+{{--										<span class="text-gray-400">-</span>--}}
+{{--									@endforelse--}}
+{{--								</div>--}}
+{{--							</th>--}}
 							<th class="text-center text-nowrap">
 								<x-badge :value="$room->status->title()" class="bg-{{$room->status->color()}}"/>
 							</th>

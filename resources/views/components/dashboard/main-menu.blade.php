@@ -24,7 +24,10 @@
 		<x-menu-item noWireNavigate title="{{__('lang.cities')}}" icon="o-map-pin" link="{{route('cities')}}"/>
 	@endcan
 
-	<x-menu-item noWireNavigate title="{{__('lang.amenities')}}" icon="o-sparkles" link="{{route('amenities')}}"/>
+	@can('show_amenity')
+		<x-menu-item noWireNavigate title="{{__('lang.amenities')}}" icon="o-sparkles" link="{{route('amenities')}}"/>
+	@endcan
+
 	@can('show_hotel')
 		<x-menu-item noWireNavigate title="{{__('lang.hotels')}}" icon="o-building-office-2" link="{{route('hotels')}}"/>
 	@endcan

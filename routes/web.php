@@ -45,7 +45,7 @@ Route::middleware(['web-language'])->group(function () {
         Route::get('main-categories', MainCategoryData::class)->name('main-categories')->middleware('permission:show_main_category'); // main categories
         Route::get('sub-categories', SubCategoryData::class)->name('sub-categories')->middleware('permission:show_sub_category'); // sub categories
         Route::get('cities', CityData::class)->name('cities')->middleware('permission:show_city'); // cities
-        Route::get('amenities', AmenityData::class)->name('amenities'); // amenities
+        Route::get('amenities', AmenityData::class)->name('amenities')->middleware('permission:show_amenity'); // amenities
         Route::prefix('hotels')->middleware('permission:show_hotel')->group(function () {
             Route::get('/', HotelData::class)->name('hotels');
             Route::get('/create-hotel', CreateHotel::class)->name('hotels.create')->middleware('permission:create_hotel');

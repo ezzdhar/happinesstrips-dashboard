@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Amenity;
 use App\Models\File;
 use App\Models\Room;
 use Illuminate\Database\Seeder;
@@ -15,13 +16,13 @@ class RoomSeeder extends Seeder
             ->count(30)
             ->create()
             ->each(function ($room) {
-                File::factory()
-                    ->count(rand(2, 5))
-                    ->image()
-                    ->create([
+                File::factory()->count(rand(2, 5))->image()->create([
                         'fileable_id' => $room->id,
                         'fileable_type' => Room::class,
                     ]);
+				//amenities attachment
+				$amenityIds = Amenity::inRandomOrder()->take(rand(1, 5))->pluck('id');
+				$room->amenities()->attach($amenityIds);
             });
     }
 }
