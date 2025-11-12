@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Dashboard\Booking;
+namespace App\Livewire\Dashboard\BookingHotel;
 
 use App\Enums\Status;
 use App\Models\Booking;
@@ -8,10 +8,11 @@ use App\Models\BookingHotel;
 use App\Models\BookingTraveler;
 use App\Models\Hotel;
 use App\Models\Room;
-use App\Models\Trip;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -50,6 +51,7 @@ class CreateBookingHotel extends Component
 		    ];
 	    })->toArray();
 	    $this->users = User::role('user')->get(['id', 'name','phone'])->toArray();
+	    $this->hotels = Hotel::status(Status::Active)->get(['id', 'name']);
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
@@ -58,7 +60,11 @@ class CreateBookingHotel extends Component
 	{
 		$this->room_id = null;
 		$this->travelers = [];
-		$this->rooms = Room::where('hotel_id', $this->hotel_id)->status(Status::Active)->get();
+		$this->rooms = [];
+		$this->selected_room = null;
+		if ($this->hotel_id) {
+			$this->rooms = Room::where('hotel_id', $this->hotel_id)->status(Status::Active)->get();
+		}
 	}
 
     public function breadcrumbs(): array
@@ -156,69 +162,65 @@ class CreateBookingHotel extends Component
         ];
     }
 
-    public function save(): void
+	public function save()
     {
         $this->validate();
 	    // Get room and calculate total price
 	    $room = Room::find($this->room_id);
-	    $roomPrice = $room->weekly_prices[$this->currency] ?? 0;
 	    $breakdown = $room->priceBreakdownForPeriod($this->check_in, $this->check_out, $this->currency);
 
-		// Create booking
-        $booking = Booking::create([
-            'user_id' => $this->user_id,
-            'check_in' => $this->check_in,
-            'check_out' => $this->check_out,
-            'nights_count' => $breakdown['nights_count'],
-	        'adults_count' => $room->adults_count,
-	        'children_count' => $room->children_count,
-            'price' => $breakdown['total'],
-            'total_price' => $breakdown['total'],
-            'currency' => $this->currency,
-            'notes' => $this->notes,
-            'status' => $this->status,
-        ]);
+	    try {
+		    DB::beginTransaction();
+		    // Create booking
+		    $booking = Booking::create([
+			    'user_id' => $this->user_id,
+			    'check_in' => $this->check_in,
+			    'check_out' => $this->check_out,
+			    'nights_count' => $breakdown['nights_count'],
+			    'adults_count' => $room->adults_count,
+			    'children_count' => $room->children_count,
+			    'price' => $breakdown['total'],
+			    'total_price' => $breakdown['total'],
+			    'currency' => $this->currency,
+			    'notes' => $this->notes,
+			    'status' => $this->status,
+		    ]);
 
-	    // Create hotel booking
-	    BookingHotel::create([
-		    'booking_id' => $booking->id,
-		    'hotel_id' => $this->hotel_id,
-		    'room_id' => $this->room_id,
-		    'room_includes' => $room->includes,
-	    ]);
+		    // Create hotel booking
+		    BookingHotel::create([
+			    'booking_id' => $booking->id,
+			    'hotel_id' => $this->hotel_id,
+			    'room_id' => $this->room_id,
+			    'room_includes' => $room->includes,
+		    ]);
 
-        // Create travelers
-        foreach ($this->travelers as $travelerData) {
-            BookingTraveler::create([
-                'booking_id' => $booking->id,
-                'full_name' => $travelerData['full_name'],
-                'phone_key' => $travelerData['phone_key'] ?? '+20',
-                'phone' => $travelerData['phone'],
-                'nationality' => $travelerData['nationality'],
-                'age' => $travelerData['age'],
-                'id_type' => $travelerData['id_type'],
-                'id_number' => $travelerData['id_number'],
-                'type' => $travelerData['type'],
-            ]);
-        }
-
-        flash()->success(__('lang.created_successfully', ['attribute' => __('lang.booking')]));
-        $this->redirectIntended(default: route('bookings.hotels'), navigate: true);
+		    // Create travelers
+		    foreach ($this->travelers as $travelerData) {
+			    BookingTraveler::create([
+				    'booking_id' => $booking->id,
+				    'full_name' => $travelerData['full_name'],
+				    'phone_key' => $travelerData['phone_key'] ?? '+20',
+				    'phone' => $travelerData['phone'],
+				    'nationality' => $travelerData['nationality'],
+				    'age' => $travelerData['age'],
+				    'id_type' => $travelerData['id_type'],
+				    'id_number' => $travelerData['id_number'],
+				    'type' => $travelerData['type'],
+			    ]);
+		    }
+		    DB::commit();
+		    flash()->success(__('lang.created_successfully', ['attribute' => __('lang.booking')]));
+		    $this->redirectIntended(default: route('bookings.hotels'));
+	    } catch (\Exception $e) {
+		    DB::rollBack();
+		    flash()->error(__('lang.error_occurred'));
+		    // Optionally log the error
+		    Log::error($e->getMessage());
+	    }
     }
 
     public function render(): View
     {
-        $data['users'] = User::get(['id', 'name'])->toArray();
-        $data['trips'] = Trip::status(Status::Active)->get(['id', 'name'])->toArray();
-	    $data['hotels'] = Hotel::status(Status::Active)->get(['id', 'name']);
-	    $data['rooms'] = [];
-
-	    if ($this->hotel_id) {
-		    $data['rooms'] = Room::where('hotel_id', $this->hotel_id)
-			    ->status(Status::Active)
-			    ->get();
-	    }
-
-        return view('livewire.dashboard.booking.create-booking-hotel', $data);
+	    return view('livewire.dashboard.booking-hotel.create-booking-hotel');
     }
 }

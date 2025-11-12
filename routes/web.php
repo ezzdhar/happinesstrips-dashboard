@@ -1,13 +1,14 @@
 <?php
 
 use App\Http\Controllers\LanguageController;
-use App\Livewire\Dashboard\Booking\BookingHotelData;
-use App\Livewire\Dashboard\Booking\BookingTripData;
-use App\Livewire\Dashboard\Booking\CreateBookingHotel;
-use App\Livewire\Dashboard\Booking\CreateBookingTrip;
-use App\Livewire\Dashboard\Booking\ShowBooking;
-use App\Livewire\Dashboard\Booking\UpdateBookingHotel;
-use App\Livewire\Dashboard\Booking\UpdateBookingTrip;
+use App\Livewire\Dashboard\BookingHotel\ShowBookingHotel;
+use App\Livewire\Dashboard\BookingTrip\BookingTripData;
+use App\Livewire\Dashboard\BookingTrip\CreateBookingTrip;
+use App\Livewire\Dashboard\BookingTrip\ShowBookingTrip;
+use App\Livewire\Dashboard\BookingTrip\UpdateBookingTrip;
+use App\Livewire\Dashboard\BookingHotel\BookingHotelData;
+use App\Livewire\Dashboard\BookingHotel\CreateBookingHotel;
+use App\Livewire\Dashboard\BookingHotel\UpdateBookingHotel;
 use App\Livewire\Dashboard\City\CityData;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Dashboard\Employee\EmployeeData;
@@ -67,7 +68,7 @@ Route::middleware(['web-language'])->group(function () {
             Route::get('/', BookingHotelData::class)->name('bookings.hotels');
             Route::get('/create', CreateBookingHotel::class)->name('bookings.hotels.create')->middleware('permission:create_booking_hotel');
             Route::get('/edit/{booking}', UpdateBookingHotel::class)->name('bookings.hotels.edit')->middleware('permission:update_booking_hotel');
-            Route::get('/show/{booking}', ShowBooking::class)->name('bookings.hotels.show');
+            Route::get('/show/{booking}', ShowBookingHotel::class)->name('bookings.hotels.show');
         });
 
         // Trip Bookings
@@ -75,7 +76,7 @@ Route::middleware(['web-language'])->group(function () {
             Route::get('/', BookingTripData::class)->name('bookings.trips');
             Route::get('/create', CreateBookingTrip::class)->name('bookings.trips.create')->middleware('permission:create_booking_trip');
             Route::get('/edit/{booking}', UpdateBookingTrip::class)->name('bookings.trips.edit')->middleware('permission:update_booking_trip');
-            Route::get('/show/{booking}', ShowBooking::class)->name('bookings.trips.show');
+            Route::get('/show/{booking}', ShowBookingTrip::class)->name('bookings.trips.show');
         });
 
     });

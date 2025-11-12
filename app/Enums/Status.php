@@ -68,8 +68,8 @@ final class Status extends Enum
 			self::End => 'gray-500',
 			self::Confirmed => 'green-500',
 			self::Cancelled => 'red-500',
-			self::UnderPayment => 'orange-500',
-			self::UnderCancellation => 'orange-500',
+			self::UnderPayment => 'yellow-500',
+			self::UnderCancellation => 'yellow-500',
 			default => 'gray-500',
 		};
 	}

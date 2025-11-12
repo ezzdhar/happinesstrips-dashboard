@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Dashboard\Booking;
+namespace App\Livewire\Dashboard\BookingTrip;
 
 use App\Enums\Status;
 use App\Models\Booking;

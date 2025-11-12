@@ -1,18 +1,21 @@
 <?php
 
-namespace App\Livewire\Dashboard\Booking;
+namespace App\Livewire\Dashboard\BookingHotel;
 
 use App\Enums\Status;
 use App\Models\Booking;
+use App\Models\BookingHotel;
 use App\Models\BookingTraveler;
+use App\Models\Hotel;
+use App\Models\Room;
 use App\Models\Trip;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('update_trip_booking')]
-class UpdateBookingTrip extends Component
+#[Title('update_hotel_booking')]
+class UpdateBookingHotel extends Component
 {
     public Booking $booking;
 
@@ -36,12 +39,15 @@ class UpdateBookingTrip extends Component
 
     public $status;
 
+    // Hotel booking details
+    public $selected_hotels = [];
+
     // Travelers
     public $travelers = [];
 
     public function mount(Booking $booking): void
     {
-        $this->booking = $booking->load(['travelers']);
+        $this->booking = $booking->load(['bookingHotel', 'travelers']);
 
         $this->user_id = $booking->user_id;
         $this->trip_id = $booking->trip_id;
@@ -53,6 +59,16 @@ class UpdateBookingTrip extends Component
         $this->notes = $booking->notes;
         $this->currency = $booking->currency;
         $this->status = $booking->status->value;
+
+        // Load hotel bookings
+        foreach ($booking->bookingHotels as $bookingHotel) {
+            $this->selected_hotels[] = [
+                'id' => $bookingHotel->id,
+                'hotel_id' => $bookingHotel->hotel_id,
+                'room_id' => $bookingHotel->room_id,
+                'rooms_count' => $bookingHotel->rooms_count,
+            ];
+        }
 
         // Load travelers
         foreach ($booking->travelers as $traveler) {
@@ -76,12 +92,12 @@ class UpdateBookingTrip extends Component
     {
         return [
             [
-                'label' => __('lang.trip_bookings'),
-                'icon' => 'o-map',
-                'link' => route('bookings.trips'),
+                'label' => __('lang.hotel_bookings'),
+                'icon' => 'o-calendar',
+                'link' => route('bookings.hotels'),
             ],
             [
-                'label' => __('lang.update_trip_booking').' - '.$this->booking->booking_number,
+                'label' => __('lang.update_hotel_booking').' - '.$this->booking->booking_number,
             ],
         ];
     }
@@ -98,6 +114,20 @@ class UpdateBookingTrip extends Component
     public function updatedCheckOut(): void
     {
         $this->updatedCheckIn();
+    }
+
+    public function addHotel(): void
+    {
+        $this->selected_hotels[] = ['hotel_id' => '', 'room_id' => '', 'rooms_count' => 1];
+    }
+
+    public function removeHotel($index): void
+    {
+        if (isset($this->selected_hotels[$index]['id'])) {
+            BookingHotel::destroy($this->selected_hotels[$index]['id']);
+        }
+        unset($this->selected_hotels[$index]);
+        $this->selected_hotels = array_values($this->selected_hotels);
     }
 
     public function addTraveler(): void
@@ -136,6 +166,10 @@ class UpdateBookingTrip extends Component
             'currency' => 'required|in:egp,usd',
             'status' => 'required|in:'.implode(',', array_column(Status::cases(), 'value')),
             'notes' => 'nullable|string',
+            'selected_hotels' => 'required|array|min:1',
+            'selected_hotels.*.hotel_id' => 'required|exists:hotels,id',
+            'selected_hotels.*.room_id' => 'required|exists:rooms,id',
+            'selected_hotels.*.rooms_count' => 'required|integer|min:1',
             'travelers' => 'required|array|min:1',
             'travelers.*.full_name' => 'required|string',
             'travelers.*.phone' => 'required|string',
@@ -151,10 +185,13 @@ class UpdateBookingTrip extends Component
     {
         $this->validate();
 
-        // Get trip and calculate price
-        $trip = Trip::find($this->trip_id);
-        $tripPrice = $trip->price[$this->currency] ?? 0;
-        $totalPrice = $tripPrice * ($this->adults_count + ($this->children_count * 0.5));
+        // Calculate total price
+        $totalPrice = 0;
+        foreach ($this->selected_hotels as $hotelData) {
+            $room = Room::find($hotelData['room_id']);
+            $roomPrice = $room->weekly_prices[$this->currency] ?? 0;
+            $totalPrice += $roomPrice * $hotelData['rooms_count'] * $this->nights_count;
+        }
 
         // Update booking
         $this->booking->update([
@@ -165,12 +202,42 @@ class UpdateBookingTrip extends Component
             'nights_count' => $this->nights_count,
             'adults_count' => $this->adults_count,
             'children_count' => $this->children_count,
-            'price' => $tripPrice,
+            'price' => $totalPrice,
             'total_price' => $totalPrice,
             'currency' => $this->currency,
             'notes' => $this->notes,
             'status' => $this->status,
         ]);
+
+        // Update hotel bookings
+        $existingIds = [];
+        foreach ($this->selected_hotels as $hotelData) {
+            $room = Room::find($hotelData['room_id']);
+
+            if (isset($hotelData['id'])) {
+                BookingHotel::find($hotelData['id'])->update([
+                    'hotel_id' => $hotelData['hotel_id'],
+                    'room_id' => $hotelData['room_id'],
+                    'room_price' => $room->weekly_prices,
+                    'rooms_count' => $hotelData['rooms_count'],
+                ]);
+                $existingIds[] = $hotelData['id'];
+            } else {
+                $newBookingHotel = BookingHotel::create([
+                    'booking_id' => $this->booking->id,
+                    'hotel_id' => $hotelData['hotel_id'],
+                    'room_id' => $hotelData['room_id'],
+                    'room_price' => $room->weekly_prices,
+                    'rooms_count' => $hotelData['rooms_count'],
+                ]);
+                $existingIds[] = $newBookingHotel->id;
+            }
+        }
+
+        // Delete removed hotels
+        BookingHotel::where('booking_id', $this->booking->id)
+            ->whereNotIn('id', $existingIds)
+            ->delete();
 
         // Update travelers
         $existingTravelerIds = [];
@@ -209,15 +276,16 @@ class UpdateBookingTrip extends Component
             ->delete();
 
         flash()->success(__('lang.updated_successfully', ['attribute' => __('lang.booking')]));
-        $this->redirectIntended(default: route('bookings.trips'), navigate: true);
+        $this->redirectIntended(default: route('bookings.hotels'), navigate: true);
     }
 
     public function render(): View
     {
         $data['users'] = User::get(['id', 'name'])->toArray();
-        $data['trips'] = Trip::status(Status::Active)->get(['id', 'name', 'duration_from', 'duration_to', 'price'])->toArray();
+        $data['trips'] = Trip::status(Status::Active)->get(['id', 'name'])->toArray();
+        $data['hotels'] = Hotel::status(Status::Active)->with('rooms')->get();
         $data['statuses'] = Status::cases();
 
-        return view('livewire.dashboard.booking.update-booking-trip', $data);
+        return view('livewire.dashboard.booking-hotel.update-booking-hotel', $data);
     }
 }

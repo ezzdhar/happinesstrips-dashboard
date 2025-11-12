@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('booking_number')->unique();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('trip_id')->constrained()->cascadeOnDelete();
+			$table->string('type')->default('hotel');//hotel or trip
 
             $table->date('check_in')->nullable();
             $table->date('check_out')->nullable();

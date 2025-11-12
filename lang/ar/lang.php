@@ -224,6 +224,7 @@ return [
     'added_successfully' => 'تمت إضافة :attribute بنجاح',
     'updated_successfully' => 'تم تحديث :attribute بنجاح',
     'deleted_successfully' => 'تم حذف :attribute بنجاح',
+	'created_successfully' => 'تم إنشاء :attribute بنجاح',
     'confirm_delete' => 'هل أنت متأكد أنك تريد حذف هذا :attribute؟',
     'all' => 'الكل',
     'search_status' => 'بحث الحالة',
@@ -721,4 +722,5 @@ return [
 	'available_rooms' => 'الغرف المتاحة',
 	'select_hotel_and_dates_to_see_available_rooms' => 'اختر الفندق والتواريخ لرؤية الغرف المتاحة',
 	'show_price_details' => 'عرض تفاصيل السعر',
+
 ];

@@ -4,7 +4,7 @@
         <x-slot:menu>
             <x-button noWireNavigate label="{{ __('lang.add') }}" icon="o-plus" class="btn-primary btn-sm" link="{{route('bookings.hotels.create')}}"/>
         </x-slot:menu>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
             <x-input label="{{ __('lang.search') }}" wire:model.live="search" placeholder="{{ __('lang.search') }}" icon="o-magnifying-glass" clearable/>
             <x-select label="{{ __('lang.status') }}" wire:model.live="status_filter" placeholder="{{ __('lang.all') }}" icon="o-flag" clearable :options="[
                 ['id' => Status::Pending, 'name' => __('lang.pending')],
@@ -15,6 +15,8 @@
             ]"/>
             <x-choices-offline label="{{ __('lang.user') }}" wire:model.live="user_filter" :options="$users" single searchable
                                option-value="id" option-label="name" option-sub-label="phone" placeholder="{{ __('lang.select') }}" icon="o-user"/>
+            <x-choices-offline label="{{ __('lang.select_hotels') }}" wire:model.live="hotel_filter" :options="$hotels" searchable option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
+
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <div class="overflow-x-auto">
@@ -42,8 +44,8 @@
                                 {{$booking->user->name}}
                                 <span class="block text-sm text-gray-500" dir="ltr">{{$booking->user->full_phone}}</span>
                             </th>
-                            <th class="text-nowrap">{{$booking->bookingHotels->room->name}}</th>
-                            <th class="text-center">{{$booking->bookingHotels->hotel->name}}</th>
+                            <th class="text-nowrap">{{ $booking->bookingHotel?->room?->name ?? '-' }}</th>
+                            <th class="text-center">{{ $booking->bookingHotel?->hotel?->name ?? '-' }}</th>
                             <th class="text-center text-nowrap">{{formatDate($booking->check_in)}}</th>
                             <th class="text-center text-nowrap">{{formatDate($booking->check_out)}}</th>
                             <th class="text-center text-nowrap">{{$booking->total_price}} {{strtoupper($booking->currency)}}</th>

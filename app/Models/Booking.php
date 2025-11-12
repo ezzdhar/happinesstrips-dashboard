@@ -48,7 +48,7 @@ class Booking extends Model
         return $this->belongsTo(Trip::class);
     }
 
-    public function bookingHotels(): HasOne
+	public function bookingHotel(): HasOne
     {
         return $this->hasOne(BookingHotel::class, 'booking_id', 'id');
     }
@@ -72,5 +72,21 @@ class Booking extends Model
     {
         return $query->when($tripId, fn($q) => $q->where('trip_id', $tripId));
     }
+
+	public function scopeHotel($query, $hotelId = null)
+	{
+		return $query->when($hotelId, fn($q) => $q->whereHas('bookingHotel', fn($q2) => $q2->where('hotel_id', $hotelId)));
+	}
+
+	public function scopeBookingNumber($query, $bookingNumber = null)
+	{
+		return $query->when($bookingNumber, fn($q) => $q->where('booking_number', 'like', "%{$bookingNumber}%"));
+	}
+
+	public function scopeType($query, $type = 'hotel')//hotel or trip
+	{
+		return $query->when($type, fn($q) => $q->where('type', $type));
+	}
+
 }
 

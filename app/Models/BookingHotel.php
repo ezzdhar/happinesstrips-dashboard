@@ -22,17 +22,17 @@ class BookingHotel extends Model
 
     public function booking(): BelongsTo
     {
-        return $this->belongsTo(Booking::class);
+	    return $this->belongsTo(Booking::class, 'booking_id');
     }
 
     public function hotel(): BelongsTo
     {
-        return $this->belongsTo(Hotel::class);
+	    return $this->belongsTo(Hotel::class, 'hotel_id')->withDefault(['name' => __('lang.no_data')]);
     }
 
     public function room(): BelongsTo
     {
-        return $this->belongsTo(Room::class);
+	    return $this->belongsTo(Room::class, 'room_id')->withDefault(['name' => __('lang.no_data')]);
     }
 }
 

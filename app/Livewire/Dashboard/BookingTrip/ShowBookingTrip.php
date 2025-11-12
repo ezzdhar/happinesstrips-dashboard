@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Dashboard\Booking;
+namespace App\Livewire\Dashboard\BookingTrip;
 
 use App\Models\Booking;
 use Illuminate\Contracts\View\View;
@@ -8,19 +8,19 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Title('booking_details')]
-class ShowBooking extends Component
+class ShowBookingTrip extends Component
 {
     public Booking $booking;
 
     public function mount(Booking $booking): void
     {
-        $this->booking = $booking->load(['user', 'trip', 'bookingHotels.hotel', 'bookingHotels.room', 'travelers']);
+        $this->booking = $booking->load(['user', 'trip', 'bookingHotel.hotel', 'bookingHotel.room', 'travelers']);
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
     public function breadcrumbs(): array
     {
-        $isHotelBooking = $this->booking->bookingHotels->count() > 0;
+        $isHotelBooking = $this->booking->bookingHotel->count() > 0;
 
         return [
             [
@@ -36,6 +36,6 @@ class ShowBooking extends Component
 
     public function render(): View
     {
-        return view('livewire.dashboard.booking.show-booking');
+        return view('livewire.dashboard.booking-trip.show-booking-trip');
     }
 }

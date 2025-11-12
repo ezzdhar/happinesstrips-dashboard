@@ -55,8 +55,7 @@
 						<x-icon name="o-building-office-2" class="w-5 h-5 inline"/> {{ __('lang.trip_hotels') }}
 					</h3>
 					<div class="grid grid-cols-1 gap-4">
-						<x-choices-offline label="{{ __('lang.select_hotels') }}" wire:model="selected_hotels" :options="$hotels" searchable
-						                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
+						<x-choices-offline label="{{ __('lang.select_hotels') }}" wire:model="selected_hotels" :options="$hotels" searchable option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
 					</div>
 				</div>
 
