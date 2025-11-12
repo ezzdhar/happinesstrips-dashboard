@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard\Booking;
 
 use App\Models\Booking;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -18,10 +19,15 @@ class BookingHotelData extends Component
 
     public $status_filter;
 
-    public $user_filter;
+	public $user_filter;
+	public $users;
+	public $hotel_filter;
+	public $hotels;
+
 
     public function mount(): void
     {
+	    $this->users = User::get(['id', 'name','phone'])->toArray();
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
@@ -46,12 +52,11 @@ class BookingHotelData extends Component
             })
             ->status($this->status_filter)
             ->user($this->user_filter)
+	        ->with(['bookingHotels.room'])
             ->latest()
             ->paginate(20);
 
-        $data['users'] = \App\Models\User::get(['id', 'name'])->toArray();
-
-        return view('livewire.dashboard.booking.booking-hotel-data', $data);
+	    return view('livewire.dashboard.booking.booking-hotel-data', $data);
     }
 
     public function deleteSweetAlert($id): void

@@ -13,7 +13,8 @@
                 ['id' => Status::Cancelled, 'name' => __('lang.cancelled')],
                 ['id' => Status::Completed, 'name' => __('lang.completed')],
             ]"/>
-            <x-select label="{{ __('lang.user') }}" wire:model.live="user_filter" placeholder="{{ __('lang.all') }}" icon="o-user" clearable :options="$users" option-value="id" option-label="name"/>
+            <x-choices-offline label="{{ __('lang.user') }}" wire:model.live="user_filter" :options="$users" single searchable
+                               option-value="id" option-label="name" option-sub-label="phone" placeholder="{{ __('lang.select') }}" icon="o-user"/>
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <div class="overflow-x-auto">
@@ -24,7 +25,7 @@
                         <th class="text-center">{{__('lang.booking_number')}}</th>
                         <th class="text-center">{{__('lang.user')}}</th>
                         <th class="text-center">{{__('lang.room')}}</th>
-                        <th class="text-center">{{__('lang.hotels')}}</th>
+                        <th class="text-center">{{__('lang.hotel')}}</th>
                         <th class="text-center">{{__('lang.check_in')}}</th>
                         <th class="text-center">{{__('lang.check_out')}}</th>
                         <th class="text-center">{{__('lang.total_price')}}</th>
@@ -37,9 +38,12 @@
                         <tr class="bg-base-200">
                             <th class="text-center">{{$bookings->firstItem() + $loop->index}}</th>
                             <th class="text-nowrap">{{$booking->booking_number}}</th>
-                            <th class="text-nowrap">{{$booking->user->name}}</th>
+                            <th class="text-nowrap">
+                                {{$booking->user->name}}
+                                <span class="block text-sm text-gray-500" dir="ltr">{{$booking->user->full_phone}}</span>
+                            </th>
                             <th class="text-nowrap">{{$booking->bookingHotels->room->name}}</th>
-                            <th class="text-center">{{$booking->bookingHotels->count()}}</th>
+                            <th class="text-center">{{$booking->bookingHotels->hotel->name}}</th>
                             <th class="text-center text-nowrap">{{formatDate($booking->check_in)}}</th>
                             <th class="text-center text-nowrap">{{formatDate($booking->check_out)}}</th>
                             <th class="text-center text-nowrap">{{$booking->total_price}} {{strtoupper($booking->currency)}}</th>
