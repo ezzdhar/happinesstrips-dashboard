@@ -108,7 +108,6 @@ class CreateBookingHotel extends Component
 	public function initializeTravelers(int $adultsCount, int $childrenCount): void
     {
 	    $this->travelers = [];
-
 	    // Add adults
 	    for ($i = 0; $i < $adultsCount; $i++) {
 		    $this->travelers[] = [

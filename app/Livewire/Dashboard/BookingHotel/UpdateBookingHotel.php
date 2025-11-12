@@ -9,6 +9,7 @@ use App\Models\Hotel;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Title;
@@ -116,8 +117,9 @@ class UpdateBookingHotel extends Component
     public function updatedHotelId(): void
     {
         $this->room_id = null;
-        $this->rooms = [];
         $this->selected_room = null;
+	    $this->rooms = [];
+	    $this->travelers = [];
         if ($this->hotel_id) {
             $this->rooms = Room::where('hotel_id', $this->hotel_id)->status(Status::Active)->get();
         }
@@ -129,15 +131,48 @@ class UpdateBookingHotel extends Component
             $room = Room::find($this->room_id);
             if ($room) {
                 $this->selected_room = $room;
+	            $this->initializeTravelers($room->adults_count, $room->children_count);
             }
         }
     }
 
+	public function initializeTravelers(int $adultsCount, int $childrenCount): void
+	{
+		$this->travelers = [];
+		// Add adults
+		for ($i = 0; $i < $adultsCount; $i++) {
+			$this->travelers[] = [
+				'full_name' => '',
+				'phone_key' => '+20',
+				'phone' => '',
+				'nationality' => '',
+				'age' => '',
+				'id_type' => '',
+				'id_number' => '',
+				'type' => 'adult',
+			];
+		}
+
+		// Add children
+		for ($i = 0; $i < $childrenCount; $i++) {
+			$this->travelers[] = [
+				'full_name' => '',
+				'phone_key' => '+20',
+				'phone' => '',
+				'nationality' => '',
+				'age' => '',
+				'id_type' => 'passport',
+				'id_number' => '',
+				'type' => 'child',
+			];
+		}
+	}
+
     public function updatedCheckIn(): void
     {
         if ($this->check_in && $this->check_out) {
-            $checkIn = \Carbon\Carbon::parse($this->check_in);
-            $checkOut = \Carbon\Carbon::parse($this->check_out);
+            $checkIn = Carbon::parse($this->check_in);
+            $checkOut = Carbon::parse($this->check_out);
             $this->nights_count = $checkIn->diffInDays($checkOut);
         }
     }
