@@ -4,14 +4,7 @@
 		<div class="grid grid-cols-1 gap-3">
 			<x-input label="{{ __('lang.name').' ('.__('lang.ar').')' }}" wire:model="name_ar" placeholder="{{ __('lang.name').' ('.__('lang.ar').')' }}" icon="o-language"/>
 			<x-input label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
-
-			<!-- Icon Picker Component -->
-			<livewire:dashboard.components.icon-picker
-				wire:model="icon"
-				:label="__('lang.icon')"
-				:placeholder="__('lang.select_icon', ['icon' => 'اختر أيقونة'])"
-				:hint="__('lang.icon_hint')"
-			/>
+			<x-input label="{{ __('lang.icon') }}" wire:model="icon" placeholder="o-star" icon="o-sparkles" hint="{{__('lang.icon_hint')}}"/>
 		</div>
 		<x-slot:actions>
 			<x-button label="{{__('lang.cancel')}}" @click="$wire.modalAdd = false;$wire.resetData()" wire:loading.attr="disabled"/>
