@@ -17,13 +17,17 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="text-sm font-medium text-gray-600">{{ __('lang.user') }}</label>
-                    <p class="text-base">{{ $booking->user->name }}</p>
-                    <p class="text-sm text-gray-500" dir="ltr">{{ $booking->user->full_phone }}</p>
-                </div>
 
-                <div class="grid grid-cols-2 gap-3">
+
+                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">{{ __('lang.user') }}</label>
+                        <p class="text-base">{{ $booking->user->name }}</p>
+                        <p class="text-sm text-gray-500" >
+                            <span dir="ltr">{{ $booking->user->full_phone }}</span>
+                        </p>
+                    </div>
+
                     <div>
                         <label class="text-sm font-medium text-gray-600">{{ __('lang.check_in') }}</label>
                         <p class="text-base">{{ formatDate($booking->check_in) }}</p>
@@ -72,7 +76,6 @@
             @if($booking->bookingHotel)
                 <div class="space-y-4">
                     <h3 class="text-lg font-semibold border-b pb-2">{{ __('lang.hotel_information') }}</h3>
-
                     <div class="bg-base-200 p-4 rounded-lg space-y-3">
                         <div>
                             <label class="text-sm font-medium text-gray-600">{{ __('lang.hotel') }}</label>

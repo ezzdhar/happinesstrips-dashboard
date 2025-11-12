@@ -66,10 +66,12 @@ class RolePermissionSeeder extends Seeder
 		    Permission::create(['name' => $action.'_trip', 'type' => 'trips_mng'])->assignRole('hotel');
 	    }
 
+		// booking trip
 	    foreach (['create', 'show', 'update', 'delete'] as $action) {
 		    Permission::create(['name' => $action.'_booking_trip', 'type' => 'booking_trips_mng']);
 	    }
 
+		// booking hotel
 	    foreach (['create', 'show', 'update', 'delete'] as $action) {
 		    Permission::create(['name' => $action.'_booking_hotel', 'type' => 'booking_hotels_mng']);
 	    }

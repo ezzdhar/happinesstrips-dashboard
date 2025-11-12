@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Dashboard\BookingHotel;
 
+use App\Enums\Status;
 use App\Models\Booking;
 use App\Models\Hotel;
 use App\Models\User;
@@ -51,15 +52,25 @@ class BookingHotelData extends Component
     #[On('render')]
     public function render(): View
     {
-	    $data['bookings'] = Booking::type('hotel')->bookingNumber($this->search)->status($this->status_filter)->user($this->user_filter)->hotel($this->hotel_filter)
-		    ->select('id', 'user_id', 'booking_number', 'check_in', 'check_out', 'status', 'total_price')
-            ->latest()
-		    ->with(['user','bookingHotel.hotel', 'bookingHotel.room', 'travelers'])
-		    ->paginate(20);
+	    $bookings = Booking::type('hotel')->bookingNumber($this->search)->status($this->status_filter)->user($this->user_filter)->hotel($this->hotel_filter)
+		    ->select('id', 'user_id', 'booking_number', 'check_in', 'check_out', 'status', 'total_price');
+	    $data['bookings_count'] = (clone $bookings)->count();
+	    $data['bookings_pending_count'] = (clone $bookings)->where('status', '=', Status::Pending)->count();
+	    $data['bookings_under_payment_count'] = (clone $bookings)->where('status', '=', Status::UnderPayment)->count();
+	    $data['bookings_under_cancellation_count'] = (clone $bookings)->where('status', '=', Status::UnderCancellation)->count();
+	    $data['bookings_cancelled_count'] = (clone $bookings)->where('status', '=', Status::Cancelled)->count();
+	    $data['bookings_completed_count'] = (clone $bookings)->where('status', '=', Status::Completed)->count();
+
+	    $data['bookings'] = $bookings->latest()->with(['user', 'bookingHotel.hotel', 'bookingHotel.room', 'travelers'])->paginate(20);
 	    return view('livewire.dashboard.booking-hotel.booking-hotel-data', $data);
     }
 
-    public function deleteSweetAlert($id): void
+	public function changeStatusFilter($status): void
+	{
+		$this->status_filter = $status;
+	}
+
+	public function deleteSweetAlert($id): void
     {
         sweetalert()
             ->showDenyButton()

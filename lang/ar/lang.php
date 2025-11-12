@@ -726,5 +726,6 @@ return [
 	'room_includes' => 'تتضمن الغرفة',
 	'type' => 'النوع',
 	'back' => 'رجوع',
+	'search_booking_number' => 'بحث برقم الحجز',
 
 ];

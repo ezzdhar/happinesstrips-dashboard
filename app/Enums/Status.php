@@ -57,20 +57,21 @@ final class Status extends Enum
 	{
 		return match ($this->value) {
 			self::Active => 'green-500',
-			self::Inactive => 'red-500',
-			self::Expired => 'yellow-500',
-			self::Pending => 'yellow-500',
+			self::Inactive => 'gray-500',
+			self::Expired => 'rose-500',
+			self::Pending => 'amber-500',
 			self::Paid => 'blue-500',
-			self::InProgress => 'yellow-500',
-			self::Completed => 'green-500',
-			self::Closed => 'red-500',
-			self::Start => 'blue-500',
-			self::End => 'gray-500',
-			self::Confirmed => 'green-500',
+			self::InProgress => 'indigo-500',
+			self::Completed => 'teal-500',
+			self::Closed => 'red-600',
+			self::Start => 'cyan-500',
+			self::End => 'slate-500',
+			self::Confirmed => 'emerald-500',
 			self::Cancelled => 'red-500',
-			self::UnderPayment => 'yellow-500',
-			self::UnderCancellation => 'yellow-500',
-			default => 'gray-500',
+			self::UnderPayment => 'orange-500',
+			self::UnderCancellation => 'purple-500',
+			default => 'zinc-500',
 		};
 	}
+
 }
