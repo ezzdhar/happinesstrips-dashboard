@@ -17,43 +17,43 @@ use Spatie\Permission\Traits\HasRoles;
 #[ObservedBy(UserObserver::class)]
 class User extends Authenticatable implements MustVerifyEmail
 {
-	use HasApiTokens, HasFactory, \Illuminate\Auth\MustVerifyEmail, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, HasRoles, \Illuminate\Auth\MustVerifyEmail, Notifiable;
 
-	protected $guarded = ['id', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
-	protected $hidden = [
-		'password',
-		'remember_token',
-	];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
-	protected function casts(): array
-	{
-		return [
-			'email_verified_at' => 'datetime',
-			'password' => 'hashed',
-			'status' => Status::class
-		];
-	}
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'status' => Status::class,
+        ];
+    }
 
-	/**
-	 * Get the user's initials
-	 */
-	public function initials(): string
-	{
-		return Str::of($this->name)
-			->explode(' ')
-			->map(fn(string $name) => Str::of($name)->substr(0, 1))
-			->implode('');
-	}
+    /**
+     * Get the user's initials
+     */
+    public function initials(): string
+    {
+        return Str::of($this->name)
+            ->explode(' ')
+            ->map(fn (string $name) => Str::of($name)->substr(0, 1))
+            ->implode('');
+    }
 
-	//attribute full_phone
-	public function getFullPhoneAttribute(): string
-	{
-		return $this->phone_key . $this->phone;
-	}
+    // attribute full_phone
+    public function getFullPhoneAttribute(): string
+    {
+        return $this->phone_key.$this->phone;
+    }
 
-	public function bookings(): HasMany
-	{
-		return $this->hasMany(Booking::class);
-	}
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

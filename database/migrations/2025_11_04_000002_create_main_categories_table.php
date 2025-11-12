@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('main_categories', function (Blueprint $table) {
             $table->id();
             $table->json('name');
-			$table->string('image')->nullable();
+            $table->string('image')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
@@ -28,4 +28,3 @@ return new class extends Migration
         Schema::dropIfExists('main_categories');
     }
 };
-

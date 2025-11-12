@@ -67,7 +67,7 @@ class CreateEmployee extends Component
         $this->validate();
         $employee = User::create([
             'name' => $this->name,
-	        'email' => $this->email ?: null,
+            'email' => $this->email ?: null,
             'image' => FileService::save($this->image, 'users'),
             'password' => Hash::make($this->password),
             'phone' => $this->phone,

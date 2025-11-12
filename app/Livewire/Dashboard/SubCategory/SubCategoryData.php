@@ -2,10 +2,8 @@
 
 namespace App\Livewire\Dashboard\SubCategory;
 
-use App\Enums\Status;
 use App\Models\SubCategory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -41,7 +39,7 @@ class SubCategoryData extends Component
         $data['sub_categories'] = SubCategory::filter($this->search)
             ->status($this->status_filter)
             ->latest()
-	        ->with(['mainCategory'])
+            ->with(['mainCategory'])
             ->paginate(25);
 
         return view('livewire.dashboard.sub-category.sub-category-data', $data);
@@ -67,4 +65,3 @@ class SubCategoryData extends Component
         flash()->success(__('lang.deleted_successfully', ['attribute' => __('lang.sub_category')]));
     }
 }
-

@@ -21,13 +21,13 @@ return new class extends Migration
             $table->json('price'); // {"egp": 0, "usd": 0}
             $table->date('duration_from')->nullable();
             $table->date('duration_to')->nullable();
-			$table->integer('nights_count')->nullable();
-			$table->integer('people_count')->default(1);
+            $table->integer('nights_count')->nullable();
+            $table->integer('people_count')->default(1);
             $table->json('notes')->nullable();
             $table->json('program')->nullable();
             $table->boolean('is_featured')->default(false);
-	        $table->enum('type', [TripType::Fixed, TripType::Flexible])->default(TripType::Fixed);
-            $table->enum('status', [Status::Active, Status::Inactive,Status::End,Status::Start])->default(Status::Active);
+            $table->enum('type', [TripType::Fixed, TripType::Flexible])->default(TripType::Fixed);
+            $table->enum('status', [Status::Active, Status::Inactive, Status::End, Status::Start])->default(Status::Active);
             $table->timestamps();
         });
     }
@@ -40,4 +40,3 @@ return new class extends Migration
         Schema::dropIfExists('trips');
     }
 };
-

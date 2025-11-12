@@ -9,23 +9,25 @@ use Livewire\WithPagination;
 #[Title('home')]
 class Dashboard extends Component
 {
-	use WithPagination;
+    use WithPagination;
 
-	public function mount(): void
-	{
-		view()->share('breadcrumbs', $this->breadcrumbs());
-	}
-	public function breadcrumbs(): array
-	{
-		return [
-			[
-				'label' => __('lang.home'),
-				'icon' => 'o-home',
-			],
-		];
-	}
-	public function render()
-	{
-		return view('livewire.dashboard.dashboard');
-	}
+    public function mount(): void
+    {
+        view()->share('breadcrumbs', $this->breadcrumbs());
+    }
+
+    public function breadcrumbs(): array
+    {
+        return [
+            [
+                'label' => __('lang.home'),
+                'icon' => 'o-home',
+            ],
+        ];
+    }
+
+    public function render()
+    {
+        return view('livewire.dashboard.dashboard');
+    }
 }

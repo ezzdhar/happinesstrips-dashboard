@@ -99,11 +99,11 @@ class InstallPackagesCommand extends Command
                 'publish' => 'php artisan flasher:install',
                 'description' => 'Installing Flasher Laravel',
             ],
-	        [
-		        'install' => 'composer require php-flasher/flasher-sweetalert-laravel',
-		        'publish' => 'php artisan flasher:install',
-		        'description' => 'Installing Flasher SweetAlert Laravel',
-	        ],
+            [
+                'install' => 'composer require php-flasher/flasher-sweetalert-laravel',
+                'publish' => 'php artisan flasher:install',
+                'description' => 'Installing Flasher SweetAlert Laravel',
+            ],
             //			[
             //				'install' => 'composer require jantinnerezo/livewire-alert -W',
             //				'publish' => 'php artisan vendor:publish --tag=livewire-alert:assets',

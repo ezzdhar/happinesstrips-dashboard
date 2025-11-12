@@ -21,21 +21,23 @@ class BookingHotelData extends Component
 
     public $status_filter;
 
-	public $user_filter;
-	public $users;
-	public $hotel_filter;
-	public $hotels;
+    public $user_filter;
 
+    public $users;
+
+    public $hotel_filter;
+
+    public $hotels;
 
     public function mount(): void
     {
-	    $this->users = User::get(['id', 'name','phone'])->toArray();
-	    $this->hotels = Hotel::get(['id', 'name'])->map(function ($hotel) {
-		    return [
-			    'id' => $hotel->id,
-			    'name' => $hotel->name,
-		    ];
-	    })->toArray();
+        $this->users = User::get(['id', 'name', 'phone'])->toArray();
+        $this->hotels = Hotel::get(['id', 'name'])->map(function ($hotel) {
+            return [
+                'id' => $hotel->id,
+                'name' => $hotel->name,
+            ];
+        })->toArray();
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
@@ -52,25 +54,26 @@ class BookingHotelData extends Component
     #[On('render')]
     public function render(): View
     {
-	    $bookings = Booking::type('hotel')->bookingNumber($this->search)->status($this->status_filter)->user($this->user_filter)->hotel($this->hotel_filter)
-		    ->select('id', 'user_id', 'booking_number', 'check_in', 'check_out', 'status', 'total_price');
-	    $data['bookings_count'] = (clone $bookings)->count();
-	    $data['bookings_pending_count'] = (clone $bookings)->where('status', '=', Status::Pending)->count();
-	    $data['bookings_under_payment_count'] = (clone $bookings)->where('status', '=', Status::UnderPayment)->count();
-	    $data['bookings_under_cancellation_count'] = (clone $bookings)->where('status', '=', Status::UnderCancellation)->count();
-	    $data['bookings_cancelled_count'] = (clone $bookings)->where('status', '=', Status::Cancelled)->count();
-	    $data['bookings_completed_count'] = (clone $bookings)->where('status', '=', Status::Completed)->count();
+        $bookings = Booking::type('hotel')->bookingNumber($this->search)->status($this->status_filter)->user($this->user_filter)->hotel($this->hotel_filter)
+            ->select('id', 'user_id', 'booking_number', 'check_in', 'check_out', 'status', 'total_price');
+        $data['bookings_count'] = (clone $bookings)->count();
+        $data['bookings_pending_count'] = (clone $bookings)->where('status', '=', Status::Pending)->count();
+        $data['bookings_under_payment_count'] = (clone $bookings)->where('status', '=', Status::UnderPayment)->count();
+        $data['bookings_under_cancellation_count'] = (clone $bookings)->where('status', '=', Status::UnderCancellation)->count();
+        $data['bookings_cancelled_count'] = (clone $bookings)->where('status', '=', Status::Cancelled)->count();
+        $data['bookings_completed_count'] = (clone $bookings)->where('status', '=', Status::Completed)->count();
 
-	    $data['bookings'] = $bookings->latest()->with(['user', 'bookingHotel.hotel', 'bookingHotel.room', 'travelers'])->paginate(20);
-	    return view('livewire.dashboard.booking-hotel.booking-hotel-data', $data);
+        $data['bookings'] = $bookings->latest()->with(['user', 'bookingHotel.hotel', 'bookingHotel.room', 'travelers'])->paginate(20);
+
+        return view('livewire.dashboard.booking-hotel.booking-hotel-data', $data);
     }
 
-	public function changeStatusFilter($status): void
-	{
-		$this->status_filter = $status;
-	}
+    public function changeStatusFilter($status): void
+    {
+        $this->status_filter = $status;
+    }
 
-	public function deleteSweetAlert($id): void
+    public function deleteSweetAlert($id): void
     {
         sweetalert()
             ->showDenyButton()

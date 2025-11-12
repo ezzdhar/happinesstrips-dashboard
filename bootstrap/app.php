@@ -17,13 +17,13 @@ return Application::configure(basePath: dirname(__DIR__))
         apiPrefix: '/api/v1',
     )
     ->withMiddleware(function (Middleware $middleware) {
-	    $middleware->api(prepend: [LanguageMiddleware::class]);
-	    $middleware->alias([
-		    'web-language' => LanguageMiddleware::class,
-		    'role' => RoleMiddleware::class,
-		    'permission' => PermissionMiddleware::class,
-		    'role_or_permission' => RoleOrPermissionMiddleware::class,
-	    ]);
+        $middleware->api(prepend: [LanguageMiddleware::class]);
+        $middleware->alias([
+            'web-language' => LanguageMiddleware::class,
+            'role' => RoleMiddleware::class,
+            'permission' => PermissionMiddleware::class,
+            'role_or_permission' => RoleOrPermissionMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

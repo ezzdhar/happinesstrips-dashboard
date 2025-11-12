@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('main_category_id')->constrained('main_categories')->cascadeOnDelete();
             $table->json('name');
-	        $table->string('image')->nullable();
+            $table->string('image')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
@@ -29,4 +29,3 @@ return new class extends Migration
         Schema::dropIfExists('sub_categories');
     }
 };
-

@@ -64,7 +64,7 @@ class FileService
 
     public static function get(?string $path): ?string
     {
-        if (!$path) {
+        if (! $path) {
             return null;
         }
         $url = Storage::disk(self::DISK)->url($path);
@@ -72,6 +72,7 @@ class FileService
         if (config('app.env') === 'production' || request()->secure()) {
             $url = str_replace('http://', 'https://', $url);
         }
+
         return $url;
     }
 

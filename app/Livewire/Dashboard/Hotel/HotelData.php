@@ -2,10 +2,8 @@
 
 namespace App\Livewire\Dashboard\Hotel;
 
-use App\Enums\Status;
 use App\Models\Hotel;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -38,7 +36,8 @@ class HotelData extends Component
     #[On('render')]
     public function render(): View
     {
-        $data['hotels'] = Hotel::filter($this->search)->status($this->status_filter)->with(['city', 'user','files'])->withCount('rooms')->latest()->paginate(20);
+        $data['hotels'] = Hotel::filter($this->search)->status($this->status_filter)->with(['city', 'user', 'files'])->withCount('rooms')->latest()->paginate(20);
+
         return view('livewire.dashboard.hotel.hotel-data', $data);
     }
 
@@ -62,4 +61,3 @@ class HotelData extends Component
         flash()->success(__('lang.deleted_successfully', ['attribute' => __('lang.hotel')]));
     }
 }
-

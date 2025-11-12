@@ -17,7 +17,7 @@ class MainCategorySeeder extends Seeder
                     'ar' => 'رحلات سياحية',
                     'en' => 'Tourism Trips',
                 ],
-	            'image' => FileService::fakeImage(name: 'image',folder: 'main_category'),
+                'image' => FileService::fakeImage(name: 'image', folder: 'main_category'),
                 'status' => Status::Active,
             ],
             [
@@ -25,7 +25,7 @@ class MainCategorySeeder extends Seeder
                     'ar' => 'رحلات دينية',
                     'en' => 'Religious Trips',
                 ],
-	            'image' => FileService::fakeImage(name: 'image',folder: 'main_category'),
+                'image' => FileService::fakeImage(name: 'image', folder: 'main_category'),
                 'status' => Status::Active,
             ],
             [
@@ -33,7 +33,7 @@ class MainCategorySeeder extends Seeder
                     'ar' => 'رحلات شاطئية',
                     'en' => 'Beach Trips',
                 ],
-	            'image' => FileService::fakeImage(name: 'image',folder: 'main_category'),
+                'image' => FileService::fakeImage(name: 'image', folder: 'main_category'),
                 'status' => Status::Active,
             ],
             [
@@ -41,7 +41,7 @@ class MainCategorySeeder extends Seeder
                     'ar' => 'رحلات مغامرات',
                     'en' => 'Adventure Trips',
                 ],
-	            'image' => FileService::fakeImage(name: 'image',folder: 'main_category'),
+                'image' => FileService::fakeImage(name: 'image', folder: 'main_category'),
                 'status' => Status::Active,
             ],
             [
@@ -49,7 +49,7 @@ class MainCategorySeeder extends Seeder
                     'ar' => 'رحلات عائلية',
                     'en' => 'Family Trips',
                 ],
-	            'image' => FileService::fakeImage(name: 'image',folder: 'main_category'),
+                'image' => FileService::fakeImage(name: 'image', folder: 'main_category'),
                 'status' => Status::Active,
             ],
         ];
@@ -59,7 +59,6 @@ class MainCategorySeeder extends Seeder
         }
 
         // Create additional random categories
-//        MainCategory::factory(2)->create();
+        //        MainCategory::factory(2)->create();
     }
 }
-

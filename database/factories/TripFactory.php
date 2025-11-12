@@ -5,8 +5,8 @@ namespace Database\Factories;
 use App\Enums\Status;
 use App\Enums\TripType;
 use App\Models\MainCategory;
-use App\Models\Trip;
 use App\Models\SubCategory;
+use App\Models\Trip;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TripFactory extends Factory
@@ -22,8 +22,8 @@ class TripFactory extends Factory
             'main_category_id' => MainCategory::factory(),
             'sub_category_id' => SubCategory::factory(),
             'name' => [
-                'ar' => 'عرض ' . fake('ar_SA')->words(3, true),
-                'en' => fake('en_US')->words(3, true) . ' Package',
+                'ar' => 'عرض '.fake('ar_SA')->words(3, true),
+                'en' => fake('en_US')->words(3, true).' Package',
             ],
             'price' => [
                 'egp' => fake()->numberBetween(3000, 50000),
@@ -67,4 +67,3 @@ class TripFactory extends Factory
         ]);
     }
 }
-

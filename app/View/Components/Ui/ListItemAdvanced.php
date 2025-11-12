@@ -24,7 +24,7 @@ class ListItemAdvanced extends Component
         // Slots
         public mixed $actions = null,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary'.md5(serialize($this)).$id;
     }
 
     public function render(): View|Closure|string
@@ -111,4 +111,3 @@ class ListItemAdvanced extends Component
         HTML;
     }
 }
-

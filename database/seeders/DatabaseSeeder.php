@@ -11,15 +11,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-	    $this->call(RolePermissionSeeder::class);
-	    $this->call(UserSeeder::class);
-		$this->call(CitySeeder::class);
+        $this->call(RolePermissionSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(CitySeeder::class);
 
-		// Travel System Seeders
-		$this->call(MainCategorySeeder::class);
-		$this->call(SubCategorySeeder::class);
-		$this->call(HotelSeeder::class);
-		$this->call(RoomSeeder::class);
-		$this->call(TripSeeder::class);
+        // Travel System Seeders
+        $this->call(MainCategorySeeder::class);
+        $this->call(SubCategorySeeder::class);
+        $this->call(HotelSeeder::class);
+        $this->call(RoomSeeder::class);
+        $this->call(TripSeeder::class);
     }
 }

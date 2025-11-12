@@ -100,7 +100,7 @@ test('booking price calculator works for fixed trip', function () {
         'price' => ['egp' => 10000, 'usd' => 500],
     ]);
 
-    $calculator = new BookingPriceCalculator();
+    $calculator = new BookingPriceCalculator;
     $result = $calculator->calculate($trip);
 
     expect($result['trip_price'])->toBe($trip->price)
@@ -118,7 +118,7 @@ test('booking price calculator works for flexible trip', function () {
     $checkIn = now();
     $checkOut = now()->addDays(7);
 
-    $calculator = new BookingPriceCalculator();
+    $calculator = new BookingPriceCalculator;
     $result = $calculator->calculate($trip, [], $checkIn, $checkOut);
 
     expect($result['total_price']['egp'])->toBe(7000.0)
@@ -151,4 +151,3 @@ test('user has bookings relationship', function () {
 
     expect($user->bookings)->toHaveCount(2);
 });
-

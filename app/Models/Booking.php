@@ -32,8 +32,8 @@ class Booking extends Model
         parent::boot();
 
         static::creating(function ($booking) {
-            if (!$booking->booking_number) {
-                $booking->booking_number = 'BK-' . strtoupper(uniqid());
+            if (! $booking->booking_number) {
+                $booking->booking_number = 'BK-'.strtoupper(uniqid());
             }
         });
     }
@@ -48,7 +48,7 @@ class Booking extends Model
         return $this->belongsTo(Trip::class);
     }
 
-	public function bookingHotel(): HasOne
+    public function bookingHotel(): HasOne
     {
         return $this->hasOne(BookingHotel::class, 'booking_id', 'id');
     }
@@ -60,33 +60,31 @@ class Booking extends Model
 
     public function scopeStatus($query, $status = null)
     {
-        return $query->when($status, fn($q) => $q->where('status', $status));
+        return $query->when($status, fn ($q) => $q->where('status', $status));
     }
 
     public function scopeUser($query, $userId = null)
     {
-        return $query->when($userId, fn($q) => $q->where('user_id', $userId));
+        return $query->when($userId, fn ($q) => $q->where('user_id', $userId));
     }
 
     public function scopeTrip($query, $tripId = null)
     {
-        return $query->when($tripId, fn($q) => $q->where('trip_id', $tripId));
+        return $query->when($tripId, fn ($q) => $q->where('trip_id', $tripId));
     }
 
-	public function scopeHotel($query, $hotelId = null)
-	{
-		return $query->when($hotelId, fn($q) => $q->whereHas('bookingHotel', fn($q2) => $q2->where('hotel_id', $hotelId)));
-	}
+    public function scopeHotel($query, $hotelId = null)
+    {
+        return $query->when($hotelId, fn ($q) => $q->whereHas('bookingHotel', fn ($q2) => $q2->where('hotel_id', $hotelId)));
+    }
 
-	public function scopeBookingNumber($query, $bookingNumber = null)
-	{
-		return $query->when($bookingNumber, fn($q) => $q->where('booking_number', 'like', "%{$bookingNumber}%"));
-	}
+    public function scopeBookingNumber($query, $bookingNumber = null)
+    {
+        return $query->when($bookingNumber, fn ($q) => $q->where('booking_number', 'like', "%{$bookingNumber}%"));
+    }
 
-	public function scopeType($query, $type = 'hotel')//hotel or trip
-	{
-		return $query->when($type, fn($q) => $q->where('type', $type));
-	}
-
+    public function scopeType($query, $type = 'hotel')// hotel or trip
+    {
+        return $query->when($type, fn ($q) => $q->where('type', $type));
+    }
 }
-

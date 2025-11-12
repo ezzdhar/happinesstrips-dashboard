@@ -16,7 +16,6 @@ class UpdateCity extends Component
 
     public $name_en;
 
-
     public function mount(): void
     {
         $this->name_ar = $this->city->getTranslation('name', 'ar');
@@ -57,4 +56,3 @@ class UpdateCity extends Component
         $this->resetValidation();
     }
 }
-

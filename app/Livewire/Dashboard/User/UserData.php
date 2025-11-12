@@ -13,8 +13,7 @@ use Livewire\WithPagination;
 #[Title('users')]
 class UserData extends Component
 {
-
-	use WithPagination;
+    use WithPagination;
 
     public $all_user;
 
@@ -60,7 +59,7 @@ class UserData extends Component
     public function delete(array $payload): void
     {
         $id = $payload['envelope']['options']['id'];
-		User::findOrFail($id)->delete();
+        User::findOrFail($id)->delete();
         flash()->success(__('lang.deleted_successfully', ['attribute' => __('lang.user')]));
     }
 }

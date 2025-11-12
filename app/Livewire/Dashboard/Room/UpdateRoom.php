@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard\Room;
 
 use App\Enums\Status;
+use App\Models\Amenity;
 use App\Models\Hotel;
 use App\Models\Room;
 use App\Services\FileService;
@@ -40,13 +41,17 @@ class UpdateRoom extends Component
 
     public $hotels = [];
 
+    public $amenities = [];
+
+    public $selected_amenities = [];
+
     public function mount(): void
     {
-	    if (auth()->user()->hasRole('hotel')) {
-		    if ($this->room->hotel->user_id != auth()->id()) {
-			    abort(403);
-		    }
-	    }
+        if (auth()->user()->hasRole('hotel')) {
+            if ($this->room->hotel->user_id != auth()->id()) {
+                abort(403);
+            }
+        }
         $this->name_ar = $this->room->getTranslation('name', 'ar');
         $this->name_en = $this->room->getTranslation('name', 'en');
         $this->status = $this->room->status->value;
@@ -55,28 +60,40 @@ class UpdateRoom extends Component
         $this->children_count = $this->room->children_count;
         $this->includes_ar = $this->room->getTranslation('includes', 'ar');
         $this->includes_en = $this->room->getTranslation('includes', 'en');
-	    $this->hotels = Hotel::status(Status::Active)->get(['id', 'name'])->map(function ($hotel) {
-		    return [
-			    'id' => $hotel->id,
-			    'name' => $hotel->name,
-		    ];
-	    })->toArray();
-		$this->loadWeeklyPrices();
-	    view()->share('breadcrumbs', $this->breadcrumbs());
+        $this->hotels = Hotel::status(Status::Active)->get(['id', 'name'])->map(function ($hotel) {
+            return [
+                'id' => $hotel->id,
+                'name' => $hotel->name,
+            ];
+        })->toArray();
+
+        $this->amenities = Amenity::get(['id', 'name', 'icon'])->map(function ($amenity) {
+            return [
+                'id' => $amenity->id,
+                'name' => $amenity->name,
+                'icon' => $amenity->icon,
+            ];
+        })->toArray();
+
+        $this->selected_amenities = $this->room->amenities()->pluck('amenities.id')->toArray();
+
+        $this->loadWeeklyPrices();
+        view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
-	public function breadcrumbs(): array
-	{
-		return [
-			[
-				'label' => __('lang.rooms'),
-				'icon' => 'ionicon.bed-outline',
-			],
-			[
-				'label' => __('lang.update_room'),
-			],
-		];
-	}
+    public function breadcrumbs(): array
+    {
+        return [
+            [
+                'label' => __('lang.rooms'),
+                'icon' => 'ionicon.bed-outline',
+            ],
+            [
+                'label' => __('lang.update_room'),
+            ],
+        ];
+    }
+
     public function loadWeeklyPrices(): void
     {
         $existingPrices = $this->room->weekly_prices ?? [];
@@ -116,10 +133,12 @@ class UpdateRoom extends Component
             'weekly_prices.*.price_egp' => 'required|numeric|min:0',
             'weekly_prices.*.price_usd' => 'required|numeric|min:0',
             'images.*' => 'nullable|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
+            'selected_amenities' => 'nullable|array',
+            'selected_amenities.*' => 'exists:amenities,id',
         ];
     }
 
-	public function saveUpdate()
+    public function saveUpdate()
     {
         $this->validate();
 
@@ -139,8 +158,11 @@ class UpdateRoom extends Component
             'weekly_prices' => array_values($this->weekly_prices),
         ]);
 
+        // Sync amenities
+        $this->room->amenities()->sync($this->selected_amenities ?? []);
+
         // Save new images if uploaded
-        if (!empty($this->images)) {
+        if (! empty($this->images)) {
             foreach ($this->images as $image) {
                 $this->room->files()->create([
                     'path' => FileService::save($image, 'rooms'),
@@ -148,7 +170,7 @@ class UpdateRoom extends Component
             }
         }
 
-	    return to_route('rooms')->with('success', __('lang.updated_successfully', ['attribute' => __('lang.room')]));
+        return to_route('rooms')->with('success', __('lang.updated_successfully', ['attribute' => __('lang.room')]));
 
     }
 
@@ -171,4 +193,3 @@ class UpdateRoom extends Component
         $this->resetValidation();
     }
 }
-

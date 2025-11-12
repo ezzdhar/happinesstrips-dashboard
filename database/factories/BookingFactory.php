@@ -6,6 +6,7 @@ use App\Enums\Status;
 use App\Models\Trip;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+
 class BookingFactory extends Factory
 {
     /**
@@ -16,7 +17,7 @@ class BookingFactory extends Factory
     public function definition(): array
     {
         return [
-            'booking_number' => 'BK-' . strtoupper(uniqid()),
+            'booking_number' => 'BK-'.strtoupper(uniqid()),
             'user_id' => User::factory(),
             'trip_id' => Trip::factory(),
             'check_in' => fake()->dateTimeBetween('now', '+1 month'),
@@ -26,7 +27,7 @@ class BookingFactory extends Factory
             'children_count' => fake()->numberBetween(0, 2),
             'price' => fake()->numberBetween(5000, 20000),
             'total_price' => fake()->numberBetween(8000, 30000),
-			'currency' => fake()->randomElement(['egp', 'usd']),
+            'currency' => fake()->randomElement(['egp', 'usd']),
             'notes' => fake()->optional()->sentence(),
             'status' => fake()->randomElement([Status::Pending, Status::UnderPayment, Status::UnderCancellation, Status::Cancelled, Status::Completed]),
         ];

@@ -213,9 +213,9 @@ return [
         'name' => 'الاسم',
         'messages' => 'الرسائل',
         'password_confirmation' => 'تأكيد كلمة المرور',
-	    'includes_ar' => 'المميزات بالعربية',
-	    'includes_en' => 'المميزات بالإنجليزية',
-		'includes' => 'المميزات',
+        'includes_ar' => 'المميزات بالعربية',
+        'includes_en' => 'المميزات بالإنجليزية',
+        'includes' => 'المميزات',
     ],
 
 ];

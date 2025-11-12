@@ -7,6 +7,7 @@ use App\Traits\HasWeeklyPrices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Translatable\HasTranslations;
@@ -44,16 +45,20 @@ class Room extends Model
         return $this->morphMany(File::class, 'fileable');
     }
 
-    public function scopeStatus($query, $status = null)
+    public function amenities(): BelongsToMany
     {
-        return $query->when($status, fn($q) => $q->where('status', $status));
+        return $this->belongsToMany(Amenity::class);
     }
 
-	public function scopeHotelId($query, $hotel_id = null)
-	{
-		return $query->when($hotel_id, fn($q) => $q->where('hotel_id', $hotel_id));
-	}
+    public function scopeStatus($query, $status = null)
+    {
+        return $query->when($status, fn ($q) => $q->where('status', $status));
+    }
 
+    public function scopeHotelId($query, $hotel_id = null)
+    {
+        return $query->when($hotel_id, fn ($q) => $q->where('hotel_id', $hotel_id));
+    }
 
     public function scopeFilter($query, $search = null)
     {
@@ -61,7 +66,4 @@ class Room extends Model
             $q->where('name->ar', 'like', "%{$search}%")->orWhere('name->en', 'like', "%{$search}%");
         });
     }
-
-
 }
-

@@ -61,4 +61,3 @@ class CityData extends Component
         flash()->success(__('lang.deleted_successfully', ['attribute' => __('lang.city')]));
     }
 }
-

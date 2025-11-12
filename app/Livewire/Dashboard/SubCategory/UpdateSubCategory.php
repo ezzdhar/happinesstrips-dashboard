@@ -36,11 +36,11 @@ class UpdateSubCategory extends Component
         $this->name_en = $this->subCategory->getTranslation('name', 'en');
         $this->status = $this->subCategory->status->value;
         $this->main_category_id = $this->subCategory->main_category_id;
-        $this->main_categories = MainCategory::status(Status::Active)->get(['id', 'name']) ->map(function ($category) {
-	        return [
-		        'id' => $category->id,
-		        'name' => $category->name,
-	        ];
+        $this->main_categories = MainCategory::status(Status::Active)->get(['id', 'name'])->map(function ($category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+            ];
         })->toArray();
     }
 
@@ -65,7 +65,7 @@ class UpdateSubCategory extends Component
             ],
             'main_category_id' => $this->main_category_id,
             'status' => $this->status,
-            'image' => FileService::update( $this->subCategory->image, $this->image, 'sub_categories'),
+            'image' => FileService::update($this->subCategory->image, $this->image, 'sub_categories'),
         ]);
 
         $this->modalUpdate = false;
@@ -84,4 +84,3 @@ class UpdateSubCategory extends Component
         $this->resetValidation();
     }
 }
-

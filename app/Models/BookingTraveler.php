@@ -26,7 +26,6 @@ class BookingTraveler extends Model
 
     public function scopeType($query, $type = null)
     {
-        return $query->when($type, fn($q) => $q->where('type', $type));
+        return $query->when($type, fn ($q) => $q->where('type', $type));
     }
 }
-

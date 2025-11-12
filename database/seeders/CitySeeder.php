@@ -16,7 +16,7 @@ class CitySeeder extends Seeder
                 'name' => [
                     'ar' => $data['arabic'],
                     'en' => $data['english'],
-//                    'zh' => $data['chinese'],
+                    //                    'zh' => $data['chinese'],
                 ],
                 'code' => 'eg',
             ]);

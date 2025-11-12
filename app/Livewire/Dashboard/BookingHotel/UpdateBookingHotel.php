@@ -83,13 +83,13 @@ class UpdateBookingHotel extends Component
         }
 
         // Load data for dropdowns
-	    $this->hotels = Hotel::status(Status::Active)->get()->map(function ($hotel) {
-		    return [
-			    'id' => $hotel->id,
-			    'name' => $hotel->name,
-		    ];
-	    })->toArray();
-		$this->users = User::role('user')->get(['id', 'name', 'phone'])->toArray();
+        $this->hotels = Hotel::status(Status::Active)->get()->map(function ($hotel) {
+            return [
+                'id' => $hotel->id,
+                'name' => $hotel->name,
+            ];
+        })->toArray();
+        $this->users = User::role('user')->get(['id', 'name', 'phone'])->toArray();
 
         // Load rooms for selected hotel
         if ($this->hotel_id) {
@@ -118,8 +118,8 @@ class UpdateBookingHotel extends Component
     {
         $this->room_id = null;
         $this->selected_room = null;
-	    $this->rooms = [];
-	    $this->travelers = [];
+        $this->rooms = [];
+        $this->travelers = [];
         if ($this->hotel_id) {
             $this->rooms = Room::where('hotel_id', $this->hotel_id)->status(Status::Active)->get();
         }
@@ -131,42 +131,42 @@ class UpdateBookingHotel extends Component
             $room = Room::find($this->room_id);
             if ($room) {
                 $this->selected_room = $room;
-	            $this->initializeTravelers($room->adults_count, $room->children_count);
+                $this->initializeTravelers($room->adults_count, $room->children_count);
             }
         }
     }
 
-	public function initializeTravelers(int $adultsCount, int $childrenCount): void
-	{
-		$this->travelers = [];
-		// Add adults
-		for ($i = 0; $i < $adultsCount; $i++) {
-			$this->travelers[] = [
-				'full_name' => '',
-				'phone_key' => '+20',
-				'phone' => '',
-				'nationality' => '',
-				'age' => '',
-				'id_type' => '',
-				'id_number' => '',
-				'type' => 'adult',
-			];
-		}
+    public function initializeTravelers(int $adultsCount, int $childrenCount): void
+    {
+        $this->travelers = [];
+        // Add adults
+        for ($i = 0; $i < $adultsCount; $i++) {
+            $this->travelers[] = [
+                'full_name' => '',
+                'phone_key' => '+20',
+                'phone' => '',
+                'nationality' => '',
+                'age' => '',
+                'id_type' => '',
+                'id_number' => '',
+                'type' => 'adult',
+            ];
+        }
 
-		// Add children
-		for ($i = 0; $i < $childrenCount; $i++) {
-			$this->travelers[] = [
-				'full_name' => '',
-				'phone_key' => '+20',
-				'phone' => '',
-				'nationality' => '',
-				'age' => '',
-				'id_type' => 'passport',
-				'id_number' => '',
-				'type' => 'child',
-			];
-		}
-	}
+        // Add children
+        for ($i = 0; $i < $childrenCount; $i++) {
+            $this->travelers[] = [
+                'full_name' => '',
+                'phone_key' => '+20',
+                'phone' => '',
+                'nationality' => '',
+                'age' => '',
+                'id_type' => 'passport',
+                'id_number' => '',
+                'type' => 'child',
+            ];
+        }
+    }
 
     public function updatedCheckIn(): void
     {

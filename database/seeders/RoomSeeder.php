@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Status;
-use App\Models\Hotel;
-use App\Models\Room;
 use App\Models\File;
+use App\Models\Room;
 use Illuminate\Database\Seeder;
 
 class RoomSeeder extends Seeder
@@ -27,4 +25,3 @@ class RoomSeeder extends Seeder
             });
     }
 }
-

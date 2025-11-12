@@ -61,12 +61,12 @@ class Trip extends Model
 
     public function scopeStatus($query, $status = null)
     {
-        return $query->when($status, fn($q) => $q->where('status', $status));
+        return $query->when($status, fn ($q) => $q->where('status', $status));
     }
 
     public function scopeType($query, $type = null)
     {
-        return $query->when($type, fn($q) => $q->where('type', $type));
+        return $query->when($type, fn ($q) => $q->where('type', $type));
     }
 
     public function scopeFeatured($query)
@@ -78,8 +78,7 @@ class Trip extends Model
     {
         return $query->when($search, function ($q) use ($search) {
             $q->where('name->ar', 'like', "%{$search}%")
-              ->orWhere('name->en', 'like', "%{$search}%");
+                ->orWhere('name->en', 'like', "%{$search}%");
         });
     }
 }
-

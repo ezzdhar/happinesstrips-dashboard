@@ -13,7 +13,7 @@ class FileFactory extends Factory
     public function definition(): array
     {
         return [
-            'path' => FileService::fakeImage(name: 'name' ,folder: 'files'),
+            'path' => FileService::fakeImage(name: 'name', folder: 'files'),
             'type' => fake()->randomElement(['image', 'document', 'video']),
         ];
     }
@@ -22,8 +22,7 @@ class FileFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'type' => 'image',
-            'path' => FileService::fakeImage(name: 'name' ,folder: 'files'),
+            'path' => FileService::fakeImage(name: 'name', folder: 'files'),
         ]);
     }
 }
-

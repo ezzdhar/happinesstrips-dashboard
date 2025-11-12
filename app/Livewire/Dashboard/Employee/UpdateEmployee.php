@@ -74,7 +74,7 @@ class UpdateEmployee extends Component
         $this->validate();
         $this->employee->update([
             'name' => $this->name,
-	        'email' => $this->email ?: null,
+            'email' => $this->email ?: null,
             'image' => FileService::update($this->employee->image, $this->image, 'users'),
             'phone' => $this->phone,
             'phone_key' => $this->phone_key,

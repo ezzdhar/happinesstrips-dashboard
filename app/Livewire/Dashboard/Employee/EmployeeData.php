@@ -28,7 +28,7 @@ class EmployeeData extends Component
 
     public function mount(): void
     {
-        $this->all_employees = User::role('admin')->whereNot('id',1)->get(['id', 'name', 'phone'])->toArray();
+        $this->all_employees = User::role('admin')->whereNot('id', 1)->get(['id', 'name', 'phone'])->toArray();
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
@@ -45,13 +45,12 @@ class EmployeeData extends Component
     #[On('render')]
     public function render(): View
     {
-        $data['employees'] = User::role('admin')->whereNot('id',1)
+        $data['employees'] = User::role('admin')->whereNot('id', 1)
             ->when($this->search_employee_id, fn (Builder $query) => $query->where('id', $this->search_employee_id))
             ->with(['roles'])->latest()->paginate(30);
 
         return view('livewire.dashboard.employee.employee-data', $data);
     }
-
 
     public function deleteSweetAlert($id): void
     {

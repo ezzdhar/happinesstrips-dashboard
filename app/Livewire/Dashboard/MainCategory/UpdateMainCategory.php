@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Dashboard\MainCategory;
 
-use App\Enums\Status;
 use App\Models\MainCategory;
 use App\Services\FileService;
 use Illuminate\Contracts\View\View;
@@ -51,7 +50,7 @@ class UpdateMainCategory extends Component
                 'en' => $this->name_en,
             ],
             'status' => $this->status,
-            'image' =>  FileService::update($this->mainCategory->image, $this->image, 'main_categories'),
+            'image' => FileService::update($this->mainCategory->image, $this->image, 'main_categories'),
         ]);
 
         $this->modalUpdate = false;
@@ -70,4 +69,3 @@ class UpdateMainCategory extends Component
         $this->resetValidation();
     }
 }
-

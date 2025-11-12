@@ -14,69 +14,74 @@ class RolePermissionSeeder extends Seeder
     public function run(): void
     {
 
-	    // roles
-	    $roles = ['admin', 'user', 'hotel'];
-	    foreach ($roles as $role) {
-		    Role::create(['name' => $role, 'is_main'=>true]);
-	    }
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	    // permissions
-	    // role
-	    foreach (['create', 'show', 'update', 'delete'] as $action) {
-		    Permission::create(['name' => $action.'_role', 'type' => 'roles_mng']);
-	    }
+        // roles
+        $roles = ['admin', 'user', 'hotel'];
+        foreach ($roles as $role) {
+            Role::create(['name' => $role, 'is_main' => true]);
+        }
+        // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // permissions
+        // role
+        foreach (['create', 'show', 'update', 'delete'] as $action) {
+            Permission::create(['name' => $action.'_role', 'type' => 'roles_mng']);
+        }
 
-	    // user
-	    foreach (['create', 'show', 'update', 'delete'] as $action) {
-		    Permission::create(['name' => $action.'_user', 'type' => 'users_mng']);
-	    }
+        // user
+        foreach (['create', 'show', 'update', 'delete'] as $action) {
+            Permission::create(['name' => $action.'_user', 'type' => 'users_mng']);
+        }
 
-	    // employee
-	    foreach (['create', 'show', 'update', 'delete'] as $action) {
-		    Permission::create(['name' => $action.'_employee', 'type' => 'employees_mng']);
-	    }
+        // employee
+        foreach (['create', 'show', 'update', 'delete'] as $action) {
+            Permission::create(['name' => $action.'_employee', 'type' => 'employees_mng']);
+        }
 
-	    //main category
-	    foreach (['create', 'show', 'update', 'delete'] as $action) {
-		    Permission::create(['name' => $action.'_main_category', 'type' => 'main_categories_mng']);
-	    }
+        // main category
+        foreach (['create', 'show', 'update', 'delete'] as $action) {
+            Permission::create(['name' => $action.'_main_category', 'type' => 'main_categories_mng']);
+        }
 
-	    //sub category
-	    foreach (['create', 'show', 'update', 'delete'] as $action) {
-		    Permission::create(['name' => $action.'_sub_category', 'type' => 'sub_categories_mng']);
-	    }
+        // sub category
+        foreach (['create', 'show', 'update', 'delete'] as $action) {
+            Permission::create(['name' => $action.'_sub_category', 'type' => 'sub_categories_mng']);
+        }
 
-	    //city
-	    foreach (['create', 'show', 'update', 'delete'] as $action) {
-		    Permission::create(['name' => $action.'_city', 'type' => 'cities_mng']);
-	    }
+        // city
+        foreach (['create', 'show', 'update', 'delete'] as $action) {
+            Permission::create(['name' => $action.'_city', 'type' => 'cities_mng']);
+        }
 
-		//hotel
-	    foreach (['create', 'show', 'update', 'delete'] as $action) {
-		    Permission::create(['name' => $action.'_hotel', 'type' => 'hotels_mng'])->assignRole('hotel');
-	    }
+        // hotel
+        foreach (['create', 'show', 'update', 'delete'] as $action) {
+            Permission::create(['name' => $action.'_hotel', 'type' => 'hotels_mng'])->assignRole('hotel');
+        }
 
-		//room
-	    foreach (['create', 'show', 'update', 'delete'] as $action) {
-		    Permission::create(['name' => $action.'_room', 'type' => 'rooms_mng'])->assignRole('hotel');
-	    }
+        // room
+        foreach (['create', 'show', 'update', 'delete'] as $action) {
+            Permission::create(['name' => $action.'_room', 'type' => 'rooms_mng'])->assignRole('hotel');
+        }
 
-		//trip
-	    foreach (['create', 'show', 'update', 'delete'] as $action) {
-		    Permission::create(['name' => $action.'_trip', 'type' => 'trips_mng'])->assignRole('hotel');
-	    }
+        // trip
+        foreach (['create', 'show', 'update', 'delete'] as $action) {
+            Permission::create(['name' => $action.'_trip', 'type' => 'trips_mng'])->assignRole('hotel');
+        }
 
-		// booking trip
-	    foreach (['create', 'show', 'update', 'delete'] as $action) {
-		    Permission::create(['name' => $action.'_booking_trip', 'type' => 'booking_trips_mng']);
-	    }
+        // booking trip
+        foreach (['create', 'show', 'update', 'delete'] as $action) {
+            Permission::create(['name' => $action.'_booking_trip', 'type' => 'booking_trips_mng']);
+        }
 
-		// booking hotel
-	    foreach (['create', 'show', 'update', 'delete'] as $action) {
-		    Permission::create(['name' => $action.'_booking_hotel', 'type' => 'booking_hotels_mng']);
-	    }
+        // booking hotel
+        foreach (['create', 'show', 'update', 'delete'] as $action) {
+            Permission::create(['name' => $action.'_booking_hotel', 'type' => 'booking_hotels_mng']);
+        }
 
-	    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//        $masterAdminRole->givePermissionTo(Permission::all()->pluck('name')->toArray());
+        // amenity
+        foreach (['create', 'show', 'update', 'delete'] as $action) {
+            Permission::create(['name' => $action.'_amenity', 'type' => 'amenities_mng']);
+        }
+
+        // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //        $masterAdminRole->givePermissionTo(Permission::all()->pluck('name')->toArray());
     }
 }

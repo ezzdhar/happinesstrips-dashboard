@@ -69,5 +69,3 @@ test('booking number is automatically generated', function () {
         ->toBeString()
         ->toStartWith('BK-');
 });
-
-

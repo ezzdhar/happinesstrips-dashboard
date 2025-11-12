@@ -28,6 +28,11 @@
 			</div>
 
 			<div class="mt-3">
+				<x-choices-offline label="{{ __('lang.amenities') }}" wire:model="selected_amenities" :options="$amenities" searchable
+				                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}" icon="o-sparkles" hint="{{__('lang.select').' '.__('lang.amenities')}}"/>
+			</div>
+
+			<div class="mt-3">
 				<h3 class="font-bold text-lg mb-3">{{ __('lang.weekly_prices') }}</h3>
 				<div class="grid grid-cols-1 sm-only:grid-cols-2 md:grid-cols-4 gap-3">
 				@foreach(['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as $day)

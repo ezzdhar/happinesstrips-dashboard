@@ -18,7 +18,7 @@ class MainCategoryFactory extends Factory
                 'ar' => fake('ar_SA')->words(3, true),
                 'en' => fake('en_US')->words(3, true),
             ],
-	        'image' => FileService::fakeImage(name: 'image',folder: 'main_categories'),
+            'image' => FileService::fakeImage(name: 'image', folder: 'main_categories'),
             'status' => fake()->randomElement([Status::Active, Status::Inactive]),
         ];
     }
@@ -37,4 +37,3 @@ class MainCategoryFactory extends Factory
         ]);
     }
 }
-

@@ -2,10 +2,8 @@
 
 namespace App\Livewire\Dashboard\MainCategory;
 
-use App\Enums\Status;
 use App\Models\MainCategory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -66,4 +64,3 @@ class MainCategoryData extends Component
         flash()->success(__('lang.deleted_successfully', ['attribute' => __('lang.main_category')]));
     }
 }
-

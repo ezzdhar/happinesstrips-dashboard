@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard\Room;
 
 use App\Enums\Status;
+use App\Models\Amenity;
 use App\Models\Hotel;
 use App\Models\Room;
 use App\Services\FileService;
@@ -37,30 +38,43 @@ class CreateRoom extends Component
 
     public $hotels = [];
 
+    public $amenities = [];
+
+    public $selected_amenities = [];
+
     public function mount(): void
     {
         $this->hotels = Hotel::status(Status::Active)->get(['id', 'name'])->map(function ($hotel) {
-	        return [
-		        'id' => $hotel->id,
-		        'name' => $hotel->name,
-	        ];
+            return [
+                'id' => $hotel->id,
+                'name' => $hotel->name,
+            ];
         })->toArray();
+
+        $this->amenities = Amenity::get(['id', 'name', 'icon'])->map(function ($amenity) {
+            return [
+                'id' => $amenity->id,
+                'name' => $amenity->name,
+                'icon' => $amenity->icon,
+            ];
+        })->toArray();
+
         $this->initializeWeeklyPrices();
-	    view()->share('breadcrumbs', $this->breadcrumbs());
+        view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
-	public function breadcrumbs(): array
-	{
-		return [
-			[
-				'label' => __('lang.rooms'),
-				'icon' => 'ionicon.bed-outline',
-			],
-			[
-				'label' => __('lang.add_room'),
-			],
-		];
-	}
+    public function breadcrumbs(): array
+    {
+        return [
+            [
+                'label' => __('lang.rooms'),
+                'icon' => 'ionicon.bed-outline',
+            ],
+            [
+                'label' => __('lang.add_room'),
+            ],
+        ];
+    }
 
     public function initializeWeeklyPrices(): void
     {
@@ -93,6 +107,8 @@ class CreateRoom extends Component
             'weekly_prices.*.price_egp' => 'required|numeric|min:0',
             'weekly_prices.*.price_usd' => 'required|numeric|min:0',
             'images.*' => 'required|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
+            'selected_amenities' => 'nullable|array',
+            'selected_amenities.*' => 'exists:amenities,id',
         ];
     }
 
@@ -115,8 +131,13 @@ class CreateRoom extends Component
             'weekly_prices' => array_values($this->weekly_prices),
         ]);
 
+        // Sync amenities
+        if (! empty($this->selected_amenities)) {
+            $room->amenities()->sync($this->selected_amenities);
+        }
+
         // Save images
-        if (!empty($this->images)) {
+        if (! empty($this->images)) {
             foreach ($this->images as $image) {
                 $room->files()->create([
                     'path' => FileService::save($image, 'rooms'),
@@ -124,7 +145,7 @@ class CreateRoom extends Component
             }
         }
 
-		return to_route('rooms')->with('success', __('lang.added_successfully', ['attribute' => __('lang.room')]));
+        return to_route('rooms')->with('success', __('lang.added_successfully', ['attribute' => __('lang.room')]));
     }
 
     public function resetData(): void
@@ -137,4 +158,3 @@ class CreateRoom extends Component
         $this->resetValidation();
     }
 }
-

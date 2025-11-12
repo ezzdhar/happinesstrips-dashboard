@@ -47,15 +47,14 @@ class SubCategory extends Model
 
     public function scopeStatus($query, $status = null)
     {
-        return $query->when($status, fn($q) => $q->where('status', $status));
+        return $query->when($status, fn ($q) => $q->where('status', $status));
     }
 
     public function scopeFilter($query, $search = null)
     {
         return $query->when($search, function ($q) use ($search) {
             $q->where('name->ar', 'like', "%{$search}%")
-              ->orWhere('name->en', 'like', "%{$search}%");
+                ->orWhere('name->en', 'like', "%{$search}%");
         });
     }
 }
-

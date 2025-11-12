@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 
 use App\Enums\Status;
+use App\Models\File;
+use App\Models\Hotel;
 use App\Models\MainCategory;
 use App\Models\SubCategory;
 use App\Models\Trip;
-use App\Models\Hotel;
-use App\Models\File;
 use Illuminate\Database\Seeder;
 
 class TripSeeder extends Seeder
@@ -19,6 +19,7 @@ class TripSeeder extends Seeder
 
         if ($mainCategories->isEmpty() || $hotels->isEmpty()) {
             $this->command->error('No main categories or hotels found. Please run their seeders first.');
+
             return;
         }
 
@@ -98,7 +99,7 @@ class TripSeeder extends Seeder
             $mainCategory = $mainCategories->random();
             $subCategory = SubCategory::where('main_category_id', $mainCategory->id)->inRandomOrder()->first();
 
-            if (!$subCategory) {
+            if (! $subCategory) {
                 $subCategory = SubCategory::factory()->create(['main_category_id' => $mainCategory->id]);
             }
 
@@ -132,24 +133,23 @@ class TripSeeder extends Seeder
         }
 
         // Create additional random trips
-//        Trip::factory()
-//            ->count(20)
-//            ->create()
-//            ->each(function ($trip) use ($hotels) {
-//                // Attach random hotels
-//                $trip->hotels()->attach(
-//                    $hotels->random(rand(1, 4))->pluck('id')->toArray()
-//                );
-//
-//                // Create images
-//                File::factory()
-//                    ->count(rand(3, 8))
-//                    ->image()
-//                    ->create([
-//                        'fileable_id' => $trip->id,
-//                        'fileable_type' => Trip::class,
-//                    ]);
-//            });
+        //        Trip::factory()
+        //            ->count(20)
+        //            ->create()
+        //            ->each(function ($trip) use ($hotels) {
+        //                // Attach random hotels
+        //                $trip->hotels()->attach(
+        //                    $hotels->random(rand(1, 4))->pluck('id')->toArray()
+        //                );
+        //
+        //                // Create images
+        //                File::factory()
+        //                    ->count(rand(3, 8))
+        //                    ->image()
+        //                    ->create([
+        //                        'fileable_id' => $trip->id,
+        //                        'fileable_type' => Trip::class,
+        //                    ]);
+        //            });
     }
 }
-
