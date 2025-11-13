@@ -93,7 +93,6 @@
                             <p class="text-base">{{ $booking->bookingHotel->room->name }}</p>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="text-sm font-medium text-gray-600">{{ __('lang.room_capacity') }}</label>
                                 <p class="text-sm">
@@ -104,17 +103,14 @@
                                 </p>
                             </div>
                             <div>
-                        </div>
-
-                            <div>
                                 <label class="text-sm font-medium text-gray-600">{{ __('lang.room_includes') }}</label>
                                 <div class="mt-1 flex flex-wrap gap-2">
                                     <small class="">{!! $booking->bookingHotel->room_includes !!}</small>
                                 </div>
                             </div>
-                        </div>
                 </div>
             @endif
+        </div>
         </div>
 
         <!-- Travelers Information -->
@@ -157,7 +153,6 @@
         @endif
 
 
-        </div>
     </x-card>
 </div>
 

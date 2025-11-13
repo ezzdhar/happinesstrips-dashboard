@@ -46,13 +46,18 @@ class CreateBookingTrip extends Component
     // Travelers
     public $travelers = [];
 
+    // UI State
+    public $currentStep = 1;
+
+    public $showReview = false;
+
     public $users;
 
     public $trips;
 
     public function mount(): void
     {
-        $this->users = User::role('user')->get(['id', 'name'])->toArray();
+        $this->users = User::role('user')->get(['id', 'name', 'phone'])->toArray();
         $this->trips = Trip::status(Status::Active)->get()->map(function ($trip) {
             return [
                 'id' => $trip->id,
@@ -105,6 +110,9 @@ class CreateBookingTrip extends Component
                 $this->children_count = 0;
                 $this->free_children_count = 0;
 
+                // Sync travelers array
+                $this->syncTravelers();
+
                 // Calculate price
                 $this->calculatePrice();
             }
@@ -116,9 +124,57 @@ class CreateBookingTrip extends Component
             $this->adults_count = 1;
             $this->children_count = 0;
             $this->free_children_count = 0;
+            $this->travelers = [];
             $this->calculated_price = 0;
             $this->total_price = 0;
         }
+    }
+
+    public function nextStep(): void
+    {
+        // Validate current step before moving forward
+        if ($this->currentStep == 1) {
+            $this->validate([
+                'user_id' => 'required|exists:users,id',
+                'trip_id' => 'required|exists:trips,id',
+            ]);
+            $this->currentStep = 2;
+        } elseif ($this->currentStep == 2) {
+            $this->validate([
+                'check_in' => 'required|date',
+                'check_out' => 'required|date|after:check_in',
+                'adults_count' => 'required|integer|min:1',
+                'currency' => 'required|in:egp,usd',
+            ]);
+            $this->currentStep = 3;
+        } elseif ($this->currentStep == 3) {
+            // Validate travelers
+            $this->validate([
+                'travelers' => 'required|array|min:1',
+                'travelers.*.full_name' => 'required|string',
+                'travelers.*.phone' => 'required|string',
+                'travelers.*.nationality' => 'required|string',
+                'travelers.*.age' => 'required|integer|min:1',
+                'travelers.*.id_type' => 'required|in:passport,national_id',
+                'travelers.*.id_number' => 'required|string',
+            ]);
+            $this->showReview = true;
+        }
+    }
+
+    public function previousStep(): void
+    {
+        if ($this->showReview) {
+            $this->showReview = false;
+        } elseif ($this->currentStep > 1) {
+            $this->currentStep--;
+        }
+    }
+
+    public function editStep(int $step): void
+    {
+        $this->showReview = false;
+        $this->currentStep = $step;
     }
 
     public function updatedCheckIn(): void
@@ -183,8 +239,8 @@ class CreateBookingTrip extends Component
                     'phone_key' => '+20',
                     'phone' => '',
                     'nationality' => 'مصر',
-                    'age' => $type === 'adult' ? 18 : 5,
-                    'id_type' => 'passport',
+                    'age' => '',
+                    'id_type' => '',
                     'id_number' => '',
                     'type' => $type,
                 ];
@@ -285,6 +341,7 @@ class CreateBookingTrip extends Component
             'currency' => $this->currency,
             'notes' => $this->notes,
             'status' => Status::Pending,
+            'type' => 'trip',
         ]);
 
         // Create travelers

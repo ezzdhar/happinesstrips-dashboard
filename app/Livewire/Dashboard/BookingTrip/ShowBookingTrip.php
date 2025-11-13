@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard\BookingTrip;
 
 use App\Models\Booking;
+use App\Services\TripPricingService;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -12,21 +13,30 @@ class ShowBookingTrip extends Component
 {
     public Booking $booking;
 
+    public $calculated_price = 0;
+
+    public $total_price = 0;
+
+    public $child_age_threshold = 12;
+
     public function mount(Booking $booking): void
     {
-        $this->booking = $booking->load(['user', 'trip', 'bookingHotel.hotel', 'bookingHotel.room', 'travelers']);
+        $this->booking = $booking->load(['user', 'trip', 'travelers']);
+
+        $this->calculated_price = $booking->price;
+        $this->total_price = $booking->total_price;
+        $this->child_age_threshold = TripPricingService::getChildAgeThreshold();
+
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
     public function breadcrumbs(): array
     {
-        $isHotelBooking = $this->booking->bookingHotel->count() > 0;
-
         return [
             [
-                'label' => $isHotelBooking ? __('lang.hotel_bookings') : __('lang.trip_bookings'),
-                'icon' => $isHotelBooking ? 'o-calendar' : 'o-map',
-                'link' => $isHotelBooking ? route('bookings.hotels') : route('bookings.trips'),
+                'label' => __('lang.trip_bookings'),
+                'icon' => 'o-map',
+                'link' => route('bookings.trips'),
             ],
             [
                 'label' => __('lang.booking_details').' - '.$this->booking->booking_number,

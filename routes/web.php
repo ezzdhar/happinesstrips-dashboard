@@ -8,6 +8,7 @@ use App\Livewire\Dashboard\BookingHotel\ShowBookingHotel;
 use App\Livewire\Dashboard\BookingHotel\UpdateBookingHotel;
 use App\Livewire\Dashboard\BookingTrip\BookingTripData;
 use App\Livewire\Dashboard\BookingTrip\CreateBookingTrip;
+use App\Livewire\Dashboard\BookingTrip\PrintBookingTrip;
 use App\Livewire\Dashboard\BookingTrip\ShowBookingTrip;
 use App\Livewire\Dashboard\BookingTrip\UpdateBookingTrip;
 use App\Livewire\Dashboard\City\CityData;
@@ -87,6 +88,10 @@ Route::middleware(['web-language'])->group(function () {
             Route::get('/create', CreateBookingTrip::class)->name('bookings.trips.create')->middleware('permission:create_booking_trip');
             Route::get('/edit/{booking}', UpdateBookingTrip::class)->name('bookings.trips.edit')->middleware('permission:update_booking_trip');
             Route::get('/show/{booking}', ShowBookingTrip::class)->name('bookings.trips.show');
+            Route::get('/print/{booking}', function (Booking $booking) {
+				$booking->load(['user', 'trip', 'travelers']);
+				return view('livewire.dashboard.booking-trip.print-booking-trip', compact('booking'));
+			})->name('bookings.trips.print');
         });
 
     });

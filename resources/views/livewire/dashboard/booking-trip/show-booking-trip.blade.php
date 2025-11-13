@@ -1,6 +1,12 @@
 @php use App\Enums\Status; @endphp
 <div>
     <x-card title="{{ __('lang.booking_details') }} - {{ $booking->booking_number }}" shadow class="mb-3">
+        <x-slot:menu>
+            <x-button noWireNavigate label="{{ __('lang.print') }}" icon="o-printer" class="btn-sm btn-success" link="{{ route('bookings.trips.print', $booking->id) }}" target="_blank"/>
+            @can('update_booking_trip')
+                <x-button noWireNavigate label="{{ __('lang.edit') }}" icon="o-pencil" class="btn-sm btn-primary" link="{{ route('bookings.trips.edit', $booking->id) }}"/>
+            @endcan
+        </x-slot:menu>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Booking Information -->
             <div class="space-y-4">
@@ -17,18 +23,15 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
                     <div>
                         <label class="text-sm font-medium text-gray-600">{{ __('lang.user') }}</label>
                         <p class="text-base">{{ $booking->user->name }}</p>
+                        <p class="text-sm text-gray-500">
+                            <span dir="ltr">{{ $booking->user->full_phone }}</span>
+                        </p>
                     </div>
-                    <div>
-                        <label class="text-sm font-medium text-gray-600">{{ __('lang.trip') }}</label>
-                        <p class="text-base">{{ $booking->trip->name }}</p>
-                    </div>
-                </div>
 
-                <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="text-sm font-medium text-gray-600">{{ __('lang.check_in') }}</label>
                         <p class="text-base">{{ formatDate($booking->check_in) }}</p>
@@ -49,10 +52,19 @@
                         <p class="text-base">{{ $booking->adults_count }}</p>
                     </div>
                     <div>
-                        <label class="text-sm font-medium text-gray-600">{{ __('lang.children') }}</label>
+                        <label class="text-sm font-medium text-gray-600">{{ __('lang.children') }} {{ $child_age_threshold }}+</label>
                         <p class="text-base">{{ $booking->children_count }}</p>
                     </div>
                 </div>
+
+                @if(($booking->free_children_count ?? 0) > 0)
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">{{ __('lang.children') }} <{{ $child_age_threshold }}</label>
+                            <p class="text-base badge badge-success">{{ $booking->free_children_count }} ({{ __('lang.free') }})</p>
+                        </div>
+                    </div>
+                @endif
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
@@ -73,22 +85,52 @@
                 @endif
             </div>
 
-            <!-- Hotels Information (if exists) -->
-            @if($booking->bookingHotels->count() > 0)
+            <!-- Trip Information -->
+            @if($booking->trip)
                 <div class="space-y-4">
-                    <h3 class="text-lg font-semibold border-b pb-2">{{ __('lang.hotels') }}</h3>
-                    @foreach($booking->bookingHotels as $bookingHotel)
-                        <div class="bg-base-200 p-4 rounded-lg">
-                            <h4 class="font-semibold mb-2">{{ $bookingHotel->hotel->name }}</h4>
-                            <div class="space-y-1">
-                                <p class="text-sm"><span class="font-medium">{{ __('lang.room') }}:</span> {{ $bookingHotel->room->name }}</p>
-                                <p class="text-sm"><span class="font-medium">{{ __('lang.rooms_count') }}:</span> {{ $bookingHotel->rooms_count }}</p>
-                                <p class="text-sm"><span class="font-medium">{{ __('lang.price') }}:</span>
-                                    {{ $bookingHotel->room_price[$booking->currency] ?? 0 }} {{ strtoupper($booking->currency) }} / {{ __('lang.night') }}
+                    <h3 class="text-lg font-semibold border-b pb-2">{{ __('lang.trip_information') }}</h3>
+                    <div class="bg-base-200 p-4 rounded-lg space-y-3">
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">{{ __('lang.trip') }}</label>
+                            <p class="text-base font-semibold">{{ $booking->trip->name }}</p>
+                        </div>
+
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">{{ __('lang.trip_type') }}</label>
+                            <p>
+                                <x-badge
+                                    :value="__('lang.' . $booking->trip->type->value)"
+                                    class="{{ $booking->trip->type->value === 'fixed' ? 'badge-success' : 'badge-warning' }}"
+                                />
+                            </p>
+                        </div>
+
+                        @if($booking->trip->description)
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">{{ __('lang.description') }}</label>
+                                <p class="text-sm">{{ $booking->trip->description }}</p>
+                            </div>
+                        @endif
+
+                        @if($booking->trip->type->value === 'flexible')
+                            <div>
+                                <label class="text-sm font-medium text-gray-600">{{ __('lang.price_per_night') }}</label>
+                                <p class="text-sm">
+                                    {{ number_format($calculated_price, 2) }} {{ strtoupper($booking->currency) }}
                                 </p>
                             </div>
+                        @endif
+
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">{{ __('lang.calculation') }}</label>
+                            <p class="text-sm font-mono">
+                                {{ $booking->adults_count + $booking->children_count }} × {{ number_format($calculated_price, 2) }}
+                                @if($booking->trip->type->value === 'flexible')
+                                    × {{ $booking->nights_count }}
+                                @endif
+                            </p>
                         </div>
-                    @endforeach
+                    </div>
                 </div>
             @endif
         </div>
@@ -116,7 +158,7 @@
                                 <tr class="bg-base-200">
                                     <th class="text-center">{{ $loop->iteration }}</th>
                                     <td>{{ $traveler->full_name }}</td>
-                                    <td>{{ $traveler->phone_key }} {{ $traveler->phone }}</td>
+                                    <td dir="ltr">{{ $traveler->phone_key }} {{ $traveler->phone }}</td>
                                     <td>{{ $traveler->nationality }}</td>
                                     <td class="text-center">{{ $traveler->age }}</td>
                                     <td>{{ __('lang.' . $traveler->id_type) }}</td>
@@ -132,15 +174,6 @@
             </div>
         @endif
 
-        <x-slot:actions>
-            @php
-                $isHotelBooking = $booking->bookingHotels->count() > 0;
-                $backRoute = $isHotelBooking ? route('bookings.hotels') : route('bookings.trips');
-                $editRoute = $isHotelBooking ? route('bookings.hotels.edit', $booking->id) : route('bookings.trips.edit', $booking->id);
-            @endphp
-            <x-button noWireNavigate label="{{ __('lang.back') }}" icon="o-arrow-left" link="{{ $backRoute }}"/>
-            <x-button noWireNavigate label="{{ __('lang.edit') }}" icon="o-pencil" class="btn-primary" link="{{ $editRoute }}"/>
-        </x-slot:actions>
     </x-card>
 </div>
 
