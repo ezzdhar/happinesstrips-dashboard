@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\BookingTraveler;
 use App\Models\Trip;
 use App\Models\User;
+use App\Services\TripPricingService;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
@@ -29,7 +30,10 @@ class CreateBookingTrip extends Component
 
     public $adults_count = 1;
 
-    public $children_count = 0;
+    public $children_count = 0; // Children at or above threshold age (charged as adults)
+
+    public $free_children_count = 0; // Children below threshold age (free)
+    // Threshold age is configurable via CHILD_AGE_THRESHOLD in .env (default: 12)
 
     public $notes;
 
@@ -98,7 +102,8 @@ class CreateBookingTrip extends Component
 
                 // Set default people count from trip
                 $this->adults_count = $this->selectedTrip['adults_count'] ?? 1;
-                $this->children_count = $this->selectedTrip['children_count'] ?? 0;
+                $this->children_count = 0;
+                $this->free_children_count = 0;
 
                 // Calculate price
                 $this->calculatePrice();
@@ -110,6 +115,7 @@ class CreateBookingTrip extends Component
             $this->nights_count = 1;
             $this->adults_count = 1;
             $this->children_count = 0;
+            $this->free_children_count = 0;
             $this->calculated_price = 0;
             $this->total_price = 0;
         }
@@ -132,12 +138,68 @@ class CreateBookingTrip extends Component
 
     public function updatedAdultsCount(): void
     {
+        $this->syncTravelers();
         $this->calculatePrice();
     }
 
     public function updatedChildrenCount(): void
     {
+        $this->syncTravelers();
         $this->calculatePrice();
+    }
+
+    public function updatedFreeChildrenCount(): void
+    {
+        $this->syncTravelers();
+        // Free children don't affect price
+    }
+
+    private function syncTravelers(): void
+    {
+        $totalTravelers = (int) $this->adults_count + (int) $this->children_count + (int) $this->free_children_count;
+        $currentTravelers = count($this->travelers);
+
+        // Add travelers if needed
+        if ($totalTravelers > $currentTravelers) {
+            $adultsAdded = 0;
+            $childrenAdded = 0;
+            $freeChildrenAdded = 0;
+
+            for ($i = $currentTravelers; $i < $totalTravelers; $i++) {
+                // Determine traveler type based on counts
+                if ($adultsAdded < $this->adults_count) {
+                    $type = 'adult';
+                    $adultsAdded++;
+                } elseif ($childrenAdded < $this->children_count) {
+                    $type = 'child';
+                    $childrenAdded++;
+                } else {
+                    $type = 'child';
+                    $freeChildrenAdded++;
+                }
+
+                $this->travelers[] = [
+                    'full_name' => '',
+                    'phone_key' => '+20',
+                    'phone' => '',
+                    'nationality' => 'مصر',
+                    'age' => $type === 'adult' ? 18 : 5,
+                    'id_type' => 'passport',
+                    'id_number' => '',
+                    'type' => $type,
+                ];
+            }
+        }
+
+        // Remove excess travelers if needed
+        if ($totalTravelers < $currentTravelers) {
+            $this->travelers = array_slice($this->travelers, 0, $totalTravelers);
+        }
+    }
+
+    public function getChildAgeThreshold(): int
+    {
+        return TripPricingService::getChildAgeThreshold();
     }
 
     public function updatedCurrency(): void
@@ -147,95 +209,38 @@ class CreateBookingTrip extends Component
 
     public function calculatePrice(): void
     {
-        if (! $this->selectedTrip || ! $this->currency) {
+        if (! $this->trip_id || ! $this->check_in || ! $this->check_out || ! $this->currency) {
             $this->calculated_price = 0;
             $this->total_price = 0;
 
             return;
         }
 
-        $basePrice = $this->selectedTrip['price'][$this->currency] ?? 0;
-        $baseAdultsCount = $this->selectedTrip['adults_count'] ?? 1;
+        // Get the full Trip model
+        $trip = Trip::find($this->trip_id);
 
-        // Get child discount settings
-        $childDiscountPercentage = config('booking.child_discount_percentage', 50);
-        $maxDiscountedChildren = config('booking.max_discounted_children', 2);
+        if (! $trip) {
+            $this->calculated_price = 0;
+            $this->total_price = 0;
 
-        if ($this->selectedTrip['type'] === 'fixed') {
-            // Fixed trip: price is for base adults count for the trip duration
-            $pricePerAdult = $basePrice / $baseAdultsCount;
-
-            // Calculate adults cost
-            $adultsCost = $this->adults_count * $pricePerAdult;
-
-            // Calculate children cost
-            $childrenCost = 0;
-            for ($i = 0; $i < $this->children_count; $i++) {
-                if ($i < $maxDiscountedChildren) {
-                    // First 2 children get discount
-                    $childrenCost += $pricePerAdult * ($childDiscountPercentage / 100);
-                } else {
-                    // 3rd child and beyond pay full adult rate
-                    $childrenCost += $pricePerAdult;
-                }
-            }
-
-            $this->total_price = $adultsCost + $childrenCost;
-            $this->calculated_price = $basePrice;
-
-        } else {
-            // Flexible trip: price per night for base adults count
-            if (! $this->nights_count || $this->nights_count < 1) {
-                $this->calculated_price = 0;
-                $this->total_price = 0;
-
-                return;
-            }
-
-            $pricePerAdultPerNight = $basePrice / $baseAdultsCount;
-
-            // Calculate adults cost
-            $adultsCost = $this->adults_count * $pricePerAdultPerNight * $this->nights_count;
-
-            // Calculate children cost
-            $childrenCost = 0;
-            for ($i = 0; $i < $this->children_count; $i++) {
-                if ($i < $maxDiscountedChildren) {
-                    // First 2 children get discount
-                    $childrenCost += ($pricePerAdultPerNight * $this->nights_count) * ($childDiscountPercentage / 100);
-                } else {
-                    // 3rd child and beyond pay full adult rate
-                    $childrenCost += $pricePerAdultPerNight * $this->nights_count;
-                }
-            }
-
-            $this->total_price = $adultsCost + $childrenCost;
-            $this->calculated_price = $basePrice;
+            return;
         }
 
-        // Round to 2 decimals
-        $this->calculated_price = round($this->calculated_price, 2);
-        $this->total_price = round($this->total_price, 2);
-    }
+        // Use TripPricingService with all data
+        $result = TripPricingService::calculateTripPrice(
+            trip: $trip,
+            checkIn: $this->check_in,
+            checkOut: $this->check_out,
+            adultsCount: (int) $this->adults_count,
+            childrenCount: (int) $this->children_count,
+            freeChildrenCount: (int) $this->free_children_count,
+            currency: $this->currency
+        );
 
-    public function addTraveler(): void
-    {
-        $this->travelers[] = [
-            'full_name' => '',
-            'phone_key' => '+20',
-            'phone' => '',
-            'nationality' => '',
-            'age' => '',
-            'id_type' => 'passport',
-            'id_number' => '',
-            'type' => 'adult',
-        ];
-    }
-
-    public function removeTraveler($index): void
-    {
-        unset($this->travelers[$index]);
-        $this->travelers = array_values($this->travelers);
+        // Update component properties from result
+        $this->nights_count = $result['nights_count'];
+        $this->calculated_price = $result['calculated_price'];
+        $this->total_price = $result['total_price'];
     }
 
     public function rules(): array
@@ -248,6 +253,7 @@ class CreateBookingTrip extends Component
             'nights_count' => 'required|integer|min:1',
             'adults_count' => 'required|integer|min:1',
             'children_count' => 'nullable|integer|min:0',
+            'free_children_count' => 'nullable|integer|min:0',
             'currency' => 'required|in:egp,usd',
             'notes' => 'nullable|string',
             'travelers' => 'required|array|min:1',
