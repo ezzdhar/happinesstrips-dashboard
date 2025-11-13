@@ -2,8 +2,6 @@
 <div>
     <x-card title="{{ __('lang.create_trip_booking') }}" shadow class="mb-3">
         <form wire:submit.prevent="save">
-            <div class="max-h-[75vh] overflow-y-auto p-4 space-y-6">
-
                 {{-- Basic Information --}}
                 <div class="border-b pb-4">
                     <h3 class="text-lg font-semibold mb-4">
@@ -26,15 +24,123 @@
                     <h3 class="text-lg font-semibold mb-4">
                         <x-icon name="o-calendar" class="w-5 h-5 inline"/> {{ __('lang.dates') }}
                     </h3>
+
+                    @if($selectedTrip)
+                        {{-- Trip Details --}}
+                        <div class="bg-info/10 p-4 rounded-lg mb-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                <div>
+                                    <span class="font-semibold">{{ __('lang.trip_type') }}:</span>
+                                    <span class="badge badge-{{ $selectedTrip['type'] === 'fixed' ? 'success' : 'warning' }}">
+                                        {{ __('lang.' . $selectedTrip['type']) }}
+                                    </span>
+                                </div>
+
+                                @if($selectedTrip['type'] === 'fixed')
+                                    <div>
+                                        <span class="font-semibold">{{ __('lang.duration') }}:</span>
+                                        {{ $selectedTrip['duration_from'] }} → {{ $selectedTrip['duration_to'] }}
+                                    </div>
+                                @else
+                                    <div>
+                                        <span class="font-semibold">{{ __('lang.available_from') }}:</span>
+                                        {{ $selectedTrip['duration_from'] ?? __('lang.any_time') }}
+                                    </div>
+                                @endif
+
+                                <div>
+                                    <span class="font-semibold">{{ __('lang.base_people_count') }}:</span>
+                                    {{ $selectedTrip['adults_count'] }} {{ __('lang.adults') }}
+                                    @if($selectedTrip['children_count'] > 0)
+                                        + {{ $selectedTrip['children_count'] }} {{ __('lang.children') }}
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <x-input required label="{{ __('lang.check_in') }}" wire:model.live="check_in" type="date" icon="o-calendar"/>
-                        <x-input required label="{{ __('lang.check_out') }}" wire:model.live="check_out" type="date" icon="o-calendar"/>
-                        <x-input required label="{{ __('lang.nights') }}" wire:model="nights_count" type="number" min="1" icon="o-moon"/>
+                        <x-input
+                                required
+                                label="{{ __('lang.check_in') }}"
+                                wire:model.live="check_in"
+                                type="date"
+                                icon="o-calendar"
+                                :readonly="$selectedTrip && $selectedTrip['type'] === 'fixed'"
+                                :min="$selectedTrip && $selectedTrip['type'] === 'flexible' ? $selectedTrip['duration_from'] : null"
+                        />
+                        <x-input
+                                required
+                                label="{{ __('lang.check_out') }}"
+                                wire:model.live="check_out"
+                                type="date"
+                                icon="o-calendar"
+                                :readonly="$selectedTrip && $selectedTrip['type'] === 'fixed'"
+                                :min="$check_in"
+                        />
+                        <x-input
+                                required
+                                label="{{ __('lang.nights') }}"
+                                wire:model="nights_count"
+                                type="number"
+                                min="1"
+                                icon="o-moon"
+                                readonly
+                        />
                         <div class="grid grid-cols-2 gap-2">
-                            <x-input required label="{{ __('lang.adults') }}" wire:model="adults_count" type="number" min="1" icon="o-user"/>
-                            <x-input label="{{ __('lang.children') }}" wire:model="children_count" type="number" min="0" icon="o-user-group"/>
+                            <x-input
+                                    required
+                                    label="{{ __('lang.adults') }}"
+                                    wire:model.live="adults_count"
+                                    type="number"
+                                    min="1"
+                                    icon="o-user"
+                            />
+                            <x-input
+                                    label="{{ __('lang.children') }}"
+                                    wire:model.live="children_count"
+                                    type="number"
+                                    min="0"
+                                    icon="o-user-group"
+                            />
                         </div>
                     </div>
+
+                    {{-- Pricing Details --}}
+                    @if($selectedTrip && $total_price > 0)
+                        <div class="bg-success/10 p-4 rounded-lg mt-4">
+                            <h4 class="font-semibold mb-3 text-success">
+                                <x-icon name="o-currency-dollar" class="w-5 h-5 inline"/> {{ __('lang.pricing_details') }}
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                                @if($selectedTrip['type'] === 'fixed')
+                                    <div>
+                                        <span class="text-gray-600">{{ __('lang.base_price') }}:</span>
+                                        <span class="font-bold">{{ number_format($calculated_price, 2) }} {{ strtoupper($currency) }}</span>
+                                    </div>
+                                @else
+                                    <div>
+                                        <span class="text-gray-600">{{ __('lang.price_per_night') }}:</span>
+                                        <span class="font-bold">{{ number_format($calculated_price, 2) }} {{ strtoupper($currency) }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-600">{{ __('lang.total_nights') }}:</span>
+                                        <span class="font-bold">{{ $nights_count }} {{ __('lang.nights') }}</span>
+                                    </div>
+                                @endif
+
+                                <div>
+                                    <span class="text-gray-600">{{ __('lang.total_people') }}:</span>
+                                    <span class="font-bold">{{ $adults_count + $children_count }} {{ __('lang.persons') }}</span>
+                                </div>
+
+                                <div class="md:col-span-3 pt-2 border-t border-success/30">
+                                    <span class="text-gray-600">{{ __('lang.total_price') }}:</span>
+                                    <span class="font-bold text-lg text-success">{{ number_format($total_price, 2) }} {{ strtoupper($currency) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 {{-- Travelers --}}
@@ -78,7 +184,6 @@
                     </h3>
                     <x-textarea wire:model="notes" placeholder="{{ __('lang.notes') }}" rows="3"/>
                 </div>
-            </div>
 
             <x-slot:actions>
                 <x-button noWireNavigate label="{{ __('lang.cancel') }}" icon="o-x-mark" link="{{ route('bookings.trips') }}"/>

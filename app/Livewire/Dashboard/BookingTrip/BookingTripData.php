@@ -3,6 +3,8 @@
 namespace App\Livewire\Dashboard\BookingTrip;
 
 use App\Models\Booking;
+use App\Models\Trip;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -40,7 +42,7 @@ class BookingTripData extends Component
     #[On('render')]
     public function render(): View
     {
-        $data['bookings'] = Booking::with(['user', 'trip', 'bookingHotel.hotel', 'bookingHotel.room', 'travelers'])
+        $data['bookings'] = Booking::type('trip')->with(['user', 'trip', 'bookingHotel.hotel', 'bookingHotel.room', 'travelers'])
             ->when($this->search, function ($q) {
                 $q->where('booking_number', 'like', "%{$this->search}%")
                     ->orWhereHas('user', fn ($q) => $q->where('name', 'like', "%{$this->search}%"));
@@ -51,10 +53,10 @@ class BookingTripData extends Component
             ->latest()
             ->paginate(20);
 
-        $data['users'] = \App\Models\User::get(['id', 'name'])->toArray();
-        $data['trips'] = \App\Models\Trip::get(['id', 'name'])->toArray();
+        $data['users'] = User::get(['id', 'name'])->toArray();
+        $data['trips'] = Trip::get(['id', 'name'])->toArray();
 
-        return view('livewire.dashboard.booking.booking-trip-data', $data);
+        return view('livewire.dashboard.booking-trip.booking-trip-data', $data);
     }
 
     public function deleteSweetAlert($id): void

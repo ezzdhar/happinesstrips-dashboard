@@ -28,11 +28,7 @@
 		@can('show_room')
 			<x-menu-item noWireNavigate title="{{__('lang.rooms')}}" icon="ionicon.bed-outline" link="{{route('rooms')}}"/>
 		@endcan
-		@can('show_booking_hotel')
-			<x-menu-item noWireNavigate title="{{__('lang.hotel_bookings')}}" icon="hugeicons.tap-02" link="{{route('bookings.hotels')}}"/>
-		@endcan
 	</x-menu-sub>
-
 
 	<x-menu-sub title="{{__('lang.trips_mng')}}" icon="o-briefcase">
 		@can('show_main_category')
@@ -46,12 +42,13 @@
 		@can('show_trip')
 			<x-menu-item noWireNavigate title="{{__('lang.trips')}}" icon="o-briefcase" link="{{route('trips')}}"/>
 		@endcan
-
-
-		@can('show_booking_trip')
-			<x-menu-item noWireNavigate title="{{__('lang.trip_bookings')}}" icon="hugeicons.tap-02" link="{{route('bookings.trips')}}"/>
-		@endcan
 	</x-menu-sub>
 
+	@can('show_booking_hotel')
+		<x-menu-item noWireNavigate title="{{__('lang.hotel_bookings')}}" icon="hugeicons.tap-02" link="{{route('bookings.hotels')}}"/>
+	@endcan
 
+	@can('show_booking_trip')
+		<x-menu-item noWireNavigate title="{{__('lang.trip_bookings')}}" icon="hugeicons.tap-02" link="{{route('bookings.trips')}}"/>
+	@endcan
 </x-menu>

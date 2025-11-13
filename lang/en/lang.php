@@ -700,5 +700,16 @@ return [
     'under_cancellation' => 'Under Cancellation',
     'cancelled' => 'Cancelled',
     'trips' => 'Trips',
+    'base_people_count' => 'Base People Count',
+    'max_people' => 'Max People',
+    'available_from' => 'Available From',
+    'any_time' => 'Any Time',
+    'pricing_details' => 'Pricing Details',
+    'base_price' => 'Base Price',
+    'price_per_night' => 'Price Per Night',
+    'total_nights' => 'Total Nights',
+    'total_people' => 'Total People',
+    'persons' => 'Persons',
+    'total_price' => 'Total Price',
 
 ];

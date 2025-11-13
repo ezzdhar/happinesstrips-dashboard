@@ -1,6 +1,12 @@
 @php use App\Enums\Status; @endphp
 <div>
     <x-card title="{{ __('lang.booking_details') }} - {{ $booking->booking_number }}" shadow class="mb-3">
+        <x-slot:menu>
+            <x-button noWireNavigate label="{{ __('lang.print') }}" icon="o-printer" class="btn-sm btn-success" link="{{ route('bookings.hotels.print', $booking->id) }}" target="_blank"/>
+            @can('update_booking_hotel')
+                <x-button noWireNavigate label="{{ __('lang.edit') }}" icon="o-pencil" class="btn-sm btn-primary" link="{{ route('bookings.hotels.edit', $booking->id) }}"/>
+            @endcan
+        </x-slot:menu>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Booking Information -->
             <div class="space-y-4">
@@ -150,11 +156,7 @@
             </div>
         @endif
 
-        <x-slot:actions>
-            <x-button noWireNavigate label="{{ __('lang.back') }}" icon="o-arrow-left" link="{{ route('bookings.hotels') }}"/>
-            <x-button noWireNavigate label="{{ __('lang.print') }}" icon="o-printer" class="btn-success" link="{{ route('bookings.hotels.print', $booking->id) }}" target="_blank"/>
-            <x-button noWireNavigate label="{{ __('lang.edit') }}" icon="o-pencil" class="btn-primary" link="{{ route('bookings.hotels.edit', $booking->id) }}"/>
-        </x-slot:actions>
+
         </div>
     </x-card>
 </div>

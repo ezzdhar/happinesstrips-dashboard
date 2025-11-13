@@ -160,6 +160,12 @@ return [
             'mimes' => 'يجب أن تكون الصورة من نوع: :values.',
             'max' => 'يجب ألا يتجاوز حجم الصورة :max كيلوبايت.',
         ],
+	    'duration_from' => [
+		    'required' => 'حقل :attribute مطلوب.',
+		    'date' => 'حقل :attribute يجب أن يكون تاريخًا صالحًا.',
+		    'before_or_equal' => 'حقل :attribute يجب أن يكون تاريخًا يساوي أو قبل الغد.',
+		    'after_or_equal' => 'حقل :attribute يجب أن يكون تاريخًا بعد أو يساوي :date.',
+	    ],
     ],
 
     'attributes' => [

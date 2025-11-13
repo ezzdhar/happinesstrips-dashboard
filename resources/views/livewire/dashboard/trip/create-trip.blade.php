@@ -24,7 +24,7 @@
 							['id' => Status::Start, 'name' => __('lang.start')],
 							['id' => Status::End, 'name' => __('lang.end')],
 						]"/>
-						<x-select required label="{{ __('lang.trip_type') }}" wire:model.live.debounce="type" placeholder="{{ __('lang.select') }}" icon="o-bookmark" :options="[
+						<x-select required label="{{ __('lang.trip_type') }}" wire:model.live="type" placeholder="{{ __('lang.select') }}" icon="o-bookmark" :options="[
 							['id' => TripType::Fixed, 'name' => __('lang.fixed')],
 							['id' => TripType::Flexible, 'name' => __('lang.flexible')],
 						]"/>
@@ -33,24 +33,26 @@
 				</div>
 
 				{{-- Price Information Section --}}
-				<div class="border-b pb-4">
+				<div class="border-b py-4">
 					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
 						<x-icon name="o-currency-dollar" class="w-5 h-5 inline"/> {{ __('lang.price_information') }}
 					</h3>
 					<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-						<x-input required type="number" step="0.01" label="{{ __('lang.price_egp') }}" wire:model="price_egp" placeholder="0.00" icon="o-banknotes"/>
-						<x-input required type="number" step="0.01" label="{{ __('lang.price_usd') }}" wire:model="price_usd" placeholder="0.00" icon="o-banknotes"/>
-						<x-input required type="date" label="{{ __('lang.duration_from') }}" wire:model="duration_from" icon="o-calendar"/>
-						@if($type == TripType::Fixed)
-							<x-input type="date" label="{{ __('lang.duration_to') }}" wire:model="duration_to" icon="o-calendar"/>
+						<x-input required type="number" step="0.01" label="{{ __('lang.price_egp') }}" wire:model="price_egp" placeholder="0.00" icon="o-banknotes"
+						         hint="{{ $type === TripType::Flexible ? __('lang.for_one_person_per_night') : __('lang.for_all_package') }}"/>
+						<x-input required type="number" step="0.01" label="{{ __('lang.price_usd') }}" wire:model="price_usd" placeholder="0.00" icon="o-banknotes"
+						         hint="{{ $type === TripType::Flexible ? __('lang.for_one_person_per_night') : __('lang.for_all_package') }}"/>
+						<x-input required type="date" label="{{ __('lang.duration_from') }}" wire:model.live="duration_from" icon="o-calendar"/>
+						@if($type === TripType::Fixed)
+							<x-input type="date" label="{{ __('lang.duration_to') }}" wire:model.live="duration_to" icon="o-calendar"/>
+							<x-input type="number" label="{{ __('lang.nights_count') }}" wire:model="nights_count" placeholder="0" icon="o-moon"/>
 						@endif
-						<x-input type="number" label="{{ __('lang.nights_count') }}" wire:model="nights_count" placeholder="0" icon="o-moon"/>
-						<x-input required type="number" label="{{ __('lang.people_count') }}" wire:model="people_count" placeholder="1" icon="o-users"/>
+{{--						<x-input disabled readonly required type="number" label="{{ __('lang.people_count') }}" wire:model="people_count" placeholder="1" icon="o-users"/>--}}
 					</div>
 				</div>
 
 				{{-- Hotels Section --}}
-				<div class="border-b pb-4">
+				<div class="border-b py-4">
 					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
 						<x-icon name="o-building-office-2" class="w-5 h-5 inline"/> {{ __('lang.trip_hotels') }}
 					</h3>

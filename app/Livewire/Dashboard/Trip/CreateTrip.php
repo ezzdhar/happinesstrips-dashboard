@@ -2,11 +2,13 @@
 
 namespace App\Livewire\Dashboard\Trip;
 
+use App\Enums\TripType;
 use App\Models\Hotel;
 use App\Models\MainCategory;
 use App\Models\SubCategory;
 use App\Models\Trip;
 use App\Services\FileService;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Title;
@@ -118,6 +120,21 @@ class CreateTrip extends Component
         }
     }
 
+	//calculate nights count
+	public function updatedDurationFrom(): void
+	{
+		if ($this->duration_to && $this->duration_from && $this->type == TripType::Fixed) {
+			$from = Carbon::parse($this->duration_from);
+			$to = Carbon::parse($this->duration_to);
+			$this->nights_count = $from->diffInDays($to);
+		}
+	}
+	public function updatedDurationTo(): void
+	{
+		$this->updatedDurationFrom();
+	}
+
+
     public function render()
     {
         return view('livewire.dashboard.trip.create-trip');
@@ -135,7 +152,7 @@ class CreateTrip extends Component
             'duration_from' => 'required|date|before_or_equal:duration_to',
             'duration_to' => 'nullable|required_if:type,fixed|date|after_or_equal:duration_from',
             'nights_count' => 'nullable|integer|min:1',
-            'people_count' => 'required|integer|min:1',
+//            'people_count' => 'required|integer|min:1',
             'notes_ar' => 'required|string',
             'notes_en' => 'required|string',
             'program_ar' => 'required|string',
@@ -167,7 +184,7 @@ class CreateTrip extends Component
             'duration_from' => $this->duration_from,
             'duration_to' => $this->duration_to,
             'nights_count' => $this->nights_count,
-            'people_count' => $this->people_count,
+            'people_count' => 1 ,//$this->people_count
             'notes' => [
                 'ar' => $this->notes_ar,
                 'en' => $this->notes_en,
@@ -199,30 +216,4 @@ class CreateTrip extends Component
         $this->redirectIntended(default: route('trips'), navigate: true);
     }
 
-    public function resetData(): void
-    {
-        $this->reset([
-            'main_category_id',
-            'sub_category_id',
-            'name_ar',
-            'name_en',
-            'price_egp',
-            'price_usd',
-            'duration_from',
-            'duration_to',
-            'nights_count',
-            'people_count',
-            'notes_ar',
-            'notes_en',
-            'program_ar',
-            'program_en',
-            'is_featured',
-            'type',
-            'status',
-            'selected_hotels',
-            'images',
-        ]);
-        $this->resetErrorBag();
-        $this->resetValidation();
-    }
 }

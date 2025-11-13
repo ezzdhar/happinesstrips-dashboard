@@ -134,7 +134,7 @@ class UpdateBookingTrip extends Component
             'adults_count' => 'required|integer|min:1',
             'children_count' => 'nullable|integer|min:0',
             'currency' => 'required|in:egp,usd',
-            'status' => 'required|in:'.implode(',', array_column(Status::cases(), 'value')),
+            'status' => 'required|in:active,inactive',
             'notes' => 'nullable|string',
             'travelers' => 'required|array|min:1',
             'travelers.*.full_name' => 'required|string',
@@ -218,6 +218,6 @@ class UpdateBookingTrip extends Component
         $data['trips'] = Trip::status(Status::Active)->get(['id', 'name', 'duration_from', 'duration_to', 'price'])->toArray();
         $data['statuses'] = Status::cases();
 
-        return view('livewire.dashboard.booking.update-booking-trip', $data);
+        return view('livewire.dashboard.booking-trip.update-booking-trip', $data);
     }
 }

@@ -29,8 +29,9 @@ class Trip extends Model
             'is_featured' => 'boolean',
             'status' => Status::class,
             'type' => TripType::class,
-            'people_count' => 'integer',
-            'max_people_count' => 'integer',
+            'nights_count' => 'integer',
+            'adults_count' => 'integer',
+            'children_count' => 'integer',
         ];
     }
 

@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Dashboard\Trip;
 
+use App\Enums\TripType;
 use App\Models\File;
 use App\Models\Hotel;
 use App\Models\MainCategory;
 use App\Models\SubCategory;
 use App\Models\Trip;
 use App\Services\FileService;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
@@ -138,6 +140,14 @@ class UpdateTrip extends Component
         ];
     }
 
+	public function updatedDurationFrom(): void
+	{
+		if ($this->duration_to && $this->duration_from && $this->type == TripType::Fixed) {
+			$from = Carbon::parse($this->duration_from);
+			$to = Carbon::parse($this->duration_to);
+			$this->nights_count = $from->diffInDays($to);
+		}
+	}
     public function updatedMainCategoryId($value): void
     {
         if ($value) {
@@ -168,7 +178,7 @@ class UpdateTrip extends Component
             'duration_from' => 'required|date|before_or_equal:duration_to',
             'duration_to' => 'nullable|required_if:type,fixed|date|after_or_equal:duration_from',
             'nights_count' => 'nullable|integer|min:1',
-            'people_count' => 'required|integer|min:1',
+//            'people_count' => 'required|integer|min:1',
             'notes_ar' => 'required|string',
             'notes_en' => 'required|string',
             'program_ar' => 'required|string',
@@ -200,7 +210,7 @@ class UpdateTrip extends Component
             'duration_from' => $this->duration_from,
             'duration_to' => $this->duration_to,
             'nights_count' => $this->nights_count,
-            'people_count' => $this->people_count,
+//            'people_count' => $this->people_count,
             'notes' => [
                 'ar' => $this->notes_ar,
                 'en' => $this->notes_en,
@@ -231,7 +241,7 @@ class UpdateTrip extends Component
         }
 
         flash()->success(__('lang.updated_successfully', ['attribute' => __('lang.trip')]));
-        $this->redirectIntended(default: route('trips'), navigate: true);
+        $this->redirectIntended(default: route('trips'));
     }
 
     public function render(): View

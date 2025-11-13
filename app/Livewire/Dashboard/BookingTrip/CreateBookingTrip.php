@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\BookingTraveler;
 use App\Models\Trip;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -17,6 +18,8 @@ class CreateBookingTrip extends Component
     public $user_id;
 
     public $trip_id;
+
+    public $selectedTrip;
 
     public $check_in;
 
@@ -32,11 +35,32 @@ class CreateBookingTrip extends Component
 
     public $currency = 'egp';
 
+    public $calculated_price = 0;
+
+    public $total_price = 0;
+
     // Travelers
     public $travelers = [];
 
+    public $users;
+
+    public $trips;
+
     public function mount(): void
     {
+        $this->users = User::role('user')->get(['id', 'name'])->toArray();
+        $this->trips = Trip::status(Status::Active)->get()->map(function ($trip) {
+            return [
+                'id' => $trip->id,
+                'name' => $trip->name,
+                'type' => $trip->type->value,
+                'duration_from' => $trip->duration_from?->format('Y-m-d'),
+                'duration_to' => $trip->duration_to?->format('Y-m-d'),
+                'price' => $trip->price,
+                'adults_count' => $trip->adults_count,
+                'children_count' => $trip->children_count,
+            ];
+        })->toArray();
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
@@ -57,27 +81,141 @@ class CreateBookingTrip extends Component
     public function updatedTripId(): void
     {
         if ($this->trip_id) {
-            $trip = Trip::find($this->trip_id);
-            if ($trip) {
-                $this->check_in = $trip->duration_from;
-                $this->check_out = $trip->duration_to;
-                $this->updatedCheckIn();
+            $this->selectedTrip = collect($this->trips)->firstWhere('id', $this->trip_id);
+
+            if ($this->selectedTrip) {
+                // For Fixed trips, set the dates automatically
+                if ($this->selectedTrip['type'] === 'fixed') {
+                    $this->check_in = $this->selectedTrip['duration_from'];
+                    $this->check_out = $this->selectedTrip['duration_to'];
+                    $this->updatedCheckIn();
+                } else {
+                    // For Flexible trips, clear dates and set minimum date
+                    $this->check_in = null;
+                    $this->check_out = null;
+                    $this->nights_count = 1;
+                }
+
+                // Set default people count from trip
+                $this->adults_count = $this->selectedTrip['adults_count'] ?? 1;
+                $this->children_count = $this->selectedTrip['children_count'] ?? 0;
+
+                // Calculate price
+                $this->calculatePrice();
             }
+        } else {
+            $this->selectedTrip = null;
+            $this->check_in = null;
+            $this->check_out = null;
+            $this->nights_count = 1;
+            $this->adults_count = 1;
+            $this->children_count = 0;
+            $this->calculated_price = 0;
+            $this->total_price = 0;
         }
     }
 
     public function updatedCheckIn(): void
     {
         if ($this->check_in && $this->check_out) {
-            $checkIn = \Carbon\Carbon::parse($this->check_in);
-            $checkOut = \Carbon\Carbon::parse($this->check_out);
+            $checkIn = Carbon::parse($this->check_in);
+            $checkOut = Carbon::parse($this->check_out);
             $this->nights_count = $checkIn->diffInDays($checkOut);
+            $this->calculatePrice();
         }
     }
 
     public function updatedCheckOut(): void
     {
         $this->updatedCheckIn();
+    }
+
+    public function updatedAdultsCount(): void
+    {
+        $this->calculatePrice();
+    }
+
+    public function updatedChildrenCount(): void
+    {
+        $this->calculatePrice();
+    }
+
+    public function updatedCurrency(): void
+    {
+        $this->calculatePrice();
+    }
+
+    public function calculatePrice(): void
+    {
+        if (! $this->selectedTrip || ! $this->currency) {
+            $this->calculated_price = 0;
+            $this->total_price = 0;
+
+            return;
+        }
+
+        $basePrice = $this->selectedTrip['price'][$this->currency] ?? 0;
+        $baseAdultsCount = $this->selectedTrip['adults_count'] ?? 1;
+
+        // Get child discount settings
+        $childDiscountPercentage = config('booking.child_discount_percentage', 50);
+        $maxDiscountedChildren = config('booking.max_discounted_children', 2);
+
+        if ($this->selectedTrip['type'] === 'fixed') {
+            // Fixed trip: price is for base adults count for the trip duration
+            $pricePerAdult = $basePrice / $baseAdultsCount;
+
+            // Calculate adults cost
+            $adultsCost = $this->adults_count * $pricePerAdult;
+
+            // Calculate children cost
+            $childrenCost = 0;
+            for ($i = 0; $i < $this->children_count; $i++) {
+                if ($i < $maxDiscountedChildren) {
+                    // First 2 children get discount
+                    $childrenCost += $pricePerAdult * ($childDiscountPercentage / 100);
+                } else {
+                    // 3rd child and beyond pay full adult rate
+                    $childrenCost += $pricePerAdult;
+                }
+            }
+
+            $this->total_price = $adultsCost + $childrenCost;
+            $this->calculated_price = $basePrice;
+
+        } else {
+            // Flexible trip: price per night for base adults count
+            if (! $this->nights_count || $this->nights_count < 1) {
+                $this->calculated_price = 0;
+                $this->total_price = 0;
+
+                return;
+            }
+
+            $pricePerAdultPerNight = $basePrice / $baseAdultsCount;
+
+            // Calculate adults cost
+            $adultsCost = $this->adults_count * $pricePerAdultPerNight * $this->nights_count;
+
+            // Calculate children cost
+            $childrenCost = 0;
+            for ($i = 0; $i < $this->children_count; $i++) {
+                if ($i < $maxDiscountedChildren) {
+                    // First 2 children get discount
+                    $childrenCost += ($pricePerAdultPerNight * $this->nights_count) * ($childDiscountPercentage / 100);
+                } else {
+                    // 3rd child and beyond pay full adult rate
+                    $childrenCost += $pricePerAdultPerNight * $this->nights_count;
+                }
+            }
+
+            $this->total_price = $adultsCost + $childrenCost;
+            $this->calculated_price = $basePrice;
+        }
+
+        // Round to 2 decimals
+        $this->calculated_price = round($this->calculated_price, 2);
+        $this->total_price = round($this->total_price, 2);
     }
 
     public function addTraveler(): void
@@ -127,12 +265,7 @@ class CreateBookingTrip extends Component
     {
         $this->validate();
 
-        // Get trip and calculate price
-        $trip = Trip::find($this->trip_id);
-        $tripPrice = $trip->price[$this->currency] ?? 0;
-        $totalPrice = $tripPrice * ($this->adults_count + ($this->children_count * 0.5));
-
-        // Create booking
+        // Create booking with calculated prices
         $booking = Booking::create([
             'user_id' => $this->user_id,
             'trip_id' => $this->trip_id,
@@ -141,8 +274,8 @@ class CreateBookingTrip extends Component
             'nights_count' => $this->nights_count,
             'adults_count' => $this->adults_count,
             'children_count' => $this->children_count,
-            'price' => $tripPrice,
-            'total_price' => $totalPrice,
+            'price' => $this->calculated_price,
+            'total_price' => $this->total_price,
             'currency' => $this->currency,
             'notes' => $this->notes,
             'status' => Status::Pending,
@@ -169,9 +302,7 @@ class CreateBookingTrip extends Component
 
     public function render(): View
     {
-        $data['users'] = User::get(['id', 'name'])->toArray();
-        $data['trips'] = Trip::status(Status::Active)->get(['id', 'name', 'duration_from', 'duration_to', 'price'])->toArray();
 
-        return view('livewire.dashboard.booking.create-booking-trip', $data);
+        return view('livewire.dashboard.booking-trip.create-booking-trip');
     }
 }
