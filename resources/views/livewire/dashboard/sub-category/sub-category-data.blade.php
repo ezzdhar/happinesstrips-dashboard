@@ -29,7 +29,7 @@
 						<tr class="bg-base-200">
 							<th class="text-center">{{$sub_categories->firstItem() + $loop->index}}</th>
 							<th class="text-nowrap">
-								<x-avatar :image="FileService::get($sub_category->image)" :title="$sub_category->name" class="!w-10"/>
+								{{$sub_category->name}}
 							</th>
 							<th class="text-center text-nowrap">{{$sub_category->mainCategory->name}}</th>
 							<th class="text-center text-nowrap">

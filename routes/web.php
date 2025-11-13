@@ -27,6 +27,7 @@ use App\Livewire\Dashboard\Trip\CreateTrip;
 use App\Livewire\Dashboard\Trip\TripData;
 use App\Livewire\Dashboard\Trip\UpdateTrip;
 use App\Livewire\Dashboard\User\UserData;
+use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web-language'])->group(function () {
@@ -73,6 +74,11 @@ Route::middleware(['web-language'])->group(function () {
             Route::get('/create', CreateBookingHotel::class)->name('bookings.hotels.create')->middleware('permission:create_booking_hotel');
             Route::get('/edit/{booking}', UpdateBookingHotel::class)->name('bookings.hotels.edit')->middleware('permission:update_booking_hotel');
             Route::get('/show/{booking}', ShowBookingHotel::class)->name('bookings.hotels.show');
+            Route::get('/print/{booking}', function (Booking $booking) {
+                $booking->load(['user', 'bookingHotel.hotel', 'bookingHotel.room', 'travelers']);
+
+                return view('livewire.dashboard.booking-hotel.print-booking-hotel', compact('booking'));
+            })->name('bookings.hotels.print');
         });
 
         // Trip Bookings

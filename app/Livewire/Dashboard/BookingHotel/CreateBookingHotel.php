@@ -213,7 +213,7 @@ class CreateBookingHotel extends Component
             }
             DB::commit();
             flash()->success(__('lang.created_successfully', ['attribute' => __('lang.booking')]));
-            $this->redirectIntended(default: route('bookings.hotels'));
+            $this->redirectIntended(default: route('bookings.hotels.show',$booking->id));
         } catch (\Exception $e) {
             DB::rollBack();
             flash()->error(__('lang.error_occurred'));

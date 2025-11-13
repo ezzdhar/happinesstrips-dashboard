@@ -152,6 +152,7 @@
 
         <x-slot:actions>
             <x-button noWireNavigate label="{{ __('lang.back') }}" icon="o-arrow-left" link="{{ route('bookings.hotels') }}"/>
+            <x-button noWireNavigate label="{{ __('lang.print') }}" icon="o-printer" class="btn-success" link="{{ route('bookings.hotels.print', $booking->id) }}" target="_blank"/>
             <x-button noWireNavigate label="{{ __('lang.edit') }}" icon="o-pencil" class="btn-primary" link="{{ route('bookings.hotels.edit', $booking->id) }}"/>
         </x-slot:actions>
         </div>

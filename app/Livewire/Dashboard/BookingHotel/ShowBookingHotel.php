@@ -34,6 +34,13 @@ class ShowBookingHotel extends Component
         ];
     }
 
+    public function print(): View
+    {
+        return view('livewire.dashboard.booking-hotel.print-booking-hotel', [
+            'booking' => $this->booking,
+        ]);
+    }
+
     public function render(): View
     {
         return view('livewire.dashboard.booking-hotel.show-booking-hotel');
