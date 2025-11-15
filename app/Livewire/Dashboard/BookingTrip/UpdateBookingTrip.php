@@ -347,7 +347,7 @@ class UpdateBookingTrip extends Component
             ->delete();
 
         flash()->success(__('lang.updated_successfully', ['attribute' => __('lang.booking')]));
-        $this->redirectIntended(default: route('bookings.trips'), navigate: true);
+        $this->redirectIntended(default: route('bookings.trips'));
     }
 
     public function render(): View

@@ -279,7 +279,7 @@ class UpdateBookingHotel extends Component
 
             DB::commit();
             flash()->success(__('lang.updated_successfully', ['attribute' => __('lang.booking')]));
-            $this->redirectIntended(default: route('bookings.hotels'), navigate: true);
+            $this->redirectIntended(default: route('bookings.hotels'));
         } catch (\Exception $e) {
             DB::rollBack();
             flash()->error(__('lang.error_occurred'));

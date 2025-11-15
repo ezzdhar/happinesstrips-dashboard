@@ -38,7 +38,7 @@ new class extends Component {
 		if ($notification) {
 			$notification->markAsRead();
 //			$this->unread_notifications = auth()->user()->unreadNotifications()->count();
-			$this->redirectIntended(default: $notification->data['url'], navigate: true);
+			$this->redirectIntended(default: $notification->data['url']);
 		}
 	}
 };

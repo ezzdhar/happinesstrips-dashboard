@@ -18,8 +18,10 @@
 		<x-menu-item noWireNavigate title="{{__('lang.cities')}}" icon="o-map-pin" link="{{route('cities')}}"/>
 	@endcan
 
-	<x-menu-sub title="{{__('lang.hotels_mng')}}" icon="o-building-office-2">
-		@can('show_hotel')
+	<x-menu-separator/>
+	<x-menu-title title="{{__('lang.hotels_mng')}}" icon="o-building-office-2"/>
+
+	@can('show_hotel')
 			<x-menu-item noWireNavigate title="{{__('lang.hotels')}}" icon="o-building-office-2" link="{{route('hotels')}}"/>
 		@endcan
 		@can('show_amenity')
@@ -28,10 +30,12 @@
 		@can('show_room')
 			<x-menu-item noWireNavigate title="{{__('lang.rooms')}}" icon="ionicon.bed-outline" link="{{route('rooms')}}"/>
 		@endcan
-	</x-menu-sub>
 
-	<x-menu-sub title="{{__('lang.trips_mng')}}" icon="o-briefcase">
-		@can('show_main_category')
+
+	<x-menu-separator/>
+	<x-menu-title title="{{__('lang.trips_mng')}}" icon="o-briefcase"/>
+
+	@can('show_main_category')
 			<x-menu-item noWireNavigate title="{{__('lang.main_categories')}}" icon="o-rectangle-stack" link="{{route('main-categories')}}"/>
 		@endcan
 
@@ -42,7 +46,9 @@
 		@can('show_trip')
 			<x-menu-item noWireNavigate title="{{__('lang.trips')}}" icon="o-briefcase" link="{{route('trips')}}"/>
 		@endcan
-	</x-menu-sub>
+
+	<x-menu-separator/>
+	<x-menu-title title="{{__('lang.bookings_mng')}}" icon="o-bookmark"/>
 
 	@can('show_booking_hotel')
 		<x-menu-item noWireNavigate title="{{__('lang.hotel_bookings')}}" icon="hugeicons.tap-02" link="{{route('bookings.hotels')}}"/>
@@ -51,4 +57,13 @@
 	@can('show_booking_trip')
 		<x-menu-item noWireNavigate title="{{__('lang.trip_bookings')}}" icon="hugeicons.tap-02" link="{{route('bookings.trips')}}"/>
 	@endcan
+
+	<x-menu-separator/>
+
+	<x-menu-item noWireNavigate title="{{__('lang.logout')}}" icon="fas.sign-out-alt"
+	             onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="cursor: pointer"/>
+
+	<form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+		@csrf
+	</form>
 </x-menu>

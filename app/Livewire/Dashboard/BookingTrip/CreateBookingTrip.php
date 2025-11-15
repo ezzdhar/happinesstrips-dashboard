@@ -360,7 +360,7 @@ class CreateBookingTrip extends Component
         }
 
         flash()->success(__('lang.created_successfully', ['attribute' => __('lang.booking')]));
-        $this->redirectIntended(default: route('bookings.trips'), navigate: true);
+        $this->redirectIntended(default: route('bookings.trips'));
     }
 
     public function render(): View

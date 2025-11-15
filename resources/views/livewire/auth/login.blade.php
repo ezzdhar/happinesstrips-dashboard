@@ -40,7 +40,7 @@ new #[Layout('components.layouts.auth', ['title' => 'login'])] class extends Com
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirectIntended(default: route('dashboard', absolute: false));
     }
 
     /**

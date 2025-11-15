@@ -31,7 +31,7 @@ new #[Layout('components.layouts.auth', ['title' => 'register'])] class extends 
 
         Auth::login($user);
 
-        $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
+        $this->redirectIntended(route('dashboard', absolute: false));
     }
 }; ?>
 

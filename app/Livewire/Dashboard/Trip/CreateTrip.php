@@ -213,7 +213,7 @@ class CreateTrip extends Component
         }
 
         flash()->success(__('lang.added_successfully', ['attribute' => __('lang.trip')]));
-        $this->redirectIntended(default: route('trips'), navigate: true);
+        $this->redirectIntended(default: route('trips'));
     }
 
 }

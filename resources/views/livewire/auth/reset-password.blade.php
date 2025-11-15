@@ -64,7 +64,7 @@ new #[Layout('components.layouts.auth', ['title' => 'reset_password'])] class ex
 
         Session::flash('status', __($status));
 
-        $this->redirectRoute('login', navigate: true);
+        $this->redirectRoute('login');
     }
 }; ?>
 
