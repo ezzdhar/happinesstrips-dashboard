@@ -252,7 +252,19 @@
 						borderWidth: 1
 					}]
 				},
-				options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+				options: {
+                    responsive: true,
+					maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0, // يمنع الكسور
+                                stepSize: 1   // يخلي التدريج بالأعداد الصحيحة فقط
+                            }
+                        }
+                    }
+                }
 			});
 
 			// Monthly Trip Bookings Chart
@@ -268,7 +280,19 @@
 						borderWidth: 1
 					}]
 				},
-				options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+				options: {
+                    responsive: true,
+					maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0, // يمنع الكسور
+                                stepSize: 1   // يخلي التدريج بالأعداد الصحيحة فقط
+                            }
+                        }
+                    }
+                }
 			});
 
 			// Hotel Booking Status Chart
