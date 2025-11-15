@@ -19,15 +19,8 @@ class TripPricingService
      * @param  string  $currency  Currency (egp or usd)
      * @return array Result containing all pricing details
      */
-    public static function calculateTripPrice(
-        Trip $trip,
-        string $checkIn,
-        string $checkOut,
-        int $adultsCount,
-        int $childrenCount = 0,
-        int $freeChildrenCount = 0,
-        string $currency = 'egp'
-    ): array {
+	public static function calculateTripPrice(Trip $trip, string $checkIn, string $checkOut, int $adultsCount, int $childrenCount = 0, int $freeChildrenCount = 0, string $currency = 'egp'): array
+	{
         // Calculate nights
         $checkInDate = Carbon::parse($checkIn);
         $checkOutDate = Carbon::parse($checkOut);
@@ -123,16 +116,8 @@ class TripPricingService
     /**
      * Get empty result for invalid calculations.
      */
-    private static function getEmptyResult(
-        Trip $trip,
-        string $checkIn,
-        string $checkOut,
-        int $nightsCount,
-        int $adultsCount,
-        int $childrenCount,
-        int $freeChildrenCount,
-        string $currency
-    ): array {
+	private static function getEmptyResult(Trip $trip, string $checkIn, string $checkOut, int $nightsCount, int $adultsCount, int $childrenCount, int $freeChildrenCount, string $currency): array
+	{
         return [
             'trip_id' => $trip->id,
             'trip_name' => $trip->name,

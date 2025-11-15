@@ -173,7 +173,7 @@
                                             @if($selectedTrip['type'] === 'fixed')
                                                 <div>
                                                     <span class="text-gray-600 dark:text-gray-400">{{ __('lang.duration') }}:</span>
-                                                    <span class="ml-2 font-semibold">{{ $selectedTrip['duration_from'] }} → {{ $selectedTrip['duration_to'] }}</span>
+                                                    <span class="ml-2 font-semibold">{{ $selectedTrip['duration_from'] }} / {{ $selectedTrip['duration_to'] }}</span>
                                                 </div>
                                             @endif
                                         </div>
@@ -571,51 +571,21 @@
                 <div class="mt-8 flex justify-between items-center">
                     <div>
                         @if($currentStep > 1 || $showReview)
-                            <x-button
-                                    type="button"
-                                    wire:click="previousStep"
-                                    label="{{ __('lang.previous') }}"
-                                    icon="o-arrow-left"
-                                    class="btn-outline"
-                            />
+                            <x-button type="button" wire:click="previousStep" label="{{ __('lang.previous') }}" icon="o-arrow-left" class="btn-outline"/>
                         @else
-                            <x-button
-                                    label="{{ __('lang.cancel') }}"
-                                    icon="o-x-mark"
-                                    link="{{ route('bookings.trips') }}"
-                                    class="btn-ghost"
-                            />
+                            <x-button label="{{ __('lang.cancel') }}" icon="o-x-mark" link="{{ route('bookings.trips') }}" class="btn-ghost"/>
                         @endif
                     </div>
 
                     <div class="flex gap-2">
                         @if(!$showReview)
                             @if($currentStep < 3 || ($currentStep == 3 && count($travelers) == 0))
-                                <x-button
-                                        type="button"
-                                        wire:click="nextStep"
-                                        label="{{ __('lang.next') }}"
-                                        icon="o-arrow-right"
-                                        class="btn-primary"
-                                        :disabled="!$selectedTrip && $currentStep == 1"
-                                />
+                                <x-button type="button" spinner wire:click="nextStep" label="{{ __('lang.next') }}" icon="o-arrow-right" class="btn-primary" :disabled="!$selectedTrip && $currentStep == 1"/>
                             @else
-                                <x-button
-                                        type="button"
-                                        wire:click="nextStep"
-                                        label="{{ __('lang.review_booking') }}"
-                                        icon="o-document-check"
-                                        class="btn-primary"
-                                />
+                                <x-button type="button" spinner wire:click="nextStep" label="{{ __('lang.review_booking') }}" icon="o-document-check" class="btn-primary"/>
                             @endif
                         @else
-                            <x-button
-                                    type="submit"
-                                    label="{{ __('lang.confirm_and_save') }}"
-                                    icon="o-check-circle"
-                                    class="btn-success btn-lg"
-                                    spinner="save"
-                            />
+                            <x-button type="submit" label="{{ __('lang.confirm_and_save') }}" icon="o-check-circle" class="btn-success btn-lg" spinner="save"/>
                         @endif
                     </div>
                 </div>
