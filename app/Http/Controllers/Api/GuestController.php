@@ -12,7 +12,6 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Notifications\SendCodeNotification;
 use App\Services\FileService;
-use App\Services\PhoneService;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Str;
 
@@ -27,15 +26,12 @@ class GuestController extends Controller
                 'name' => $request->name,
                 'password' => $request->password,
                 'email' => $request->email,
-                'phone' => [
-                    'key' => $request->phone_key,
-                    'number' => PhoneService::formatNumber($request->phone),
-                ],
                 'image' => FileService::fakeImage(),
+	            'device_token' => $request->device_token
             ]
         );
+	    $user->assignRole('user');
         $user->notify(new SendCodeNotification($user, randomOtpCode()));
-
         return $this->responseCreated(__('lang.registered_successfully_and_code_sent'));
     }
 

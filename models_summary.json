@@ -1,0 +1,493 @@
+{
+  "project": {
+    "name": "Happiness Trips",
+    "framework": "Laravel 12.36.1",
+    "php_version": "8.4.14",
+    "analysis_date": "2025-11-16"
+  },
+  "models": {
+    "User": {
+      "table": "users",
+      "primary_key": "id",
+      "fields": {
+        "id": "bigint PK auto_increment",
+        "username": "string nullable unique",
+        "name": "string",
+        "email": "string unique",
+        "email_verified_at": "timestamp nullable",
+        "password": "string hashed",
+        "image": "string nullable",
+        "status": "enum(active,inactive) default:active",
+        "phone_key": "string nullable",
+        "phone": "string nullable",
+        "verification_code": "string nullable",
+        "remember_token": "string",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "relations": {
+        "bookings": "hasMany(Booking)"
+      },
+      "observers": ["UserObserver"],
+      "create_endpoints": [
+        "POST /api/v1/register",
+        "Livewire: Employee/User Components"
+      ],
+      "calculations": {
+        "full_phone": "phone_key + phone",
+        "initials": "First letter of each word in name"
+      },
+      "priority_issues": [
+        {
+          "level": "MEDIUM",
+          "issue": "Consider adding soft deletes",
+          "reason": "Cascade delete removes all bookings"
+        },
+        {
+          "level": "LOW",
+          "issue": "Observer creates fake image unconditionally",
+          "reason": "May not be needed in production"
+        }
+      ]
+    },
+    "Booking": {
+      "table": "bookings",
+      "primary_key": "id",
+      "fields": {
+        "id": "bigint PK",
+        "booking_number": "string unique (auto-generated)",
+        "user_id": "FK users.id cascade",
+        "trip_id": "FK trips.id cascade",
+        "type": "string default:hotel (hotel|trip)",
+        "check_in": "date nullable",
+        "check_out": "date nullable",
+        "nights_count": "integer default:1",
+        "adults_count": "integer default:1",
+        "children_count": "integer default:0",
+        "price": "decimal(8,2)",
+        "total_price": "decimal(8,2)",
+        "currency": "string default:egp",
+        "notes": "text nullable",
+        "status": "enum(pending,under_payment,under_cancellation,cancelled,completed)",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "relations": {
+        "user": "belongsTo(User)",
+        "trip": "belongsTo(Trip)",
+        "bookingHotel": "hasOne(BookingHotel)",
+        "travelers": "hasMany(BookingTraveler)"
+      },
+      "boot_method": {
+        "creating": "Auto-generates booking_number: BK-{UNIQID}"
+      },
+      "create_endpoints": [
+        "Livewire: BookingHotel/CreateBookingHotel (with transaction)",
+        "Livewire: BookingTrip/CreateBookingTrip (NO transaction!)"
+      ],
+      "calculations": {
+        "hotel_booking": {
+          "service": "Room::priceBreakdownForPeriod()",
+          "formula": "Sum of daily prices from weekly_prices",
+          "currency": "egp or usd"
+        },
+        "trip_booking_fixed": {
+          "service": "TripPricingService::calculateTripPrice()",
+          "formula": "(adults_count + children_count) * base_price",
+          "note": "free_children_count not charged"
+        },
+        "trip_booking_flexible": {
+          "service": "TripPricingService::calculateTripPrice()",
+          "formula": "(adults_count + children_count) * base_price * nights_count",
+          "note": "free_children_count not charged"
+        }
+      },
+      "priority_issues": [
+        {
+          "level": "CRITICAL",
+          "issue": "CreateBookingTrip does not use DB::transaction",
+          "fix": "Wrap creation in try-catch with transaction"
+        },
+        {
+          "level": "HIGH",
+          "issue": "uniqid() is not safe for concurrent requests",
+          "fix": "Use UUID or Snowflake ID"
+        },
+        {
+          "level": "HIGH",
+          "issue": "N+1 query problem in listing",
+          "fix": "Use eager loading: with(['user', 'trip', 'bookingHotel.hotel', 'travelers'])"
+        },
+        {
+          "level": "MEDIUM",
+          "issue": "Missing indexes on booking_number, status, check_in",
+          "fix": "Create migration to add indexes"
+        }
+      ]
+    },
+    "BookingHotel": {
+      "table": "booking_hotels",
+      "primary_key": "id",
+      "fields": {
+        "id": "bigint PK",
+        "booking_id": "FK bookings.id cascade",
+        "hotel_id": "FK hotels.id cascade",
+        "room_id": "FK rooms.id nullable cascade",
+        "room_includes": "longText nullable",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "relations": {
+        "booking": "belongsTo(Booking)",
+        "hotel": "belongsTo(Hotel) withDefault",
+        "room": "belongsTo(Room) withDefault"
+      },
+      "priority_issues": [
+        {
+          "level": "CRITICAL",
+          "issue": "Model has casts for 'room_price' and 'rooms_count' which don't exist in schema",
+          "fix": "Either remove casts or add migration for these fields"
+        }
+      ]
+    },
+    "BookingTraveler": {
+      "table": "booking_travelers",
+      "primary_key": "id",
+      "fields": {
+        "id": "bigint PK",
+        "booking_id": "FK bookings.id cascade",
+        "full_name": "string",
+        "phone_key": "string nullable",
+        "phone": "string",
+        "nationality": "string",
+        "age": "integer",
+        "id_type": "enum(passport,national_id) default:passport",
+        "id_number": "string",
+        "type": "enum(adult,child) default:adult",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "relations": {
+        "booking": "belongsTo(Booking)"
+      },
+      "priority_issues": [
+        {
+          "level": "LOW",
+          "issue": "No validation between age and type fields",
+          "fix": "Add custom validation rule"
+        }
+      ]
+    },
+    "Hotel": {
+      "table": "hotels",
+      "primary_key": "id",
+      "fields": {
+        "id": "bigint PK",
+        "user_id": "FK users.id cascade",
+        "city_id": "FK cities.id cascade",
+        "email": "string",
+        "name": "json (translatable)",
+        "status": "enum(active,inactive) default:active",
+        "rating": "enum(1,2,3,4,5) default:3",
+        "phone_key": "string nullable",
+        "phone": "string nullable",
+        "latitude": "string nullable",
+        "longitude": "string nullable",
+        "description": "json nullable",
+        "address": "json (translatable)",
+        "facilities": "json (translatable)",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "relations": {
+        "user": "belongsTo(User)",
+        "city": "belongsTo(City)",
+        "rooms": "hasMany(Room)",
+        "trips": "belongsToMany(Trip, hotel_trip)",
+        "bookingHotels": "hasMany(BookingHotel)",
+        "files": "morphMany(File)"
+      },
+      "create_endpoints": [
+        "Livewire: Hotel/CreateHotel"
+      ],
+      "priority_issues": [
+        {
+          "level": "MEDIUM",
+          "issue": "Missing indexes on city_id, status",
+          "fix": "Add migration for indexes"
+        },
+        {
+          "level": "LOW",
+          "issue": "Need to verify transaction usage when uploading files",
+          "fix": "Review and ensure atomicity"
+        }
+      ]
+    },
+    "Room": {
+      "table": "rooms",
+      "primary_key": "id",
+      "fields": {
+        "id": "bigint PK",
+        "hotel_id": "FK hotels.id cascade",
+        "name": "json (translatable)",
+        "adults_count": "integer default:1",
+        "children_count": "integer default:0",
+        "weekly_prices": "json (sunday-saturday with egp/usd)",
+        "includes": "json nullable (translatable)",
+        "status": "enum(active,inactive) default:active",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "relations": {
+        "hotel": "belongsTo(Hotel)",
+        "bookingHotels": "hasMany(BookingHotel)",
+        "files": "morphMany(File)",
+        "amenities": "belongsToMany(Amenity, room_amenity)"
+      },
+      "traits": [
+        "HasWeeklyPrices"
+      ],
+      "create_endpoints": [
+        "Livewire: Room/CreateRoom"
+      ],
+      "calculations": {
+        "priceForDay": {
+          "input": "day (date|string|int), currency",
+          "output": "float price for specific day",
+          "supports": "Multiple day formats (date, 'friday', 5, 'الجمعة')"
+        },
+        "totalPriceForPeriod": {
+          "input": "startDate, endDate, currency",
+          "output": "float total",
+          "formula": "Sum of daily prices in range"
+        },
+        "priceBreakdownForPeriod": {
+          "input": "startDate, endDate, currency",
+          "output": "array with days[], total, currency, nights_count",
+          "note": "Provides detailed breakdown for each day"
+        }
+      },
+      "priority_issues": [
+        {
+          "level": "MEDIUM",
+          "issue": "No validation for weekly_prices format",
+          "fix": "Add validation rule to ensure all days are present"
+        },
+        {
+          "level": "MEDIUM",
+          "issue": "Missing unit tests for HasWeeklyPrices trait",
+          "fix": "Create comprehensive test suite"
+        },
+        {
+          "level": "LOW",
+          "issue": "Missing indexes on hotel_id, status",
+          "fix": "Add migration"
+        }
+      ]
+    },
+    "Trip": {
+      "table": "trips",
+      "primary_key": "id",
+      "fields": {
+        "id": "bigint PK",
+        "main_category_id": "FK main_categories.id cascade",
+        "sub_category_id": "FK sub_categories.id cascade",
+        "name": "json (translatable)",
+        "price": "json {egp, usd}",
+        "duration_from": "date nullable",
+        "duration_to": "date nullable",
+        "nights_count": "integer nullable",
+        "people_count": "integer default:1",
+        "notes": "json nullable (translatable)",
+        "program": "json nullable (translatable)",
+        "is_featured": "boolean default:false",
+        "type": "enum(fixed,flexible) default:fixed",
+        "status": "enum(active,inactive,end,start) default:active",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "relations": {
+        "mainCategory": "belongsTo(MainCategory)",
+        "subCategory": "belongsTo(SubCategory)",
+        "hotels": "belongsToMany(Hotel, hotel_trip)",
+        "bookings": "hasMany(Booking)",
+        "files": "morphMany(File)"
+      },
+      "create_endpoints": [
+        "Livewire: Trip/CreateTrip"
+      ],
+      "calculations": {
+        "note": "See TripPricingService in Booking model"
+      },
+      "priority_issues": [
+        {
+          "level": "HIGH",
+          "issue": "Model has casts for adults_count and children_count which don't exist in schema",
+          "fix": "Remove these casts from Model"
+        },
+        {
+          "level": "MEDIUM",
+          "issue": "Cascade delete removes all bookings",
+          "fix": "Consider soft deletes"
+        },
+        {
+          "level": "LOW",
+          "issue": "Missing indexes on type, status, is_featured",
+          "fix": "Add migration"
+        }
+      ]
+    },
+    "City": {
+      "table": "cities",
+      "primary_key": "id",
+      "fields": {
+        "id": "bigint PK",
+        "name": "json (translatable)",
+        "code": "string default:eg",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "relations": {
+        "hotels": "hasMany(Hotel)"
+      },
+      "priority_issues": [
+        {
+          "level": "LOW",
+          "issue": "Missing unique constraint on code",
+          "fix": "Add unique index"
+        }
+      ]
+    },
+    "MainCategory": {
+      "table": "main_categories",
+      "primary_key": "id",
+      "fields": {
+        "id": "bigint PK",
+        "name": "json (translatable)",
+        "image": "string nullable",
+        "status": "enum(active,inactive) default:active",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "relations": {
+        "subCategories": "hasMany(SubCategory)",
+        "trips": "hasMany(Trip)"
+      },
+      "priority_issues": []
+    },
+    "SubCategory": {
+      "table": "sub_categories",
+      "primary_key": "id",
+      "fields": {
+        "id": "bigint PK",
+        "main_category_id": "FK main_categories.id",
+        "name": "json (translatable)",
+        "status": "enum(active,inactive) default:active",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "relations": {
+        "mainCategory": "belongsTo(MainCategory)",
+        "trips": "hasMany(Trip)",
+        "files": "morphMany(File)"
+      },
+      "priority_issues": []
+    },
+    "Amenity": {
+      "table": "amenities",
+      "primary_key": "id",
+      "fields": {
+        "id": "bigint PK",
+        "name": "json (translatable)",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "relations": {
+        "rooms": "belongsToMany(Room, room_amenity)"
+      },
+      "priority_issues": []
+    },
+    "File": {
+      "table": "files",
+      "primary_key": "id",
+      "fields": {
+        "id": "bigint PK",
+        "fileable_type": "string (polymorphic)",
+        "fileable_id": "bigint (polymorphic)",
+        "path": "string",
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
+      },
+      "relations": {
+        "fileable": "morphTo()"
+      },
+      "used_by": [
+        "Hotel",
+        "Room",
+        "Trip",
+        "SubCategory"
+      ],
+      "priority_issues": [
+        {
+          "level": "MEDIUM",
+          "issue": "Missing metadata fields (type, size, mime_type)",
+          "fix": "Add migration for additional fields"
+        },
+        {
+          "level": "MEDIUM",
+          "issue": "Missing index on polymorphic keys",
+          "fix": "Add index on (fileable_type, fileable_id)"
+        }
+      ]
+    }
+  },
+  "services": {
+    "TripPricingService": {
+      "methods": {
+        "calculateTripPrice": "Main method for trip pricing with all parameters",
+        "calculateFixedTripPrice": "Legacy method for fixed trips",
+        "calculateFlexibleTripPrice": "Legacy method for flexible trips",
+        "getChildAgeThreshold": "Gets threshold from config (default: 12)"
+      },
+      "config": {
+        "child_age_threshold": "config/booking.php -> CHILD_AGE_THRESHOLD env"
+      }
+    },
+    "FileService": {
+      "methods": {
+        "fakeImage": "Generates fake avatar images",
+        "get": "Retrieves file path for display"
+      }
+    }
+  },
+  "summary": {
+    "total_models": 12,
+    "critical_issues": 3,
+    "high_priority_issues": 4,
+    "medium_priority_issues": 8,
+    "low_priority_issues": 7,
+    "overall_rating": "7.5/10",
+    "strengths": [
+      "Well-organized Livewire structure",
+      "Excellent HasWeeklyPrices trait implementation",
+      "Clear TripPricingService logic",
+      "Good use of transactions in Hotel Booking",
+      "Multilingual support"
+    ],
+    "weaknesses": [
+      "Missing transaction in Trip Booking (CRITICAL)",
+      "Schema-Cast mismatches in multiple models",
+      "N+1 query problems",
+      "Missing database indexes",
+      "Aggressive cascade deletes"
+    ],
+    "next_steps": [
+      "Fix CRITICAL issues immediately",
+      "Add database indexes",
+      "Implement comprehensive testing",
+      "Add authorization policies",
+      "Consider soft deletes for important models"
+    ]
+  }
+}
+

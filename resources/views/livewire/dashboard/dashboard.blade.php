@@ -207,7 +207,7 @@
 						<h4 class="font-medium mb-2">{{ __('lang.top_hotels') }}</h4>
 						<div class="space-y-2">
 							@forelse($topHotels as $hotel)
-							<div class="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-800 rounded">
+							<div class="flex justify-between items-center p-2 bg-gray-200 dark:bg-gray-800 rounded">
 								<span>{{ $hotel->name }}</span>
 								<span class="badge badge-success">{{ $hotel->booking_hotels_count }} {{ __('lang.bookings') }}</span>
 							</div>
@@ -221,7 +221,7 @@
 						<h4 class="font-medium mb-2">{{ __('lang.top_trips') }}</h4>
 						<div class="space-y-2">
 							@forelse($topTrips as $trip)
-							<div class="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-800 rounded">
+							<div class="flex justify-between items-center p-2 bg-gray-200 dark:bg-gray-800 rounded">
 								<span>{{ $trip->name }}</span>
 								<span class="badge badge-info">{{ $trip->bookings_count }} {{ __('lang.bookings') }}</span>
 							</div>

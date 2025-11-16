@@ -744,4 +744,14 @@ return [
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',
 
+    // Email translations
+    'verification_code' => 'Verification Code',
+    'app_logo' => 'Application Logo',
+    'hello' => 'Hello :name',
+    'verification_message' => 'Use the following code to verify your account:',
+    'ignore_message' => 'If you did not request this code, you can ignore this message.',
+    'thank_you' => 'Thank you',
+    'contact_us_to_help' => 'If you need help, you can contact us via',
+    'support_link' => 'Support',
+
 ];

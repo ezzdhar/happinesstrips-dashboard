@@ -66,7 +66,7 @@
 <div class="container text-center">
 	<!-- الشعار -->
 	<div class="header my-3">
-		<img src="{{ FileService::get(setting()->logo) }}" alt="{{ __('lang.app_logo') }}" class="img-fluid" style="max-width: 140px;">
+		<img src="{{ asset('logo.svg') }}" alt="{{ __('lang.app_logo') }}" class="img-fluid" style="max-width: 140px;">
 	</div>
 
 	<!-- المحتوى -->

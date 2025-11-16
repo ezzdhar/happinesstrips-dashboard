@@ -8,7 +8,6 @@ use App\Livewire\Dashboard\BookingHotel\ShowBookingHotel;
 use App\Livewire\Dashboard\BookingHotel\UpdateBookingHotel;
 use App\Livewire\Dashboard\BookingTrip\BookingTripData;
 use App\Livewire\Dashboard\BookingTrip\CreateBookingTrip;
-use App\Livewire\Dashboard\BookingTrip\PrintBookingTrip;
 use App\Livewire\Dashboard\BookingTrip\ShowBookingTrip;
 use App\Livewire\Dashboard\BookingTrip\UpdateBookingTrip;
 use App\Livewire\Dashboard\City\CityData;
