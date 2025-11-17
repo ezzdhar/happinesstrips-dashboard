@@ -33,21 +33,38 @@
 				<x-trix dir="ltr" required wire:model="includes_en" label="{{ __('lang.includes').' ('.__('lang.en').')' }}" key="{{\Illuminate\Support\Str::random(20)}}"></x-trix>
 			</div>
 
+			{{-- Price Periods Section --}}
+			<div class="mt-3">
+				<div class="flex justify-between items-center mb-3">
+					<h3 class="font-bold text-lg">{{ __('lang.price_periods') }}</h3>
+					<x-button wire:click="addPricePeriod" icon="o-plus" class="btn-sm btn-primary">
+						{{ __('lang.add_price_period') }}
+					</x-button>
+				</div>
 
-			<div class="mt-4">
-			<h3 class="font-bold text-lg mb-3">{{ __('lang.weekly_prices') }}</h3>
-			<div class="grid grid-cols-1 sm-only:grid-cols-2 md:grid-cols-4 gap-3">
-				@foreach(['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] as $day)
-					<div class="card bg-base-200 p-3">
-						<h4 class="font-semibold mb-2">{{ __('lang.'.$day) }}</h4>
-						<div class="grid grid-cols-2 gap-2">
-							<x-input label="{{__('lang.price_egp')}}" wire:model="weekly_prices.{{$day}}.price_egp" type="number" step="0.01" min="0" placeholder="0"/>
-							<x-input label="{{__('lang.price_usd')}}" wire:model="weekly_prices.{{$day}}.price_usd" type="number" step="0.01" min="0" placeholder="0"/>
+				@if(empty($price_periods))
+					<div class="alert alert-warning">
+						<x-icon name="o-exclamation-triangle" class="w-5 h-5"/>
+						<span>{{ __('lang.no_price_periods_added') }}</span>
+					</div>
+				@endif
+
+				@foreach($price_periods as $index => $period)
+					<div class="card bg-base-200 p-4 mb-3">
+						<div class="flex justify-between items-center mb-3">
+							<h4 class="font-semibold">{{ __('lang.price_period') }} #{{ $index + 1 }}</h4>
+							<x-button wire:click="removePricePeriod({{ $index }})" icon="o-trash" class="btn-sm btn-error btn-circle"/>
+						</div>
+
+						<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+							<x-input required label="{{ __('lang.start_date') }}" wire:model="price_periods.{{ $index }}.start_date" type="date" icon="o-calendar"/>
+							<x-input required label="{{ __('lang.end_date') }}" wire:model="price_periods.{{ $index }}.end_date" type="date" icon="o-calendar"/>
+							<x-input required label="{{ __('lang.adult_price_egp') }}" wire:model="price_periods.{{ $index }}.adult_price_egp" type="number" step="0.01" min="0" placeholder="0" icon="o-currency-dollar" hint="{{ __('lang.price_per_person_per_night') }}"/>
+							<x-input required label="{{ __('lang.adult_price_usd') }}" wire:model="price_periods.{{ $index }}.adult_price_usd" type="number" step="0.01" min="0" placeholder="0" icon="o-currency-dollar" hint="{{ __('lang.price_per_person_per_night') }}"/>
 						</div>
 					</div>
 				@endforeach
 			</div>
-		</div>
 
 		@if($room->files->isNotEmpty())
 			<div class="mt-4">

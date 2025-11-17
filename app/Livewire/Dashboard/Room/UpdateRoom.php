@@ -35,7 +35,7 @@ class UpdateRoom extends Component
 
     public $includes_en;
 
-    public $weekly_prices = [];
+    public $price_periods = [];
 
     public $images = [];
 
@@ -77,7 +77,7 @@ class UpdateRoom extends Component
 
         $this->selected_amenities = $this->room->amenities()->pluck('amenities.id')->toArray();
 
-        $this->loadWeeklyPrices();
+        $this->price_periods = $this->room->price_periods ?? [];
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
@@ -94,31 +94,6 @@ class UpdateRoom extends Component
         ];
     }
 
-    public function loadWeeklyPrices(): void
-    {
-        $existingPrices = $this->room->weekly_prices ?? [];
-        $days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-
-        // Convert array to keyed format
-        $pricesMap = [];
-        if (is_array($existingPrices)) {
-            foreach ($existingPrices as $price) {
-                if (isset($price['day_of_week'])) {
-                    $pricesMap[$price['day_of_week']] = $price;
-                }
-            }
-        }
-
-        // Initialize all days
-        foreach ($days as $day) {
-            $this->weekly_prices[$day] = [
-                'day_of_week' => $day,
-                'price_egp' => $pricesMap[$day]['price_egp'] ?? 0,
-                'price_usd' => $pricesMap[$day]['price_usd'] ?? 0,
-            ];
-        }
-    }
-
     public function rules(): array
     {
         return [
@@ -130,8 +105,11 @@ class UpdateRoom extends Component
             'status' => 'required|in:active,inactive',
             'includes_ar' => 'nullable|string',
             'includes_en' => 'nullable|string',
-            'weekly_prices.*.price_egp' => 'required|numeric|min:0',
-            'weekly_prices.*.price_usd' => 'required|numeric|min:0',
+            'price_periods' => 'required|array|min:1',
+            'price_periods.*.start_date' => 'required|date',
+            'price_periods.*.end_date' => 'required|date|after:price_periods.*.start_date',
+            'price_periods.*.adult_price_egp' => 'required|numeric|min:0',
+            'price_periods.*.adult_price_usd' => 'required|numeric|min:0',
             'images.*' => 'nullable|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
             'selected_amenities' => 'nullable|array',
             'selected_amenities.*' => 'exists:amenities,id',
@@ -155,7 +133,7 @@ class UpdateRoom extends Component
                 'ar' => $this->includes_ar,
                 'en' => $this->includes_en,
             ],
-            'weekly_prices' => array_values($this->weekly_prices),
+            'price_periods' => $this->price_periods,
         ]);
 
         // Sync amenities
@@ -191,5 +169,21 @@ class UpdateRoom extends Component
     {
         $this->resetErrorBag();
         $this->resetValidation();
+    }
+
+    public function addPricePeriod(): void
+    {
+        $this->price_periods[] = [
+            'start_date' => '',
+            'end_date' => '',
+            'adult_price_egp' => 0,
+            'adult_price_usd' => 0,
+        ];
+    }
+
+    public function removePricePeriod($index): void
+    {
+        unset($this->price_periods[$index]);
+        $this->price_periods = array_values($this->price_periods);
     }
 }

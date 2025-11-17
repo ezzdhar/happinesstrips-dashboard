@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use App\Enums\Status;
-use App\Traits\HasWeeklyPrices;
+use App\Traits\CalculatesBookingPrice;
+use App\Traits\HasPricePeriods;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Room extends Model
 {
-    use HasFactory, HasTranslations,HasWeeklyPrices;
+    use CalculatesBookingPrice, HasFactory, HasPricePeriods, HasTranslations;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
@@ -23,7 +24,7 @@ class Room extends Model
     protected function casts(): array
     {
         return [
-            'weekly_prices' => 'array',
+            'price_periods' => 'array',
             'status' => Status::class,
             'adults_count' => 'integer',
             'children_count' => 'integer',
