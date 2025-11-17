@@ -212,7 +212,7 @@
 									@foreach($children_ages as $index => $age)
 										<div class="flex gap-2 items-center" wire:key="child-{{ $index }}">
 											<x-input label="{{ __('lang.child') }} {{ $index + 1 }}" wire:model.live="children_ages.{{ $index }}" type="number" min="0" max="18" hint="{{ __('lang.age') }}" icon="o-cake"/>
-											<x-button wire:click="removeChild({{ $index }})" icon="o-trash" class="btn-sm btn-error btn-circle mt-6" spinner="removeChild({{ $index }})"/>
+											<x-button wire:click="removeChild({{ $index }})" icon="o-trash" class="btn-sm btn-error text-white btn-circle mt-6" spinner="removeChild({{ $index }})"/>
 										</div>
 									@endforeach
 								</div>
@@ -240,7 +240,7 @@
 					</h3>
 
 					<div class="card bg-base-200">
-						<div class="card-body">
+						<div class="card-body p-3">
 							{{-- Room Info --}}
 							<div class="flex justify-between items-center mb-4">
 								<div>
@@ -268,11 +268,11 @@
 									<div class="space-y-2 bg-base-100 p-3 rounded">
 										@foreach($pricing_result['children_breakdown'] as $child)
 											<div class="flex justify-between items-center text-sm">
-					<span>
-						{{ __('lang.child') }} {{ $child['child_number'] }}
-						<span class="text-xs text-gray-500">({{ $child['age'] }} {{ __('lang.years') }})</span>
-						- {{ $child['category_label'] }}
-					</span>
+												<span>
+													{{ __('lang.child') }} {{ $child['child_number'] }}
+													<span class="text-xs text-gray-500">({{ $child['age'] }} {{ __('lang.years') }})</span>
+													- {{ $child['category_label'] }}
+												</span>
 												<span class="font-medium">{{ number_format($child['price'], 2) }} {{ $pricing_result['currency'] }}</span>
 											</div>
 										@endforeach

@@ -41,11 +41,11 @@ class CreateBookingHotel extends Component
 
     public $travelers = [];
 
-	public $pricing_result = null;
+    public $pricing_result = null;
 
-	public $adults_count = 2;
+    public $adults_count = 2;
 
-	public $children_ages = [];
+    public $children_ages = [];
 
     public $hotels = [];
 
@@ -98,7 +98,7 @@ class CreateBookingHotel extends Component
             $checkOut = Carbon::parse($this->check_out);
             $this->nights_count = $checkIn->diffInDays($checkOut);
         }
-	    $this->calculatePrice();
+        $this->calculatePrice();
     }
 
     public function updatedCheckOut(): void
@@ -112,82 +112,84 @@ class CreateBookingHotel extends Component
             $room = Room::find($this->room_id);
             if ($room) {
                 $this->selected_room = $room;
-	            $this->adults_count = $room->adults_count;
-	            $this->pricing_result = null;
-	            $this->travelers = [];
+                $this->adults_count = $room->adults_count;
+                $this->pricing_result = null;
+                $this->travelers = [];
             }
         }
     }
 
-	public function calculatePrice(): void
-	{
-		if (!$this->room_id || !$this->check_in || !$this->check_out) {
-			$this->pricing_result = null;
+    public function calculatePrice(): void
+    {
+        if (! $this->room_id || ! $this->check_in || ! $this->check_out) {
+            $this->pricing_result = null;
+            flash()->error(__('lang.please_select_room_checkin_checkout'));
 
-			return;
-		}
+            return;
+        }
 
-		$room = Room::find($this->room_id);
-		if (!$room) {
-			$this->pricing_result = null;
+        $room = Room::find($this->room_id);
+        if (! $room) {
+            $this->pricing_result = null;
+            return;
+        }
 
-			return;
-		}
+        $this->pricing_result = $room->calculateBookingPrice(
+            checkIn: $this->check_in,
+            checkOut: $this->check_out,
+            adultsCount: $this->adults_count,
+            childrenAges: $this->children_ages,
+            currency: $this->currency
+        );
 
-		$this->pricing_result = $room->calculateBookingPrice(
-			checkIn: $this->check_in,
-			checkOut: $this->check_out,
-			adultsCount: $this->adults_count,
-			childrenAges: $this->children_ages,
-			currency: $this->currency
-		);
+        if ($this->pricing_result['success']) {
+            $this->nights_count = $this->pricing_result['nights_count'];
+            // تهيئة المسافرين بناءً على العدد
+            $this->initializeTravelers(
+                $this->adults_count,
+                count($this->children_ages)
+            );
+        }
+    }
 
-		if ($this->pricing_result['success']) {
-			$this->nights_count = $this->pricing_result['nights_count'];
-			// تهيئة المسافرين بناءً على العدد
-			$this->initializeTravelers(
-				$this->adults_count,
-				count($this->children_ages)
-			);
-		}
-	}
+    public function addChild(): void
+    {
+        if ($this->selected_room->children_count <= count($this->children_ages)) {
+            flash()->error(__('lang.children_count_exceeded_maximum', ['max' => $this->selected_room->children_count]));
 
-	public function addChild(): void
-	{
- 		if($this->selected_room->children_count  <= count($this->children_ages)){
-			flash()->error(__('lang.children_count_exceeded_maximum', ['max' => $this->selected_room->children_count]));
-			return;
-		}
-		$this->children_ages[] = 0;
-		$this->calculatePrice();
-	}
+            return;
+        }
+        $this->children_ages[] = 0;
+        $this->calculatePrice();
+    }
 
-	public function removeChild($index): void
-	{
-		unset($this->children_ages[$index]);
-		$this->children_ages = array_values($this->children_ages);
-		$this->calculatePrice();
-	}
+    public function removeChild($index): void
+    {
+        unset($this->children_ages[$index]);
+        $this->children_ages = array_values($this->children_ages);
+        $this->calculatePrice();
+    }
 
-	public function updatedAdultsCount(): void
-	{
-		if ($this->selected_room->adults_count < $this->adults_count) {
-			$this->adults_count = $this->selected_room->adults_count;
-			flash()->error(__('lang.adults_count_exceeded_maximum', ['max' => $this->selected_room->adults_count]));
-			return;
-		}
-		$this->calculatePrice();
-	}
+    public function updatedAdultsCount(): void
+    {
+        if ($this->selected_room->adults_count < $this->adults_count) {
+            $this->adults_count = $this->selected_room->adults_count;
+            flash()->error(__('lang.adults_count_exceeded_maximum', ['max' => $this->selected_room->adults_count]));
 
-	public function updatedChildrenAges(): void
-	{
-		$this->calculatePrice();
-	}
+            return;
+        }
+        $this->calculatePrice();
+    }
 
-	public function updatedCurrency(): void
-	{
-		$this->calculatePrice();
-	}
+    public function updatedChildrenAges(): void
+    {
+        $this->calculatePrice();
+    }
+
+    public function updatedCurrency(): void
+    {
+        $this->calculatePrice();
+    }
 
     public function initializeTravelers(int $adultsCount, int $childrenCount): void
     {
@@ -227,14 +229,14 @@ class CreateBookingHotel extends Component
             'user_id' => 'required|exists:users,id',
             'hotel_id' => 'required|exists:hotels,id',
             'room_id' => 'required|exists:rooms,id',
-	        'check_in' => 'required|date|after:today',
+            'check_in' => 'required|date|after:today',
             'check_out' => 'required|date|after:check_in',
-	        'adults_count' => 'required|integer|min:1',
-	        'children_ages' => 'nullable|array',
-	        'children_ages.*' => 'required|integer|min:0|max:18',
+            'adults_count' => 'required|integer|min:1',
+            'children_ages' => 'nullable|array',
+            'children_ages.*' => 'required|integer|min:0|max:18',
             'nights_count' => 'required|integer|min:1',
             'currency' => 'required|in:egp,usd',
-	        'status' => 'required|in:pending,confirmed,cancelled,completed',
+            'status' => 'required|in:pending,under_payment,under_cancellation,cancelled,completed',
             'notes' => 'nullable|string',
             'travelers' => 'required|array|min:1',
             'travelers.*.full_name' => 'required|string',
@@ -252,23 +254,23 @@ class CreateBookingHotel extends Component
     {
         $this->validate();
 
-	    // Get room and calculate total price using new system
+        // Get room and calculate total price using new system
         $room = Room::find($this->room_id);
 
-	    $pricingResult = $room->calculateBookingPrice(
-		    checkIn: $this->check_in,
-		    checkOut: $this->check_out,
-		    adultsCount: $this->adults_count,
-		    childrenAges: $this->children_ages,
-		    currency: $this->currency
-	    );
+        $pricingResult = $room->calculateBookingPrice(
+            checkIn: $this->check_in,
+            checkOut: $this->check_out,
+            adultsCount: $this->adults_count,
+            childrenAges: $this->children_ages,
+            currency: $this->currency
+        );
 
-	    // Check if pricing calculation was successful
-	    if (!$pricingResult['success']) {
-		    flash()->error($pricingResult['error']);
+        // Check if pricing calculation was successful
+        if (! $pricingResult['success']) {
+            flash()->error($pricingResult['error']);
 
-		    return;
-	    }
+            return;
+        }
 
         try {
             DB::beginTransaction();
@@ -278,26 +280,26 @@ class CreateBookingHotel extends Component
                 'user_id' => $this->user_id,
                 'check_in' => $this->check_in,
                 'check_out' => $this->check_out,
-	            'nights_count' => $pricingResult['nights_count'],
-	            'adults_count' => $this->adults_count,
-	            'children_count' => count($this->children_ages),
-	            'price' => $pricingResult['grand_total'],
-	            'total_price' => $pricingResult['grand_total'],
-	            'currency' => strtoupper($this->currency),
+                'nights_count' => $pricingResult['nights_count'],
+                'adults_count' => $this->adults_count,
+                'children_count' => count($this->children_ages),
+                'price' => $pricingResult['grand_total'],
+                'total_price' => $pricingResult['grand_total'],
+                'currency' => strtoupper($this->currency),
                 'notes' => $this->notes,
                 'status' => $this->status,
             ]);
 
-	        // Create hotel booking with pricing details
+            // Create hotel booking with pricing details
             BookingHotel::create([
                 'booking_id' => $booking->id,
                 'hotel_id' => $this->hotel_id,
                 'room_id' => $this->room_id,
                 'room_includes' => $room->includes,
-	            'adults_price' => $pricingResult['adults_total'],
-	            'children_price' => $pricingResult['children_total'],
-	            'children_breakdown' => $pricingResult['children_breakdown'],
-	            'pricing_details' => $pricingResult,
+                'adults_price' => $pricingResult['adults_total'],
+                'children_price' => $pricingResult['children_total'],
+                'children_breakdown' => $pricingResult['children_breakdown'],
+                'pricing_details' => $pricingResult,
             ]);
 
             // Create travelers
@@ -317,11 +319,11 @@ class CreateBookingHotel extends Component
 
             DB::commit();
             flash()->success(__('lang.created_successfully', ['attribute' => __('lang.booking')]));
-	        $this->redirectIntended(default: route('bookings.hotels.show', $booking->id));
+            $this->redirectIntended(default: route('bookings.hotels.show', $booking->id));
         } catch (\Exception $e) {
             DB::rollBack();
             flash()->error(__('lang.error_occurred'));
-	        Log::error('Booking creation error: ' . $e->getMessage());
+            Log::error('Booking creation error: '.$e->getMessage());
         }
     }
 

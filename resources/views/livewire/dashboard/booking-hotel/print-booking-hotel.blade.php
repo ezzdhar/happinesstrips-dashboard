@@ -372,6 +372,77 @@
             </div>
         @endif
 
+        <!-- Pricing Details -->
+        @if($booking->bookingHotel && $booking->bookingHotel->pricing_details)
+            @php
+                $pricing = $booking->bookingHotel->pricing_details;
+            @endphp
+            <div class="section">
+                <h2 class="section-title">{{ __('lang.pricing_details') }}</h2>
+
+                <!-- Adults Pricing -->
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 6px; border-radius: 4px; margin-bottom: 6px;">
+                    <div style="font-size: 9px; font-weight: bold; color: #166534; margin-bottom: 4px;">{{ __('lang.adults') }}</div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;">
+                        <div class="info-item" style="background: white;">
+                            <div class="info-label">{{ __('lang.adults_count') }}</div>
+                            <div class="info-value">{{ $pricing['adults_count'] ?? 0 }}</div>
+                        </div>
+                        @if(isset($pricing['adult_price_per_person']))
+                            <div class="info-item" style="background: white;">
+                                <div class="info-label">{{ __('lang.price_per_person') }}</div>
+                                <div class="info-value">{{ number_format($pricing['adult_price_per_person'], 2) }} {{ $pricing['currency'] ?? $booking->currency }}</div>
+                            </div>
+                        @endif
+                        <div class="info-item" style="background: white;">
+                            <div class="info-label">{{ __('lang.adults_total') }}</div>
+                            <div class="info-value highlight">{{ number_format($booking->bookingHotel->adults_price, 2) }} {{ $pricing['currency'] ?? $booking->currency }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Children Pricing -->
+                @if(!empty($pricing['children_breakdown']) && count($pricing['children_breakdown']) > 0)
+                    <div style="background: #fef3c7; border: 1px solid #fde047; padding: 6px; border-radius: 4px; margin-bottom: 6px;">
+                        <div style="font-size: 9px; font-weight: bold; color: #854d0e; margin-bottom: 4px;">{{ __('lang.children') }} ({{ count($pricing['children_breakdown']) }})</div>
+
+                        @foreach($pricing['children_breakdown'] as $child)
+                            <div style="background: white; padding: 4px 6px; border-radius: 3px; margin-bottom: 3px; border: 1px solid #e5e7eb;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                    <div>
+                                        <span style="font-size: 8px; font-weight: 600;">{{ __('lang.child') }} {{ $child['child_number'] }}</span>
+                                        <span style="font-size: 7px; color: #6b7280; margin-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }}: 4px;">{{ $child['age'] }} {{ __('lang.years') }}</span>
+                                    </div>
+                                    <span style="font-size: 9px; font-weight: bold; color: #854d0e;">{{ number_format($child['price'], 2) }} {{ $pricing['currency'] ?? $booking->currency }}</span>
+                                </div>
+                                <div style="font-size: 6px; color: #6b7280;">
+                                    {{ $child['category_label'] }}
+                                    @if($child['percentage'] > 0)
+                                        <span style="background: #f3f4f6; padding: 1px 4px; border-radius: 8px; margin-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }}: 3px;">{{ $child['percentage'] }}%</span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+
+                        <div style="background: white; padding: 4px 6px; border-radius: 3px; margin-top: 3px; border: 1px solid #e5e7eb;">
+                            <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                                <span style="font-size: 8px;">{{ __('lang.children_total') }}:</span>
+                                <span style="font-size: 9px; color: #854d0e;">{{ number_format($booking->bookingHotel->children_price, 2) }} {{ $pricing['currency'] ?? $booking->currency }}</span>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Grand Total -->
+                <div style="background: #dcfce7; border: 2px solid #22c55e; padding: 8px; border-radius: 4px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 11px; font-weight: bold; color: #166534;">{{ __('lang.grand_total') }}:</span>
+                        <span style="font-size: 14px; font-weight: bold; color: #15803d;">{{ number_format($pricing['grand_total'], 2) }} {{ $pricing['currency'] ?? $booking->currency }}</span>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <!-- Travelers Information -->
         @if($booking->travelers->count() > 0)
             <div class="section">

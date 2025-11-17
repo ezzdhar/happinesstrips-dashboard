@@ -24,6 +24,12 @@ return new class extends Migration
             $table->json('description')->nullable();
             $table->json('address');
             $table->json('facilities');
+            $table->decimal('first_child_price_percentage', 50, 2)->default(50)->after('facilities');
+            $table->decimal('second_child_price_percentage', 5, 2)->default(50)->after('first_child_price_percentage');
+            $table->decimal('third_child_price_percentage', 5, 2)->default(50)->after('second_child_price_percentage');
+            $table->decimal('additional_child_price_percentage', 5, 2)->default(100)->after('third_child_price_percentage');
+            $table->unsignedTinyInteger('free_child_age')->default(4)->after('additional_child_price_percentage')->comment('Age under which children are free');
+            $table->unsignedTinyInteger('adult_age')->default(12)->after('free_child_age')->comment('Age at which a child is considered an adult');
             $table->timestamps();
         });
     }
