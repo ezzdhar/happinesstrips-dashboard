@@ -16,26 +16,41 @@ class RoomFactory extends Factory
         $fakerAr = fake('ar_SA');
         $fakerEn = fake('en_US');
 
-        // إنشاء فترات سعرية عشوائية
+        // إنشاء فترات سعرية واقعية
         $pricePeriods = [];
         $currentDate = now();
 
-        // إنشاء 3-5 فترات سعرية
-        $periodsCount = $fakerEn->numberBetween(3, 5);
+        // موسم منخفض
+        $pricePeriods[] = [
+            'start_date' => $currentDate->copy()->format('Y-m-d'),
+            'end_date' => $currentDate->copy()->addMonths(3)->format('Y-m-d'),
+            'adult_price_egp' => $fakerEn->numberBetween(800, 1500),
+            'adult_price_usd' => $fakerEn->numberBetween(26, 48),
+        ];
 
-        for ($i = 0; $i < $periodsCount; $i++) {
-            $startDate = $currentDate->copy()->addDays($i * 30);
-            $endDate = $startDate->copy()->addDays($fakerEn->numberBetween(20, 40));
+        // موسم متوسط
+        $pricePeriods[] = [
+            'start_date' => $currentDate->copy()->addMonths(3)->addDay()->format('Y-m-d'),
+            'end_date' => $currentDate->copy()->addMonths(6)->format('Y-m-d'),
+            'adult_price_egp' => $fakerEn->numberBetween(1200, 2000),
+            'adult_price_usd' => $fakerEn->numberBetween(39, 65),
+        ];
 
-            $pricePeriods[] = [
-                'start_date' => $startDate->format('Y-m-d'),
-                'end_date' => $endDate->format('Y-m-d'),
-                'adult_price_egp' => $fakerEn->numberBetween(500, 5000),
-                'adult_price_usd' => $fakerEn->numberBetween(20, 200),
-            ];
+        // موسم مرتفع
+        $pricePeriods[] = [
+            'start_date' => $currentDate->copy()->addMonths(6)->addDay()->format('Y-m-d'),
+            'end_date' => $currentDate->copy()->addMonths(9)->format('Y-m-d'),
+            'adult_price_egp' => $fakerEn->numberBetween(1800, 3500),
+            'adult_price_usd' => $fakerEn->numberBetween(58, 113),
+        ];
 
-            $currentDate = $endDate->copy()->addDay();
-        }
+        // موسم عادي
+        $pricePeriods[] = [
+            'start_date' => $currentDate->copy()->addMonths(9)->addDay()->format('Y-m-d'),
+            'end_date' => $currentDate->copy()->addYear()->format('Y-m-d'),
+            'adult_price_egp' => $fakerEn->numberBetween(1000, 1800),
+            'adult_price_usd' => $fakerEn->numberBetween(32, 58),
+        ];
 
         return [
             'hotel_id' => Hotel::inRandomOrder()->value('id'),

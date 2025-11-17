@@ -36,7 +36,7 @@
 			<div class="mt-3">
 				<div class="flex justify-between items-center mb-3">
 					<h3 class="font-bold text-lg">{{ __('lang.price_periods') }}</h3>
-					<x-button wire:click="addPricePeriod" icon="o-plus" class="btn-sm btn-primary">
+					<x-button wire:click="addPricePeriod" icon="o-plus" class="btn-sm btn-primary" spinner="addPricePeriod">
 						{{ __('lang.add_price_period') }}
 					</x-button>
 				</div>

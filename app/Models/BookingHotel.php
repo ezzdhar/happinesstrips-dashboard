@@ -17,6 +17,10 @@ class BookingHotel extends Model
         return [
             'room_price' => 'array',
             'rooms_count' => 'integer',
+            'adults_price' => 'decimal:2',
+            'children_price' => 'decimal:2',
+            'children_breakdown' => 'array',
+            'pricing_details' => 'array',
         ];
     }
 

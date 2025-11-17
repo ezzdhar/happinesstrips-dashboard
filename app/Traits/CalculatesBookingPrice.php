@@ -126,6 +126,9 @@ trait CalculatesBookingPrice
         $total = 0;
 
         foreach ($childrenAges as $index => $age) {
+            // Ensure age is integer
+            $age = (int) $age;
+
             $childNumber = $index + 1;
             $category = '';
             $percentage = 0;

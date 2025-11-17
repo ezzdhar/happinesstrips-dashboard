@@ -105,6 +105,7 @@
 					<x-choices-offline required label="{{ __('lang.user') }}" wire:model="user_id" :options="$users" option-value="id" option-label="name" option-sub-label="phone"
 					                   single clearable searchable icon="o-user"/>
 					<x-select required label="{{ __('lang.currency') }}" wire:model.live="currency" icon="o-currency-dollar" :options="[
+                            ['id' => null, 'name' => __('lang.select')],
                             ['id' => 'egp', 'name' => 'EGP'],
                             ['id' => 'usd', 'name' => 'USD'],
                         ]"/>
@@ -141,11 +142,11 @@
 
 				@if($hotel_id && count($rooms) > 0)
 					<div class="mt-4">
-						<h4 class="font-semibold mb-3">{{ __('lang.rooms') }}</h4>
+						<h4 class="font-semibold mb-3">{{ __('lang.select_room') }}</h4>
 						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 							@foreach($rooms as $room)
 								<div wire:key="room-{{ $room->id }}"
-								     class="border rounded-lg p-4 cursor-pointer transition-all {{ $room_id == $room->id ? 'border-2 border-solid' : 'border-base-300 hover:border-primary/50' }}"
+								     class="border rounded-lg p-4 cursor-pointer transition-all {{ $room_id == $room->id ? 'border-primary border-2' : 'border-base-300 hover:border-primary/50' }}"
 								>
 									<label class="cursor-pointer">
 										<div class="flex items-start justify-between mb-2">
@@ -158,72 +159,154 @@
 												<x-icon name="o-user" class="w-4 h-4"/>
 												<span>{{ __('lang.adults') }}: {{ $room->adults_count }}</span>
 											</div>
-
 											<div class="flex items-center gap-2">
 												<x-icon name="o-user-group" class="w-4 h-4"/>
 												<span>{{ __('lang.children') }}: {{ $room->children_count }}</span>
 											</div>
-
-											@php
-												$breakdown = $room->priceBreakdownForPeriod($check_in, $check_out, $currency);
-											@endphp
-
-											<div class="mt-3 pt-3 border-t border-base-300">
-												{{-- Price Details --}}
-												<div class="lg:col-span-4">
-													<details class="text-sm">
-														<summary class="cursor-pointer flex items-center gap-2 text-primary hover:text-primary-focus">
-															<x-icon name="o-calendar-days" class="w-4 h-4"/>
-															<span class="font-medium">{{ __('lang.show_price_details') }}</span>
-														</summary>
-														<div class="mt-2 space-y-1 max-h-32 overflow-y-auto bg-base-200/50 rounded p-2">
-															@foreach($breakdown['days'] as $day)
-																<div class="flex justify-between items-center text-xs">
-																	<span class="text-base-content/70">
-																		{{ $day['day_name'] }}
-																		<span class="text-base-content/50">({{ \Carbon\Carbon::parse($day['date'])->format('d/m') }})</span>
-																	</span>
-																	<span class="font-medium">{{ number_format($day['price'], 2) }}</span>
-																</div>
-															@endforeach
-														</div>
-													</details>
-												</div>
-
-												<div class="flex items-center justify-between mt-2 pt-2 ">
-													<div class="flex items-center gap-1">
-														<x-icon name="o-currency-dollar" class="w-4 h-4 text-primary"/>
-														<span class="font-bold text-sm">{{ __('lang.total') }}</span>
-														<span class="text-xs text-base-content/60">({{ $breakdown['nights_count'] }} {{ __('lang.nights') }})</span>
-													</div>
-													<span class="font-bold text-primary">{{ number_format($breakdown['total'], 2) }} {{ $breakdown['currency'] }}</span>
-												</div>
-											</div>
-
-
-											{{-- Includes (Collapsible) --}}
-											<div class="lg:col-span-12">
-												<details class="text-sm">
-													<summary class="cursor-pointer text-xs font-semibold text-base-content/70 hover:text-base-content">
-														{{ __('lang.includes') }}
-													</summary>
-													<div class="mt-2 text-xs bg-base-200/30 rounded p-2">
-														{!! $room->includes !!}
-													</div>
-												</details>
-											</div>
 										</div>
+
 									</label>
 								</div>
 							@endforeach
 						</div>
 					</div>
+				@elseif($hotel_id)
+					<div class="alert alert-warning">
+						<x-icon name="o-exclamation-triangle" class="w-5 h-5"/>
+						<span>{{ __('lang.no_rooms_available') }}</span>
+					</div>
 				@else
-					<div class="flex flex-col items-center justify-center py-10">
-						<p class="text-sm text-base-content/70">{{ __('lang.select_hotel_and_dates_to_see_available_rooms') }}</p>
+					<div class="alert alert-info">
+						<x-icon name="o-information-circle" class="w-5 h-5"/>
+						<span>{{ __('lang.select_hotel_and_dates_to_see_available_rooms') }}</span>
 					</div>
 				@endif
 			</div>
+
+			{{-- People Count --}}
+			@if($room_id)
+				<div class="border-b mt-2 pb-4">
+					<h3 class="text-lg font-semibold mb-4">
+						<x-icon name="o-users" class="w-5 h-5 inline"/> {{ __('lang.people_count') }}
+					</h3>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+						{{-- Adults --}}
+						<div>
+							<x-input required label="{{ __('lang.adults_count') }}" wire:model.live="adults_count" type="number" min="1" :max="$selected_room->adults_count" icon="o-user"/>
+						</div>
+
+						{{-- Children --}}
+						<div>
+							<div class="flex justify-between items-center mb-2">
+								<label class="label">
+									<span class="label-text">{{ __('lang.children_count') }}</span>
+								</label>
+								<x-button wire:click="addChild" icon="o-plus" class="btn-sm btn-primary" spinner="addChild" >
+									{{ __('lang.add_child') }}
+								</x-button>
+							</div>
+
+							@if(count($children_ages) > 0)
+								<div class="space-y-2 max-h-64 overflow-y-auto">
+									@foreach($children_ages as $index => $age)
+										<div class="flex gap-2 items-center" wire:key="child-{{ $index }}">
+											<x-input label="{{ __('lang.child') }} {{ $index + 1 }}" wire:model.live="children_ages.{{ $index }}" type="number" min="0" max="18" hint="{{ __('lang.age') }}" icon="o-cake"/>
+											<x-button wire:click="removeChild({{ $index }})" icon="o-trash" class="btn-sm btn-error btn-circle mt-6" spinner="removeChild({{ $index }})"/>
+										</div>
+									@endforeach
+								</div>
+							@else
+								<div class="text-sm text-gray-500">{{ __('lang.no_children') }}</div>
+							@endif
+						</div>
+					</div>
+
+					{{-- Calculate Price Button --}}
+					<div class="mt-4">
+						<x-button wire:click="calculatePrice" class="btn-primary" spinner="calculatePrice">
+							<x-icon name="o-calculator" class="w-5 h-5"/>
+							{{ __('lang.calculate_price') }}
+						</x-button>
+					</div>
+				</div>
+			@endif
+
+			{{-- Pricing Summary --}}
+			@if($pricing_result && $pricing_result['success'])
+				<div class="border-b mt-2 pb-4">
+					<h3 class="text-lg font-semibold mb-4">
+						<x-icon name="o-currency-dollar" class="w-5 h-5 inline"/> {{ __('lang.pricing_summary') }}
+					</h3>
+
+					<div class="card bg-base-200">
+						<div class="card-body">
+							{{-- Room Info --}}
+							<div class="flex justify-between items-center mb-4">
+								<div>
+									<h4 class="font-semibold">{{ $pricing_result['room_name'] }}</h4>
+									<p class="text-sm text-gray-600">{{ $pricing_result['hotel_name'] }}</p>
+								</div>
+								<div class="text-right">
+									<p class="text-sm">{{ $pricing_result['nights_count'] }} {{ __('lang.nights') }}</p>
+									<p class="text-xs text-gray-500">{{ $pricing_result['check_in'] }} - {{ $pricing_result['check_out'] }}</p>
+								</div>
+							</div>
+
+							<div class="divider"></div>
+
+							{{-- Adults --}}
+							<div class="flex justify-between items-center">
+								<span>{{ $pricing_result['adults_count'] }} {{ __('lang.adults') }}</span>
+								<span class="font-semibold">{{ number_format($pricing_result['adults_total'], 2) }} {{ $pricing_result['currency'] }}</span>
+							</div>
+
+							{{-- Children --}}
+							@if($pricing_result['children_count'] > 0)
+								<div class="mt-3">
+									<p class="font-semibold mb-2">{{ __('lang.children') }}:</p>
+									<div class="space-y-2 bg-base-100 p-3 rounded">
+										@foreach($pricing_result['children_breakdown'] as $child)
+											<div class="flex justify-between items-center text-sm">
+					<span>
+						{{ __('lang.child') }} {{ $child['child_number'] }}
+						<span class="text-xs text-gray-500">({{ $child['age'] }} {{ __('lang.years') }})</span>
+						- {{ $child['category_label'] }}
+					</span>
+												<span class="font-medium">{{ number_format($child['price'], 2) }} {{ $pricing_result['currency'] }}</span>
+											</div>
+										@endforeach
+										<div class="divider my-1"></div>
+										<div class="flex justify-between font-semibold">
+											<span>{{ __('lang.children_total') }}</span>
+											<span>{{ number_format($pricing_result['children_total'], 2) }} {{ $pricing_result['currency'] }}</span>
+										</div>
+									</div>
+								</div>
+							@endif
+
+							<div class="divider"></div>
+
+							{{-- Grand Total --}}
+							<div class="flex justify-between items-center text-xl font-bold">
+								<span>{{ __('lang.grand_total') }}</span>
+								<span class="text-primary">{{ number_format($pricing_result['grand_total'], 2) }} {{ $pricing_result['currency'] }}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			@elseif($pricing_result && !$pricing_result['success'])
+				<div class="alert alert-error mt-4">
+					<x-icon name="o-exclamation-triangle" class="w-5 h-5"/>
+					<span>{{ $pricing_result['error'] }}</span>
+					@if(isset($pricing_result['uncovered_dates']))
+						<div class="mt-2 text-sm">
+							{{ __('lang.uncovered_dates') }}: {{ implode(', ', $pricing_result['uncovered_dates']) }}
+						</div>
+					@endif
+				</div>
+			@endif
+
 
 			{{-- Travelers --}}
 			@if(count($travelers) > 0)
@@ -231,8 +314,8 @@
 					<h3 class="text-lg font-semibold mb-4">
 						<x-icon name="o-users" class="w-5 h-5 inline"/> {{ __('lang.travelers') }}
 						<span class="text-sm font-normal text-base-content/60">
-								({{ __('lang.total') }}: {{ count($travelers) }})
-							</span>
+	({{ __('lang.total') }}: {{ count($travelers) }})
+</span>
 					</h3>
 
 					@foreach($travelers as $index => $traveler)
@@ -246,10 +329,10 @@
 								<x-input required label="{{ __('lang.nationality') }}" wire:model="travelers.{{ $index }}.nationality" icon="o-flag"/>
 								<x-input required label="{{ __('lang.age') }}" wire:model="travelers.{{ $index }}.age" type="number" min="1" icon="o-hashtag"/>
 								<x-select required label="{{ __('lang.id_type') }}" wire:model="travelers.{{ $index }}.id_type" icon="o-identification" :options="[
-										['id' => null, 'name' => __('lang.select')],
-										['id' => 'passport', 'name' => __('lang.passport')],
-										['id' => 'national_id', 'name' => __('lang.national_id')],
-									]"/>
+			['id' => null, 'name' => __('lang.select')],
+			['id' => 'passport', 'name' => __('lang.passport')],
+			['id' => 'national_id', 'name' => __('lang.national_id')],
+		]"/>
 								<x-input required label="{{ __('lang.id_number') }}" wire:model="travelers.{{ $index }}.id_number" icon="o-hashtag"/>
 							</div>
 						</div>

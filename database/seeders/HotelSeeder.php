@@ -43,6 +43,13 @@ class HotelSeeder extends Seeder
                 'phone_key' => '+20',
                 'phone' => '0123456789',
                 'status' => Status::Active,
+                // Children Policy
+                'free_child_age' => 4,
+                'adult_age' => 12,
+                'first_child_price_percentage' => 50,
+                'second_child_price_percentage' => 30,
+                'third_child_price_percentage' => 20,
+                'additional_child_price_percentage' => 10,
             ],
             [
                 'user_id' => $users->random()->id,
@@ -53,6 +60,7 @@ class HotelSeeder extends Seeder
                     'en' => 'Red Sea Resort',
                 ],
                 'latitude' => 27.2579,
+                'longitude' => 33.8116,
                 'phone_key' => '+20',
                 'phone' => '0123456788',
                 'status' => Status::Active,
@@ -69,6 +77,13 @@ class HotelSeeder extends Seeder
                     'ar' => 'شاطئ خاص، غوص، سنوركلينج، سبا، مطاعم متعددة',
                     'en' => 'Private beach, Diving, Snorkeling, Spa, Multiple restaurants',
                 ],
+                // Children Policy
+                'free_child_age' => 3,
+                'adult_age' => 12,
+                'first_child_price_percentage' => 40,
+                'second_child_price_percentage' => 25,
+                'third_child_price_percentage' => 15,
+                'additional_child_price_percentage' => 10,
             ],
             [
                 'user_id' => $users->random()->id,
@@ -79,6 +94,7 @@ class HotelSeeder extends Seeder
                     'en' => 'Luxor Royal Hotel',
                 ],
                 'latitude' => 25.6872,
+                'longitude' => 32.6396,
                 'phone_key' => '+20',
                 'phone' => '0123456787',
                 'status' => Status::Active,
@@ -95,6 +111,13 @@ class HotelSeeder extends Seeder
                     'ar' => 'إطلالة على النيل، مطعم، بار، حمام سباحة على السطح',
                     'en' => 'Nile view, Restaurant, Bar, Rooftop pool',
                 ],
+                // Children Policy
+                'free_child_age' => 5,
+                'adult_age' => 14,
+                'first_child_price_percentage' => 60,
+                'second_child_price_percentage' => 40,
+                'third_child_price_percentage' => 25,
+                'additional_child_price_percentage' => 15,
             ],
         ];
 
