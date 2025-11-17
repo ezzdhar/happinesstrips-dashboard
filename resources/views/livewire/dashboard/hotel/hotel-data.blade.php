@@ -24,6 +24,7 @@
 						<th class="text-center">#</th>
 						<th class="text-center">{{__('lang.name')}}</th>
 						<th class="text-center">{{__('lang.city')}}</th>
+						<th class="text-center">{{__('lang.hotel_type')}}</th>
 						<th class="text-center">{{__('lang.rating')}}</th>
 						<th class="text-center">{{__('lang.status')}}</th>
 						<th class="text-center">{{__('lang.rooms')}}</th>
@@ -39,6 +40,11 @@
 								{{$hotel->name}}
 							</th>
 							<th class="text-center text-nowrap">{{$hotel->city->name}}</th>
+							<th class="text-center">
+							@foreach($hotel->hotelTypes as $type)
+									<x-badge :value="$type->name" class="bg-blue-500 mb-1"/>
+							@endforeach
+							</th>
 							<th class="text-center">
 								<div class="flex justify-center gap-0.5">
 									@for($i = 1; $i <= 5; $i++)
