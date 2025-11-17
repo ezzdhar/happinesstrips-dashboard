@@ -70,6 +70,27 @@
 					</div>
 				</div>
 
+				{{-- Children Policy Section --}}
+				<div class="border-b pb-4">
+					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
+						<x-icon name="o-user-group" class="w-5 h-5 inline"/> {{ __('lang.children_policy') }}
+					</h3>
+
+					{{-- Age Policy --}}
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+						<x-input required label="{{ __('lang.free_child_age') }}" wire:model="free_child_age" type="number" min="0" max="18" placeholder="4" icon="o-user" hint="{{ __('lang.children_under_this_age_free') }}"/>
+						<x-input required label="{{ __('lang.adult_age') }}" wire:model="adult_age" type="number" min="1" max="25" placeholder="12" icon="o-user-circle" hint="{{ __('lang.age_considered_adult') }}"/>
+					</div>
+
+					{{-- Price Percentages --}}
+					<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+						<x-input required label="{{ __('lang.first_child_percentage') }}" wire:model="first_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
+						<x-input required label="{{ __('lang.second_child_percentage') }}" wire:model="second_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
+						<x-input required label="{{ __('lang.third_child_percentage') }}" wire:model="third_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
+						<x-input required label="{{ __('lang.additional_child_percentage') }}" wire:model="additional_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
+					</div>
+				</div>
+
 				{{-- Images Section --}}
 				<div>
 					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">

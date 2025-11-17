@@ -26,6 +26,12 @@ class Hotel extends Model
             'rating' => 'integer',
             'latitude' => 'decimal:7',
             'longitude' => 'decimal:7',
+            'first_child_price_percentage' => 'decimal:2',
+            'second_child_price_percentage' => 'decimal:2',
+            'third_child_price_percentage' => 'decimal:2',
+            'additional_child_price_percentage' => 'decimal:2',
+            'free_child_age' => 'integer',
+            'adult_age' => 'integer',
         ];
     }
 
@@ -68,14 +74,15 @@ class Hotel extends Model
     {
         return $query->when($status, fn ($q) => $q->where('status', $status));
     }
-	public function scopeHotelTypeFilter($query, $hotel_type_id = null)
-	{
-		return $query->when($hotel_type_id, function ($q) use ($hotel_type_id) {
-			$q->whereHas('hotelTypes', function ($q2) use ($hotel_type_id) {
-				$q2->where('hotel_type_id', $hotel_type_id);
-			});
-		});
-	}
+
+    public function scopeHotelTypeFilter($query, $hotel_type_id = null)
+    {
+        return $query->when($hotel_type_id, function ($q) use ($hotel_type_id) {
+            $q->whereHas('hotelTypes', function ($q2) use ($hotel_type_id) {
+                $q2->where('hotel_type_id', $hotel_type_id);
+            });
+        });
+    }
 
     public function scopeFilter($query, $search = null)
     {

@@ -759,6 +759,16 @@ return [
     'step' => 'الخطوة',
     'client_and_trip' => 'العميل والرحلة',
     'dates_and_people' => 'التواريخ والأشخاص',
+    'children_policy' => 'سياسة الأطفال',
+    'first_child_percentage' => 'نسبة الطفل الأول',
+    'second_child_percentage' => 'نسبة الطفل الثاني',
+    'third_child_percentage' => 'نسبة الطفل الثالث',
+    'additional_child_percentage' => 'نسبة الأطفال الإضافيين',
+    'percentage_of_adult_price' => 'نسبة من سعر الشخص البالغ',
+    'free_child_age' => 'عمر الطفل المجاني',
+    'adult_age' => 'عمر البلوغ',
+    'children_under_this_age_free' => 'الأطفال تحت هذا العمر مجاناً',
+    'age_considered_adult' => 'العمر الذي يُعتبر بعده بالغاً',
     'number_of_travelers' => 'عدد المسافرين',
     'additional_notes' => 'ملاحظات إضافية',
     'add_notes_here' => 'أضف ملاحظاتك هنا...',
@@ -817,5 +827,5 @@ return [
     'thank_you' => 'شكراً لك',
     'contact_us_to_help' => 'إذا كنت بحاجة إلى مساعدة، يمكنك التواصل معنا عبر',
     'support_link' => 'الدعم الفني',
-	'search_by_name' => 'البحث بالاسم'
+    'search_by_name' => 'البحث بالاسم',
 ];
