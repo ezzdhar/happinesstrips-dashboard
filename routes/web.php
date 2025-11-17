@@ -16,6 +16,7 @@ use App\Livewire\Dashboard\Employee\EmployeeData;
 use App\Livewire\Dashboard\Hotel\CreateHotel;
 use App\Livewire\Dashboard\Hotel\HotelData;
 use App\Livewire\Dashboard\Hotel\UpdateHotel;
+use App\Livewire\Dashboard\HotelType\HotelTypeData;
 use App\Livewire\Dashboard\MainCategory\MainCategoryData;
 use App\Livewire\Dashboard\Profile\Profile;
 use App\Livewire\Dashboard\Role\RoleData;
@@ -47,6 +48,7 @@ Route::middleware(['web-language'])->group(function () {
         Route::get('sub-categories', SubCategoryData::class)->name('sub-categories')->middleware('permission:show_sub_category'); // sub categories
         Route::get('cities', CityData::class)->name('cities')->middleware('permission:show_city'); // cities
         Route::get('amenities', AmenityData::class)->name('amenities')->middleware('permission:show_amenity'); // amenities
+        Route::get('hotel-types', HotelTypeData::class)->name('hotel-types')->middleware('permission:show_hotel'); // hotel types
         Route::prefix('hotels')->middleware('permission:show_hotel')->group(function () {
             Route::get('/', HotelData::class)->name('hotels');
             Route::get('/create-hotel', CreateHotel::class)->name('hotels.create')->middleware('permission:create_hotel');
@@ -88,9 +90,10 @@ Route::middleware(['web-language'])->group(function () {
             Route::get('/edit/{booking}', UpdateBookingTrip::class)->name('bookings.trips.edit')->middleware('permission:update_booking_trip');
             Route::get('/show/{booking}', ShowBookingTrip::class)->name('bookings.trips.show');
             Route::get('/print/{booking}', function (Booking $booking) {
-				$booking->load(['user', 'trip', 'travelers']);
-				return view('livewire.dashboard.booking-trip.print-booking-trip', compact('booking'));
-			})->name('bookings.trips.print');
+                $booking->load(['user', 'trip', 'travelers']);
+
+                return view('livewire.dashboard.booking-trip.print-booking-trip', compact('booking'));
+            })->name('bookings.trips.print');
         });
 
     });

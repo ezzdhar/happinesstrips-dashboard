@@ -4,6 +4,7 @@ namespace App\Livewire\Dashboard\Hotel;
 
 use App\Models\City;
 use App\Models\Hotel;
+use App\Models\HotelType;
 use App\Models\User;
 use App\Services\FileService;
 use Illuminate\Support\Collection;
@@ -56,7 +57,9 @@ class CreateHotel extends Component
 
     public $images = [];
 
-    public $cities = [];
+	public $cities = [];
+	public $hotel_types = [];
+	public $hotel_type_ids = [];
 
     public $users = [];
 
@@ -71,6 +74,12 @@ class CreateHotel extends Component
                 'name' => $city->name,
             ];
         })->toArray();
+	    $this->hotel_types = HotelType::get(['id', 'name'])->map(function ($type) {
+		    return [
+			    'id' => $type->id,
+			    'name' => $type->name,
+		    ];
+	    })->toArray();
         $this->library = collect();
         $this->users = User::role('hotel')->get(['id', 'name'])->toArray();
         view()->share('breadcrumbs', $this->breadcrumbs());
@@ -100,6 +109,8 @@ class CreateHotel extends Component
         return [
             'user_id' => 'required|exists:users,id',
             'city_id' => 'required|exists:cities,id',
+	        'hotel_type_ids' => 'required|array|min:1',
+	        'hotel_type_ids.*' => 'exists:hotel_types,id',
             'email' => 'required|email|max:255',
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
@@ -159,6 +170,10 @@ class CreateHotel extends Component
                 ]);
             }
         }
+	    if ($this->hotel_type_ids) {
+		    $hotel->hotelTypes()->attach($this->hotel_type_ids);
+	    }
+
 
         return to_route('hotels')->with('success', __('lang.added_successfully', ['attribute' => __('lang.hotel')]));
     }

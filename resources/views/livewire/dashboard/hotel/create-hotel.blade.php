@@ -8,7 +8,7 @@
 		<form wire:submit.prevent="saveAdd">
 
 				{{-- Basic Information Section --}}
-				<div class="border-b pb-4">
+				<div class="border-b py-4">
 					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
 						<x-icon name="o-information-circle" class="w-5 h-5 inline"/> {{ __('lang.basic_information') }}
 					</h3>
@@ -31,17 +31,14 @@
 							['id' => 4, 'name' => '4'],
 							['id' => 5, 'name' => '5'],
 						]"/>
-						<x-phone-input
-								required
-								label="{{__('lang.phone')}}"
-								phoneProperty="phone"
-								keyProperty="phone_key"
-						/>
+						<x-phone-input required label="{{__('lang.phone')}}" phoneProperty="phone" keyProperty="phone_key"/>
 					</div>
+					<x-choices-offline required label="{{ __('lang.hotel_type') }}" wire:model="hotel_type_ids" :options="$hotel_types" multiple clearable searchable
+					                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
 				</div>
 
 				{{-- Location & Map Section --}}
-				<div class="border-b pb-4">
+				<div class="border-b py-4">
 					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
 						<x-icon name="o-map-pin" class="w-5 h-5 inline"/> {{ __('lang.location_information') }}
 					</h3>

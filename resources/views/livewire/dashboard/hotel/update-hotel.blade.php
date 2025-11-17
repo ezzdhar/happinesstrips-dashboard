@@ -9,7 +9,7 @@
 			<div class="max-h-[75vh] overflow-y-auto p-4 space-y-6">
 
 				{{-- Basic Information Section --}}
-				<div class="border-b pb-4">
+				<div class="border-b py-4">
 					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
 						<x-icon name="o-information-circle" class="w-5 h-5 inline"/> {{ __('lang.basic_information') }}
 					</h3>
@@ -39,10 +39,13 @@
 								keyProperty="phone_key"
 						/>
 					</div>
+					<x-choices-offline required label="{{ __('lang.hotel_type') }}" wire:model="hotel_type_ids" :options="$hotel_types" multiple clearable searchable
+					                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
+
 				</div>
 
 				{{-- Location & Map Section --}}
-				<div class="border-b pb-4">
+				<div class="border-b py-4">
 					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
 						<x-icon name="o-map-pin" class="w-5 h-5 inline"/> {{ __('lang.location_information') }}
 					</h3>
@@ -102,10 +105,10 @@
 				</div>
 
 			</div>
-			<x-slot:actions>
+			<div class="mt-6 flex justify-end gap-2 px-4 pb-4">
 				<x-button label="{{__('lang.cancel')}}" @click="$wire.modalUpdate = false;$wire.resetError()" wire:loading.attr="disabled"/>
 				<x-button label="{{__('lang.update')}}" class="btn-primary" type="submit" wire:loading.attr="disabled" wire:target="saveUpdate" spinner="saveUpdate"/>
-			</x-slot:actions>
+			</div>
 		</form>
 	</x-card>
 </div>

@@ -5,6 +5,7 @@ namespace App\Livewire\Dashboard\Hotel;
 use App\Models\City;
 use App\Models\File;
 use App\Models\Hotel;
+use App\Models\HotelType;
 use App\Models\User;
 use App\Services\FileService;
 use Illuminate\Contracts\View\View;
@@ -64,8 +65,9 @@ class UpdateHotel extends Component
     public $cities = [];
 
     public $users = [];
-
-    #[Rule('required')]
+	public $hotel_types = [];
+	public $hotel_type_ids = [];
+    #[Rule('nullable')]
     public Collection $library;
 
     public function mount(): void
@@ -76,9 +78,15 @@ class UpdateHotel extends Component
                 'name' => $city->name,
             ];
         })->toArray();
+	    $this->hotel_types = HotelType::get(['id', 'name'])->map(function ($type) {
+		    return [
+			    'id' => $type->id,
+			    'name' => $type->name,
+		    ];
+	    })->toArray();
         $this->library = collect();
         $this->users = User::role('hotel')->get(['id', 'name'])->toArray();
-
+	    $this->hotel_type_ids = $this->hotel->hotelTypes->pluck('id')->toArray();
         $this->user_id = $this->hotel->user_id;
         $this->city_id = $this->hotel->city_id;
         $this->email = $this->hotel->email;
@@ -117,6 +125,8 @@ class UpdateHotel extends Component
         return [
             'user_id' => 'required|exists:users,id',
             'city_id' => 'required|exists:cities,id',
+	        'hotel_type_ids' => 'required|array|min:1',
+	        'hotel_type_ids.*' => 'exists:hotel_types,id',
             'email' => 'required|email|max:255',
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
@@ -176,6 +186,8 @@ class UpdateHotel extends Component
                 ]);
             }
         }
+
+	    $this->hotel->hotelTypes()->sync($this->hotel_type_ids);
 
         return to_route('hotels')->with('success', __('lang.updated_successfully', ['attribute' => __('lang.hotel')]));
     }

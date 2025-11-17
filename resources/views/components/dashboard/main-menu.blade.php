@@ -22,14 +22,16 @@
 	<x-menu-title title="{{__('lang.hotels_mng')}}" icon="o-building-office-2"/>
 
 	@can('show_hotel')
-			<x-menu-item noWireNavigate title="{{__('lang.hotels')}}" icon="o-building-office-2" link="{{route('hotels')}}"/>
-		@endcan
+		<x-menu-item noWireNavigate title="{{__('lang.hotel_types')}}" icon="o-building-office" link="{{route('hotel-types')}}"/>
 		@can('show_amenity')
 			<x-menu-item noWireNavigate title="{{__('lang.amenities')}}" icon="o-sparkles" link="{{route('amenities')}}"/>
 		@endcan
+			<x-menu-item noWireNavigate title="{{__('lang.hotels')}}" icon="o-building-office-2" link="{{route('hotels')}}"/>
+
 		@can('show_room')
 			<x-menu-item noWireNavigate title="{{__('lang.rooms')}}" icon="ionicon.bed-outline" link="{{route('rooms')}}"/>
 		@endcan
+	@endcan
 
 
 	<x-menu-separator/>

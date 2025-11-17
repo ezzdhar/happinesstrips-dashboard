@@ -6,12 +6,15 @@
 				<x-button noWireNavigate label="{{ __('lang.add') }}" icon="o-plus" class="btn-primary btn-sm" link="{{route('hotels.create')}}"/>
 			@endcan
 		</x-slot:menu>
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-			<x-input label="{{ __('lang.search') }}" wire:model.live="search" placeholder="{{ __('lang.search') }}" icon="o-magnifying-glass" clearable/>
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+			<x-input label="{{ __('lang.search') }}" wire:model.live="search" placeholder="{{ __('lang.search_by_name') }}" icon="o-magnifying-glass" clearable/>
 			<x-select label="{{ __('lang.status') }}" wire:model.live="status_filter" placeholder="{{ __('lang.all') }}" icon="o-flag" clearable :options="[
 				['id' => Status::Active, 'name' => __('lang.active')],
 				['id' => Status::Inactive, 'name' => __('lang.inactive')],
 			]"/>
+			<x-choices-offline required label="{{ __('lang.hotel_type') }}" wire:model.live="hotel_type_filter" :options="$hotel_types" single clearable searchable
+			                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
+
 		</div>
 		<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
 			<div class="overflow-x-auto">

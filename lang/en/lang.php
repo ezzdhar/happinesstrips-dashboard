@@ -318,6 +318,8 @@ return [
     'city' => 'City',
     'cities' => 'Cities',
     'hotels' => 'Hotels',
+    'hotel_type' => 'Hotel Type',
+    'hotel_types' => 'Hotel Types',
     'room' => 'Room',
     'rooms' => 'Rooms',
     'amenity' => 'Room Amenity',

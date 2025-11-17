@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard\Hotel;
 
 use App\Models\Hotel;
+use App\Models\HotelType;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
@@ -17,9 +18,17 @@ class HotelData extends Component
     public $search;
 
     public $status_filter;
+	public $hotel_types = [];
+	public $hotel_type_filter;
 
     public function mount(): void
     {
+	    $this->hotel_types = HotelType::get(['id', 'name'])->map(function ($type) {
+		    return [
+			    'id' => $type->id,
+			    'name' => $type->name,
+		    ];
+	    })->toArray();
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
@@ -36,7 +45,10 @@ class HotelData extends Component
     #[On('render')]
     public function render(): View
     {
-        $data['hotels'] = Hotel::filter($this->search)->status($this->status_filter)->with(['city', 'user', 'files'])->withCount('rooms')->latest()->paginate(20);
+        $data['hotels'] = Hotel::filter($this->search)
+	        ->status($this->status_filter)
+	        ->hotelTypeFilter($this->hotel_type_filter)
+	        ->with(['city', 'user', 'files'])->withCount('rooms')->latest()->paginate(20);
 
         return view('livewire.dashboard.hotel.hotel-data', $data);
     }

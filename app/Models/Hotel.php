@@ -49,6 +49,11 @@ class Hotel extends Model
         return $this->belongsToMany(Trip::class, 'hotel_trip');
     }
 
+    public function hotelTypes(): BelongsToMany
+    {
+        return $this->belongsToMany(HotelType::class, 'hotel_hotel_type');
+    }
+
     public function bookingHotels(): HasMany
     {
         return $this->hasMany(BookingHotel::class);
@@ -63,6 +68,14 @@ class Hotel extends Model
     {
         return $query->when($status, fn ($q) => $q->where('status', $status));
     }
+	public function scopeHotelTypeFilter($query, $hotel_type_id = null)
+	{
+		return $query->when($hotel_type_id, function ($q) use ($hotel_type_id) {
+			$q->whereHas('hotelTypes', function ($q2) use ($hotel_type_id) {
+				$q2->where('hotel_type_id', $hotel_type_id);
+			});
+		});
+	}
 
     public function scopeFilter($query, $search = null)
     {
