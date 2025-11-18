@@ -14,10 +14,10 @@ return new class extends Migration
             $table->foreignId('hotel_id')->constrained()->cascadeOnDelete();
             $table->foreignId('room_id')->nullable()->constrained()->cascadeOnDelete();
             $table->longText('room_includes')->nullable();
-            $table->decimal('adults_price', 10, 2)->default(0)->after('room_includes');
-            $table->decimal('children_price', 10, 2)->default(0)->after('adults_price');
-            $table->json('children_breakdown')->nullable()->after('children_price');
-            $table->json('pricing_details')->nullable()->after('children_breakdown');
+            $table->decimal('adults_price', 10, 2)->default(0);
+            $table->decimal('children_price', 10, 2)->default(0);
+            $table->json('children_breakdown')->nullable();
+            $table->json('pricing_details')->nullable();
             $table->timestamps();
         });
     }
