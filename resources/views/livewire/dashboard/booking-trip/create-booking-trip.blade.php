@@ -202,64 +202,64 @@
 									</div>
 								</div>
 
-                                <!-- People Count Section -->
-                                <div class="mb-6">
-                                    <h3 class="font-semibold mb-4 text-lg">👥 {{ __('lang.number_of_travelers') }}</h3>
+								<!-- People Count Section -->
+								<div class="mb-6">
+									<h3 class="font-semibold mb-4 text-lg">👥 {{ __('lang.number_of_travelers') }}</h3>
 
-                                    <!-- Adults Count -->
-                                    <div class="mb-4">
-                                        <div class="p-4 bg-primary/5 rounded-lg border border-primary/20">
-                                            <x-input
-                                                    label="{{ __('lang.adults') }}"
-                                                    wire:model.live="adults_count"
-                                                    type="number"
-                                                    min="1"
-                                                    icon="o-user"
-                                                    required
-                                            />
-                                            <p class="text-xs text-gray-500 mt-1">{{ __('lang.adults_description') }}</p>
-                                        </div>
-                                    </div>
+									<!-- Adults Count -->
+									<div class="mb-4">
+										<div class="p-4 bg-primary/5 rounded-lg border border-primary/20">
+											<x-input
+													label="{{ __('lang.adults') }}"
+													wire:model.live="adults_count"
+													type="number"
+													min="1"
+													icon="o-user"
+													required
+											/>
+											<p class="text-xs text-gray-500 mt-1">{{ __('lang.adults_description') }}</p>
+										</div>
+									</div>
 
-                                    <!-- Children Ages Section -->
-                                    <div>
-                                        <div class="flex items-center justify-between mb-3">
-                                            <label class="font-semibold text-sm">{{ __('lang.children') }}</label>
-                                            <x-button wire:click="addChild" icon="o-plus" class="btn-sm btn-primary" label="{{ __('lang.add_child') }}" spinner="addChild"/>
-                                        </div>
+									<!-- Children Ages Section -->
+									<div>
+										<div class="flex items-center justify-between mb-3">
+											<label class="font-semibold text-sm">{{ __('lang.children') }}</label>
+											<x-button wire:click="addChild" icon="o-plus" class="btn-sm btn-primary" label="{{ __('lang.add_child') }}" spinner="addChild"/>
+										</div>
 
-                                        @if(count($children_ages) > 0)
-                                            <div class="space-y-2">
-                                                @foreach($children_ages as $index => $age)
-                                                    <div class="flex gap-2 items-center p-3 bg-info/5 rounded-lg border border-info/20">
-                                                        <div class="flex-1">
-                                                            <x-input label="{{ __('lang.child') }} {{ $index + 1 }} - {{ __('lang.age') }}" wire:model.live="children_ages.{{ $index }}" type="number"
-                                                                     min="0" max="18" icon="o-cake" required hint="{{__('lang.child_age')}}"/>
-                                                        </div>
-                                                        <x-button wire:click="removeChild({{ $index }})" icon="o-trash" class="btn-sm btn-error btn-outline mt-6" spinner="removeChild({{$index }})"/>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @else
-                                            <div class="p-4 bg-base-100 rounded-lg border-2 border-dashed border-base-300 text-center">
-                                                <p class="text-sm text-gray-500">{{ __('lang.no_children_added') }}</p>
-                                                <p class="text-xs text-gray-400 mt-1">{{ __('lang.click_add_child_button') }}</p>
-                                            </div>
-                                        @endif
-                                    </div>
+										@if(count($children_ages) > 0)
+											<div class="space-y-2">
+												@foreach($children_ages as $index => $age)
+													<div class="flex gap-2 items-center p-3 bg-info/5 rounded-lg border border-info/20">
+														<div class="flex-1">
+															<x-input label="{{ __('lang.child') }} {{ $index + 1 }} - {{ __('lang.age') }}" wire:model.live="children_ages.{{ $index }}" type="number"
+															         min="0" max="18" icon="o-cake" required hint="{{__('lang.child_age')}}"/>
+														</div>
+														<x-button wire:click="removeChild({{ $index }})" icon="o-trash" class="btn-sm btn-error btn-outline mt-6" spinner="removeChild({{$index }})"/>
+													</div>
+												@endforeach
+											</div>
+										@else
+											<div class="p-4 bg-base-100 rounded-lg border-2 border-dashed border-base-300 text-center">
+												<p class="text-sm text-gray-500">{{ __('lang.no_children_added') }}</p>
+												<p class="text-xs text-gray-400 mt-1">{{ __('lang.click_add_child_button') }}</p>
+											</div>
+										@endif
+									</div>
 
-                                    @if($selectedTrip)
-                                        <div class="mt-3 p-3 bg-info/10 rounded-lg border border-info/30">
-                                            <p class="text-xs text-info flex items-center gap-2">
-                                                <x-icon name="o-information-circle" class="w-4 h-4"/>
-                                                <span>{{ __('lang.children_pricing_note', [
+									@if($selectedTrip)
+										<div class="mt-3 p-3 bg-info/10 rounded-lg border border-info/30">
+											<p class="text-xs text-info flex items-center gap-2">
+												<x-icon name="o-information-circle" class="w-4 h-4"/>
+												<span>{{ __('lang.children_pricing_note', [
                                                     'free_age' => $selectedTrip['free_child_age'] ?? 5,
                                                     'adult_age' => $selectedTrip['adult_age'] ?? 12
                                                 ]) }}</span>
-                                            </p>
-                                        </div>
-                                    @endif
-                                </div>
+											</p>
+										</div>
+									@endif
+								</div>
 
 								<!-- Currency Section -->
 								<div>
@@ -276,35 +276,35 @@
 									</div>
 								</div>
 
-                                <!-- Price Preview -->
-                                @if($total_price > 0)
-                                    <div class="mt-6 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg border-2 border-primary/30">
-                                        <div class="flex justify-between items-center">
-                                            <div>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('lang.estimated_total') }}:</p>
-                                                <p class="text-xs text-gray-500">
-                                                    {{ $adults_count }} {{ __('lang.adults') }}
-                                                    @if(count($children_ages) > 0)
-                                                        + {{ count($children_ages) }} {{ __('lang.children') }}
-                                                    @endif
-                                                    @if($selectedTrip['type'] === 'flexible')
-                                                        × {{ $nights_count }} {{ __('lang.nights') }}
-                                                    @endif
-                                                </p>
-                                            </div>
-                                            <div class="text-right">
-                                                <p class="text-3xl font-bold text-primary">{{ number_format($total_price, 2) }}</p>
-                                                <p class="text-sm text-gray-600">{{ strtoupper($currency) }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="mt-2 pt-2 border-t border-primary/20">
-                                            <p class="text-xs text-gray-500">
-                                                <x-icon name="o-information-circle" class="w-3 h-3 inline"/>
-                                                {{ __('lang.final_price_based_on_ages') }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                @endif
+								<!-- Price Preview -->
+								@if($total_price > 0)
+									<div class="mt-6 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg border-2 border-primary/30">
+										<div class="flex justify-between items-center">
+											<div>
+												<p class="text-sm text-gray-600 dark:text-gray-400">{{ __('lang.estimated_total') }}:</p>
+												<p class="text-xs text-gray-500">
+													{{ $adults_count }} {{ __('lang.adults') }}
+													@if(count($children_ages) > 0)
+														+ {{ count($children_ages) }} {{ __('lang.children') }}
+													@endif
+													@if($selectedTrip['type'] === 'flexible')
+														× {{ $nights_count }} {{ __('lang.nights') }}
+													@endif
+												</p>
+											</div>
+											<div class="text-right">
+												<p class="text-3xl font-bold text-primary">{{ number_format($total_price, 2) }}</p>
+												<p class="text-sm text-gray-600">{{ strtoupper($currency) }}</p>
+											</div>
+										</div>
+										<div class="mt-2 pt-2 border-t border-primary/20">
+											<p class="text-xs text-gray-500">
+												<x-icon name="o-information-circle" class="w-3 h-3 inline"/>
+												{{ __('lang.final_price_based_on_ages') }}
+											</p>
+										</div>
+									</div>
+								@endif
 							</div>
 						</div>
 					@endif
@@ -463,20 +463,20 @@
 												<p class="text-sm text-gray-500">{{ __('lang.duration') }}</p>
 												<p class="font-semibold">{{ $nights_count }} {{ __('lang.nights') }}</p>
 											</div>
-                                            <div class="pt-3 border-t">
-                                                <div class="grid grid-cols-2 gap-2 text-center">
-                                                    <div class="p-2 bg-primary/10 rounded">
-                                                        <p class="text-2xl font-bold text-primary">{{ $adults_count }}</p>
-                                                        <p class="text-xs text-gray-600">{{ __('lang.adults') }}</p>
-                                                    </div>
-                                                    @if(count($children_ages) > 0)
-                                                        <div class="p-2 bg-info/10 rounded">
-                                                            <p class="text-2xl font-bold text-info">{{ count($children_ages) }}</p>
-                                                            <p class="text-xs text-gray-600">{{ __('lang.children') }}</p>
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                            </div>
+											<div class="pt-3 border-t">
+												<div class="grid grid-cols-2 gap-2 text-center">
+													<div class="p-2 bg-primary/10 rounded">
+														<p class="text-2xl font-bold text-primary">{{ $adults_count }}</p>
+														<p class="text-xs text-gray-600">{{ __('lang.adults') }}</p>
+													</div>
+													@if(count($children_ages) > 0)
+														<div class="p-2 bg-info/10 rounded">
+															<p class="text-2xl font-bold text-info">{{ count($children_ages) }}</p>
+															<p class="text-xs text-gray-600">{{ __('lang.children') }}</p>
+														</div>
+													@endif
+												</div>
+											</div>
 										</div>
 									</div>
 
@@ -517,89 +517,226 @@
 
 								<!-- Right Column - Price Summary -->
 								<div class="space-y-4">
-									<div class="bg-white dark:bg-base-100 rounded-lg p-5 border-2 border-primary/50 sticky top-6">
-										<h3 class="font-bold text-xl mb-4 flex items-center gap-2">
-											<x-icon name="o-calculator" class="w-6 h-6 text-primary"/>
-											{{ __('lang.price_breakdown') }}
-										</h3>
+									{{-- Pricing Summary --}}
+									@if($pricing_result)
+										<div class="bg-white dark:bg-base-100 rounded-lg p-5 border-2 border-primary/50 sticky top-6">
+											<h3 class="font-bold text-xl mb-4 flex items-center gap-2">
+												<x-icon name="o-currency-dollar" class="w-6 h-6 text-primary"/>
+												{{ __('lang.pricing_summary') }}
+											</h3>
 
-										<div class="space-y-3 mb-4">
-                                            <div class="flex justify-between items-center pb-2 border-b">
-                                                <span class="text-gray-600">{{ __('lang.base_price') }}</span>
-                                                <span class="font-semibold">{{ number_format($sub_total, 2) }} {{ strtoupper($currency) }}</span>
-                                            </div>
+											<div class="card bg-base-200">
+												<div class="card-body p-3">
+													{{-- Trip Info --}}
+													<div class="flex justify-between items-center mb-4">
+														<div>
+															<h4 class="font-semibold">{{ $selectedTrip['name'] ?? '-' }}</h4>
+															<p class="text-sm text-gray-600">
+																<x-badge :value="__('lang.' . ($selectedTrip['type'] ?? 'fixed'))" :class="($selectedTrip['type'] ?? 'fixed') === 'fixed' ? 'badge-success' : 'badge-warning'"/>
+															</p>
+														</div>
+														<div class="text-right">
+															<p class="text-sm">{{ $nights_count }} {{ __('lang.nights') }}</p>
+															<p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($check_in)->format('d M') }} - {{ \Carbon\Carbon::parse($check_out)->format('d M') }}</p>
+														</div>
+													</div>
 
-                                            <div class="flex justify-between items-center pb-2 border-b">
-                                                <span class="text-gray-600">{{ __('lang.total_travelers') }}</span>
-                                                <span class="font-semibold">{{ $adults_count + count($children_ages) }}</span>
-                                            </div>
+													<div class="divider"></div>
 
-                                            @if($selectedTrip['type'] === 'flexible')
-                                                <div class="flex justify-between items-center pb-2 border-b">
-                                                    <span class="text-gray-600">{{ __('lang.nights') }}</span>
-                                                    <span class="font-semibold">{{ $nights_count }}</span>
-                                                </div>
-                                            @endif
+													{{-- Base Price Info --}}
+													<div class="bg-info/10 p-2 rounded mb-3">
+														<p class="text-xs text-info">
+															<x-icon name="o-information-circle" class="w-3 h-3 inline"/>
+															{{ __('lang.base_price_label') }}:
+															{{ ($selectedTrip['type'] ?? 'fixed') === 'fixed' ? __('lang.per_person_entire_trip') : __('lang.per_person_per_night') }}
+														</p>
+													</div>
 
-                                            <div class="p-3 bg-info/10 rounded-lg border border-info/20">
-                                                <p class="text-xs text-info mb-1 flex items-center gap-1">
-                                                    <x-icon name="o-information-circle" class="w-3 h-3"/>
-                                                    {{ __('lang.pricing_details') }}:
-                                                </p>
-                                                <p class="text-sm">
-                                                    {{ __('lang.price_calculated_by_ages') }}
-                                                </p>
-                                            </div>
-										</div>
+													{{-- Adults --}}
+													<div class="flex justify-between items-center">
+														<span>{{ $adults_count }} {{ __('lang.adults') }}</span>
+														<span class="font-semibold">{{ number_format($pricing_result['adults_price'] ?? 0, 2) }} {{ strtoupper($currency) }}</span>
+													</div>
 
-										<div class="pt-4 border-t-2 border-primary">
-											<div class="flex justify-between items-center mb-2">
-												<span class="text-xl font-bold">{{ __('lang.total_amount') }}</span>
-												<div class="text-right">
-													<p class="text-3xl font-bold text-primary">{{ number_format($total_price, 2) }}</p>
-													<p class="text-sm text-gray-500">{{ strtoupper($currency) }}</p>
+													{{-- Children --}}
+													@if(count($children_ages) > 0 && isset($pricing_result['children_breakdown']))
+														<div class="mt-3">
+															<p class="font-semibold mb-2">{{ __('lang.children') }}:</p>
+															<div class="space-y-2 bg-base-100 p-3 rounded">
+																{{-- Free Children --}}
+																@if(!empty($pricing_result['children_breakdown']['free_children']))
+																	@foreach($pricing_result['children_breakdown']['free_children'] as $child)
+																		<div class="flex justify-between items-center text-sm">
+																			<span>
+																				{{ __('lang.child') }}
+																				<span class="text-xs text-gray-500">({{ $child['age'] }} {{ __('lang.years') }})</span>
+																				<span class="badge badge-success badge-xs">{{ __('lang.free') }}</span>
+																			</span>
+																			<span class="font-medium text-success">{{ number_format($child['price'], 2) }} {{ strtoupper($currency) }}</span>
+																		</div>
+																	@endforeach
+																@endif
+
+																{{-- First Child --}}
+																@if(isset($pricing_result['children_breakdown']['first_child']))
+																	@php $child = $pricing_result['children_breakdown']['first_child']; @endphp
+																	<div class="flex justify-between items-center text-sm">
+																		<span>
+																			{{ __('lang.child') }} 1
+																			<span class="text-xs text-gray-500">({{ $child['age'] }} {{ __('lang.years') }})</span>
+																		</span>
+																		<span class="font-medium">{{ number_format($child['price'], 2) }} {{ strtoupper($currency) }}</span>
+																	</div>
+																@endif
+
+																{{-- Second Child --}}
+																@if(isset($pricing_result['children_breakdown']['second_child']))
+																	@php $child = $pricing_result['children_breakdown']['second_child']; @endphp
+																	<div class="flex justify-between items-center text-sm">
+																		<span>
+																			{{ __('lang.child') }} 2
+																			<span class="text-xs text-gray-500">({{ $child['age'] }} {{ __('lang.years') }})</span>
+																		</span>
+																		<span class="font-medium">{{ number_format($child['price'], 2) }} {{ strtoupper($currency) }}</span>
+																	</div>
+																@endif
+
+																{{-- Third Child --}}
+																@if(isset($pricing_result['children_breakdown']['third_child']))
+																	@php $child = $pricing_result['children_breakdown']['third_child']; @endphp
+																	<div class="flex justify-between items-center text-sm">
+																		<span>
+																			{{ __('lang.child') }} 3
+																			<span class="text-xs text-gray-500">({{ $child['age'] }} {{ __('lang.years') }})</span>
+																		</span>
+																		<span class="font-medium">{{ number_format($child['price'], 2) }} {{ strtoupper($currency) }}</span>
+																	</div>
+																@endif
+
+																{{-- Additional Children --}}
+																@if(!empty($pricing_result['children_breakdown']['additional_children']))
+																	@foreach($pricing_result['children_breakdown']['additional_children'] as $index => $child)
+																		<div class="flex justify-between items-center text-sm">
+																			<span>
+																				{{ __('lang.child') }} {{ 4 + $index }}
+																				<span class="text-xs text-gray-500">({{ $child['age'] }} {{ __('lang.years') }})</span>
+																			</span>
+																			<span class="font-medium">{{ number_format($child['price'], 2) }} {{ strtoupper($currency) }}</span>
+																		</div>
+																	@endforeach
+																@endif
+
+																<div class="divider my-1"></div>
+																<div class="flex justify-between font-semibold">
+																	<span>{{ __('lang.children_total') }}</span>
+																	<span>{{ number_format($pricing_result['children_breakdown']['total_children_price'] ?? 0, 2) }} {{ strtoupper($currency) }}</span>
+																</div>
+															</div>
+														</div>
+													@endif
+
+													<div class="divider"></div>
+
+													{{-- Grand Total --}}
+													<div class="flex justify-between items-center text-xl font-bold">
+														<span>{{ __('lang.grand_total') }}</span>
+														<span class="text-primary">{{ number_format($total_price, 2) }} {{ strtoupper($currency) }}</span>
+													</div>
 												</div>
 											</div>
-										</div>
 
-										@if($notes)
-											<div class="mt-4 p-3 bg-warning/10 rounded-lg border border-warning/30">
-												<p class="text-xs font-semibold text-warning mb-1">{{ __('lang.notes') }}:</p>
-												<p class="text-sm">{{ $notes }}</p>
-											</div>
-										@endif
+											@if($notes)
+												<div class="mt-4 p-3 bg-warning/10 rounded-lg border border-warning/30">
+													<p class="text-xs font-semibold text-warning mb-1">{{ __('lang.notes') }}:</p>
+													<p class="text-sm">{{ $notes }}</p>
+												</div>
+											@endif
+										</div>
+									@endif
+								</div>
+								<x-icon name="o-calculator" class="w-6 h-6 text-primary"/>
+								<h3 class="font-bold text-xl mb-4 flex items-center gap-2">
+									<x-icon name="o-currency-dollar" class="w-6 h-6 text-primary"/>
+									{{ __('lang.price_breakdown') }}
+								</h3>
+
+								<div class="space-y-3 mb-4">
+									<div class="flex justify-between items-center pb-2 border-b">
+										<span class="text-gray-600">{{ __('lang.base_price') }}</span>
+										<span class="font-semibold">{{ number_format($sub_total, 2) }} {{ strtoupper($currency) }}</span>
+									</div>
+
+									<div class="flex justify-between items-center pb-2 border-b">
+										<span class="text-gray-600">{{ __('lang.total_travelers') }}</span>
+										<span class="font-semibold">{{ $adults_count + count($children_ages) }}</span>
+									</div>
+
+									@if($selectedTrip['type'] === 'flexible')
+										<div class="flex justify-between items-center pb-2 border-b">
+											<span class="text-gray-600">{{ __('lang.nights') }}</span>
+											<span class="font-semibold">{{ $nights_count }}</span>
+										</div>
+									@endif
+
+									<div class="p-3 bg-info/10 rounded-lg border border-info/20">
+										<p class="text-xs text-info mb-1 flex items-center gap-1">
+											<x-icon name="o-information-circle" class="w-3 h-3"/>
+											{{ __('lang.pricing_details') }}:
+										</p>
+										<p class="text-sm">
+											{{ __('lang.price_calculated_by_ages') }}
+										</p>
 									</div>
 								</div>
+
+								<div class="pt-4 border-t-2 border-primary">
+									<div class="flex justify-between items-center mb-2">
+										<span class="text-xl font-bold">{{ __('lang.total_amount') }}</span>
+										<div class="text-right">
+											<p class="text-3xl font-bold text-primary">{{ number_format($total_price, 2) }}</p>
+											<p class="text-sm text-gray-500">{{ strtoupper($currency) }}</p>
+										</div>
+									</div>
+								</div>
+
+								@if($notes)
+									<div class="mt-4 p-3 bg-warning/10 rounded-lg border border-warning/30">
+										<p class="text-xs font-semibold text-warning mb-1">{{ __('lang.notes') }}:</p>
+										<p class="text-sm">{{ $notes }}</p>
+									</div>
+								@endif
 							</div>
 						</div>
 					</div>
-				@endif
-
-				<!-- Navigation Buttons -->
-				<div class="mt-8 flex justify-between items-center">
-					<div>
-						@if($currentStep > 1 || $showReview)
-							<x-button type="button" wire:click="previousStep" label="{{ __('lang.previous') }}" icon="o-arrow-left" class="btn-outline"/>
-						@else
-							<x-button label="{{ __('lang.cancel') }}" icon="o-x-mark" link="{{ route('bookings.trips') }}" class="btn-ghost"/>
-						@endif
-					</div>
-
-					<div class="flex gap-2">
-						@if(!$showReview)
-							@if($currentStep < 3 || ($currentStep == 3 && count($travelers) == 0))
-								<x-button type="button" spinner wire:click="nextStep" label="{{ __('lang.next') }}" icon="o-arrow-right" class="btn-primary" :disabled="!$selectedTrip && $currentStep == 1"/>
-							@else
-								<x-button type="button" spinner wire:click="nextStep" label="{{ __('lang.review_booking') }}" icon="o-document-check" class="btn-primary"/>
-							@endif
-						@else
-							<x-button type="submit" label="{{ __('lang.confirm_and_save') }}" icon="o-check-circle" class="btn-success btn-lg" spinner="save"/>
-						@endif
-					</div>
-				</div>
-			</form>
 		</div>
-	</x-card>
+</div>
+@endif
+
+<!-- Navigation Buttons -->
+<div class="mt-8 flex justify-between items-center">
+	<div>
+		@if($currentStep > 1 || $showReview)
+			<x-button type="button" wire:click="previousStep" label="{{ __('lang.previous') }}" icon="o-arrow-left" class="btn-outline"/>
+		@else
+			<x-button label="{{ __('lang.cancel') }}" icon="o-x-mark" link="{{ route('bookings.trips') }}" class="btn-ghost"/>
+		@endif
+	</div>
+
+	<div class="flex gap-2">
+		@if(!$showReview)
+			@if($currentStep < 3 || ($currentStep == 3 && count($travelers) == 0))
+				<x-button type="button" spinner wire:click="nextStep" label="{{ __('lang.next') }}" icon="o-arrow-right" class="btn-primary" :disabled="!$selectedTrip && $currentStep == 1"/>
+			@else
+				<x-button type="button" spinner wire:click="nextStep" label="{{ __('lang.review_booking') }}" icon="o-document-check" class="btn-primary"/>
+			@endif
+		@else
+			<x-button type="submit" label="{{ __('lang.confirm_and_save') }}" icon="o-check-circle" class="btn-success btn-lg" spinner="save"/>
+		@endif
+	</div>
+</div>
+</form>
+</div>
+</x-card>
 </div>
 
 

@@ -314,10 +314,9 @@
 					<h3 class="text-lg font-semibold mb-4">
 						<x-icon name="o-users" class="w-5 h-5 inline"/> {{ __('lang.travelers') }}
 						<span class="text-sm font-normal text-base-content/60">
-	({{ __('lang.total') }}: {{ count($travelers) }})
-</span>
+						     ({{ __('lang.total') }}: {{ count($travelers) }})
+						</span>
 					</h3>
-
 					@foreach($travelers as $index => $traveler)
 						<div class="bg-base-200 p-4 rounded-lg mb-3" wire:key="traveler-{{ $index }}">
 							<h4 class="font-semibold mb-3">
@@ -329,10 +328,10 @@
 								<x-input required label="{{ __('lang.nationality') }}" wire:model="travelers.{{ $index }}.nationality" icon="o-flag"/>
 								<x-input required label="{{ __('lang.age') }}" wire:model="travelers.{{ $index }}.age" type="number" min="1" icon="o-hashtag"/>
 								<x-select required label="{{ __('lang.id_type') }}" wire:model="travelers.{{ $index }}.id_type" icon="o-identification" :options="[
-			['id' => null, 'name' => __('lang.select')],
-			['id' => 'passport', 'name' => __('lang.passport')],
-			['id' => 'national_id', 'name' => __('lang.national_id')],
-		]"/>
+										['id' => null, 'name' => __('lang.select')],
+										['id' => 'passport', 'name' => __('lang.passport')],
+										['id' => 'national_id', 'name' => __('lang.national_id')],
+									]"/>
 								<x-input required label="{{ __('lang.id_number') }}" wire:model="travelers.{{ $index }}.id_number" icon="o-hashtag"/>
 							</div>
 						</div>

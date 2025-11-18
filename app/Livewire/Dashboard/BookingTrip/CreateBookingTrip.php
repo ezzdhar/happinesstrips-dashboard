@@ -5,6 +5,7 @@ namespace App\Livewire\Dashboard\BookingTrip;
 use App\Enums\Status;
 use App\Models\Booking;
 use App\Models\BookingTraveler;
+use App\Models\BookingTrip;
 use App\Models\Trip;
 use App\Models\User;
 use App\Services\TripPricingService;
@@ -39,6 +40,8 @@ class CreateBookingTrip extends Component
     public $sub_total = 0;
 
     public $total_price = 0;
+
+    public $pricing_result = null;
 
     // Travelers
     public $travelers = [];
@@ -274,6 +277,8 @@ class CreateBookingTrip extends Component
         if (! $this->trip_id || ! $this->check_in || ! $this->check_out || ! $this->currency) {
             $this->sub_total = 0;
             $this->total_price = 0;
+            $this->pricing_result = null;
+
             return;
         }
 
@@ -283,11 +288,13 @@ class CreateBookingTrip extends Component
         if (! $trip) {
             $this->sub_total = 0;
             $this->total_price = 0;
+            $this->pricing_result = null;
+
             return;
         }
 
         // Use TripPricingService with children ages
-        $result = TripPricingService::calculateTripPriceWithAges(
+        $this->pricing_result = TripPricingService::calculateTripPriceWithAges(
             trip: $trip,
             checkIn: $this->check_in,
             checkOut: $this->check_out,
@@ -296,12 +303,10 @@ class CreateBookingTrip extends Component
             currency: $this->currency
         );
 
-
-
         // Update component properties from result
-        $this->nights_count = $result['nights_count'];
-        $this->sub_total = $result['sub_total'];
-        $this->total_price = $result['total_price'];
+        $this->nights_count = $this->pricing_result['nights_count'];
+        $this->sub_total = $this->pricing_result['sub_total'];
+        $this->total_price = $this->pricing_result['total_price'];
     }
 
     public function rules(): array
@@ -347,6 +352,16 @@ class CreateBookingTrip extends Component
             'notes' => $this->notes,
             'status' => Status::Pending,
             'type' => 'trip',
+        ]);
+
+        // Create trip booking with pricing details
+        BookingTrip::create([
+            'booking_id' => $booking->id,
+            'trip_id' => $this->trip_id,
+            'adults_price' => $this->pricing_result['adults_price'] ?? 0,
+            'children_price' => $this->pricing_result['children_breakdown']['total_children_price'] ?? 0,
+            'children_breakdown' => $this->pricing_result['children_breakdown'] ?? null,
+            'pricing_details' => $this->pricing_result,
         ]);
 
         // Create travelers

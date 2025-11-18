@@ -291,7 +291,7 @@ class CreateBookingHotel extends Component
             ]);
 
             // Create hotel booking with pricing details
-            BookingHotel::create([
+	        BookingHotel::create([
                 'booking_id' => $booking->id,
                 'hotel_id' => $this->hotel_id,
                 'room_id' => $this->room_id,
