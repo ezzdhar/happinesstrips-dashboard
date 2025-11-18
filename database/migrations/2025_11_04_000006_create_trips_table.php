@@ -28,6 +28,12 @@ return new class extends Migration
             $table->boolean('is_featured')->default(false);
             $table->enum('type', [TripType::Fixed, TripType::Flexible])->default(TripType::Fixed);
             $table->enum('status', [Status::Active, Status::Inactive, Status::End, Status::Start])->default(Status::Active);
+	        $table->decimal('first_child_price_percentage', 50, 2)->default(50);
+	        $table->decimal('second_child_price_percentage', 5, 2)->default(50);
+	        $table->decimal('third_child_price_percentage', 5, 2)->default(50);
+	        $table->decimal('additional_child_price_percentage', 5, 2)->default(100);
+	        $table->unsignedTinyInteger('free_child_age')->default(4)->comment('Age under which children are free');
+	        $table->unsignedTinyInteger('adult_age')->default(12)->comment('Age at which a child is considered an adult');
             $table->timestamps();
         });
     }

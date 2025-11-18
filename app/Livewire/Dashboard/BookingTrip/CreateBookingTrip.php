@@ -30,16 +30,13 @@ class CreateBookingTrip extends Component
 
     public $adults_count = 1;
 
-    public $children_count = 0; // Children at or above threshold age (charged as adults)
-
-    public $free_children_count = 0; // Children below threshold age (free)
-    // Threshold age is configurable via CHILD_AGE_THRESHOLD in .env (default: 12)
+    public $children_ages = [];
 
     public $notes;
 
     public $currency = 'egp';
 
-    public $calculated_price = 0;
+    public $sub_total = 0;
 
     public $total_price = 0;
 
@@ -66,8 +63,9 @@ class CreateBookingTrip extends Component
                 'duration_from' => $trip->duration_from?->format('Y-m-d'),
                 'duration_to' => $trip->duration_to?->format('Y-m-d'),
                 'price' => $trip->price,
-                'adults_count' => $trip->adults_count,
-                'children_count' => $trip->children_count,
+                'nights_count' => $trip->nights_count,
+                'free_child_age' => $trip->free_child_age,
+                'adult_age' => $trip->adult_age,
             ];
         })->toArray();
         view()->share('breadcrumbs', $this->breadcrumbs());
@@ -89,9 +87,9 @@ class CreateBookingTrip extends Component
 
     public function updatedTripId(): void
     {
+
         if ($this->trip_id) {
             $this->selectedTrip = collect($this->trips)->firstWhere('id', $this->trip_id);
-
             if ($this->selectedTrip) {
                 // For Fixed trips, set the dates automatically
                 if ($this->selectedTrip['type'] === 'fixed') {
@@ -105,10 +103,9 @@ class CreateBookingTrip extends Component
                     $this->nights_count = 1;
                 }
 
-                // Set default people count from trip
-                $this->adults_count = $this->selectedTrip['adults_count'] ?? 1;
-                $this->children_count = 0;
-                $this->free_children_count = 0;
+                // Set default people count - price is always for 1 adult
+                $this->adults_count = 1;
+                $this->children_ages = [];
 
                 // Sync travelers array
                 $this->syncTravelers();
@@ -122,10 +119,9 @@ class CreateBookingTrip extends Component
             $this->check_out = null;
             $this->nights_count = 1;
             $this->adults_count = 1;
-            $this->children_count = 0;
-            $this->free_children_count = 0;
+            $this->children_ages = [];
             $this->travelers = [];
-            $this->calculated_price = 0;
+            $this->sub_total = 0;
             $this->total_price = 0;
         }
     }
@@ -198,40 +194,44 @@ class CreateBookingTrip extends Component
         $this->calculatePrice();
     }
 
-    public function updatedChildrenCount(): void
+    public function addChild(): void
     {
+        $this->children_ages[] = 0;
         $this->syncTravelers();
         $this->calculatePrice();
     }
 
-    public function updatedFreeChildrenCount(): void
+    public function removeChild($index): void
     {
+        unset($this->children_ages[$index]);
+        $this->children_ages = array_values($this->children_ages);
         $this->syncTravelers();
-        // Free children don't affect price
+        $this->calculatePrice();
+    }
+
+    public function updatedChildrenAges(): void
+    {
+        $this->calculatePrice();
     }
 
     private function syncTravelers(): void
     {
-        $totalTravelers = (int) $this->adults_count + (int) $this->children_count + (int) $this->free_children_count;
+        $totalTravelers = (int) $this->adults_count + count($this->children_ages);
         $currentTravelers = count($this->travelers);
 
         // Add travelers if needed
         if ($totalTravelers > $currentTravelers) {
             $adultsAdded = 0;
             $childrenAdded = 0;
-            $freeChildrenAdded = 0;
 
             for ($i = $currentTravelers; $i < $totalTravelers; $i++) {
                 // Determine traveler type based on counts
                 if ($adultsAdded < $this->adults_count) {
                     $type = 'adult';
                     $adultsAdded++;
-                } elseif ($childrenAdded < $this->children_count) {
-                    $type = 'child';
-                    $childrenAdded++;
                 } else {
                     $type = 'child';
-                    $freeChildrenAdded++;
+                    $childrenAdded++;
                 }
 
                 $this->travelers[] = [
@@ -263,12 +263,17 @@ class CreateBookingTrip extends Component
         $this->calculatePrice();
     }
 
+    public function updatedTravelers(): void
+    {
+        // Recalculate price when traveler ages change
+        $this->calculatePrice();
+    }
+
     public function calculatePrice(): void
     {
         if (! $this->trip_id || ! $this->check_in || ! $this->check_out || ! $this->currency) {
-            $this->calculated_price = 0;
+            $this->sub_total = 0;
             $this->total_price = 0;
-
             return;
         }
 
@@ -276,26 +281,26 @@ class CreateBookingTrip extends Component
         $trip = Trip::find($this->trip_id);
 
         if (! $trip) {
-            $this->calculated_price = 0;
+            $this->sub_total = 0;
             $this->total_price = 0;
-
             return;
         }
 
-        // Use TripPricingService with all data
-        $result = TripPricingService::calculateTripPrice(
+        // Use TripPricingService with children ages
+        $result = TripPricingService::calculateTripPriceWithAges(
             trip: $trip,
             checkIn: $this->check_in,
             checkOut: $this->check_out,
             adultsCount: (int) $this->adults_count,
-            childrenCount: (int) $this->children_count,
-            freeChildrenCount: (int) $this->free_children_count,
+            childrenAges: $this->children_ages,
             currency: $this->currency
         );
 
+
+
         // Update component properties from result
         $this->nights_count = $result['nights_count'];
-        $this->calculated_price = $result['calculated_price'];
+        $this->sub_total = $result['sub_total'];
         $this->total_price = $result['total_price'];
     }
 
@@ -308,8 +313,8 @@ class CreateBookingTrip extends Component
             'check_out' => 'required|date|after:check_in',
             'nights_count' => 'required|integer|min:1',
             'adults_count' => 'required|integer|min:1',
-            'children_count' => 'nullable|integer|min:0',
-            'free_children_count' => 'nullable|integer|min:0',
+            'children_ages' => 'nullable|array',
+            'children_ages.*' => 'required|integer|min:0|max:18',
             'currency' => 'required|in:egp,usd',
             'notes' => 'nullable|string',
             'travelers' => 'required|array|min:1',
@@ -335,8 +340,8 @@ class CreateBookingTrip extends Component
             'check_out' => $this->check_out,
             'nights_count' => $this->nights_count,
             'adults_count' => $this->adults_count,
-            'children_count' => $this->children_count,
-            'price' => $this->calculated_price,
+            'children_count' => count($this->children_ages),
+            'price' => $this->sub_total,
             'total_price' => $this->total_price,
             'currency' => $this->currency,
             'notes' => $this->notes,

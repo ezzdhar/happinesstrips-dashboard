@@ -30,8 +30,6 @@ class Trip extends Model
             'status' => Status::class,
             'type' => TripType::class,
             'nights_count' => 'integer',
-            'adults_count' => 'integer',
-            'children_count' => 'integer',
         ];
     }
 

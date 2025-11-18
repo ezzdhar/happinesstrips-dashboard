@@ -1,148 +1,180 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\Trip;
-use Carbon\Carbon;
+use App\Traits\CalculatesTripBookingPrice;
 
 class TripPricingService
 {
-    /**
-     * Calculate trip pricing with all necessary data.
-     *
-     * @param  Trip  $trip  The trip model
-     * @param  string  $checkIn  Check-in date (Y-m-d format)
-     * @param  string  $checkOut  Check-out date (Y-m-d format)
-     * @param  int  $adultsCount  Number of adults
-     * @param  int  $childrenCount  Number of children at or above threshold age (charged as adults)
-     * @param  int  $freeChildrenCount  Number of children below threshold age (free)
-     * @param  string  $currency  Currency (egp or usd)
-     * @return array Result containing all pricing details
-     */
+	use CalculatesTripBookingPrice;
+
+	/**
+	 * Calculate trip pricing with all necessary data using children ages.
+	 *
+	 * @param Trip $trip The trip model
+	 * @param string $checkIn Check-in date (Y-m-d format)
+	 * @param string $checkOut Check-out date (Y-m-d format)
+	 * @param int $adultsCount Number of adults
+	 * @param array $childrenAges Array of children ages for precise calculation
+	 * @param string $currency Currency (egp or usd)
+	 * @return array Result containing all pricing details
+	 */
+	public static function calculateTripPriceWithAges(Trip $trip, string $checkIn, string $checkOut, int $adultsCount, array $childrenAges = [], string $currency = 'egp'): array
+	{
+		$instance = new self;
+		return $instance->calculateTripPriceInternal(
+			trip: $trip,
+			checkIn: $checkIn,
+			checkOut: $checkOut,
+			adultsCount: $adultsCount,
+			childrenCount: count($childrenAges),
+			childrenAges: $childrenAges,
+			currency: $currency
+		);
+	}
+
+	/**
+	 * Calculate trip pricing with all necessary data (legacy method for backward compatibility).
+	 *
+	 * @param Trip $trip The trip model
+	 * @param string $checkIn Check-in date (Y-m-d format)
+	 * @param string $checkOut Check-out date (Y-m-d format)
+	 * @param int $adultsCount Number of adults
+	 * @param int $childrenCount Number of children at or above threshold age (charged as adults)
+	 * @param int $freeChildrenCount Number of children below threshold age (free)
+	 * @param string $currency Currency (egp or usd)
+	 * @return array Result containing all pricing details
+	 */
 	public static function calculateTripPrice(Trip $trip, string $checkIn, string $checkOut, int $adultsCount, int $childrenCount = 0, int $freeChildrenCount = 0, string $currency = 'egp'): array
 	{
-        // Calculate nights
-        $checkInDate = Carbon::parse($checkIn);
-        $checkOutDate = Carbon::parse($checkOut);
-        $nightsCount = $checkInDate->diffInDays($checkOutDate);
+		// Build children ages array based on counts
+		// This is a simplified approach - ideally we should receive actual ages
+		$childrenAges = [];
+		$adultAge = (int)$trip->adult_age;
+		$freeChildAge = (int)$trip->free_child_age;
+		$midAge = (int)(($adultAge + $freeChildAge) / 2);
 
-        // Get base price from trip
-        $basePrice = $trip->price[$currency] ?? 0;
+		// Add paid children (above free age but below adult age)
+		for ($i = 0; $i < $childrenCount; $i++) {
+			$childrenAges[] = $midAge;
+		}
 
-        // Calculate total paying people (adults + children at/above threshold age)
-        $totalPayingPeople = $adultsCount + $childrenCount;
+		// Add free children (below free age)
+		for ($i = 0; $i < $freeChildrenCount; $i++) {
+			$childrenAges[] = $freeChildAge - 1;
+		}
 
-        // Calculate total people including free children
-        $totalPeople = $adultsCount + $childrenCount + $freeChildrenCount;
+		// Use the new calculation method
+		$instance = new self;
+		$result = $instance->calculateTripPriceInternal(
+			trip: $trip,
+			checkIn: $checkIn,
+			checkOut: $checkOut,
+			adultsCount: $adultsCount,
+			childrenCount: count($childrenAges),
+			childrenAges: $childrenAges,
+			currency: $currency
+		);
 
-        if ($trip->type->value === 'fixed') {
-            // Fixed trip: base price is per person for the entire trip duration
-            $calculatedPrice = $basePrice;
-            $totalPrice = $totalPayingPeople * $basePrice;
-        } else {
-            // Flexible trip: base price is per person per night
-            if ($nightsCount < 1) {
-                return self::getEmptyResult($trip, $checkIn, $checkOut, $nightsCount, $adultsCount, $childrenCount, $freeChildrenCount, $currency);
-            }
+		return [
+			'trip_id' => $trip->id,
+			'trip_name' => $trip->name,
+			'trip_type' => $trip->type->value,
+			'check_in' => $checkIn,
+			'check_out' => $checkOut,
+			'nights_count' => $result['nights_count'],
+			'adults_count' => $adultsCount,
+			'children_count' => $childrenCount,
+			'free_children_count' => $freeChildrenCount,
+			'total_paying_people' => $adultsCount + $childrenCount,
+			'total_people' => $adultsCount + $childrenCount + $freeChildrenCount,
+			'currency' => $currency,
+			'base_price' => round($result['base_price'], 2),
+			'calculated_price' => round($result['calculated_price'], 2),
+			'total_price' => round($result['total_price'], 2),
+			'child_age_threshold' => self::getChildAgeThreshold(),
+		];
+	}
 
-            $calculatedPrice = $basePrice;
-            $totalPrice = $totalPayingPeople * $basePrice * $nightsCount;
-        }
+	/**
+	 * Calculate total price for a fixed trip (backward compatibility).
+	 */
+	public static function calculateFixedTripPrice(
+		float $basePrice,
+		int   $adultsCount,
+		int   $childrenCount = 0
+	): array
+	{
+		$totalPayingPeople = $adultsCount + $childrenCount;
+		$calculatedPrice = $basePrice;
+		$totalPrice = $totalPayingPeople * $basePrice;
 
-        return [
-            'trip_id' => $trip->id,
-            'trip_name' => $trip->name,
-            'trip_type' => $trip->type->value,
-            'check_in' => $checkIn,
-            'check_out' => $checkOut,
-            'nights_count' => $nightsCount,
-            'adults_count' => $adultsCount,
-            'children_count' => $childrenCount,
-            'free_children_count' => $freeChildrenCount,
-            'total_paying_people' => $totalPayingPeople,
-            'total_people' => $totalPeople,
-            'currency' => $currency,
-            'base_price' => round($basePrice, 2),
-            'calculated_price' => round($calculatedPrice, 2),
-            'total_price' => round($totalPrice, 2),
-            'child_age_threshold' => self::getChildAgeThreshold(),
-        ];
-    }
+		return [
+			'calculated_price' => round($calculatedPrice, 2),
+			'total_price' => round($totalPrice, 2),
+		];
+	}
 
-    /**
-     * Calculate total price for a fixed trip (backward compatibility).
-     */
-    public static function calculateFixedTripPrice(
-        float $basePrice,
-        int $adultsCount,
-        int $childrenCount = 0
-    ): array {
-        $totalPayingPeople = $adultsCount + $childrenCount;
-        $calculatedPrice = $basePrice;
-        $totalPrice = $totalPayingPeople * $basePrice;
+	/**
+	 * Calculate total price for a flexible trip (backward compatibility).
+	 */
+	public static function calculateFlexibleTripPrice(
+		float $basePricePerNight,
+		int   $nightsCount,
+		int   $adultsCount,
+		int   $childrenCount = 0
+	): array
+	{
+		if ($nightsCount < 1) {
+			return [
+				'calculated_price' => 0,
+				'total_price' => 0,
+			];
+		}
 
-        return [
-            'calculated_price' => round($calculatedPrice, 2),
-            'total_price' => round($totalPrice, 2),
-        ];
-    }
+		$totalPayingPeople = $adultsCount + $childrenCount;
+		$calculatedPrice = $basePricePerNight;
+		$totalPrice = $totalPayingPeople * $basePricePerNight * $nightsCount;
 
-    /**
-     * Calculate total price for a flexible trip (backward compatibility).
-     */
-    public static function calculateFlexibleTripPrice(
-        float $basePricePerNight,
-        int $nightsCount,
-        int $adultsCount,
-        int $childrenCount = 0
-    ): array {
-        if ($nightsCount < 1) {
-            return [
-                'calculated_price' => 0,
-                'total_price' => 0,
-            ];
-        }
+		return [
+			'calculated_price' => round($calculatedPrice, 2),
+			'total_price' => round($totalPrice, 2),
+		];
+	}
 
-        $totalPayingPeople = $adultsCount + $childrenCount;
-        $calculatedPrice = $basePricePerNight;
-        $totalPrice = $totalPayingPeople * $basePricePerNight * $nightsCount;
-
-        return [
-            'calculated_price' => round($calculatedPrice, 2),
-            'total_price' => round($totalPrice, 2),
-        ];
-    }
-
-    /**
-     * Get empty result for invalid calculations.
-     */
+	/**
+	 * Get empty result for invalid calculations.
+	 */
 	private static function getEmptyResult(Trip $trip, string $checkIn, string $checkOut, int $nightsCount, int $adultsCount, int $childrenCount, int $freeChildrenCount, string $currency): array
 	{
-        return [
-            'trip_id' => $trip->id,
-            'trip_name' => $trip->name,
-            'trip_type' => $trip->type->value,
-            'check_in' => $checkIn,
-            'check_out' => $checkOut,
-            'nights_count' => $nightsCount,
-            'adults_count' => $adultsCount,
-            'children_count' => $childrenCount,
-            'free_children_count' => $freeChildrenCount,
-            'total_paying_people' => 0,
-            'total_people' => 0,
-            'currency' => $currency,
-            'base_price' => 0,
-            'calculated_price' => 0,
-            'total_price' => 0,
-            'child_age_threshold' => self::getChildAgeThreshold(),
-        ];
-    }
+		return [
+			'trip_id' => $trip->id,
+			'trip_name' => $trip->name,
+			'trip_type' => $trip->type->value,
+			'check_in' => $checkIn,
+			'check_out' => $checkOut,
+			'nights_count' => $nightsCount,
+			'adults_count' => $adultsCount,
+			'children_count' => $childrenCount,
+			'free_children_count' => $freeChildrenCount,
+			'total_paying_people' => 0,
+			'total_people' => 0,
+			'currency' => $currency,
+			'base_price' => 0,
+			'calculated_price' => 0,
+			'total_price' => 0,
+			'child_age_threshold' => self::getChildAgeThreshold(),
+		];
+	}
 
-    /**
-     * Get the child age threshold from config.
-     */
-    public static function getChildAgeThreshold(): int
-    {
-        return config('booking.child_age_threshold', 12);
-    }
+	/**
+	 * Get the child age threshold from config.
+	 */
+	public static function getChildAgeThreshold(): int
+	{
+		return config('booking.child_age_threshold', 12);
+	}
 }
