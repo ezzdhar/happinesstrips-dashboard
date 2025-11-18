@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use Carbon\Carbon;
 
-trait CalculatesBookingPrice
+trait CalculatesHotelBookingPrice
 {
     /**
      * Calculate total booking price with all policies applied.

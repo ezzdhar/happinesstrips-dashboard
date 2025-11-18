@@ -46,7 +46,7 @@
 		@endcan
 
 		@can('show_trip')
-			<x-menu-item noWireNavigate title="{{__('lang.trips')}}" icon="o-briefcase" link="{{route('trips')}}"/>
+			<x-menu-item noWireNavigate title="{{__('lang.trips')}}" icon="o-globe-alt" link="{{route('trips')}}"/>
 		@endcan
 
 	<x-menu-separator/>

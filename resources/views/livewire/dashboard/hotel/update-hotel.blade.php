@@ -32,12 +32,7 @@
 							['id' => 4, 'name' => '4'],
 							['id' => 5, 'name' => '5'],
 						]"/>
-						<x-phone-input
-								required
-								label="{{__('lang.phone')}}"
-								phoneProperty="phone"
-								keyProperty="phone_key"
-						/>
+						<x-phone-input required label="{{__('lang.phone')}}" phoneProperty="phone" keyProperty="phone_key"/>
 					</div>
 					<x-choices-offline required label="{{ __('lang.hotel_type') }}" wire:model="hotel_type_ids" :options="$hotel_types" multiple clearable searchable
 					                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
@@ -91,10 +86,14 @@
 
 					{{-- Price Percentages --}}
 					<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-						<x-input required label="{{ __('lang.first_child_percentage') }}" wire:model="first_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
-						<x-input required label="{{ __('lang.second_child_percentage') }}" wire:model="second_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
-						<x-input required label="{{ __('lang.third_child_percentage') }}" wire:model="third_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
-						<x-input required label="{{ __('lang.additional_child_percentage') }}" wire:model="additional_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
+						<x-input required label="{{ __('lang.first_child_percentage') }}" wire:model="first_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0"
+						         suffix="%" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
+						<x-input required label="{{ __('lang.second_child_percentage') }}" wire:model="second_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0"
+						         suffix="%" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
+						<x-input required label="{{ __('lang.third_child_percentage') }}" wire:model="third_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0"
+						         suffix="%" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
+						<x-input required label="{{ __('lang.additional_child_percentage') }}" wire:model="additional_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0"
+						         suffix="%" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
 					</div>
 				</div>
 

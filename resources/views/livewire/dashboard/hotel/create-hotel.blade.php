@@ -49,7 +49,7 @@
 				</div>
 
 				{{-- Facilities Section --}}
-				<div class="overflow-auto border-b pb-4">
+				<div class="overflow-auto border-b py-3">
 					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
 						<x-icon name="o-building-office" class="w-5 h-5 inline"/> {{ __('lang.facilities') }}
 					</h3>
@@ -60,7 +60,7 @@
 				</div>
 
 				{{-- Description Section --}}
-				<div class="overflow-auto border-b pb-4">
+				<div class="overflow-auto border-b py-3">
 					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
 						<x-icon name="o-document-text" class="w-5 h-5 inline"/> {{ __('lang.description') }}
 					</h3>
@@ -71,7 +71,7 @@
 				</div>
 
 				{{-- Children Policy Section --}}
-				<div class="border-b pb-4">
+				<div class="border-b py-3">
 					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
 						<x-icon name="o-user-group" class="w-5 h-5 inline"/> {{ __('lang.children_policy') }}
 					</h3>
@@ -84,10 +84,14 @@
 
 					{{-- Price Percentages --}}
 					<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-						<x-input required label="{{ __('lang.first_child_percentage') }}" wire:model="first_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
-						<x-input required label="{{ __('lang.second_child_percentage') }}" wire:model="second_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
-						<x-input required label="{{ __('lang.third_child_percentage') }}" wire:model="third_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
-						<x-input required label="{{ __('lang.additional_child_percentage') }}" wire:model="additional_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
+						<x-input required label="{{ __('lang.first_child_percentage') }}" wire:model="first_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0"
+						         suffix="%" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
+						<x-input required label="{{ __('lang.second_child_percentage') }}" wire:model="second_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0"
+						         suffix="%" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
+						<x-input required label="{{ __('lang.third_child_percentage') }}" wire:model="third_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0"
+						         suffix="%" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
+						<x-input required label="{{ __('lang.additional_child_percentage') }}" wire:model="additional_child_price_percentage" type="number" step="0.01" min="0" max="100" placeholder="0"
+						         suffix="%" icon="o-percent-badge" hint="{{ __('lang.percentage_of_adult_price') }}"/>
 					</div>
 				</div>
 
@@ -99,7 +103,7 @@
 					<x-image-library wire:model="images" wire:library="library" :preview="$library" label="{{__('lang.project_images')}}"/>
 				</div>
 
-			<div class="mt-6 flex justify-end gap-2 px-4 pb-4">
+			<div class="mt-6 flex justify-end gap-2 px-4 py-3">
 				<x-button label="{{__('lang.cancel')}}" @click="window.location='{{route('hotels')}}'" wire:loading.attr="disabled"/>
 				<x-button label="{{__('lang.save')}}" class="btn-primary" type="submit" wire:loading.attr="disabled" wire:target="saveAdd" spinner="saveAdd"/>
 			</div>

@@ -782,7 +782,7 @@ return [
     'back' => 'رجوع',
     'search_booking_number' => 'بحث برقم الحجز',
     'add_room' => 'إضافة غرفة',
-    'for_one_person_per_night' => 'لشخص واحد في الليلة',
+    'for_one_person_per_night' => 'سعر الشخص البالغ في الليلة',
     'for_all_package' => 'لكل الباقة',
     'step' => 'الخطوة',
     'client_and_trip' => 'العميل والرحلة',
@@ -859,4 +859,5 @@ return [
     'adults_count_exceeded_maximum' => 'عدد البالغين تجاوز الحد الأقصى المسموح به وهو :max',
     'children_count_exceeded_maximum' => 'عدد الأطفال تجاوز الحد الأقصى المسموح به وهو :max',
     'please_select_room_checkin_checkout' => 'يرجى اختيار الغرفة وتواريخ تسجيل الوصول والمغادرة',
+	'for_one_person_per_trip' => 'سعر الشخص البالغ في الرحلة كاملة',
 ];

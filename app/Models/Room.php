@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Status;
-use App\Traits\CalculatesBookingPrice;
+use App\Traits\CalculatesHotelBookingPrice;
 use App\Traits\HasPricePeriods;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +15,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Room extends Model
 {
-    use CalculatesBookingPrice, HasFactory, HasPricePeriods, HasTranslations;
+    use CalculatesHotelBookingPrice, HasFactory, HasPricePeriods, HasTranslations;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 

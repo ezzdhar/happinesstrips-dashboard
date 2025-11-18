@@ -55,6 +55,17 @@ class CreateTrip extends Component
 
     public $status;
 
+	public $first_child_price_percentage = 0;
+
+	public $second_child_price_percentage = 0;
+
+	public $third_child_price_percentage = 0;
+
+	public $additional_child_price_percentage = 0;
+
+	public $free_child_age = 4;
+
+	public $adult_age = 12;
     public $selected_hotels = [];
 
     public $images = [];
@@ -152,7 +163,12 @@ class CreateTrip extends Component
             'duration_from' => 'required|date|before_or_equal:duration_to',
             'duration_to' => 'nullable|required_if:type,fixed|date|after_or_equal:duration_from',
             'nights_count' => 'nullable|integer|min:1',
-//            'people_count' => 'required|integer|min:1',
+	        'first_child_price_percentage' => 'required|numeric|min:0|max:100',
+	        'second_child_price_percentage' => 'required|numeric|min:0|max:100',
+	        'third_child_price_percentage' => 'required|numeric|min:0|max:100',
+	        'additional_child_price_percentage' => 'required|numeric|min:0|max:100',
+	        'free_child_age' => 'required|integer|min:0|max:18',
+	        'adult_age' => 'required|integer|min:1|max:25|gt:free_child_age',
             'notes_ar' => 'required|string',
             'notes_en' => 'required|string',
             'program_ar' => 'required|string',
@@ -196,6 +212,12 @@ class CreateTrip extends Component
             'is_featured' => $this->is_featured,
             'type' => $this->type,
             'status' => $this->status,
+	        'first_child_price_percentage' => $this->first_child_price_percentage,
+	        'second_child_price_percentage' => $this->second_child_price_percentage,
+	        'third_child_price_percentage' => $this->third_child_price_percentage,
+	        'additional_child_price_percentage' => $this->additional_child_price_percentage,
+	        'free_child_age' => $this->free_child_age,
+	        'adult_age' => $this->adult_age,
         ]);
 
         // Attach hotels to trip
