@@ -20,7 +20,8 @@ class CreateRoom extends Component
 
     public $name_en;
 
-    public $status;
+	public $status;
+	public $is_featured;
 
     public $hotel_id;
 
@@ -91,6 +92,7 @@ class CreateRoom extends Component
             'status' => 'required|in:active,inactive',
             'includes_ar' => 'required|string',
             'includes_en' => 'required|string',
+	        'is_featured' => 'boolean',
             'price_periods' => 'required|array|min:1',
             'price_periods.*.start_date' => 'required|date',
             'price_periods.*.end_date' => 'required|date|after:price_periods.*.start_date',
@@ -111,6 +113,7 @@ class CreateRoom extends Component
                 'en' => $this->name_en,
             ],
             'hotel_id' => $this->hotel_id,
+	        'is_featured' => $this->is_featured,
             'adults_count' => $this->adults_count,
             'children_count' => $this->children_count,
             'status' => $this->status,

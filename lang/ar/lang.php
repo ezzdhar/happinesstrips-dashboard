@@ -386,7 +386,7 @@ return [
     'trip_type' => 'نوع الرحلة',
     'fixed' => 'ثابتة',
     'flexible' => 'مرنة',
-    'is_featured' => 'رحلة مميزة',
+    'is_featured' => 'إضافة الي العروض',
     'program' => 'البرنامج',
     'trip_information' => 'معلومات الرحلة',
     'trip_details' => 'تفاصيل الرحلة',

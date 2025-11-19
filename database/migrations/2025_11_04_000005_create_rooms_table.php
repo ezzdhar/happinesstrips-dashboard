@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('children_count')->default(0);
             $table->json('price_periods')->nullable()->comment('Array of price periods with start_date, end_date, adult_price_egp, adult_price_usd');
             $table->json('includes')->nullable();
+	        $table->boolean('is_featured')->default(false);
             $table->enum('status', [Status::Active, Status::Inactive])->default(Status::Active);
             $table->timestamps();
         });

@@ -6,7 +6,7 @@
 <div>
 	<x-card title="{{ __('lang.add_room') }}" shadow class="mb-3">
 		<form wire:submit.prevent="saveAdd">
-			<div class="grid grid-cols-1 sm-only:grid-cols-2 md:grid-cols-3 gap-3">
+			<div class="grid grid-cols-1 sm-only:grid-cols-2 md:grid-cols-4 gap-3">
 				<x-input required label="{{ __('lang.name').' ('.__('lang.ar').')' }}" wire:model="name_ar" placeholder="{{ __('lang.name').' ('.__('lang.ar').')' }}" icon="o-language"/>
 				<x-input required label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
 
@@ -20,6 +20,7 @@
 
 				<x-input required label="{{ __('lang.adults_count') }}" wire:model="adults_count" type="number" min="1" placeholder="{{ __('lang.adults_count') }}" icon="o-users"/>
 				<x-input required label="{{ __('lang.children_count') }}" wire:model="children_count" type="number" min="0" placeholder="{{ __('lang.children_count') }}" icon="o-user-group"/>
+				<x-checkbox label="{{ __('lang.is_featured') }}" wire:model="is_featured"/>
 			</div>
 
 			<div class="mt-3">

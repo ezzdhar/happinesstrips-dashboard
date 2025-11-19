@@ -24,6 +24,7 @@ class UpdateRoom extends Component
     public $name_en;
 
     public $status;
+	public $is_featured;
 
     public $hotel_id;
 
@@ -54,6 +55,7 @@ class UpdateRoom extends Component
         }
         $this->name_ar = $this->room->getTranslation('name', 'ar');
         $this->name_en = $this->room->getTranslation('name', 'en');
+	    $this->is_featured = $this->room->is_featured;
         $this->status = $this->room->status->value;
         $this->hotel_id = $this->room->hotel_id;
         $this->adults_count = $this->room->adults_count;
@@ -97,6 +99,7 @@ class UpdateRoom extends Component
     public function rules(): array
     {
         return [
+	        'is_featured' => 'boolean',
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'hotel_id' => 'required|exists:hotels,id',
@@ -125,6 +128,7 @@ class UpdateRoom extends Component
                 'ar' => $this->name_ar,
                 'en' => $this->name_en,
             ],
+	        'is_featured' => $this->is_featured,
             'hotel_id' => $this->hotel_id,
             'adults_count' => $this->adults_count,
             'children_count' => $this->children_count,
