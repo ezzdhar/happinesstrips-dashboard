@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\DataController;
 use App\Http\Controllers\Api\GuestController;
+use App\Http\Controllers\Api\HotelController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -10,14 +10,15 @@ use Illuminate\Support\Facades\Route;
 Route::controller(GuestController::class)->group(function () {
     Route::post('/register', 'register');
     Route::post('/login', 'login');
+    Route::post('/social-login', 'socialLogin');
     Route::post('/send/code', 'sendCode');
     Route::post('/verify-code', 'verifyCode');
     Route::post('/reset/password', 'resetPassword');
 });
 
-// data routes
-Route::controller(DataController::class)->group(function () {
-	Route::post('/hotels', 'hotels');
+// hotels routes
+Route::prefix('hotels')->controller(HotelController::class)->group(function () {
+	Route::get('/', 'hotels');
 
 });
 
