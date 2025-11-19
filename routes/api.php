@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DataController;
 use App\Http\Controllers\Api\GuestController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
@@ -12,6 +13,12 @@ Route::controller(GuestController::class)->group(function () {
     Route::post('/send/code', 'sendCode');
     Route::post('/verify-code', 'verifyCode');
     Route::post('/reset/password', 'resetPassword');
+});
+
+// data routes
+Route::controller(DataController::class)->group(function () {
+	Route::post('/hotels', 'hotels');
+
 });
 
 Route::middleware('auth:sanctum')->group(function () {

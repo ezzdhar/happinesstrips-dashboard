@@ -14,8 +14,8 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'email' => $this->email,
             'name' => $this->name,
-            'phone_key' => $this->phone('key'),
-            'phone' => $this->phone('number'),
+            'phone_key' => $this->phone_key,
+            'phone' => $this->phone,
             'image' => FileService::get($this->image),
         ];
     }

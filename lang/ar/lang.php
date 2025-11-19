@@ -862,4 +862,5 @@ return [
     'child_age' => 'عمر الطفل',
     'price_calculated_by_ages' => 'السعر محسوب حسب الأعمار',
 	'no_data_available' => 'لا تتوفر بيانات',
+	'invalid_code' => 'رمز غير صالح',
 ];
