@@ -7,22 +7,22 @@
 	<x-card title="{{ __('lang.add_room') }}" shadow class="mb-3">
 		<form wire:submit.prevent="saveUpdate">
 
-		<div class="grid grid-cols-1 sm-only:grid-cols-2 md:grid-cols-4 gap-3">
-			<x-input label="{{ __('lang.name').' ('.__('lang.ar').')' }}" wire:model="name_ar" placeholder="{{ __('lang.name').' ('.__('lang.ar').')' }}" icon="o-language"/>
-			<x-input label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
+			<div class="grid grid-cols-1 sm-only:grid-cols-2 md:grid-cols-4 gap-3">
+				<x-input label="{{ __('lang.name').' ('.__('lang.ar').')' }}" wire:model="name_ar" placeholder="{{ __('lang.name').' ('.__('lang.ar').')' }}" icon="o-language"/>
+				<x-input label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
 
-			<x-choices-offline label="{{ __('lang.hotel') }}" wire:model="hotel_id" :options="$hotels" single searchable clearable
-			                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}" icon="o-building-office-2"/>
+				<x-choices-offline label="{{ __('lang.hotel') }}" wire:model="hotel_id" :options="$hotels" single searchable clearable
+				                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}" icon="o-building-office-2"/>
 
-			<x-select label="{{ __('lang.status') }}" wire:model="status" placeholder="{{ __('lang.select') }}" icon="o-flag" :options="[
+				<x-select label="{{ __('lang.status') }}" wire:model="status" placeholder="{{ __('lang.select') }}" icon="o-flag" :options="[
 				['id' => Status::Active, 'name' => __('lang.active')],
 				['id' => Status::Inactive, 'name' => __('lang.inactive')],
 			]"/>
 
-			<x-input label="{{ __('lang.adults_count') }}" wire:model="adults_count" type="number" min="1" placeholder="{{ __('lang.adults_count') }}" icon="o-users"/>
-			<x-input label="{{ __('lang.children_count') }}" wire:model="children_count" type="number" min="0" placeholder="{{ __('lang.children_count') }}" icon="o-user-group"/>
-			<x-checkbox label="{{ __('lang.is_featured') }}" wire:model="is_featured"/>
-		</div>
+				<x-input label="{{ __('lang.adults_count') }}" wire:model="adults_count" type="number" min="1" placeholder="{{ __('lang.adults_count') }}" icon="o-users"/>
+				<x-input label="{{ __('lang.children_count') }}" wire:model="children_count" type="number" min="0" placeholder="{{ __('lang.children_count') }}" icon="o-user-group"/>
+				<x-checkbox label="{{ __('lang.is_featured') }}" wire:model="is_featured" :checked="$is_featured ? true :false"/>
+			</div>
 
 			<div class="mt-3">
 				<x-choices-offline label="{{ __('lang.amenities') }}" wire:model="selected_amenities" :options="$amenities" searchable
@@ -60,33 +60,35 @@
 						<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
 							<x-input required label="{{ __('lang.start_date') }}" wire:model="price_periods.{{ $index }}.start_date" type="date" icon="o-calendar"/>
 							<x-input required label="{{ __('lang.end_date') }}" wire:model="price_periods.{{ $index }}.end_date" type="date" icon="o-calendar"/>
-							<x-input required label="{{ __('lang.adult_price_egp') }}" wire:model="price_periods.{{ $index }}.adult_price_egp" type="number" step="0.01" min="0" placeholder="0" icon="o-currency-dollar" hint="{{ __('lang.price_per_person_per_night') }}"/>
-							<x-input required label="{{ __('lang.adult_price_usd') }}" wire:model="price_periods.{{ $index }}.adult_price_usd" type="number" step="0.01" min="0" placeholder="0" icon="o-currency-dollar" hint="{{ __('lang.price_per_person_per_night') }}"/>
+							<x-input required label="{{ __('lang.adult_price_egp') }}" wire:model="price_periods.{{ $index }}.adult_price_egp" type="number" step="0.01" min="0" placeholder="0" icon="o-currency-dollar"
+							         hint="{{ __('lang.price_per_person_per_night') }}"/>
+							<x-input required label="{{ __('lang.adult_price_usd') }}" wire:model="price_periods.{{ $index }}.adult_price_usd" type="number" step="0.01" min="0" placeholder="0" icon="o-currency-dollar"
+							         hint="{{ __('lang.price_per_person_per_night') }}"/>
 						</div>
 					</div>
 				@endforeach
 			</div>
 
-		@if($room->files->isNotEmpty())
-			<div class="mt-4">
-				<h4 class="font-semibold mb-2">{{ __('lang.current_images') }}</h4>
-				<div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-					@foreach($room->files as $file)
-						<div class="relative">
-							<img src="{{FileService::get($file->path)}}" alt="Room image" class="w-full h-32 object-cover rounded">
-							<button type="button" wire:click="deleteImage({{$file->id}})" class="absolute top-1 right-1 btn btn-xs btn-error">
-								<x-icon name="o-trash" class="w-4 h-4"/>
-							</button>
-						</div>
-					@endforeach
+			@if($room->files->isNotEmpty())
+				<div class="mt-4">
+					<h4 class="font-semibold mb-2">{{ __('lang.current_images') }}</h4>
+					<div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+						@foreach($room->files as $file)
+							<div class="relative">
+								<img src="{{FileService::get($file->path)}}" alt="Room image" class="w-full h-32 object-cover rounded">
+								<button type="button" wire:click="deleteImage({{$file->id}})" class="absolute top-1 right-1 btn btn-xs btn-error">
+									<x-icon name="o-trash" class="w-4 h-4"/>
+								</button>
+							</div>
+						@endforeach
+					</div>
 				</div>
-			</div>
-		@endif
+			@endif
 
-		<div class="mt-3">
-			<x-file wire:model="images" label="{{__('lang.add_more_images')}}" accept="image/*" multiple/>
-			<x-progress class="progress-primary h-0.5" indeterminate wire:loading wire:target="images"/>
-		</div>
+			<div class="mt-3">
+				<x-file wire:model="images" label="{{__('lang.add_more_images')}}" accept="image/*" multiple/>
+				<x-progress class="progress-primary h-0.5" indeterminate wire:loading wire:target="images"/>
+			</div>
 
 			<div class="mt-6 flex justify-end gap-2 px-4 pb-4">
 				<x-button label="{{__('lang.cancel')}}" @click="window.location='{{route('hotels')}}'" wire:loading.attr="disabled"/>

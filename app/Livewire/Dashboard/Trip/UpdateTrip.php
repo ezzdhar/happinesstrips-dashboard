@@ -210,7 +210,7 @@ class UpdateTrip extends Component
 			'status' => 'required|in:active,inactive,start,end',
 			'selected_hotels' => 'nullable|array',
 			'selected_hotels.*' => 'exists:hotels,id',
-			'images.*' => 'required|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
+			'images.*' => 'nullable|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
 		];
 	}
 

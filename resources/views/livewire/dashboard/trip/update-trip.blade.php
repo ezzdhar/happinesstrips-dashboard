@@ -28,7 +28,7 @@
 							['id' => TripType::Fixed, 'name' => __('lang.fixed')],
 							['id' => TripType::Flexible, 'name' => __('lang.flexible')],
 						]"/>
-					<x-checkbox label="{{ __('lang.is_featured') }}" wire:model="is_featured"/>
+					<x-checkbox label="{{ __('lang.is_featured') }}" wire:model="is_featured" :checked="$is_featured ? true :false"/>
 				</div>
 			</div>
 
