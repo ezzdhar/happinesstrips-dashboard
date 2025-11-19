@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Hotel;
+use App\Services\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -13,30 +14,24 @@ class HotelResource extends JsonResource
 	{
 		return [
 			'id' => $this->id,
-			'email' => $this->email,
+			'city' => $this->city->name,
 			'name' => $this->name,
-			'status' => $this->status,
-			'rating' => $this->rating,
-			'phone_key' => $this->phone_key,
-			'phone' => $this->phone,
-			'latitude' => $this->latitude,
-			'longitude' => $this->longitude,
+			'rating' => (int)$this->rating,
+			'latitude' => (float)$this->latitude,
+			'longitude' => (float)$this->longitude,
 			'description' => $this->description,
 			'address' => $this->address,
 			'facilities' => $this->facilities,
-			'first_child_price_percentage' => $this->first_child_price_percentage,
-			'second_child_price_percentage' => $this->second_child_price_percentage,
-			'third_child_price_percentage' => $this->third_child_price_percentage,
-			'additional_child_price_percentage' => $this->additional_child_price_percentage,
-			'free_child_age' => $this->free_child_age,
-			'adult_age' => $this->adult_age,
-
-
-			'booking_hotels_count' => $this->booking_hotels_count,
-			'files_count' => $this->files_count,
-			'hotel_types_count' => $this->hotel_types_count,
-			'rooms_count' => $this->rooms_count,
-			'trips_count' => $this->trips_count,
+			'first_child_price_percentage' => (int)$this->first_child_price_percentage,
+			'second_child_price_percentage' => (int)$this->second_child_price_percentage,
+			'third_child_price_percentage' => (int)$this->third_child_price_percentage,
+			'additional_child_price_percentage' => (int)$this->additional_child_price_percentage,
+			'free_child_age' => (int)$this->free_child_age,
+			'adult_age' => (int)$this->adult_age,
+			'main_image' => FileService::get($this->files->first()->path),
+			'image' => $this->files->map(function ($image) {
+				return FileService::get($image->path);
+			})
 		];
 	}
 }

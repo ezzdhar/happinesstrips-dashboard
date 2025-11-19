@@ -19,6 +19,7 @@ Route::controller(GuestController::class)->group(function () {
 // hotels routes
 Route::prefix('hotels')->controller(HotelController::class)->group(function () {
 	Route::get('/', 'hotels');
+	Route::get('/{hotel}', 'hotelDetails');
 
 });
 

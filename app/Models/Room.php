@@ -15,56 +15,58 @@ use Spatie\Translatable\HasTranslations;
 
 class Room extends Model
 {
-    use CalculatesHotelBookingPrice, HasFactory, HasPricePeriods, HasTranslations;
+	use CalculatesHotelBookingPrice, HasFactory, HasPricePeriods, HasTranslations;
 
-    protected $guarded = ['id', 'created_at', 'updated_at'];
+	protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public array $translatable = ['name', 'includes'];
+	public array $translatable = ['name', 'includes'];
 
-    protected function casts(): array
-    {
-        return [
-            'price_periods' => 'array',
-            'status' => Status::class,
-            'adults_count' => 'integer',
-            'children_count' => 'integer',
-        ];
-    }
+	protected function casts(): array
+	{
+		return [
+			'price_periods' => 'array',
+			'status' => Status::class,
+			'adults_count' => 'integer',
+			'children_count' => 'integer',
+		];
+	}
 
-    public function hotel(): BelongsTo
-    {
-        return $this->belongsTo(Hotel::class);
-    }
+	public function hotel(): BelongsTo
+	{
+		return $this->belongsTo(Hotel::class);
+	}
 
-    public function bookingHotels(): HasMany
-    {
-        return $this->hasMany(BookingHotel::class);
-    }
+	public function bookingHotels(): HasMany
+	{
+		return $this->hasMany(BookingHotel::class);
+	}
 
-    public function files(): MorphMany
-    {
-        return $this->morphMany(File::class, 'fileable');
-    }
 
-    public function amenities(): BelongsToMany
-    {
-        return $this->belongsToMany(Amenity::class, 'room_amenity');
-    }
 
-    public function scopeStatus($query, $status = null)
-    {
-        return $query->when($status, fn ($q) => $q->where('status', $status));
-    }
+	public function files(): MorphMany
+	{
+		return $this->morphMany(File::class, 'fileable');
+	}
 
-    public function scopeHotelId($query, $hotel_id = null)
-    {
-        return $query->when($hotel_id, fn ($q) => $q->where('hotel_id', $hotel_id));
-    }
+	public function amenities(): BelongsToMany
+	{
+		return $this->belongsToMany(Amenity::class, 'room_amenity');
+	}
 
-    public function scopeFilter($query, $search = null)
-    {
-        return $query->when($search, function ($q) use ($search) {
-            $q->where('name->ar', 'like', "%{$search}%")->orWhere('name->en', 'like', "%{$search}%");
-        });
-    }
+	public function scopeStatus($query, $status = null)
+	{
+		return $query->when($status, fn($q) => $q->where('status', $status));
+	}
+
+	public function scopeHotelId($query, $hotel_id = null)
+	{
+		return $query->when($hotel_id, fn($q) => $q->where('hotel_id', $hotel_id));
+	}
+
+	public function scopeFilter($query, $search = null)
+	{
+		return $query->when($search, function ($q) use ($search) {
+			$q->where('name->ar', 'like', "%{$search}%")->orWhere('name->en', 'like', "%{$search}%");
+		});
+	}
 }
