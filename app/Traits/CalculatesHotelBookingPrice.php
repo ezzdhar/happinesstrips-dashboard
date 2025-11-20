@@ -84,7 +84,7 @@ trait CalculatesHotelBookingPrice
             'hotel_name' => $hotel->name,
             'check_in' => $startDate->format('Y-m-d'),
             'check_out' => $endDate->format('Y-m-d'),
-            'nights_count' => $nightsCount,
+            'nights_count' => (int) $nightsCount,
             'currency' => strtoupper($currency),
 
             // Adults
@@ -103,7 +103,7 @@ trait CalculatesHotelBookingPrice
 
             // Daily breakdown
             'daily_breakdown' => $dailyBreakdown['days'],
-            'price_per_night_average' => $nightsCount > 0 ? $adultPricePerPerson / $nightsCount : 0,
+            'price_per_night_average' => $nightsCount > 0 ? round($adultPricePerPerson / $nightsCount, 2) : 0,
 
             // Hotel policies
             'hotel_policies' => [

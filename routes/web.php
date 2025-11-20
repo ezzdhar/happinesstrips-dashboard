@@ -30,11 +30,13 @@ use App\Livewire\Dashboard\Trip\UpdateTrip;
 use App\Livewire\Dashboard\User\UserData;
 use App\Models\Booking;
 use App\Models\Room;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/ test', function () {
-	$room = Room::find(1);
-	return $room->calculateBookingPrice(checkIn: now(), checkOut: now(), adultsCount: 1);
+Route::get('/test', function () {
+	 $room = Room::find(1);
+	return $room->priceForDate( Carbon::parse('2026-02-20'));
+	return $room->calculateBookingPrice(checkIn: Carbon::parse('2026-02-18'), checkOut: Carbon::parse('2026-02-20'), adultsCount: 1);
 });
 
 

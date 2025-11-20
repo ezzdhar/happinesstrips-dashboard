@@ -59,16 +59,17 @@ trait HasPricePeriods
 
     /**
      * Check if a date range is fully covered by price periods.
+     * Note: endDate is the checkout date and is NOT included in the calculation (only nights count).
      */
     public function isDateRangeCovered($startDate, $endDate): bool
     {
         $start = $startDate instanceof \DateTimeInterface
-            ? Carbon::instance($startDate)
-            : Carbon::parse($startDate);
+            ? Carbon::instance($startDate)->startOfDay()
+            : Carbon::parse($startDate)->startOfDay();
 
         $end = $endDate instanceof \DateTimeInterface
-            ? Carbon::instance($endDate)
-            : Carbon::parse($endDate);
+            ? Carbon::instance($endDate)->startOfDay()
+            : Carbon::parse($endDate)->startOfDay();
 
         if ($start->greaterThanOrEqualTo($end)) {
             return false;
@@ -76,6 +77,7 @@ trait HasPricePeriods
 
         $current = $start->copy();
 
+        // Only check nights (days before checkout)
         while ($current->lessThan($end)) {
             if (! $this->findPricePeriodForDate($current)) {
                 return false;
@@ -88,6 +90,7 @@ trait HasPricePeriods
 
     /**
      * Calculate total price for a date range.
+     * Note: endDate is the checkout date and is NOT included (only nights count).
      */
     public function totalPriceForPeriod($startDate, $endDate, string $currency = 'egp'): float
     {
@@ -97,12 +100,12 @@ trait HasPricePeriods
         }
 
         $start = $startDate instanceof \DateTimeInterface
-            ? Carbon::instance($startDate)
-            : Carbon::parse($startDate);
+            ? Carbon::instance($startDate)->startOfDay()
+            : Carbon::parse($startDate)->startOfDay();
 
         $end = $endDate instanceof \DateTimeInterface
-            ? Carbon::instance($endDate)
-            : Carbon::parse($endDate);
+            ? Carbon::instance($endDate)->startOfDay()
+            : Carbon::parse($endDate)->startOfDay();
 
         if ($start->greaterThanOrEqualTo($end)) {
             return 0.0;
@@ -111,6 +114,7 @@ trait HasPricePeriods
         $total = 0.0;
         $current = $start->copy();
 
+        // Only count nights (days before checkout)
         while ($current->lessThan($end)) {
             $price = $this->priceForDate($current, $currency);
             if ($price === null) {
@@ -125,6 +129,7 @@ trait HasPricePeriods
 
     /**
      * Get price breakdown for a period.
+     * Note: endDate is the checkout date and is NOT included (only nights count).
      */
     public function priceBreakdownForPeriod($startDate, $endDate, string $currency = 'egp'): array
     {
@@ -140,12 +145,12 @@ trait HasPricePeriods
         }
 
         $start = $startDate instanceof \DateTimeInterface
-            ? Carbon::instance($startDate)
-            : Carbon::parse($startDate);
+            ? Carbon::instance($startDate)->startOfDay()
+            : Carbon::parse($startDate)->startOfDay();
 
         $end = $endDate instanceof \DateTimeInterface
-            ? Carbon::instance($endDate)
-            : Carbon::parse($endDate);
+            ? Carbon::instance($endDate)->startOfDay()
+            : Carbon::parse($endDate)->startOfDay();
 
         if ($start->greaterThanOrEqualTo($end)) {
             return [
@@ -162,6 +167,7 @@ trait HasPricePeriods
         $current = $start->copy();
         $allCovered = true;
 
+        // Only include nights (days before checkout)
         while ($current->lessThan($end)) {
             $price = $this->priceForDate($current, $currency);
 
@@ -196,20 +202,22 @@ trait HasPricePeriods
 
     /**
      * Get all uncovered dates in a range.
+     * Note: endDate is the checkout date and is NOT included (only nights count).
      */
     public function getUncoveredDates($startDate, $endDate): array
     {
         $start = $startDate instanceof \DateTimeInterface
-            ? Carbon::instance($startDate)
-            : Carbon::parse($startDate);
+            ? Carbon::instance($startDate)->startOfDay()
+            : Carbon::parse($startDate)->startOfDay();
 
         $end = $endDate instanceof \DateTimeInterface
-            ? Carbon::instance($endDate)
-            : Carbon::parse($endDate);
+            ? Carbon::instance($endDate)->startOfDay()
+            : Carbon::parse($endDate)->startOfDay();
 
         $uncovered = [];
         $current = $start->copy();
 
+        // Only check nights (days before checkout)
         while ($current->lessThan($end)) {
             if (! $this->findPricePeriodForDate($current)) {
                 $uncovered[] = $current->format('Y-m-d');
