@@ -47,14 +47,71 @@ class Hotel extends Model
 
     public function rooms(): HasMany
     {
-        return $this->hasMany(Room::class,'hotel_id');
+        return $this->hasMany(Room::class, 'hotel_id');
     }
 
-	//get room has low price
+    /**
+     * الحصول على أرخص غرفة متاحة في الفندق بناءً على سعر اليوم الحالي
+     * تستخدم لعرض أقل سعر متاح في الفندق اليوم مع بيانات الغرفة
+     *
+     * Get the cheapest available room based on today's price.
+     */
+    public function getCheapestRoomForToday(string $currency = 'egp'): ?array
+    {
+        $today = now();
+        $cheapestRoom = null;
+        $lowestPrice = null;
 
+        // Loop through all active rooms
+        foreach ($this->rooms()->where('status', Status::Active)->get() as $room) {
+            $todayPrice = $room->priceForDate($today, $currency);
 
+            // Skip rooms without price for today
+            if ($todayPrice === null) {
+                continue;
+            }
 
+            // Check if this is the cheapest so far
+            if ($lowestPrice === null || $todayPrice < $lowestPrice) {
+                $lowestPrice = $todayPrice;
+                $cheapestRoom = $room;
+            }
+        }
 
+        // Return null if no room found
+        if ($cheapestRoom === null) {
+            return [
+				'room_id' => null,
+				'room_name' => null,
+				'adults_count' => null,
+				'children_count' => null,
+				'price_period_start' => null,
+				'price_period_end' => null,
+				'price_per_night' => null,
+				'currency' => strtoupper($currency),
+            ];
+        }
+
+        // Find the current price period for this room
+        $currentPeriod = $cheapestRoom->findPricePeriodForDate($today);
+
+        if ($currentPeriod === null) {
+            return null;
+        }
+
+        return [
+            'room_id' => $cheapestRoom->id,
+            'room_name' => $cheapestRoom->name,
+            'adults_count' => $cheapestRoom->adults_count,
+            'children_count' => $cheapestRoom->children_count,
+            'price_period_start' => $currentPeriod['start_date'] ?? null,
+            'price_period_end' => $currentPeriod['end_date'] ?? null,
+            'price_per_night' => $lowestPrice,
+            'currency' => strtoupper($currency),
+        ];
+    }
+
+    // get room has low price
 
     public function trips(): BelongsToMany
     {

@@ -7,6 +7,9 @@ use Carbon\Carbon;
 trait HasPricePeriods
 {
     /**
+     * الحصول على سعر الغرفة في يوم معين بعملة محددة
+     * تستخدم للحصول على سعر البالغ في يوم واحد فقط
+     *
      * Get the price for a specific date and currency.
      *
      * @param  string|\DateTimeInterface  $date
@@ -35,6 +38,9 @@ trait HasPricePeriods
     }
 
     /**
+     * البحث عن فترة السعر التي تحتوي على التاريخ المحدد
+     * تستخدم للعثور على price period الذي يحتوي على اليوم المطلوب من جدول price_periods
+     *
      * Find price period that contains the given date.
      */
     public function findPricePeriodForDate(Carbon $date): ?array
@@ -58,6 +64,10 @@ trait HasPricePeriods
     }
 
     /**
+     * التحقق من أن جميع الأيام في فترة الحجز لها أسعار محددة
+     * تستخدم للتأكد من تغطية كل ليلة في الحجز بسعر من price_periods قبل السماح بالحجز
+     * ملحوظة: تاريخ الخروج لا يُحسب (يُحسب فقط عدد الليالي)
+     *
      * Check if a date range is fully covered by price periods.
      * Note: endDate is the checkout date and is NOT included in the calculation (only nights count).
      */
@@ -89,6 +99,10 @@ trait HasPricePeriods
     }
 
     /**
+     * حساب إجمالي السعر لفترة زمنية (مجموع أسعار كل الليالي)
+     * تستخدم لحساب السعر الإجمالي للشخص البالغ الواحد خلال فترة الحجز كاملة
+     * ملحوظة: تاريخ الخروج لا يُحسب (يُحسب فقط عدد الليالي)
+     *
      * Calculate total price for a date range.
      * Note: endDate is the checkout date and is NOT included (only nights count).
      */
@@ -128,6 +142,10 @@ trait HasPricePeriods
     }
 
     /**
+     * الحصول على تفصيل الأسعار لكل يوم في فترة الحجز
+     * تستخدم لعرض سعر كل ليلة على حدة مع اسم اليوم والتاريخ في نتيجة حساب السعر
+     * ملحوظة: تاريخ الخروج لا يُحسب (يُحسب فقط عدد الليالي)
+     *
      * Get price breakdown for a period.
      * Note: endDate is the checkout date and is NOT included (only nights count).
      */
@@ -201,6 +219,10 @@ trait HasPricePeriods
     }
 
     /**
+     * الحصول على قائمة بالتواريخ التي ليس لها أسعار محددة في فترة الحجز
+     * تستخدم لإظهار للمستخدم الأيام التي لا يمكن الحجز فيها لعدم وجود أسعار لها
+     * ملحوظة: تاريخ الخروج لا يُحسب (يُحسب فقط عدد الليالي)
+     *
      * Get all uncovered dates in a range.
      * Note: endDate is the checkout date and is NOT included (only nights count).
      */
@@ -229,6 +251,9 @@ trait HasPricePeriods
     }
 
     /**
+     * تحويل العملة إلى الصيغة الموحدة (egp أو usd)
+     * تستخدم لقبول العملة بأشكال مختلفة (جنيه، EGP، دولار، USD، إلخ) وتحويلها للشكل الموحد
+     *
      * Normalize currency to egp | usd.
      */
     protected function normalizeCurrency(string $currency): ?string

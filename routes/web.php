@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
 	 $room = Room::find(1);
-	return $room->priceForDate( Carbon::parse('2026-02-20'));
+	return $room->priceForDate( Carbon::parse('2026-11-19'));
 	return $room->calculateBookingPrice(checkIn: Carbon::parse('2026-02-18'), checkOut: Carbon::parse('2026-02-20'), adultsCount: 1);
 });
 

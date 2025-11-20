@@ -7,6 +7,10 @@ use Carbon\Carbon;
 trait CalculatesHotelBookingPrice
 {
     /**
+     * حساب السعر الإجمالي للحجز مع تطبيق جميع سياسات الفندق (البالغين والأطفال)
+     * تستخدم لحساب السعر الكامل للحجز بما في ذلك البالغين والأطفال حسب أعمارهم وسياسات الفندق
+     * وترجع تفصيل كامل بالأسعار والتواريخ والسياسات
+     *
      * Calculate total booking price with all policies applied.
      *
      * @param  string|\DateTimeInterface  $checkIn
@@ -118,6 +122,10 @@ trait CalculatesHotelBookingPrice
     }
 
     /**
+     * حساب أسعار الأطفال بناءً على سياسات الفندق (طفل مجاني، طفل مخفض، أو كبالغ)
+     * تستخدم لتطبيق نسب التخفيض على الأطفال حسب أعمارهم وترتيبهم (أول طفل، ثاني طفل، إلخ)
+     * وتصنيفهم إلى (مجاني، طفل بتخفيض، أو يُحسب كبالغ)
+     *
      * Calculate children pricing based on hotel policy.
      */
     protected function calculateChildrenPricing($hotel, float $adultPricePerPerson, array $childrenAges): array
@@ -182,6 +190,9 @@ trait CalculatesHotelBookingPrice
     }
 
     /**
+     * الحصول على تسمية توضيحية لفئة الطفل (مجاني، طفل بتخفيض، أو كبالغ)
+     * تستخدم لعرض وصف نصي واضح للمستخدم عن سبب تسعير الطفل بهذه الطريقة
+     *
      * Get child category label.
      */
     protected function getChildCategoryLabel(string $category, int $age, $hotel): string
@@ -195,6 +206,9 @@ trait CalculatesHotelBookingPrice
     }
 
     /**
+     * إرجاع رد خطأ موحد عند فشل عملية حساب السعر
+     * تستخدم لإرجاع رسالة خطأ بصيغة موحدة تحتوي على success: false ورسالة الخطأ
+     *
      * Error response format.
      */
     protected function errorResponse(string $message, array $data = []): array
@@ -206,6 +220,10 @@ trait CalculatesHotelBookingPrice
     }
 
     /**
+     * حساب سعر الحجز البسيط بدون تفصيل الأطفال (حساب سريع مبسط)
+     * تستخدم لحساب السعر بشكل أسرع بدون الدخول في تفاصيل أعمار الأطفال وسياساتهم
+     * مفيدة عند الحاجة لعرض سعر تقريبي سريع
+     *
      * Simple booking price calculation (without children breakdown).
      *
      * @param  string|\DateTimeInterface  $checkIn
