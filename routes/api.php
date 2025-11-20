@@ -27,6 +27,8 @@ Route::prefix('hotels')->controller(HotelController::class)->group(function () {
 Route::controller(DataController::class)->group(function () {
 	Route::get('/hotel-types', 'hotelTypes');
 	Route::get('/cities', 'cities');
+	Route::get('/categories', 'categories');
+	Route::get('/sub-categories', 'subCategories');
 });
 
 Route::middleware('auth:sanctum')->group(function () {

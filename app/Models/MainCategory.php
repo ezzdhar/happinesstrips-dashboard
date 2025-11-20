@@ -45,4 +45,9 @@ class MainCategory extends Model
                 ->orWhere('name->en', 'like', "%{$search}%");
         });
     }
+
+	public function scopeActive($query)
+	{
+		return $query->where('status', Status::Active);
+	}
 }
