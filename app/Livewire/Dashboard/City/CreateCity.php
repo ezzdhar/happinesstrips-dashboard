@@ -3,15 +3,19 @@
 namespace App\Livewire\Dashboard\City;
 
 use App\Models\City;
+use App\Services\FileService;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class CreateCity extends Component
 {
+	use WithFileUploads;
     public bool $modalAdd = false;
 
     public $name_ar;
 
     public $name_en;
+	public $image;
 
     public function render()
     {
@@ -23,6 +27,7 @@ class CreateCity extends Component
         return [
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
+	        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 
@@ -34,6 +39,7 @@ class CreateCity extends Component
                 'ar' => $this->name_ar,
                 'en' => $this->name_en,
             ],
+	        'image' => FileService::save($this->image,folder: 'cities'),
         ]);
 
         $this->modalAdd = false;

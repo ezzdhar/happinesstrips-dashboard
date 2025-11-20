@@ -120,7 +120,7 @@ class Hotel extends Model
 
     public function hotelTypes(): BelongsToMany
     {
-        return $this->belongsToMany(HotelType::class, 'hotel_hotel_type');
+        return $this->belongsToMany(HotelType::class, 'hotel_hotel_type', 'hotel_id', 'hotel_type_id');
     }
 
     public function bookingHotels(): HasMany

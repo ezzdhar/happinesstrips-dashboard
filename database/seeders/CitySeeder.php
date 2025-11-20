@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\City;
+use App\Services\FileService;
 use Illuminate\Database\Seeder;
 
 class CitySeeder extends Seeder
@@ -19,6 +20,7 @@ class CitySeeder extends Seeder
                     //                    'zh' => $data['chinese'],
                 ],
                 'code' => 'eg',
+	            'image' => FileService::fakeImage($data['english'], folder: 'cities')
             ]);
         }
     }

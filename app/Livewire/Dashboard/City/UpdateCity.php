@@ -3,11 +3,15 @@
 namespace App\Livewire\Dashboard\City;
 
 use App\Models\City;
+use App\Services\FileService;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class UpdateCity extends Component
 {
+	use WithFileUploads;
+
     public bool $modalUpdate = false;
 
     public City $city;
@@ -15,6 +19,7 @@ class UpdateCity extends Component
     public $name_ar;
 
     public $name_en;
+	public $image;
 
     public function mount(): void
     {
@@ -27,6 +32,7 @@ class UpdateCity extends Component
         return [
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
+	        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 
@@ -38,6 +44,7 @@ class UpdateCity extends Component
                 'ar' => $this->name_ar,
                 'en' => $this->name_en,
             ],
+	        'image' => FileService::update($this->city->image, $this->image, folder: 'cities'),
         ]);
 
         $this->modalUpdate = false;

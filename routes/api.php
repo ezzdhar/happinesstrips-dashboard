@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DataController;
 use App\Http\Controllers\Api\GuestController;
 use App\Http\Controllers\Api\HotelController;
 use App\Http\Controllers\Api\NotificationController;
@@ -20,7 +21,12 @@ Route::controller(GuestController::class)->group(function () {
 Route::prefix('hotels')->controller(HotelController::class)->group(function () {
 	Route::get('/', 'hotels');
 	Route::get('/{hotel}', 'hotelDetails');
+});
 
+// data routes
+Route::controller(DataController::class)->group(function () {
+	Route::get('/hotel-types', 'hotelTypes');
+	Route::get('/cities', 'cities');
 });
 
 Route::middleware('auth:sanctum')->group(function () {

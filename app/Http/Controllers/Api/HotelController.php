@@ -19,6 +19,7 @@ class HotelController extends Controller
 		$hotels = Hotel::status(Status::Active)
 			->when($request->name, fn(Builder $query) => $query->filter($request->name))
 			->when($request->city_id, fn(Builder $query) => $query->where('city_id', $request->city_id))
+			->when($request->hotel_type_id, fn(Builder $query) => $query->whereHas('hotelTypes', fn(Builder $q) => $q->where('hotel_type_id', $request->hotel_type_id)))
 			->when($request->children_count, function ($q) use ($request) {
 				$q->whereHas('rooms', fn(Builder $q) => $q->where('children_count', $request->children_count));
 			})->when($request->adults_count, function ($q) use ($request) {

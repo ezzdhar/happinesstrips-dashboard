@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->json('name');
             $table->string('code')->default('eg');
+			$table->string('image')->nullable();
             $table->timestamps();
         });
     }
