@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
 use App\Http\Resources\HotelTypeResource;
 use App\Models\City;
 use App\Models\HotelType;
@@ -22,6 +23,6 @@ class DataController extends Controller
 	public function cities(Request $request)
 	{
 		$cities= City::get(['id', 'name','image']);
-		return $this->responseOk(message: __('lang.hotel_types'), data: HotelTypeResource::collection($cities));
+		return $this->responseOk(message: __('lang.hotel_types'), data: CityResource::collection($cities));
 	}
 }

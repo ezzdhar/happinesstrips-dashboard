@@ -29,6 +29,7 @@ class HotelResource extends JsonResource
             'free_child_age' => (int) $this->free_child_age,
             'adult_age' => (int) $this->adult_age,
             'main_image' => FileService::get($this->files->first()->path),
+	        'hotel_types' => HotelTypeResource::collection($this->hotelTypes),
             'image' => $this->files->map(function ($image) {
                 return FileService::get($image->path);
             }),
