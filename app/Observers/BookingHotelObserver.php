@@ -8,9 +8,7 @@ use App\Notifications\UserNotification;
 
 class BookingHotelObserver
 {
-	/**
-	 * Handle the BookingHotel "created" event.
-	 */
+
 	public function created(BookingHotel $bookingHotel): void
 	{
 		$title = [
