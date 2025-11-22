@@ -39,7 +39,6 @@ class BookingHotelObserver
 		}
 	}
 
-
 	//send notification
 	private function sendNotification(array $title, array $body, BookingHotel $bookingHotel): void
 	{
