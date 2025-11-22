@@ -123,4 +123,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+	//DEFAULT_CURRENCY=egp
+	'currency' => env('APP_CURRENCY', 'egp'),
+
 ];

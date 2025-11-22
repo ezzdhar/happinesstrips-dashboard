@@ -16,6 +16,8 @@
 					                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
 					<x-choices-offline required label="{{ __('lang.sub_category') }}" wire:model="sub_category_id" :options="$sub_categories" single clearable searchable
 					                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
+					<x-choices-offline required label="{{ __('lang.city') }}" wire:model="city_id" :options="$cities" single clearable searchable
+					                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
 					<x-input required label="{{ __('lang.name').' ('.__('lang.ar').')' }}" wire:model="name_ar" placeholder="{{ __('lang.name').' ('.__('lang.ar').')' }}" icon="o-language"/>
 					<x-input required label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" dir="ltr" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
 					<x-select required label="{{ __('lang.status') }}" wire:model="status" placeholder="{{ __('lang.select') }}" icon="o-flag" :options="[

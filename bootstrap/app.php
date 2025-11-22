@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AppCurrencyMiddleware;
 use App\Http\Middleware\LanguageMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -17,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         apiPrefix: '/api/v1',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->api(prepend: [LanguageMiddleware::class]);
+	    $middleware->api(prepend: [LanguageMiddleware::class, AppCurrencyMiddleware::class]);
         $middleware->alias([
             'web-language' => LanguageMiddleware::class,
             'role' => RoleMiddleware::class,

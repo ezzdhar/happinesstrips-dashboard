@@ -6,8 +6,11 @@
 				<x-button noWireNavigate label="{{ __('lang.add') }}" icon="o-plus" class="btn-primary btn-sm" link="{{route('trips.create')}}"/>
 			@endcan
 		</x-slot:menu>
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+		<div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
 			<x-input label="{{ __('lang.search') }}" wire:model.live="search" placeholder="{{ __('lang.search') }}" icon="o-magnifying-glass" clearable/>
+			<x-choices-offline required label="{{ __('lang.city') }}" wire:model.live="city_filter" :options="$cities" single clearable searchable
+			                   option-value="id" option-label="name" placeholder="{{ __('lang.select') }}"/>
+
 			<x-select label="{{ __('lang.status') }}" wire:model.live="status_filter" placeholder="{{ __('lang.all') }}" icon="o-flag" clearable :options="[
 				['id' => Status::Active, 'name' => __('lang.active')],
 				['id' => Status::Inactive, 'name' => __('lang.inactive')],
@@ -26,12 +29,12 @@
 					<tr>
 						<th class="text-center">#</th>
 						<th class="text-center">{{__('lang.name')}}</th>
+						<th class="text-center">{{__('lang.city')}}</th>
 						<th class="text-center">{{__('lang.main_category')}}</th>
 						<th class="text-center">{{__('lang.sub_category')}}</th>
 						<th class="text-center">{{__('lang.price')}}</th>
 						<th class="text-center">{{__('lang.trip_type')}}</th>
 						<th class="text-center">{{__('lang.status')}}</th>
-						<th class="text-center">{{__('lang.is_featured')}}</th>
 						<th class="text-center">{{__('lang.created_at')}}</th>
 						<th class="text-center">{{__('lang.action')}}</th>
 					</tr>
@@ -41,6 +44,7 @@
 						<tr class="bg-base-200">
 							<th class="text-center">{{$trips->firstItem() + $loop->index}}</th>
 							<th class="text-nowrap">{{$trip->name}}</th>
+							<th class="text-center text-nowrap">{{$trip->city->name}}</th>
 							<th class="text-center text-nowrap">{{$trip->mainCategory->name}}</th>
 							<th class="text-center text-nowrap">{{$trip->subCategory->name}}</th>
 							<th class="text-center text-nowrap">
@@ -54,13 +58,6 @@
 							</th>
 							<th class="text-center text-nowrap">
 								<x-badge :value="$trip->status->title()" class="bg-{{$trip->status->color()}}"/>
-							</th>
-							<th class="text-center">
-								@if($trip->is_featured)
-									<x-icon name="o-star" class="w-5 h-5 text-yellow-400"/>
-								@else
-									<x-icon name="o-star" class="w-5 h-5 text-gray-300"/>
-								@endif
 							</th>
 							<th class="text-center text-nowrap">{{formatDate($trip->created_at, true) }}</th>
 							<td>

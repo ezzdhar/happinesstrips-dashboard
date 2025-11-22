@@ -16,8 +16,10 @@ return new class extends Migration
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
             $table->foreignId('main_category_id')->constrained('main_categories')->cascadeOnDelete();
-            $table->foreignId('sub_category_id')->constrained('sub_categories')->cascadeOnDelete();
-            $table->json('name');
+	        $table->foreignId('sub_category_id')->constrained('sub_categories')->cascadeOnDelete();
+	        $table->foreignId('city_id')->constrained('cities')->cascadeOnDelete();
+	        $table->enum('rating', [1, 2, 3, 4, 5])->default(3);
+	        $table->json('name');
             $table->json('price'); // {"egp": 0, "usd": 0}
             $table->date('duration_from')->nullable();
             $table->date('duration_to')->nullable();

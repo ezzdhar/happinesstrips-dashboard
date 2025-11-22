@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\Status;
+use App\Models\City;
 use App\Models\File;
 use App\Models\Hotel;
 use App\Models\MainCategory;
@@ -23,79 +24,251 @@ class TripSeeder extends Seeder
             return;
         }
 
-        $trips = [
-            [
-                'name' => [
-                    'ar' => 'رحلة القاهرة والأقصر - 5 أيام',
-                    'en' => 'Cairo and Luxor Trip - 5 Days',
-                ],
-                'price' => [
-                    'egp' => 12000,
-                    'usd' => 400,
-                ],
-                'duration_from' => now()->addDays(10),
-                'duration_to' => now()->addDays(15),
-                'people_count' => 4,
-                'notes' => [
-                    'ar' => 'الأسعار شاملة الإقامة والمواصلات. غير شاملة للوجبات والأنشطة الإضافية.',
-                    'en' => 'Prices include accommodation and transportation. Meals and additional activities are not included.',
-                ],
-                'program' => [
-                    'ar' => 'اليوم الأول: الوصول والتوجه للفندق. اليوم الثاني: زيارة الأهرامات والمتحف المصري. اليوم الثالث: السفر للأقصر. اليوم الرابع: زيارة معابد الكرنك والأقصر. اليوم الخامس: العودة للقاهرة.',
-                    'en' => 'Day 1: Arrival and hotel check-in. Day 2: Visit Pyramids and Egyptian Museum. Day 3: Travel to Luxor. Day 4: Visit Karnak and Luxor Temples. Day 5: Return to Cairo.',
-                ],
-                'is_featured' => true,
-                'status' => Status::Active,
-            ],
-            [
-                'name' => [
-                    'ar' => 'عرض شرم الشيخ الشاطئي - 3 أيام',
-                    'en' => 'Sharm El Sheikh Beach Package - 3 Days',
-                ],
-                'price' => [
-                    'egp' => 8000,
-                    'usd' => 260,
-                ],
-                'duration_from' => now()->addDays(20),
-                'duration_to' => now()->addDays(23),
-                'people_count' => 2,
-                'notes' => [
-                    'ar' => 'العرض يشمل الإقامة في منتجع 5 نجوم مع نظام all inclusive.',
-                    'en' => 'Package includes stay at 5-star resort with all inclusive system.',
-                ],
-                'program' => [
-                    'ar' => 'اليوم الأول: الوصول والاستقرار في المنتجع. اليوم الثاني: رحلة غوص أو سنوركلينج. اليوم الثالث: يوم حر والعودة.',
-                    'en' => 'Day 1: Arrival and resort check-in. Day 2: Diving or snorkeling trip. Day 3: Free day and departure.',
-                ],
-                'is_featured' => true,
-                'status' => Status::Active,
-            ],
-            [
-                'name' => [
-                    'ar' => 'رحلة العمرة - 7 أيام',
-                    'en' => 'Umrah Trip - 7 Days',
-                ],
-                'price' => [
-                    'egp' => 25000,
-                    'usd' => 850,
-                ],
-                'duration_from' => now()->addMonth(),
-                'duration_to' => now()->addMonth()->addDays(7),
-                'people_count' => 1,
-                'notes' => [
-                    'ar' => 'يشمل تذكرة الطيران، الإقامة في فندق قريب من الحرم، المواصلات، وزيارة المعالم الدينية.',
-                    'en' => 'Includes flight ticket, accommodation in hotel near Haram, transportation, and religious sites visits.',
-                ],
-                'program' => [
-                    'ar' => 'برنامج شامل لأداء العمرة مع زيارة المعالم الإسلامية في مكة والمدينة المنورة.',
-                    'en' => 'Comprehensive program for performing Umrah with visits to Islamic landmarks in Mecca and Medina.',
-                ],
-                'is_featured' => false,
-                'status' => Status::Active,
-            ],
-        ];
+	    $trips = [
+		    [
+			    'name' => [
+				    'ar' => 'رحلة القاهرة والأقصر',
+				    'en' => 'Cairo and Luxor Trip - 5 Days',
+			    ],
+			    'price' => [
+				    'egp' => 12000,
+				    'usd' => 400,
+			    ],
+			    'duration_from' => now()->addDays(10),
+			    'duration_to' => now()->addDays(15),
+			    'people_count' => 4,
+			    'notes' => [
+				    'ar' => 'الأسعار شاملة الإقامة والمواصلات. غير شاملة للوجبات والأنشطة الإضافية.',
+				    'en' => 'Prices include accommodation and transportation. Meals and additional activities are not included.',
+			    ],
+			    'program' => [
+				    'ar' => 'اليوم الأول: الوصول والتوجه للفندق. اليوم الثاني: زيارة الأهرامات والمتحف المصري. اليوم الثالث: السفر للأقصر. اليوم الرابع: زيارة معابد الكرنك والأقصر. اليوم الخامس: العودة للقاهرة.',
+				    'en' => 'Day 1: Arrival and hotel check-in. Day 2: Visit Pyramids and Egyptian Museum. Day 3: Travel to Luxor. Day 4: Visit Karnak and Luxor Temples. Day 5: Return to Cairo.',
+			    ],
+			    'is_featured' => true,
+			    'status' => Status::Active,
+			    'city_id' => City::inRandomOrder()->first()->id,
+		    ],
+		    [
+			    'name' => [
+				    'ar' => 'عرض شرم الشيخ الشاطئي',
+				    'en' => 'Sharm El Sheikh Beach Package - 3 Days',
+			    ],
+			    'price' => [
+				    'egp' => 8000,
+				    'usd' => 260,
+			    ],
+			    'duration_from' => now()->addDays(20),
+			    'duration_to' => now()->addDays(23),
+			    'people_count' => 2,
+			    'notes' => [
+				    'ar' => 'العرض يشمل الإقامة في منتجع 5 نجوم مع نظام all inclusive.',
+				    'en' => 'Package includes stay at 5-star resort with all inclusive system.',
+			    ],
+			    'program' => [
+				    'ar' => 'اليوم الأول: الوصول والاستقرار. اليوم الثاني: رحلة غوص. اليوم الثالث: يوم حر والعودة.',
+				    'en' => 'Day 1: Arrival. Day 2: Diving trip. Day 3: Free day and departure.',
+			    ],
+			    'is_featured' => true,
+			    'status' => Status::Active,
+			    'city_id' => City::inRandomOrder()->first()->id,
+		    ],
+		    [
+			    'name' => [
+				    'ar' => 'رحلة العمرة',
+				    'en' => 'Umrah Trip - 7 Days',
+			    ],
+			    'price' => [
+				    'egp' => 25000,
+				    'usd' => 850,
+			    ],
+			    'duration_from' => now()->addMonth(),
+			    'duration_to' => now()->addMonth()->addDays(7),
+			    'people_count' => 1,
+			    'notes' => [
+				    'ar' => 'يشمل الطيران والإقامة وزيارات دينية.',
+				    'en' => 'Includes flights, accommodation, and religious visits.',
+			    ],
+			    'program' => [
+				    'ar' => 'برنامج متكامل لأداء العمرة وزيارة المعالم.',
+				    'en' => 'Complete Umrah program with visits.',
+			    ],
+			    'is_featured' => false,
+			    'status' => Status::Active,
+			    'city_id' => City::inRandomOrder()->first()->id,
+		    ],
+		    [
+			    'name' => [
+				    'ar' => 'رحلة أسوان والنوبة',
+				    'en' => 'Aswan & Nubia Trip - 4 Days',
+			    ],
+			    'price' => [
+				    'egp' => 11000,
+				    'usd' => 370,
+			    ],
+			    'duration_from' => now()->addDays(12),
+			    'duration_to' => now()->addDays(16),
+			    'people_count' => 3,
+			    'notes' => [
+				    'ar' => 'تشمل الإقامة ورحلة فلوكة وزيارة معبد فيلة.',
+				    'en' => 'Includes accommodation, felucca ride, and Philae Temple visit.',
+			    ],
+			    'program' => [
+				    'ar' => 'زيارة السد العالي – النوبة – فلوكة – فيلة.',
+				    'en' => 'High Dam – Nubia – Felucca – Philae.',
+			    ],
+			    'is_featured' => false,
+			    'status' => Status::Active,
+			    'city_id' => City::inRandomOrder()->first()->id,
+		    ],
+		    [
+			    'name' => [
+				    'ar' => 'رحلة الإسكندرية - يومين',
+				    'en' => 'Alexandria Trip - 2 Days',
+			    ],
+			    'price' => [
+				    'egp' => 3000,
+				    'usd' => 110,
+			    ],
+			    'duration_from' => now()->addDays(5),
+			    'duration_to' => now()->addDays(7),
+			    'people_count' => 2,
+			    'notes' => [
+				    'ar' => 'تشمل زيارة مكتبة الإسكندرية وكورنيش البحر.',
+				    'en' => 'Includes Library of Alexandria and Corniche.',
+			    ],
+			    'program' => [
+				    'ar' => 'زيارة القلعة – مكتبة الإسكندرية – جولة بحر.',
+				    'en' => 'Citadel – Library – Sea tour.',
+			    ],
+			    'is_featured' => false,
+			    'status' => Status::Active,
+			    'city_id' => City::inRandomOrder()->first()->id,
+		    ],
+		    [
+			    'name' => [
+				    'ar' => 'رحلة دهب',
+				    'en' => 'Dahab Trip - 4 Days',
+			    ],
+			    'price' => [
+				    'egp' => 9000,
+				    'usd' => 300,
+			    ],
+			    'duration_from' => now()->addDays(18),
+			    'duration_to' => now()->addDays(22),
+			    'people_count' => 2,
+			    'notes' => [
+				    'ar' => 'تشمل البلو هول ورحلة جبال.',
+				    'en' => 'Includes Blue Hole and mountains tour.',
+			    ],
+			    'program' => [
+				    'ar' => 'بلو هول – جولة بدوية – جبال.',
+				    'en' => 'Blue Hole – Bedouin tour – Mountains.',
+			    ],
+			    'is_featured' => true,
+			    'status' => Status::Active,
+			    'city_id' => City::inRandomOrder()->first()->id,
+		    ],
+		    [
+			    'name' => [
+				    'ar' => 'رحلة سيوة',
+				    'en' => 'Siwa Trip - 5 Days',
+			    ],
+			    'price' => [
+				    'egp' => 15000,
+				    'usd' => 500,
+			    ],
+			    'duration_from' => now()->addDays(30),
+			    'duration_to' => now()->addDays(35),
+			    'people_count' => 4,
+			    'notes' => [
+				    'ar' => 'تشمل زيارة جبل الدكرور والبحيرات المالحة.',
+				    'en' => 'Includes Dakrour Mountain and salt lakes.',
+			    ],
+			    'program' => [
+				    'ar' => 'الواحة – جبل الدكرور – البحيرات – معبد آمون.',
+				    'en' => 'Oasis – Dakrour – Lakes – Amun Temple.',
+			    ],
+			    'is_featured' => true,
+			    'status' => Status::Active,
+			    'city_id' => City::inRandomOrder()->first()->id,
+		    ],
+		    [
+			    'name' => [
+				    'ar' => 'رحلة تركيا',
+				    'en' => 'Turkey Trip - 6 Days',
+			    ],
+			    'price' => [
+				    'egp' => 45000,
+				    'usd' => 1500,
+			    ],
+			    'duration_from' => now()->addMonth()->addDays(10),
+			    'duration_to' => now()->addMonth()->addDays(16),
+			    'people_count' => 2,
+			    'notes' => [
+				    'ar' => 'تشمل الطيران والإقامة وجولات سياحية.',
+				    'en' => 'Includes flights, hotel stays and tours.',
+			    ],
+			    'program' => [
+				    'ar' => 'إسطنبول – بورصة – جولات تاريخية.',
+				    'en' => 'Istanbul – Bursa – Tours.',
+			    ],
+			    'is_featured' => false,
+			    'status' => Status::Active,
+			    'city_id' => City::inRandomOrder()->first()->id,
+		    ],
+		    [
+			    'name' => [
+				    'ar' => 'رحلة المغرب',
+				    'en' => 'Morocco Trip - 7 Days',
+			    ],
+			    'price' => [
+				    'egp' => 50000,
+				    'usd' => 1650,
+			    ],
+			    'duration_from' => now()->addMonth()->addDays(20),
+			    'duration_to' => now()->addMonth()->addDays(27),
+			    'people_count' => 2,
+			    'notes' => [
+				    'ar' => 'تشمل مراكش والدار البيضاء.',
+				    'en' => 'Includes Marrakech & Casablanca.',
+			    ],
+			    'program' => [
+				    'ar' => 'مراكش – الدار البيضاء – الرباط.',
+				    'en' => 'Marrakech – Casablanca – Rabat.',
+			    ],
+			    'is_featured' => false,
+			    'status' => Status::Active,
+			    'city_id' => City::inRandomOrder()->first()->id,
+		    ],
+		    [
+			    'name' => [
+				    'ar' => 'رحلة الساحل الشمالي',
+				    'en' => 'North Coast Trip - 3 Days',
+			    ],
+			    'price' => [
+				    'egp' => 7000,
+				    'usd' => 230,
+			    ],
+			    'duration_from' => now()->addDays(7),
+			    'duration_to' => now()->addDays(10),
+			    'people_count' => 3,
+			    'notes' => [
+				    'ar' => 'تشمل إقامة فاخرة وجولة بحر.',
+				    'en' => 'Includes luxury stay and sea tour.',
+			    ],
+			    'program' => [
+				    'ar' => 'شاطئ – جولة بحر – وقت حر.',
+				    'en' => 'Beach – Sea Tour – Free Time.',
+			    ],
+			    'is_featured' => true,
+			    'status' => Status::Active,
+			    'city_id' => City::inRandomOrder()->first()->id,
+		    ],
+	    ];
 
-        foreach ($trips as $tripData) {
+
+	    foreach ($trips as $tripData) {
             $mainCategory = $mainCategories->random();
             $subCategory = SubCategory::where('main_category_id', $mainCategory->id)->inRandomOrder()->first();
 
@@ -115,6 +288,7 @@ class TripSeeder extends Seeder
                 'program' => $tripData['program'],
                 'is_featured' => $tripData['is_featured'],
                 'status' => $tripData['status'],
+	            'city_id' => $tripData['city_id']
             ]);
 
             // Attach random hotels to the trip

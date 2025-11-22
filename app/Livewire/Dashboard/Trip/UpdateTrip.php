@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard\Trip;
 
 use App\Enums\TripType;
+use App\Models\City;
 use App\Models\File;
 use App\Models\Hotel;
 use App\Models\MainCategory;
@@ -80,8 +81,9 @@ class UpdateTrip extends Component
 	public $sub_categories = [];
 
 	public $hotels = [];
-
-	#[Rule('required')]
+	public $cities = [];
+	public $city_id;
+	#[Rule('nullable')]
 	public Collection $library;
 
 	public function mount(): void
@@ -92,7 +94,12 @@ class UpdateTrip extends Component
 				'name' => $category->name,
 			];
 		})->toArray();
-
+		$this->cities = City::get(['id', 'name'])->map(function ($city) {
+			return [
+				'id' => $city->id,
+				'name' => $city->name,
+			];
+		})->toArray();
 		$this->hotels = Hotel::get(['id', 'name'])->map(function ($hotel) {
 			return [
 				'id' => $hotel->id,
@@ -113,6 +120,7 @@ class UpdateTrip extends Component
 		$this->duration_to = $this->trip->duration_to?->format('Y-m-d');
 		$this->nights_count = $this->trip->nights_count;
 		$this->people_count = $this->trip->people_count;
+		$this->city_id = $this->trip->city_id;
 		$this->notes_ar = $this->trip->getTranslation('notes', 'ar');
 		$this->notes_en = $this->trip->getTranslation('notes', 'en');
 		$this->program_ar = $this->trip->getTranslation('program', 'ar');
@@ -193,6 +201,7 @@ class UpdateTrip extends Component
 			'name_en' => 'required|string|max:255',
 			'price_egp' => 'required|numeric|min:0',
 			'price_usd' => 'required|numeric|min:0',
+			'city_id' => 'required|exists:cities,id',
 			'duration_from' => 'required|date|before_or_equal:duration_to',
 			'duration_to' => 'nullable|required_if:type,fixed|date|after_or_equal:duration_from',
 			'nights_count' => 'nullable|integer|min:1',
@@ -232,7 +241,7 @@ class UpdateTrip extends Component
 			'duration_from' => $this->duration_from,
 			'duration_to' => $this->duration_to,
 			'nights_count' => $this->nights_count,
-//            'people_count' => $this->people_count,
+			'city_id' => $this->city_id,
 			'notes' => [
 				'ar' => $this->notes_ar,
 				'en' => $this->notes_en,

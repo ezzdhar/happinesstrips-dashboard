@@ -691,8 +691,6 @@ return [
     'under_cancellation' => 'قيد الإلغاء',
     'cancelled' => 'ملغي',
     'confirmed' => 'مؤكد',
-    'egp' => 'جنيه مصري',
-    'usd' => 'دولار أمريكي',
     'eur' => 'يورو',
     'traveler' => 'مسافر',
     'travelers' => 'المسافرون',
@@ -863,4 +861,7 @@ return [
     'price_calculated_by_ages' => 'السعر محسوب حسب الأعمار',
 	'no_data_available' => 'لا تتوفر بيانات',
 	'invalid_code' => 'رمز غير صالح',
+	'usd' => '$',
+	'egp' => ' جنيه',
+
 ];

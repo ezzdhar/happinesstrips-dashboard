@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard\Trip;
 
 use App\Enums\TripType;
+use App\Models\City;
 use App\Models\Hotel;
 use App\Models\MainCategory;
 use App\Models\SubCategory;
@@ -75,6 +76,8 @@ class CreateTrip extends Component
     public $sub_categories = [];
 
     public $hotels = [];
+	public $cities = [];
+	public $city_id;
 
     #[Rule('required')]
     public Collection $library;
@@ -87,7 +90,12 @@ class CreateTrip extends Component
                 'name' => $category->name,
             ];
         })->toArray();
-
+	    $this->cities = City::get(['id', 'name'])->map(function ($city) {
+		    return [
+			    'id' => $city->id,
+			    'name' => $city->name,
+		    ];
+	    })->toArray();
         $this->hotels = Hotel::get(['id', 'name'])->map(function ($hotel) {
             return [
                 'id' => $hotel->id,
@@ -160,6 +168,7 @@ class CreateTrip extends Component
             'name_en' => 'required|string|max:255',
             'price_egp' => 'required|numeric|min:0',
             'price_usd' => 'required|numeric|min:0',
+	        'city_id' => 'required|exists:cities,id',
             'duration_from' => 'required|date|before_or_equal:duration_to',
             'duration_to' => 'nullable|required_if:type,fixed|date|after_or_equal:duration_from',
             'nights_count' => 'nullable|integer|min:1',
@@ -198,7 +207,8 @@ class CreateTrip extends Component
                 'usd' => $this->price_usd,
             ],
             'duration_from' => $this->duration_from,
-            'duration_to' => $this->duration_to,
+	        'duration_to' => $this->duration_to,
+	        'city_id' => $this->city_id,
             'nights_count' => $this->nights_count,
             'people_count' => 1 ,//$this->people_count
             'notes' => [

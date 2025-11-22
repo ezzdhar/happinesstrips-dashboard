@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Status;
 use App\Enums\TripType;
+use App\Traits\TripFilter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Trip extends Model
 {
-    use HasFactory, HasTranslations;
+	use HasFactory, HasTranslations, TripFilter;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
@@ -58,26 +59,11 @@ class Trip extends Model
         return $this->morphMany(File::class, 'fileable');
     }
 
-    public function scopeStatus($query, $status = null)
-    {
-        return $query->when($status, fn ($q) => $q->where('status', $status));
-    }
 
-    public function scopeType($query, $type = null)
-    {
-        return $query->when($type, fn ($q) => $q->where('type', $type));
-    }
+	public function city(): BelongsTo
+	{
+		return $this->belongsTo(City::class);
+	}
 
-    public function scopeFeatured($query)
-    {
-        return $query->where('is_featured', true);
-    }
 
-    public function scopeFilter($query, $search = null)
-    {
-        return $query->when($search, function ($q) use ($search) {
-            $q->where('name->ar', 'like', "%{$search}%")
-                ->orWhere('name->en', 'like', "%{$search}%");
-        });
-    }
 }

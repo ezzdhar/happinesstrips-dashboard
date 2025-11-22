@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Dashboard\Trip;
 
+use App\Models\City;
 use App\Models\Trip;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
@@ -18,10 +19,17 @@ class TripData extends Component
 
     public $status_filter;
 
-    public $type_filter;
-
+	public $type_filter;
+	public $city_filter;
+	public $cities = [];
     public function mount(): void
     {
+	    $this->cities = City::get(['id', 'name'])->map(function ($city) {
+		    return [
+			    'id' => $city->id,
+			    'name' => $city->name,
+		    ];
+	    })->toArray();
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
@@ -38,10 +46,11 @@ class TripData extends Component
     #[On('render')]
     public function render(): View
     {
-        $data['trips'] = Trip::filter($this->search)
+        $data['trips'] = Trip::nameFilter($this->search)
             ->status($this->status_filter)
-            ->type($this->type_filter)
-            ->with(['mainCategory', 'subCategory', 'files'])
+	        ->type($this->type_filter)
+	        ->cityFilter($this->city_filter)
+            ->with(['mainCategory', 'subCategory', 'city'])
             ->latest()
             ->paginate(20);
 
