@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use DevKandil\NotiFire\Enums\MessagePriority;
+use DevKandil\NotiFire\FcmMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
@@ -9,22 +11,34 @@ class UserNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(public string $title, public string $body, public $url = null)
+	public function __construct(public $title = [], public $body = [], public $data = [], $lang = 'en')
     {
         //
     }
 
     public function via(object $notifiable): array
     {
-        return ['database'];
+	    return ['database', 'fcm'];
     }
 
     public function toArray(object $notifiable): array
     {
         return [
-            'title' => $this->title,
-            'body' => $this->body,
-            'url' => $this->url ?: route('dashboard'),
+	        'title' => $this->title,
+	        'body' => $this->body,
+	        'data' => $this->data,
         ];
     }
+
+	public function toFcm($notifiable)
+	{
+		return FcmMessage::create($this->title[$notifiable->lang ?? 'en'], $this->body[$notifiable->lang ?? 'en'])
+			->image(public_path('logo.svg'))
+			->sound('default')
+			->clickAction('OPEN_ACTIVITY')
+			->icon(public_path('favicon.ico'))
+			->color('#FF5733')
+			->priority(MessagePriority::HIGH)
+			->data($this->data);
+	}
 }

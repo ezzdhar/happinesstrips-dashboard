@@ -24,6 +24,8 @@ return new class extends Migration {
 			$table->string('phone')->nullable();
 			$table->string('verification_code')->nullable();
 			$table->bigInteger('points')->default(0);
+			$table->string('fcm_token')->nullable();
+			$table->string('language')->default('en');
 			$table->rememberToken();
 			$table->timestamps();
 		});

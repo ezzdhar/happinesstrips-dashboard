@@ -13,7 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('booking_number')->unique();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('trip_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('trip_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('type')->default('hotel'); // hotel or trip
 
             $table->date('check_in')->nullable();

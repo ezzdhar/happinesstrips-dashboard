@@ -863,5 +863,6 @@ return [
 	'invalid_code' => 'رمز غير صالح',
 	'usd' => '$',
 	'egp' => ' جنيه',
+	'success' => 'نجاح',
 
 ];

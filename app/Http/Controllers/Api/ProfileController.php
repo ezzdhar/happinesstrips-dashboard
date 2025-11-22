@@ -54,4 +54,10 @@ class ProfileController extends Controller
 
         return $this->responseOk(message: __('lang.success'));
     }
+
+	public function changeLanguage(ProfileUpdateRequest $request)
+	{
+		auth()->user()->update(['language' => $request->language,]);
+		return $this->responseOk(message: __('lang.success'));
+	}
 }

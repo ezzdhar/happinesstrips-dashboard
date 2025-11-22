@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Status;
 use App\Observers\UserObserver;
+use DevKandil\NotiFire\Traits\HasFcm;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +18,7 @@ use Spatie\Permission\Traits\HasRoles;
 #[ObservedBy(UserObserver::class)]
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, HasRoles, \Illuminate\Auth\MustVerifyEmail, Notifiable;
+    use HasApiTokens, HasFactory, HasRoles, \Illuminate\Auth\MustVerifyEmail, Notifiable,HasFcm;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 

@@ -28,7 +28,7 @@ class GuestController extends Controller
 				'password' => $request->password,
 				'email' => $request->email,
 				'image' => FileService::fakeImage(),
-				'device_token' => $request->device_token
+				'fcm_token' => $request->fcm_token
 			]
 		);
 		$user->assignRole('user');
@@ -81,10 +81,7 @@ class GuestController extends Controller
 
 	public function socialLogin(SocialLoginRequest $request)
 	{
-		$user = User::where('provider', $request->provider)
-			->where('provider_id', $request->provider_id)
-			->first();
-
+		$user = User::where('provider', $request->provider)->where('provider_id', $request->provider_id)->first();
 		if (!$user) {
 			$user = User::where('email', $request->email)->first();
 
@@ -94,7 +91,7 @@ class GuestController extends Controller
 					'provider_id' => $request->provider_id,
 					'provider_token' => $request->provider_token,
 					'email_verified_at' => now(),
-					'device_token' => $request->device_token,
+					'fcm_token' => $request->fcm_token,
 				]);
 			} else {
 				$user = User::create([
@@ -106,7 +103,7 @@ class GuestController extends Controller
 					'email_verified_at' => now(),
 					'password' => bcrypt(Str::random(32)),
 					'image' => FileService::fakeImage(),
-					'device_token' => $request->device_token,
+					'fcm_token' => $request->fcm_token,
 				]);
 
 				$user->assignRole('user');
@@ -114,7 +111,7 @@ class GuestController extends Controller
 		} else {
 			$user->update([
 				'provider_token' => $request->provider_token,
-				'device_token' => $request->device_token,
+				'fcm_token' => $request->fcm_token,
 			]);
 		}
 

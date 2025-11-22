@@ -46,14 +46,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/read-all', 'readAll');
         Route::post('/delete', 'delete');
         Route::get('/unread/count', 'unreadNotificationCount');
-        Route::post('/disable', 'disable');
     });
 
     // profile
     Route::prefix('profile')->controller(ProfileController::class)->group(function () {
         Route::get('/', 'index');
         Route::post('/update', 'update');
-        Route::post('/change/password', 'changePassword');
+	    Route::post('/change/password', 'changePassword');
+	    Route::post('/change/language', 'changeLanguage');
         Route::post('/logout', 'logout');
         Route::post('/delete', 'deleteAccount');
     });

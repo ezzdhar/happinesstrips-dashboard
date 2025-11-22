@@ -18,6 +18,7 @@
         "codeat3/blade-fontisto-icons": "^1.5",
         "codeat3/blade-radix-icons": "^1.8",
         "davidhsianturi/blade-bootstrap-icons": "^2.1",
+        "devkandil/notifire": "^1.2",
         "faisal50x/blade-ionicons": "^1.1",
         "laravel/breeze": "*",
         "laravel/framework": "^12.0",

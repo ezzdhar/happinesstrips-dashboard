@@ -13,10 +13,9 @@ class NotificationController extends Controller
 
     public function index()
     {
-        auth()->user()->unreadNotifications->markAsRead();
+//        auth()->user()->unreadNotifications->markAsRead();
         $notifications = auth()->user()->notifications()->paginate(request()->query('limit', 10));
         $data = NotificationResource::collection($notifications);
-
         return $this->responseOk(__('lang.success'), $data);
     }
 
@@ -24,14 +23,12 @@ class NotificationController extends Controller
     {
         $notification = auth()->user()->notifications()->where('id', $request->notification_id)->first();
         $notification->markAsRead();
-
         return $this->responseCreated(__('lang.success'));
     }
 
     public function readAll()
     {
         auth()->user()->unreadNotifications->markAsRead();
-
         return $this->responseCreated(__('lang.success'));
     }
 
@@ -39,14 +36,12 @@ class NotificationController extends Controller
     {
         $notification = auth()->user()->notifications()->where('id', $request->notification_id)->first();
         $notification->delete();
-
         return $this->responseCreated(__('lang.success'));
     }
 
     public function unreadNotificationCount()
     {
         $data['count'] = auth()->user()->unreadNotifications->count();
-
         return $this->responseOk(__('lang.success'), $data);
     }
 }

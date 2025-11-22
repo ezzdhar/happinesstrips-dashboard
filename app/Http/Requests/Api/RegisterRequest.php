@@ -18,7 +18,7 @@ class RegisterRequest extends FormRequest
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required|string|same:password',
-	        'device_token' => 'nullable|string|max:255',
+	        'fcm_token' => 'nullable|string|max:255',
 //            'phone_key' => 'required|string|max:255',
 //            'phone' => 'required|string|max:255|unique:users,phone->number',
         ];
