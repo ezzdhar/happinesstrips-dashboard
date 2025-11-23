@@ -14,7 +14,7 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'phone_key' => 'required|string|max:255',
-            'phone' => 'required|string|max:255|unique:users,phone->number'.auth()->id(),
+            'phone' => 'required|string|max:255|unique:users,phone,'.auth()->id(),
             'image' => 'nullable|image|max:4048',
         ];
     }

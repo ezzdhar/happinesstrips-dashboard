@@ -864,5 +864,10 @@ return [
 	'usd' => '$',
 	'egp' => ' جنيه',
 	'success' => 'نجاح',
+	'unauthenticated' => 'برجاء تسجيل الدخول أولاً',
+	'method_not_allowed' => 'الطريقة غير مسموح بها',
+	'forbidden' => 'ممنوع',
+	'old_password_not_correct' => 'كلمة المرور القديمة غير صحيحة',
+	'logout_successfully' => 'تم تسجيل الخروج بنجاح',
 
 ];

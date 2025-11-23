@@ -15,7 +15,7 @@ class ChangePasswordRequest extends FormRequest
     {
         return [
             'old_password' => 'bail|required|string',
-            'new_password' => 'bail|required|string|min:6|confirmed',
+            'new_password' => 'bail|required|string|min:6',
             'password_confirmation' => 'bail|required|string|same:new_password',
         ];
     }
