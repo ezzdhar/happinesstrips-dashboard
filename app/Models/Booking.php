@@ -3,93 +3,101 @@
 namespace App\Models;
 
 use App\Enums\Status;
+use App\Observers\BookingObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+#[ObservedBy(BookingObserver::class)]
 class Booking extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-    protected $guarded = ['id', 'created_at', 'updated_at'];
+	protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    protected function casts(): array
-    {
-        return [
-            'check_in' => 'date',
-            'check_out' => 'date',
-            'status' => Status::class,
-            'adults_count' => 'integer',
-            'children_count' => 'integer',
-            'nights_count' => 'integer',
-        ];
-    }
+	protected function casts(): array
+	{
+		return [
+			'check_in' => 'date',
+			'check_out' => 'date',
+			'status' => Status::class,
+			'adults_count' => 'integer',
+			'children_count' => 'integer',
+			'nights_count' => 'integer',
+		];
+	}
 
-    protected static function boot(): void
-    {
-        parent::boot();
+	protected static function boot(): void
+	{
+		parent::boot();
 
-        static::creating(function ($booking) {
-            if (! $booking->booking_number) {
-                $booking->booking_number = 'BK-'.strtoupper(uniqid());
-            }
-        });
-    }
+		static::creating(function ($booking) {
+			if (!$booking->booking_number) {
+				$booking->booking_number = 'BK-' . strtoupper(uniqid());
+			}
+		});
+	}
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+	public function createdBy(): BelongsTo
+	{
+		return $this->belongsTo(User::class, 'created_by');
+	}
 
-    public function trip(): BelongsTo
-    {
-        return $this->belongsTo(Trip::class);
-    }
+	public function user(): BelongsTo
+	{
+		return $this->belongsTo(User::class);
+	}
 
-    public function bookingHotel(): HasOne
-    {
-        return $this->hasOne(BookingHotel::class, 'booking_id', 'id');
-    }
+	public function trip(): BelongsTo
+	{
+		return $this->belongsTo(Trip::class);
+	}
 
-    public function bookingTrip(): HasOne
-    {
-        return $this->hasOne(BookingTrip::class, 'booking_id', 'id');
-    }
+	public function bookingHotel(): HasOne
+	{
+		return $this->hasOne(BookingHotel::class, 'booking_id', 'id');
+	}
 
-    public function travelers(): HasMany
-    {
-        return $this->hasMany(BookingTraveler::class);
-    }
+	public function bookingTrip(): HasOne
+	{
+		return $this->hasOne(BookingTrip::class, 'booking_id', 'id');
+	}
 
-    public function scopeStatus($query, $status = null)
-    {
-        return $query->when($status, fn ($q) => $q->where('status', $status));
-    }
+	public function travelers(): HasMany
+	{
+		return $this->hasMany(BookingTraveler::class);
+	}
 
-    public function scopeUser($query, $userId = null)
-    {
-        return $query->when($userId, fn ($q) => $q->where('user_id', $userId));
-    }
+	public function scopeStatus($query, $status = null)
+	{
+		return $query->when($status, fn($q) => $q->where('status', $status));
+	}
 
-    public function scopeTrip($query, $tripId = null)
-    {
-        return $query->when($tripId, fn ($q) => $q->where('trip_id', $tripId));
-    }
+	public function scopeUser($query, $userId = null)
+	{
+		return $query->when($userId, fn($q) => $q->where('user_id', $userId));
+	}
 
-    public function scopeHotel($query, $hotelId = null)
-    {
-        return $query->when($hotelId, fn ($q) => $q->whereHas('bookingHotel', fn ($q2) => $q2->where('hotel_id', $hotelId)));
-    }
+	public function scopeTrip($query, $tripId = null)
+	{
+		return $query->when($tripId, fn($q) => $q->where('trip_id', $tripId));
+	}
 
-    public function scopeBookingNumber($query, $bookingNumber = null)
-    {
-        return $query->when($bookingNumber, fn ($q) => $q->where('booking_number', 'like', "%{$bookingNumber}%"));
-    }
+	public function scopeHotel($query, $hotelId = null)
+	{
+		return $query->when($hotelId, fn($q) => $q->whereHas('bookingHotel', fn($q2) => $q2->where('hotel_id', $hotelId)));
+	}
 
-    public function scopeType($query, $type = 'hotel')// hotel or trip
-    {
-        return $query->when($type, fn ($q) => $q->where('type', $type));
-    }
+	public function scopeBookingNumber($query, $bookingNumber = null)
+	{
+		return $query->when($bookingNumber, fn($q) => $q->where('booking_number', 'like', "%{$bookingNumber}%"));
+	}
+
+	public function scopeType($query, $type = 'hotel')// hotel or trip
+	{
+		return $query->when($type, fn($q) => $q->where('type', $type));
+	}
 }

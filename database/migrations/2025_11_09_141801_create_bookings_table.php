@@ -12,7 +12,8 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->string('booking_number')->unique();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+	        $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+	        $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('trip_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('type')->default('hotel'); // hotel or trip
 

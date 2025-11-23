@@ -369,6 +369,7 @@
 														label="{{ __('lang.id_type') }}"
 														wire:model="travelers.{{ $index }}.id_type"
 														:options="[
+														['id' => null, 'name' => __('lang.select')],
                                                         ['id' => 'passport', 'name' => __('lang.passport')],
                                                         ['id' => 'national_id', 'name' => __('lang.national_id')]
                                                     ]"

@@ -322,6 +322,7 @@ class CreateBookingHotel extends Component
             $this->redirectIntended(default: route('bookings.hotels.show', $booking->id));
         } catch (\Exception $e) {
             DB::rollBack();
+			dd($e->getMessage());
             flash()->error(__('lang.error_occurred'));
             Log::error('Booking creation error: '.$e->getMessage());
         }
