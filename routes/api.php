@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\DataController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\GuestController;
 use App\Http\Controllers\Api\HotelController;
 use App\Http\Controllers\Api\NotificationController;
@@ -30,6 +31,9 @@ Route::prefix('trips')->controller(TripController::class)->group(function () {
 	Route::get('/{trip}', 'tripDetails');
 });
 
+
+
+
 // data routes
 Route::controller(DataController::class)->group(function () {
 	Route::get('/hotel-types', 'hotelTypes');
@@ -39,6 +43,13 @@ Route::controller(DataController::class)->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+
+	//Favorites
+	Route::prefix('favorites')->controller(FavoriteController::class)->group(function () {
+		Route::get('/', 'favorites');
+		Route::post('/toggle', 'toggleFavorite');
+	});
+
     // notifications
     Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
         Route::get('/', 'index');

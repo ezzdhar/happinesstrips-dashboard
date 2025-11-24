@@ -869,5 +869,8 @@ return [
 	'forbidden' => 'ممنوع',
 	'old_password_not_correct' => 'كلمة المرور القديمة غير صحيحة',
 	'logout_successfully' => 'تم تسجيل الخروج بنجاح',
-
+	'removed_from_favorites' => 'تمت الإزالة من المفضلات',
+	'added_to_favorites' => 'تمت الإضافة إلى المفضلات',
+	'favorites' => 'المفضلات',
+	'not_found' => 'غير موجود',
 ];

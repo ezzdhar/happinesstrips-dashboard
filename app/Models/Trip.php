@@ -34,14 +34,20 @@ class Trip extends Model
         ];
     }
 
-    public function mainCategory(): BelongsTo
+	public function favorites(): MorphMany
+	{
+		return $this->morphMany(Favorite::class, 'favoritable');
+	}
+
+
+	public function mainCategory(): BelongsTo
     {
-        return $this->belongsTo(MainCategory::class);
+        return $this->belongsTo(MainCategory::class)->withDefault(['name'=>null]);
     }
 
     public function subCategory(): BelongsTo
     {
-        return $this->belongsTo(SubCategory::class);
+        return $this->belongsTo(SubCategory::class)->withDefault(['name'=>null]);
     }
 
     public function hotels(): BelongsToMany
@@ -62,7 +68,7 @@ class Trip extends Model
 
 	public function city(): BelongsTo
 	{
-		return $this->belongsTo(City::class);
+		return $this->belongsTo(City::class)->withDefault(['name'=>null]);
 	}
 
 
