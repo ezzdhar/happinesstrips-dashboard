@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Translatable\HasTranslations;
+use Carbon\Carbon;
 
 class Hotel extends Model
 {
@@ -56,58 +57,75 @@ class Hotel extends Model
 	 *
 	 * Get the cheapest available room based on today's price.
 	 */
+
 	public function getCheapestRoomForToday(string $currency = 'egp'): ?array
 	{
 		$today = now();
 		$cheapestRoom = null;
 		$lowestPrice = null;
 
-		// Loop through all active rooms
 		foreach ($this->rooms()->where('status', Status::Active)->get() as $room) {
 			$todayPrice = $room->priceForDate($today, $currency);
 
-			// Skip rooms without price for today
 			if ($todayPrice === null) {
 				continue;
 			}
 
-			// Check if this is the cheapest so far
 			if ($lowestPrice === null || $todayPrice < $lowestPrice) {
 				$lowestPrice = $todayPrice;
 				$cheapestRoom = $room;
 			}
 		}
 
-		// Return null if no room found
 		if ($cheapestRoom === null) {
 			return [
-				'room_id' => null,
-				'room_name' => null,
-				'adults_count' => null,
-				'children_count' => null,
+				'room_id'            => null,
+				'room_name'          => null,
+				'adults_count'       => null,
+				'children_count'     => null,
 				'price_period_start' => null,
-				'price_period_end' => null,
-				'price_per_night' => null,
-				'currency' => strtoupper($currency),
+				'price_period_end'   => null,
+				'price_per_night'    => null,
+				'currency'           => strtoupper($currency),
+				'next_date_in_period'=> null,
 			];
 		}
 
-		// Find the current price period for this room
 		$currentPeriod = $cheapestRoom->findPricePeriodForDate($today);
 
 		if ($currentPeriod === null) {
 			return null;
 		}
 
+		// نحسب بكرا ونتأكد إنه جوّه الفترة
+		$periodStart = isset($currentPeriod['start_date'])
+			? Carbon::parse($currentPeriod['start_date'])
+			: null;
+
+		$periodEnd = isset($currentPeriod['end_date'])
+			? Carbon::parse($currentPeriod['end_date'])
+			: null;
+
+		$nextDateInPeriod = null;
+
+		if ($periodStart && $periodEnd) {
+			$tomorrow = $today->copy()->addDay();
+
+			if ($tomorrow->betweenIncluded($periodStart, $periodEnd)) {
+				$nextDateInPeriod = $tomorrow->toDateString(); // 2000-11-16
+			}
+		}
+
 		return [
-			'room_id' => $cheapestRoom->id,
-			'room_name' => $cheapestRoom->name,
-			'adults_count' => $cheapestRoom->adults_count,
-			'children_count' => $cheapestRoom->children_count,
+			'room_id'            => $cheapestRoom->id,
+			'room_name'          => $cheapestRoom->name,
+			'adults_count'       => $cheapestRoom->adults_count,
+			'children_count'     => $cheapestRoom->children_count,
 			'price_period_start' => $currentPeriod['start_date'] ?? null,
-			'price_period_end' => $currentPeriod['end_date'] ?? null,
-			'price_per_night' => $lowestPrice,
-			'currency' => strtoupper($currency),
+			'price_period_end'   => $currentPeriod['end_date'] ?? null,
+			'price_per_night'    => $lowestPrice,
+			'currency'           => strtoupper($currency),
+			'next_date_in_period'=> $nextDateInPeriod,
 		];
 	}
 

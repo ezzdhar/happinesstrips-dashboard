@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\GuestController;
 use App\Http\Controllers\Api\HotelController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\TripController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,12 @@ Route::controller(GuestController::class)->group(function () {
 Route::prefix('hotels')->controller(HotelController::class)->group(function () {
 	Route::get('/', 'hotels');
 	Route::get('/{hotel}', 'hotelDetails');
+});
+
+// rooms routes
+Route::prefix('rooms')->controller(RoomController::class)->group(function () {
+	Route::get('/', 'rooms');
+	Route::get('/{room}', 'roomDetails');
 });
 
 // trips routes

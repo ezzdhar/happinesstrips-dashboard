@@ -69,4 +69,18 @@ class Room extends Model
 			$q->where('name->ar', 'like', "%{$search}%")->orWhere('name->en', 'like', "%{$search}%");
 		});
 	}
+
+	public function scopeAvailableBetween($query, $startDate, $endDate)
+	{
+		return $query->whereRaw("
+            EXISTS (
+                SELECT 1 FROM JSON_TABLE(price_periods, '$[*]' COLUMNS(
+                    p_start DATE PATH '$.start_date',
+                    p_end DATE PATH '$.end_date'
+                )) as periods
+                WHERE periods.p_start <= ? 
+                AND periods.p_end >= ?
+            )
+        ", [$endDate, $startDate]);
+	}
 }

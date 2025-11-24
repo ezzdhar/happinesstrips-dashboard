@@ -34,9 +34,16 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
-	 $room = Room::find(1);
-	return $room->priceForDate( Carbon::parse('2026-11-19'));
-	return $room->calculateBookingPrice(checkIn: Carbon::parse('2026-02-18'), checkOut: Carbon::parse('2026-02-20'), adultsCount: 1);
+	 $room = Room::first();
+	$room->priceForDate(Carbon::parse('2025-11-24'));
+	 $room->totalPriceForPeriod(Carbon::parse('2025-11-24'), Carbon::parse('2025-11-26'), 'egp');
+	return $room->calculateBookingPrice(
+		checkIn: Carbon::parse('2025-11-24'),
+		checkOut: Carbon::parse('2025-11-26'),
+		adultsCount: 2,
+		childrenAges: [],
+		currency: 'egp'
+	);
 });
 
 

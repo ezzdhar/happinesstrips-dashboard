@@ -15,7 +15,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
+            'email' => 'required|string|email:dns|max:255',
             'password' => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required|string|same:password',
 	        'fcm_token' => 'nullable|string|max:255',

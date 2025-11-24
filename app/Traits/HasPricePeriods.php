@@ -26,7 +26,7 @@ trait HasPricePeriods
             ? Carbon::instance($date)
             : Carbon::parse($date);
 
-        $period = $this->findPricePeriodForDate($searchDate);
+	      $period = $this->findPricePeriodForDate($searchDate);
 
         if (! $period) {
             return null;
