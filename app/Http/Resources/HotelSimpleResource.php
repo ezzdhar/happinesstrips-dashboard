@@ -11,7 +11,6 @@ class HotelSimpleResource extends JsonResource
 	public function toArray(Request $request): array
 	{
 		$currency = $request->attributes->get('currency', 'egp');
-
 		return [
 			'id' => $this->id,
 			'city' => $this->city->name,

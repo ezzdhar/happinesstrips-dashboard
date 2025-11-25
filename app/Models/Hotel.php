@@ -79,15 +79,16 @@ class Hotel extends Model
 
 		if ($cheapestRoom === null) {
 			return [
-				'room_id'            => null,
-				'room_name'          => null,
-				'adults_count'       => null,
-				'children_count'     => null,
+				'room_id' => null,
+				'room_name' => null,
+				'adults_count' => null,
+				'children_count' => null,
 				'price_period_start' => null,
-				'price_period_end'   => null,
-				'price_per_night'    => null,
-				'currency'           => strtoupper($currency),
-				'next_date_in_period'=> null,
+				'price_period_end' => null,
+				'price_per_night' => null,
+				'currency' => strtoupper($currency),
+				'start_date' => null,
+				'end_date' => null,
 			];
 		}
 
@@ -117,15 +118,17 @@ class Hotel extends Model
 		}
 
 		return [
-			'room_id'            => $cheapestRoom->id,
-			'room_name'          => $cheapestRoom->name,
-			'adults_count'       => $cheapestRoom->adults_count,
-			'children_count'     => $cheapestRoom->children_count,
+			'room_id' => $cheapestRoom->id,
+			'room_name' => $cheapestRoom->name,
+			'adults_count' => $cheapestRoom->adults_count,
+			'children_count' => $cheapestRoom->children_count,
+			'start_date' => $nextDateInPeriod,
+			'end_date' => Carbon::parse($nextDateInPeriod)->addDay()->toDateString(),
 			'price_period_start' => $currentPeriod['start_date'] ?? null,
-			'price_period_end'   => $currentPeriod['end_date'] ?? null,
-			'price_per_night'    => $lowestPrice,
-			'currency'           => strtoupper($currency),
-			'next_date_in_period'=> $nextDateInPeriod,
+			'price_period_end' => $currentPeriod['end_date'] ?? null,
+			'price_per_night' => $lowestPrice,
+			'currency' => strtoupper($currency),
+
 		];
 	}
 

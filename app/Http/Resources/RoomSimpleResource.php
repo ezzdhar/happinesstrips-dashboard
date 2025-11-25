@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
 
-class RoomResource extends JsonResource
+class RoomSimpleResource extends JsonResource
 {
 	public function toArray(Request $request): array
 	{
@@ -17,7 +17,6 @@ class RoomResource extends JsonResource
 			'name' => $this->name,
 			'adults_count' => $this->adults_count,
 			'children_count' => $this->children_count,
-			'includes' => $this->includes,
 			'price' => (float)$this->calculateBookingPrice(
 				checkIn: Carbon::parse($request->start_date),
 				checkOut: Carbon::parse($request->end_date),
@@ -27,9 +26,6 @@ class RoomResource extends JsonResource
 			)['grand_total'],
 			'amenities' => AmenityResource::collection($this->whenLoaded('amenities')),
 			'main_image' => FileService::get($this->files->first()->path),
-			'image' => $this->files->map(function ($image) {
-				return FileService::get($image->path);
-			}),
 		];
 	}
 }
