@@ -10,6 +10,7 @@ use App\Http\Resources\RoomSimpleResource;
 use App\Models\Room;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class RoomController extends Controller
 {
@@ -30,8 +31,24 @@ class RoomController extends Controller
 	}
 
 
-	public function roomDetails(GetRoomDetailsRequest $request,Room $room)
+	public function roomDetails(GetRoomDetailsRequest $request, Room $room)
 	{
 		return $this->responseOk(message: __('lang.room_details'), data: new RoomResource($room));
 	}
+
+	public function calculateBookingRoomPrice(GetRoomDetailsRequest $request, Room $room)
+	{
+		$calculate_booking_price = $room->calculateBookingPrice(
+			checkIn: Carbon::parse($request->start_date),
+			checkOut: Carbon::parse($request->end_date),
+			adultsCount: $request->adults_count,
+			childrenAges: $request->childrenAges ?? [],
+			currency: $request->attributes->get('currency', 'egp')
+		);
+		if (!$calculate_booking_price['success']) {
+			return $this->responseError(message: $calculate_booking_price['error']);
+		}
+		return $this->responseOk(message: __('lang.calculate_booking_room_price'), data: $calculate_booking_price);
+	}
+
 }

@@ -37,9 +37,9 @@ class ApiExceptionHandlerException extends ExceptionHandler
                 return $this->responseMethodNotAllowed();
             });
 
-            //			$this->renderable(function (\Exception $e, $request) {
-            //				return $this->responseInternalError();
-            //			});
+//            			$this->renderable(function (\Exception $e, $request) {
+//            				return $this->responseInternalError();
+//            			});
         }
 
     }

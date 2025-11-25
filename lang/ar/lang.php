@@ -873,4 +873,7 @@ return [
 	'added_to_favorites' => 'تمت الإضافة إلى المفضلات',
 	'favorites' => 'المفضلات',
 	'not_found' => 'غير موجود',
+	'calculate_booking_room_price' => 'حساب تفاصيل حجز  خرفة',
+	'adults_count_exceeds_room_capacity' => 'عدد البالغين يتجاوز سعة الغرفة البالغة :capacity',
+	'children_count_exceeds_room_capacity' => 'عدد الأطفال يتجاوز سعة الغرفة للأطفال :capacity',
 ];

@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Route;
 
 // guest routes
 Route::controller(GuestController::class)->group(function () {
-    Route::post('/register', 'register');
-    Route::post('/login', 'login');
-    Route::post('/social-login', 'socialLogin');
-    Route::post('/send/code', 'sendCode');
-    Route::post('/verify-code', 'verifyCode');
-    Route::post('/reset/password', 'resetPassword');
+	Route::post('/register', 'register');
+	Route::post('/login', 'login');
+	Route::post('/social-login', 'socialLogin');
+	Route::post('/send/code', 'sendCode');
+	Route::post('/verify-code', 'verifyCode');
+	Route::post('/reset/password', 'resetPassword');
 });
 
 // hotels routes
@@ -30,6 +30,7 @@ Route::prefix('hotels')->controller(HotelController::class)->group(function () {
 Route::prefix('rooms')->controller(RoomController::class)->group(function () {
 	Route::get('/', 'rooms');
 	Route::get('/{room}', 'roomDetails');
+	Route::get('/calculate/booking-room/price/{room}', 'calculateBookingRoomPrice');
 });
 
 // trips routes
@@ -37,8 +38,6 @@ Route::prefix('trips')->controller(TripController::class)->group(function () {
 	Route::get('/', 'trips');
 	Route::get('/{trip}', 'tripDetails');
 });
-
-
 
 
 // data routes
@@ -57,22 +56,22 @@ Route::middleware('auth:sanctum')->group(function () {
 		Route::post('/toggle', 'toggleFavorite');
 	});
 
-    // notifications
-    Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
-        Route::get('/', 'index');
-        Route::post('/read', 'read');
-        Route::post('/read-all', 'readAll');
-        Route::post('/delete', 'delete');
-        Route::get('/unread/count', 'unreadNotificationCount');
-    });
+	// notifications
+	Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
+		Route::get('/', 'index');
+		Route::post('/read', 'read');
+		Route::post('/read-all', 'readAll');
+		Route::post('/delete', 'delete');
+		Route::get('/unread/count', 'unreadNotificationCount');
+	});
 
-    // profile
-    Route::prefix('profile')->controller(ProfileController::class)->group(function () {
-        Route::get('/', 'index');
-        Route::post('/update', 'update');
-	    Route::post('/update/password', 'changePassword');
-	    Route::post('/update/language', 'changeLanguage');
-        Route::post('/logout', 'logout');
-        Route::post('/delete-account', 'deleteAccount');
-    });
+	// profile
+	Route::prefix('profile')->controller(ProfileController::class)->group(function () {
+		Route::get('/', 'index');
+		Route::post('/update', 'update');
+		Route::post('/update/password', 'changePassword');
+		Route::post('/update/language', 'changeLanguage');
+		Route::post('/logout', 'logout');
+		Route::post('/delete-account', 'deleteAccount');
+	});
 });
