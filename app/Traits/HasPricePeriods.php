@@ -3,267 +3,297 @@
 namespace App\Traits;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 trait HasPricePeriods
 {
-    /**
-     * الحصول على سعر الغرفة في يوم معين بعملة محددة
-     * تستخدم للحصول على سعر البالغ في يوم واحد فقط
-     *
-     * Get the price for a specific date and currency.
-     *
-     * @param  string|\DateTimeInterface  $date
-     * @param  string  $currency  "egp" | "usd"
-     */
-    public function priceForDate($date, string $currency = 'egp'): ?float
-    {
-        $currency = $this->normalizeCurrency($currency);
-        if (! $currency) {
-            return null;
-        }
+	/**
+	 * الحصول على سعر الغرفة في يوم معين بعملة محددة
+	 * (تم تحسين الأداء باستخدام Timestamp للمقارنة الأسرع)
+	 */
+	public function priceForDate($date, string $currency = 'egp'): ?float
+	{
+		$currency = $this->normalizeCurrency($currency);
+		if (!$currency) {
+			return null;
+		}
 
-        $searchDate = $date instanceof \DateTimeInterface
-            ? Carbon::instance($date)
-            : Carbon::parse($date);
+		// نستخدم الدالة المحسنة للبحث
+		$period = $this->findPricePeriodForDate(
+			$date instanceof \DateTimeInterface ? Carbon::instance($date) : Carbon::parse($date)
+		);
 
-	      $period = $this->findPricePeriodForDate($searchDate);
+		if (!$period) {
+			return null;
+		}
 
-        if (! $period) {
-            return null;
-        }
+		return $currency === 'egp'
+			? ($period['adult_price_egp'] ?? null)
+			: ($period['adult_price_usd'] ?? null);
+	}
 
-        return $currency === 'egp'
-            ? ($period['adult_price_egp'] ?? null)
-            : ($period['adult_price_usd'] ?? null);
-    }
+	/**
+	 * البحث عن فترة السعر (تم تحسينها لتتوقف فور العثور على النتيجة)
+	 */
+	public function findPricePeriodForDate(Carbon $date): ?array
+	{
+		$periods = $this->price_periods ?? [];
+		$targetTimestamp = $date->startOfDay()->timestamp;
 
-    /**
-     * البحث عن فترة السعر التي تحتوي على التاريخ المحدد
-     * تستخدم للعثور على price period الذي يحتوي على اليوم المطلوب من جدول price_periods
-     *
-     * Find price period that contains the given date.
-     */
-    public function findPricePeriodForDate(Carbon $date): ?array
-    {
-        $periods = $this->price_periods ?? [];
+		foreach ($periods as $period) {
+			// تحقق سريع قبل عمل Parse للتواريخ لتوفير الأداء
+			if (!isset($period['start_date']) || !isset($period['end_date'])) {
+				continue;
+			}
 
-        foreach ($periods as $period) {
-            if (! isset($period['start_date']) || ! isset($period['end_date'])) {
-                continue;
-            }
+			// تحويل التواريخ لـ Timestamp للمقارنة الرقمية السريعة
+			$startTs = Carbon::parse($period['start_date'])->startOfDay()->timestamp;
+			$endTs = Carbon::parse($period['end_date'])->endOfDay()->timestamp;
 
-            $start = Carbon::parse($period['start_date'])->startOfDay();
-            $end = Carbon::parse($period['end_date'])->endOfDay();
+			if ($targetTimestamp >= $startTs && $targetTimestamp <= $endTs) {
+				return $period;
+			}
+		}
 
-            if ($date->between($start, $end)) {
-                return $period;
-            }
-        }
+		return null;
+	}
 
-        return null;
-    }
+	/**
+	 * التحقق من التغطية (تم تحسينها باستخدام الرياضيات بدلاً من اللوب)
+	 * Time Complexity: O(M) where M is number of periods (Fast)
+	 */
+	public function isDateRangeCovered($startDate, $endDate): bool
+	{
+		$start = Carbon::parse($startDate)->startOfDay();
+		$end = Carbon::parse($endDate)->startOfDay();
 
-    /**
-     * التحقق من أن جميع الأيام في فترة الحجز لها أسعار محددة
-     * تستخدم للتأكد من تغطية كل ليلة في الحجز بسعر من price_periods قبل السماح بالحجز
-     * ملحوظة: تاريخ الخروج لا يُحسب (يُحسب فقط عدد الليالي)
-     *
-     * Check if a date range is fully covered by price periods.
-     * Note: endDate is the checkout date and is NOT included in the calculation (only nights count).
-     */
-    public function isDateRangeCovered($startDate, $endDate): bool
-    {
-        $start = $startDate instanceof \DateTimeInterface
-            ? Carbon::instance($startDate)->startOfDay()
-            : Carbon::parse($startDate)->startOfDay();
+		if ($start->greaterThanOrEqualTo($end)) {
+			return false;
+		}
 
-        $end = $endDate instanceof \DateTimeInterface
-            ? Carbon::instance($endDate)->startOfDay()
-            : Carbon::parse($endDate)->startOfDay();
+		$totalNightsRequired = $start->diffInDays($end);
+		$coveredNights = 0;
 
-        if ($start->greaterThanOrEqualTo($end)) {
-            return false;
-        }
+		$periods = $this->price_periods ?? [];
 
-        $current = $start->copy();
+		foreach ($periods as $period) {
+			if (!isset($period['start_date']) || !isset($period['end_date'])) {
+				continue;
+			}
 
-        // Only check nights (days before checkout)
-        while ($current->lessThan($end)) {
-            if (! $this->findPricePeriodForDate($current)) {
-                return false;
-            }
-            $current->addDay();
-        }
+			$pStart = Carbon::parse($period['start_date'])->startOfDay();
+			$pEnd = Carbon::parse($period['end_date'])->startOfDay(); // نجعلها StartOfDay لتوحيد الحساب
 
-        return true;
-    }
+			// حساب التقاطع بين فترة الحجز وفترة السعر
+			// Intersection Start = Max(ReqStart, PeriodStart)
+			// Intersection End   = Min(ReqEnd, PeriodEnd + 1 Day) -> لأن الـ End في الفترات عادة شامل، بينما في الحجز هو Check-out
 
-    /**
-     * حساب إجمالي السعر لفترة زمنية (مجموع أسعار كل الليالي)
-     * تستخدم لحساب السعر الإجمالي للشخص البالغ الواحد خلال فترة الحجز كاملة
-     * ملحوظة: تاريخ الخروج لا يُحسب (يُحسب فقط عدد الليالي)
-     *
-     * Calculate total price for a date range.
-     * Note: endDate is the checkout date and is NOT included (only nights count).
-     */
-    public function totalPriceForPeriod($startDate, $endDate, string $currency = 'egp'): float
-    {
-        $currency = $this->normalizeCurrency($currency);
-        if (! $currency) {
-            return 0.0;
-        }
+			// تصحيح: فترة السعر شاملة لليوم الأخير، لكن الحجز ينتهي عند الـ check-out
+			// إذن الليلة الأخيرة في فترة السعر هي pEnd.
+			// الحساب الدقيق:
 
-        $start = $startDate instanceof \DateTimeInterface
-            ? Carbon::instance($startDate)->startOfDay()
-            : Carbon::parse($startDate)->startOfDay();
+			$overlapStart = $start->max($pStart);
+			// نأخذ الأصغر بين: (تاريخ الخروج) و (تاريخ نهاية الفترة + 1 يوم) لأن فترة السعر تشمل ليلة النهاية
+			$overlapEnd = $end->min($pEnd->copy()->addDay());
 
-        $end = $endDate instanceof \DateTimeInterface
-            ? Carbon::instance($endDate)->startOfDay()
-            : Carbon::parse($endDate)->startOfDay();
+			if ($overlapStart->lessThan($overlapEnd)) {
+				$days = $overlapStart->diffInDays($overlapEnd);
+				$coveredNights += $days;
+			}
+		}
 
-        if ($start->greaterThanOrEqualTo($end)) {
-            return 0.0;
-        }
+		// إذا كان مجموع الأيام المغطاة يساوي أو أكبر من المطلوب، فالنطاق مغطى
+		// ملاحظة: هذا يفترض عدم تداخل الفترات في قاعدة البيانات، وهو الطبيعي
+		return $coveredNights >= $totalNightsRequired;
+	}
 
-        $total = 0.0;
-        $current = $start->copy();
+	/**
+	 * حساب السعر الإجمالي (تم تحسينها بضرب عدد الأيام في السعر بدلاً من الجمع المتكرر)
+	 * Time Complexity: O(M) (Fast)
+	 */
+	public function totalPriceForPeriod($startDate, $endDate, string $currency = 'egp'): float
+	{
+		$currency = $this->normalizeCurrency($currency);
+		if (!$currency) return 0.0;
 
-        // Only count nights (days before checkout)
-        while ($current->lessThan($end)) {
-            $price = $this->priceForDate($current, $currency);
-            if ($price === null) {
-                return 0.0; // If any day is not covered, return 0
-            }
-            $total += $price;
-            $current->addDay();
-        }
+		$start = Carbon::parse($startDate)->startOfDay();
+		$end = Carbon::parse($endDate)->startOfDay();
 
-        return $total;
-    }
+		if ($start->greaterThanOrEqualTo($end)) return 0.0;
 
-    /**
-     * الحصول على تفصيل الأسعار لكل يوم في فترة الحجز
-     * تستخدم لعرض سعر كل ليلة على حدة مع اسم اليوم والتاريخ في نتيجة حساب السعر
-     * ملحوظة: تاريخ الخروج لا يُحسب (يُحسب فقط عدد الليالي)
-     *
-     * Get price breakdown for a period.
-     * Note: endDate is the checkout date and is NOT included (only nights count).
-     */
-    public function priceBreakdownForPeriod($startDate, $endDate, string $currency = 'egp'): array
-    {
-        $currency = $this->normalizeCurrency($currency);
-        if (! $currency) {
-            return [
-                'days' => [],
-                'total' => 0.0,
-                'currency' => $currency,
-                'nights_count' => 0,
-                'is_covered' => false,
-            ];
-        }
+		$totalNightsRequired = $start->diffInDays($end);
+		$calculatedNights = 0;
+		$totalPrice = 0.0;
 
-        $start = $startDate instanceof \DateTimeInterface
-            ? Carbon::instance($startDate)->startOfDay()
-            : Carbon::parse($startDate)->startOfDay();
+		// مفتاح السعر المطلوب
+		$priceKey = $currency === 'usd' ? 'adult_price_usd' : 'adult_price_egp';
+		$periods = $this->price_periods ?? [];
 
-        $end = $endDate instanceof \DateTimeInterface
-            ? Carbon::instance($endDate)->startOfDay()
-            : Carbon::parse($endDate)->startOfDay();
+		foreach ($periods as $period) {
+			if (!isset($period[$priceKey])) continue;
 
-        if ($start->greaterThanOrEqualTo($end)) {
-            return [
-                'days' => [],
-                'total' => 0.0,
-                'currency' => $currency,
-                'nights_count' => 0,
-                'is_covered' => false,
-            ];
-        }
+			$pStart = Carbon::parse($period['start_date'])->startOfDay();
+			$pEnd = Carbon::parse($period['end_date'])->startOfDay();
 
-        $days = [];
-        $total = 0.0;
-        $current = $start->copy();
-        $allCovered = true;
+			// منطق التقاطع (Intersection Logic)
+			$overlapStart = $start->max($pStart);
+			$overlapEnd = $end->min($pEnd->copy()->addDay());
 
-        // Only include nights (days before checkout)
-        while ($current->lessThan($end)) {
-            $price = $this->priceForDate($current, $currency);
+			if ($overlapStart->lessThan($overlapEnd)) {
+				$days = $overlapStart->diffInDays($overlapEnd);
 
-            if ($price === null) {
-                $allCovered = false;
-            }
+				$totalPrice += ($days * (float)$period[$priceKey]);
+				$calculatedNights += $days;
+			}
+		}
 
-            $days[] = [
-                'date' => $current->format('Y-m-d'),
-                'day_name' => $current->locale(app()->getLocale())->translatedFormat('l'),
-                'day_name_en' => $current->format('l'),
-                'price' => $price ?? 0,
-                'currency' => strtoupper($currency),
-                'is_covered' => $price !== null,
-            ];
+		// إذا لم نغطي كامل المدة، نرجع 0 كما في الدالة الأصلية
+		if ($calculatedNights < $totalNightsRequired) {
+			return 0.0;
+		}
 
-            if ($price !== null) {
-                $total += $price;
-            }
+		return $totalPrice;
+	}
 
-            $current->addDay();
-        }
+	/**
+	 * تفاصيل الأسعار (تم تحسينها باستخدام Lookup Map)
+	 * Time Complexity: O(N) (Fast lookup inside loop)
+	 */
+	public function priceBreakdownForPeriod($startDate, $endDate, string $currency = 'egp'): array
+	{
+		$currency = $this->normalizeCurrency($currency);
 
-        return [
-            'days' => $days,
-            'total' => $total,
-            'currency' => strtoupper($currency),
-            'nights_count' => count($days),
-            'is_covered' => $allCovered,
-        ];
-    }
+		// الرد الافتراضي للفشل
+		$fallback = [
+			'days' => [], 'total' => 0.0, 'currency' => $currency,
+			'nights_count' => 0, 'is_covered' => false
+		];
 
-    /**
-     * الحصول على قائمة بالتواريخ التي ليس لها أسعار محددة في فترة الحجز
-     * تستخدم لإظهار للمستخدم الأيام التي لا يمكن الحجز فيها لعدم وجود أسعار لها
-     * ملحوظة: تاريخ الخروج لا يُحسب (يُحسب فقط عدد الليالي)
-     *
-     * Get all uncovered dates in a range.
-     * Note: endDate is the checkout date and is NOT included (only nights count).
-     */
-    public function getUncoveredDates($startDate, $endDate): array
-    {
-        $start = $startDate instanceof \DateTimeInterface
-            ? Carbon::instance($startDate)->startOfDay()
-            : Carbon::parse($startDate)->startOfDay();
+		if (!$currency) return $fallback;
 
-        $end = $endDate instanceof \DateTimeInterface
-            ? Carbon::instance($endDate)->startOfDay()
-            : Carbon::parse($endDate)->startOfDay();
+		$start = Carbon::parse($startDate)->startOfDay();
+		$end = Carbon::parse($endDate)->startOfDay();
 
-        $uncovered = [];
-        $current = $start->copy();
+		if ($start->greaterThanOrEqualTo($end)) return $fallback;
 
-        // Only check nights (days before checkout)
-        while ($current->lessThan($end)) {
-            if (! $this->findPricePeriodForDate($current)) {
-                $uncovered[] = $current->format('Y-m-d');
-            }
-            $current->addDay();
-        }
+		// 1. بناء خريطة أسعار (Cache) للفترة المطلوبة فقط
+		// هذا يمنع البحث المتكرر داخل اللوب
+		$priceMap = $this->buildPriceMap($start, $end, $currency);
 
-        return $uncovered;
-    }
+		$days = [];
+		$total = 0.0;
+		$allCovered = true;
+		$current = $start->copy();
 
-    /**
-     * تحويل العملة إلى الصيغة الموحدة (egp أو usd)
-     * تستخدم لقبول العملة بأشكال مختلفة (جنيه، EGP، دولار، USD، إلخ) وتحويلها للشكل الموحد
-     *
-     * Normalize currency to egp | usd.
-     */
-    protected function normalizeCurrency(string $currency): ?string
-    {
-        $c = strtolower(trim($currency));
-        $aliases = [
-            'egp' => 'egp', 'e£' => 'egp', 'le' => 'egp', 'جنيه' => 'egp', 'جنيه مصري' => 'egp', 'pound' => 'egp',
-            'usd' => 'usd', '$' => 'usd', 'دولار' => 'usd', 'dollar' => 'usd',
-        ];
+		// Locale مرة واحدة خارج اللوب
+		$locale = app()->getLocale();
 
-        return $aliases[$c] ?? ($c === 'egp' || $c === 'usd' ? $c : null);
-    }
+		// اللوب الآن سريع جداً لأنه مجرد قراءة من المصفوفة
+		while ($current->lessThan($end)) {
+			$dateStr = $current->format('Y-m-d');
+			$price = $priceMap[$dateStr] ?? null;
+
+			if ($price === null) {
+				$allCovered = false;
+			} else {
+				$total += $price;
+			}
+
+			$days[] = [
+				'date' => $dateStr,
+				'day_name' => $current->locale($locale)->translatedFormat('l'),
+				'day_name_en' => $current->format('l'),
+				'price' => $price ?? 0,
+				'currency' => strtoupper($currency),
+				'is_covered' => $price !== null,
+			];
+
+			$current->addDay();
+		}
+
+		return [
+			'days' => $days,
+			'total' => $total,
+			'currency' => strtoupper($currency),
+			'nights_count' => count($days),
+			'is_covered' => $allCovered,
+		];
+	}
+
+	/**
+	 * التواريخ غير المغطاة
+	 * (تستخدم نفس منطق الـ Map للسرعة)
+	 */
+	public function getUncoveredDates($startDate, $endDate): array
+	{
+		$start = Carbon::parse($startDate)->startOfDay();
+		$end = Carbon::parse($endDate)->startOfDay();
+
+		// نستخدم خريطة وهمية للتحقق من الوجود فقط
+		// بما أننا لا نحتاج السعر، نمرر 'egp' كقيمة افتراضية
+		$priceMap = $this->buildPriceMap($start, $end, 'egp');
+
+		$uncovered = [];
+		$current = $start->copy();
+
+		while ($current->lessThan($end)) {
+			$dateStr = $current->format('Y-m-d');
+
+			if (!isset($priceMap[$dateStr])) {
+				$uncovered[] = $dateStr;
+			}
+
+			$current->addDay();
+		}
+
+		return $uncovered;
+	}
+
+	/**
+	 * دالة مساعدة خاصة لبناء خريطة الأسعار بسرعة
+	 * تحول الفترات إلى مصفوفة: ['2025-01-01' => 100, '2025-01-02' => 100]
+	 */
+	private function buildPriceMap(Carbon $start, Carbon $end, string $currency): array
+	{
+		$map = [];
+		$priceKey = $currency === 'usd' ? 'adult_price_usd' : 'adult_price_egp';
+		$periods = $this->price_periods ?? [];
+
+		foreach ($periods as $period) {
+			if (!isset($period['start_date'], $period['end_date'], $period[$priceKey])) {
+				continue;
+			}
+
+			// تحسين: نفحص فقط الفترات التي تتقاطع مع طلب العميل
+			$pStart = Carbon::parse($period['start_date'])->startOfDay();
+			$pEnd = Carbon::parse($period['end_date'])->startOfDay(); // نهاية الفترة تشمل الليلة
+
+			// التقاطع
+			$overlapStart = $start->max($pStart);
+			$overlapEnd = $end->min($pEnd->copy()->addDay()); // +1 لأن الـ Loop يتوقف قبل الـ End
+
+			if ($overlapStart->lessThan($overlapEnd)) {
+				$curr = $overlapStart->copy();
+				$price = (float)$period[$priceKey];
+
+				// ملء الخريطة للأيام المتقاطعة فقط
+				while ($curr->lessThan($overlapEnd)) {
+					$map[$curr->format('Y-m-d')] = $price;
+					$curr->addDay();
+				}
+			}
+		}
+		return $map;
+	}
+
+	protected function normalizeCurrency(string $currency): ?string
+	{
+		$c = strtolower(trim($currency));
+		$aliases = [
+			'egp' => 'egp', 'e£' => 'egp', 'le' => 'egp', 'جنيه' => 'egp', 'جنيه مصري' => 'egp', 'pound' => 'egp',
+			'usd' => 'usd', '$' => 'usd', 'دولار' => 'usd', 'dollar' => 'usd',
+		];
+
+		return $aliases[$c] ?? ($c === 'egp' || $c === 'usd' ? $c : null);
+	}
 }

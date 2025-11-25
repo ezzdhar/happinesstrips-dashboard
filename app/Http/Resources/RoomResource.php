@@ -30,6 +30,7 @@ class RoomResource extends JsonResource
 			'image' => $this->files->map(function ($image) {
 				return FileService::get($image->path);
 			}),
+			'price_periods' =>$this->price_periods
 		];
 	}
 }

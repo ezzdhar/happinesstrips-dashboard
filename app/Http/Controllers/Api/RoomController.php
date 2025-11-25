@@ -22,7 +22,8 @@ class RoomController extends Controller
 			->hotelId($request->hotel_id)
 			->where('adults_count', (int)$request->adults_count)
 			->when($request->children_count, fn($q) => $q->where('children_count', $request->children_count))
-			->availableBetween($request->start_date, $request->end_date)
+			->isAvailableRangeCovered()
+			->filterByCalculatedPrice()
 			->with(['amenities'])
 			->paginate($request->per_page ?? 15);
 		return $this->responseOk(message: __('lang.rooms'), data: RoomSimpleResource::collection($rooms));
