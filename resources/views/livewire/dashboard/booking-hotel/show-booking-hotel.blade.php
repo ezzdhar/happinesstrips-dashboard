@@ -146,7 +146,7 @@
                     <!-- Children Pricing -->
                     <div class="bg-base-200 p-4 rounded-lg">
                         <h4 class="font-semibold mb-3 text-secondary">{{ __('lang.children') }}</h4>
-                        @if(!empty($pricing['children_breakdown']) && count($pricing['children_breakdown']) > 0)
+                        @if(!empty($pricing['children_breakdown']) && count($pricing['children_breakdown']) > 0 && $booking->children_count)
                             <div class="space-y-3">
                                 @foreach($pricing['children_breakdown'] as $child)
                                     <div class="bg-base-100 p-3 rounded border">

@@ -876,4 +876,11 @@ return [
 	'calculate_booking_room_price' => 'حساب تفاصيل حجز  خرفة',
 	'adults_count_exceeds_room_capacity' => 'عدد البالغين يتجاوز سعة الغرفة البالغة :capacity',
 	'children_count_exceeds_room_capacity' => 'عدد الأطفال يتجاوز سعة الغرفة للأطفال :capacity',
+	'custom_hotel_bookings' => 'حجوزات الفنادق المخصصة',
+	'hotel_details' => 'تفاصيل الفندق',
+	'travelers_count_mismatch' => 'عدد المسافرين غير مطابق. المتوقع :expected والمُرسل :provided',
+	'fcm_token' => 'رمز FCM',
+	'no_children' => 'لا يوجد أطفال',
+	'recalculate_price' => 'إعادة حساب السعر',
+
 ];

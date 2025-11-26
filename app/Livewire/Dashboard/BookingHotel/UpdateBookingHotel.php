@@ -4,291 +4,345 @@ namespace App\Livewire\Dashboard\BookingHotel;
 
 use App\Enums\Status;
 use App\Models\Booking;
-use App\Models\BookingTraveler;
 use App\Models\Hotel;
 use App\Models\Room;
 use App\Models\User;
+use App\Services\Booking\HotelBookingService;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Title('update_hotel_booking')]
 class UpdateBookingHotel extends Component
 {
-    public Booking $booking;
+	public Booking $booking;
 
-    public $user_id;
+	// خصائص الحجز الأساسية
+	public $user_id;
+	public $hotel_id;
+	public $room_id;
+	public $selected_room;
+	public $check_in;
+	public $check_out;
+	public $status;
+	public $notes;
+	public $currency = 'egp';
+	public $nights_count = 1;
 
-    public $hotel_id;
+	// خصائص الأعداد والأسعار (تمت إضافتها لتطابق الإضافة)
+	public $adults_count = 1;
+	public $children_ages = [];
+	public $pricing_result = null;
 
-    public $room_id;
+	// القوائم والبيانات
+	public $travelers = [];
+	public $hotels = [];
+	public $users = [];
+	public $rooms = [];
 
-    public $selected_room;
+	public function mount(Booking $booking): void
+	{
+		$this->booking = $booking->load(['bookingHotel', 'travelers']);
 
-    public $check_in;
+		// تعبئة البيانات الأساسية
+		$this->user_id = $booking->user_id;
+		$this->check_in = $booking->check_in?->format('Y-m-d');
+		$this->check_out = $booking->check_out?->format('Y-m-d');
+		$this->nights_count = $booking->nights_count;
+		$this->notes = $booking->notes;
+		$this->currency = $booking->currency;
+		$this->status = $booking->status->value;
+		$this->adults_count = $booking->adults_count;
 
-    public $check_out;
+		// استخراج أعمار الأطفال من المسافرين الحاليين
+		// نفترض أن نوع المسافر 'child' هو المحدد
+		$this->children_ages = $booking->travelers->where('type', 'child')->pluck('age')->toArray();
 
-    public $status;
+		// تحميل بيانات الفندق والغرفة
+		if ($booking->bookingHotel) {
+			$this->hotel_id = $booking->bookingHotel->hotel_id;
+			$this->room_id = $booking->bookingHotel->room_id;
+			$this->selected_room = $booking->bookingHotel->room;
+		}
 
-    public $notes;
+		// تحميل المسافرين للواجهة (مع الحفاظ على الـ ID للتعديل)
+		foreach ($booking->travelers as $traveler) {
+			$this->travelers[] = [
+				'id' => $traveler->id, // مهم جداً: نحتفظ بالـ ID للتعديل بدلاً من الحذف والإنشاء
+				'full_name' => $traveler->full_name,
+				'phone_key' => $traveler->phone_key,
+				'phone' => $traveler->phone,
+				'nationality' => $traveler->nationality,
+				'age' => $traveler->age,
+				'id_type' => $traveler->id_type,
+				'id_number' => $traveler->id_number,
+				'type' => $traveler->type,
+			];
+		}
 
-    public $currency = 'egp';
+		// تحميل القوائم المنسدلة
+		$this->hotels = Hotel::status(Status::Active)->get()->map(function ($hotel) {
+			return [
+				'id' => $hotel->id,
+				'name' => $hotel->name,
+			];
+		})->toArray();
+		$this->users = User::role('user')->get(['id', 'name', 'phone'])->toArray();
 
-    public $nights_count = 1;
+		if ($this->hotel_id) {
+			$this->rooms = Room::where('hotel_id', $this->hotel_id)->status(Status::Active)->get();
+		}
 
-    public $travelers = [];
+		// حساب السعر المبدئي لعرضه
+		$this->calculatePrice(false); // false تعني لا تعدل المسافرين في الـ mount
 
-    public $hotels = [];
+		view()->share('breadcrumbs', $this->breadcrumbs());
+	}
 
-    public $users = [];
+	public function breadcrumbs(): array
+	{
+		return [
+			[
+				'label' => __('lang.hotel_bookings'),
+				'icon' => 'o-calendar',
+				'link' => route('bookings.hotels'),
+			],
+			[
+				'label' => __('lang.update_hotel_booking') . ' - ' . $this->booking->booking_number,
+			],
+		];
+	}
 
-    public $rooms = [];
+	// --- أحداث التغيير (Update Events) ---
 
-    public function mount(Booking $booking): void
-    {
-        $this->booking = $booking->load(['bookingHotel', 'travelers']);
+	public function updatedHotelId(): void
+	{
+		$this->room_id = null;
+		$this->selected_room = null;
+		$this->rooms = [];
+		// لا نصفر المسافرين هنا في التعديل لتجنب فقدان البيانات بالخطأ، لكن يمكن فعل ذلك حسب الرغبة
+		if ($this->hotel_id) {
+			$this->rooms = Room::where('hotel_id', $this->hotel_id)->status(Status::Active)->get();
+		}
+	}
 
-        $this->user_id = $booking->user_id;
-        $this->check_in = $booking->check_in?->format('Y-m-d');
-        $this->check_out = $booking->check_out?->format('Y-m-d');
-        $this->nights_count = $booking->nights_count;
-        $this->notes = $booking->notes;
-        $this->currency = $booking->currency;
-        $this->status = $booking->status->value;
+	public function updatedRoomId(): void
+	{
+		if ($this->room_id) {
+			$room = Room::find($this->room_id);
+			if ($room) {
+				$this->selected_room = $room;
+				// عند تغيير الغرفة، نتأكد أن العدد الحالي لا يتجاوز سعة الغرفة الجديدة
+				if ($this->adults_count > $room->adults_count) {
+					$this->adults_count = $room->adults_count;
+				}
+				$this->calculatePrice();
+			}
+		}
+	}
 
-        // Load hotel booking (single)
-        if ($booking->bookingHotel) {
-            $this->hotel_id = $booking->bookingHotel->hotel_id;
-            $this->room_id = $booking->bookingHotel->room_id;
-            $this->selected_room = $booking->bookingHotel->room;
-        }
+	public function updatedCheckIn(): void
+	{
+		if ($this->check_in && $this->check_out) {
+			$checkIn = Carbon::parse($this->check_in);
+			$checkOut = Carbon::parse($this->check_out);
+			$this->nights_count = $checkIn->diffInDays($checkOut);
+		}
+		$this->calculatePrice();
+	}
 
-        // Load travelers
-        foreach ($booking->travelers as $traveler) {
-            $this->travelers[] = [
-                'id' => $traveler->id,
-                'full_name' => $traveler->full_name,
-                'phone_key' => $traveler->phone_key,
-                'phone' => $traveler->phone,
-                'nationality' => $traveler->nationality,
-                'age' => $traveler->age,
-                'id_type' => $traveler->id_type,
-                'id_number' => $traveler->id_number,
-                'type' => $traveler->type,
-            ];
-        }
+	public function updatedCheckOut(): void
+	{
+		$this->updatedCheckIn();
+	}
 
-        // Load data for dropdowns
-        $this->hotels = Hotel::status(Status::Active)->get()->map(function ($hotel) {
-            return [
-                'id' => $hotel->id,
-                'name' => $hotel->name,
-            ];
-        })->toArray();
-        $this->users = User::role('user')->get(['id', 'name', 'phone'])->toArray();
+	public function updatedCurrency(): void
+	{
+		$this->calculatePrice();
+	}
 
-        // Load rooms for selected hotel
-        if ($this->hotel_id) {
-            $this->rooms = Room::where('hotel_id', $this->hotel_id)->status(Status::Active)->get();
-        }
+	public function updatedAdultsCount(): void
+	{
+		if ($this->selected_room && $this->selected_room->adults_count < $this->adults_count) {
+			$this->adults_count = $this->selected_room->adults_count;
+			flash()->error(__('lang.adults_count_exceeded_maximum', ['max' => $this->selected_room->adults_count]));
+			return;
+		}
+		$this->calculatePrice();
+	}
 
-        view()->share('breadcrumbs', $this->breadcrumbs());
-    }
+	public function updatedChildrenAges(): void
+	{
+		$this->calculatePrice();
+	}
 
-    public function breadcrumbs(): array
-    {
-        return [
-            [
-                'label' => __('lang.hotel_bookings'),
-                'icon' => 'o-calendar',
-                'link' => route('bookings.hotels'),
-            ],
-            [
-                'label' => __('lang.update_hotel_booking').' - '.$this->booking->booking_number,
-            ],
-        ];
-    }
+	// --- إدارة الأطفال ---
 
-    // get rooms based on selected hotel
-    public function updatedHotelId(): void
-    {
-        $this->room_id = null;
-        $this->selected_room = null;
-        $this->rooms = [];
-        $this->travelers = [];
-        if ($this->hotel_id) {
-            $this->rooms = Room::where('hotel_id', $this->hotel_id)->status(Status::Active)->get();
-        }
-    }
+	public function addChild(): void
+	{
+		if ($this->selected_room && $this->selected_room->children_count <= count($this->children_ages)) {
+			flash()->error(__('lang.children_count_exceeded_maximum', ['max' => $this->selected_room->children_count]));
+			return;
+		}
+		$this->children_ages[] = 0;
+		$this->calculatePrice();
+	}
 
-    public function updatedRoomId(): void
-    {
-        if ($this->room_id) {
-            $room = Room::find($this->room_id);
-            if ($room) {
-                $this->selected_room = $room;
-                $this->initializeTravelers($room->adults_count, $room->children_count);
-            }
-        }
-    }
+	public function removeChild($index): void
+	{
+		unset($this->children_ages[$index]);
+		$this->children_ages = array_values($this->children_ages);
+		$this->calculatePrice();
+	}
 
-    public function initializeTravelers(int $adultsCount, int $childrenCount): void
-    {
-        $this->travelers = [];
-        // Add adults
-        for ($i = 0; $i < $adultsCount; $i++) {
-            $this->travelers[] = [
-                'full_name' => '',
-                'phone_key' => '+20',
-                'phone' => '',
-                'nationality' => '',
-                'age' => '',
-                'id_type' => '',
-                'id_number' => '',
-                'type' => 'adult',
-            ];
-        }
+	// --- المنطق الأساسي (Core Logic) ---
 
-        // Add children
-        for ($i = 0; $i < $childrenCount; $i++) {
-            $this->travelers[] = [
-                'full_name' => '',
-                'phone_key' => '+20',
-                'phone' => '',
-                'nationality' => '',
-                'age' => '',
-                'id_type' => 'passport',
-                'id_number' => '',
-                'type' => 'child',
-            ];
-        }
-    }
+	public function calculatePrice($syncTravelers = true): void
+	{
+		if (!$this->room_id || !$this->check_in || !$this->check_out) {
+			$this->pricing_result = null;
+			return;
+		}
 
-    public function updatedCheckIn(): void
-    {
-        if ($this->check_in && $this->check_out) {
-            $checkIn = Carbon::parse($this->check_in);
-            $checkOut = Carbon::parse($this->check_out);
-            $this->nights_count = $checkIn->diffInDays($checkOut);
-        }
-    }
+		$room = Room::find($this->room_id);
+		if (!$room) return;
+		$this->selected_room = $room;
 
-    public function updatedCheckOut(): void
-    {
-        $this->updatedCheckIn();
-    }
+		// استخدام دالة الموديل لحساب السعر
+		$this->pricing_result = $room->calculateBookingPrice(
+			checkIn: $this->check_in,
+			checkOut: $this->check_out,
+			adultsCount: (int)$this->adults_count,
+			childrenAges: $this->children_ages,
+			currency: $this->currency
+		);
 
-    public function rules(): array
-    {
-        return [
-            'user_id' => 'required|exists:users,id',
-            'hotel_id' => 'required|exists:hotels,id',
-            'room_id' => 'required|exists:rooms,id',
-            'check_in' => 'required|date',
-            'check_out' => 'required|date|after:check_in',
-            'nights_count' => 'required|integer|min:1',
-            'currency' => 'required|in:egp,usd',
-            'notes' => 'nullable|string',
-            'travelers' => 'required|array|min:1',
-            'travelers.*.full_name' => 'required|string',
-            'travelers.*.phone_key' => 'required|string',
-            'travelers.*.phone' => 'required|string',
-            'travelers.*.nationality' => 'required|string',
-            'travelers.*.age' => 'required|integer|min:1',
-            'travelers.*.id_type' => 'required|in:passport,national_id',
-            'travelers.*.id_number' => 'required|string',
-            'travelers.*.type' => 'required|in:adult,child',
-        ];
-    }
+		if ($this->pricing_result['success']) {
+			$this->nights_count = $this->pricing_result['nights_count'];
+			if ($syncTravelers) {
+				$this->syncTravelersArray();
+			}
+		}
+	}
 
-    public function update(): void
-    {
-        $this->validate();
+	/**
+	 * دالة ذكية لمزامنة مصفوفة المسافرين عند تغيير العدد
+	 * تحافظ على البيانات المدخلة وتضيف/تحذف حسب الحاجة
+	 */
+	public function syncTravelersArray(): void
+	{
+		// 1. فصل البالغين والأطفال الحاليين
+		$currentAdults = collect($this->travelers)->where('type', 'adult')->values();
+		$currentChildren = collect($this->travelers)->where('type', 'child')->values();
 
-        // Get room and calculate total price
-        $room = Room::find($this->room_id);
-        $breakdown = $room->priceBreakdownForPeriod($this->check_in, $this->check_out, $this->currency);
+		$newTravelersList = [];
 
-        try {
-            DB::beginTransaction();
+		// 2. معالجة البالغين
+		for ($i = 0; $i < $this->adults_count; $i++) {
+			if (isset($currentAdults[$i])) {
+				$newTravelersList[] = $currentAdults[$i]; // إبقاء الموجود
+			} else {
+				$newTravelersList[] = $this->getEmptyTraveler('adult'); // إضافة جديد
+			}
+		}
 
-            // Update booking
-            $this->booking->update([
-                'user_id' => $this->user_id,
-                'check_in' => $this->check_in,
-                'check_out' => $this->check_out,
-                'nights_count' => $breakdown['nights_count'],
-                'adults_count' => $room->adults_count,
-                'children_count' => $room->children_count,
-                'price' => $breakdown['total'],
-                'total_price' => $breakdown['total'],
-                'currency' => $this->currency,
-                'notes' => $this->notes,
-                'status' => $this->status,
-            ]);
+		// 3. معالجة الأطفال (بناءً على مصفوفة الأعمار children_ages)
+		foreach ($this->children_ages as $index => $age) {
+			if (isset($currentChildren[$index])) {
+				$child = $currentChildren[$index];
+				$child['age'] = $age; // تحديث العمر ليطابق المدخل في الحقل الصغير
+				$newTravelersList[] = $child;
+			} else {
+				$newChild = $this->getEmptyTraveler('child');
+				$newChild['age'] = $age;
+				$newTravelersList[] = $newChild;
+			}
+		}
 
-            // Update or create hotel booking
-            $this->booking->bookingHotel()->updateOrCreate(
-                ['booking_id' => $this->booking->id],
-                [
-                    'hotel_id' => $this->hotel_id,
-                    'room_id' => $this->room_id,
-                    'room_includes' => $room->includes,
-                ]
-            );
+		$this->travelers = $newTravelersList;
+	}
 
-            // Update travelers
-            $existingTravelerIds = [];
-            foreach ($this->travelers as $travelerData) {
-                if (isset($travelerData['id'])) {
-                    BookingTraveler::find($travelerData['id'])->update([
-                        'full_name' => $travelerData['full_name'],
-                        'phone_key' => $travelerData['phone_key'] ?? '+20',
-                        'phone' => $travelerData['phone'],
-                        'nationality' => $travelerData['nationality'],
-                        'age' => $travelerData['age'],
-                        'id_type' => $travelerData['id_type'],
-                        'id_number' => $travelerData['id_number'],
-                        'type' => $travelerData['type'],
-                    ]);
-                    $existingTravelerIds[] = $travelerData['id'];
-                } else {
-                    $newTraveler = BookingTraveler::create([
-                        'booking_id' => $this->booking->id,
-                        'full_name' => $travelerData['full_name'],
-                        'phone_key' => $travelerData['phone_key'] ?? '+20',
-                        'phone' => $travelerData['phone'],
-                        'nationality' => $travelerData['nationality'],
-                        'age' => $travelerData['age'],
-                        'id_type' => $travelerData['id_type'],
-                        'id_number' => $travelerData['id_number'],
-                        'type' => $travelerData['type'],
-                    ]);
-                    $existingTravelerIds[] = $newTraveler->id;
-                }
-            }
+	private function getEmptyTraveler($type): array
+	{
+		return [
+			'id' => null, // جديد
+			'full_name' => '',
+			'phone_key' => '+20',
+			'phone' => '',
+			'nationality' => '',
+			'age' => '',
+			'id_type' => $type == 'adult' ? '' : 'passport',
+			'id_number' => '',
+			'type' => $type,
+		];
+	}
 
-            // Delete removed travelers
-            BookingTraveler::where('booking_id', $this->booking->id)
-                ->whereNotIn('id', $existingTravelerIds)
-                ->delete();
+	// --- الحفظ (Update) ---
 
-            DB::commit();
-            flash()->success(__('lang.updated_successfully', ['attribute' => __('lang.booking')]));
-            $this->redirectIntended(default: route('bookings.hotels'));
-        } catch (\Exception $e) {
-            DB::rollBack();
-            flash()->error(__('lang.error_occurred'));
-            Log::error($e->getMessage());
-        }
-    }
+	public function rules(): array
+	{
+		return [
+			'user_id' => 'required|exists:users,id',
+			'hotel_id' => 'required|exists:hotels,id',
+			'room_id' => 'required|exists:rooms,id',
+			'check_in' => 'required|date',
+			'check_out' => 'required|date|after:check_in',
+			'nights_count' => 'required|integer|min:1',
+			'currency' => 'required|in:egp,usd',
+			'status' => 'required|in:pending,under_payment,under_cancellation,cancelled,completed',
+			'notes' => 'nullable|string',
 
-    public function render(): View
-    {
-        return view('livewire.dashboard.booking-hotel.update-booking-hotel');
-    }
+			// تحقق من الأعداد والأعمار
+			'adults_count' => 'required|integer|min:1',
+			'children_ages' => 'nullable|array',
+			'children_ages.*' => 'required|integer|min:0|max:18',
+
+			// تحقق من المسافرين
+			'travelers' => 'required|array|min:1',
+			'travelers.*.full_name' => 'required|string',
+			'travelers.*.phone_key' => 'required|string',
+			'travelers.*.phone' => 'required|string',
+			'travelers.*.nationality' => 'required|string',
+			'travelers.*.age' => 'required|integer|min:1',
+			'travelers.*.id_type' => 'required|in:passport,national_id',
+			'travelers.*.id_number' => 'required|string',
+			'travelers.*.type' => 'required|in:adult,child',
+		];
+	}
+
+	public function update(HotelBookingService $bookingService): void
+	{
+		$this->validate();
+
+		try {
+			$data = [
+				'user_id' => $this->user_id,
+				'hotel_id' => $this->hotel_id,
+				'room_id' => $this->room_id,
+				'check_in' => $this->check_in,
+				'check_out' => $this->check_out,
+				'currency' => $this->currency,
+				'status' => $this->status,
+				'notes' => $this->notes,
+				'travelers' => $this->travelers,
+				// البيانات الديناميكية الجديدة
+				'adults_count' => $this->adults_count,
+				'children_ages' => $this->children_ages,
+			];
+
+			$bookingService->updateBooking($this->booking, $data);
+
+			flash()->success(__('lang.updated_successfully', ['attribute' => __('lang.booking')]));
+			$this->redirectIntended(default: route('bookings.hotels'));
+
+		} catch (\Exception $e) {
+			flash()->error($e->getMessage());
+		}
+	}
+
+	public function render(): View
+	{
+		return view('livewire.dashboard.booking-hotel.update-booking-hotel');
+	}
 }

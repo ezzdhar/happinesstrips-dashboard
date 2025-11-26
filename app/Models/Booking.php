@@ -27,6 +27,7 @@ class Booking extends Model
 			'adults_count' => 'integer',
 			'children_count' => 'integer',
 			'nights_count' => 'integer',
+			'is_special' => 'boolean',
 		];
 	}
 
@@ -100,4 +101,10 @@ class Booking extends Model
 	{
 		return $query->when($type, fn($q) => $q->where('type', $type));
 	}
+
+	public function scopeIsSpecial($query, $isSpecial = true)
+	{
+		return $query->when($isSpecial, fn($q) => $q->where('is_special', $isSpecial));
+	}
+
 }

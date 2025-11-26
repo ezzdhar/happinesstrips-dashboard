@@ -402,7 +402,7 @@
                 </div>
 
                 <!-- Children Pricing -->
-                @if(!empty($pricing['children_breakdown']) && count($pricing['children_breakdown']) > 0)
+                @if(!empty($pricing['children_breakdown']) && count($pricing['children_breakdown']) > 0 && $booking->children_count)
                     <div style="background: #fef3c7; border: 1px solid #fde047; padding: 6px; border-radius: 4px; margin-bottom: 6px;">
                         <div style="font-size: 9px; font-weight: bold; color: #854d0e; margin-bottom: 4px;">{{ __('lang.children') }} ({{ count($pricing['children_breakdown']) }})</div>
 

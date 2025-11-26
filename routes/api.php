@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\DataController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\GuestController;
+use App\Http\Controllers\Api\HotelBookingController;
 use App\Http\Controllers\Api\HotelController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
@@ -23,15 +24,20 @@ Route::controller(GuestController::class)->group(function () {
 // hotels routes
 Route::prefix('hotels')->controller(HotelController::class)->group(function () {
 	Route::get('/', 'hotels');
-	Route::get('/{hotel}', 'hotelDetails');
+	Route::get('/details/{hotel}', 'hotelDetails');
+	// rooms routes
+	Route::prefix('rooms')->controller(RoomController::class)->group(function () {
+		Route::get('/', 'rooms');
+		Route::get('/{room}', 'roomDetails');
+		Route::get('/calculate/booking-room/price/{room}', 'calculateBookingRoomPrice');
+	});
+	//bookings
+	Route::prefix('booking')->middleware('auth:sanctum')->controller(HotelBookingController::class)->group(function () {
+		Route::post('/', 'hotelRoomBooking');
+		Route::post('/custom', 'hotelCustomBooking');
+	});
 });
 
-// rooms routes
-Route::prefix('rooms')->controller(RoomController::class)->group(function () {
-	Route::get('/', 'rooms');
-	Route::get('/{room}', 'roomDetails');
-	Route::get('/calculate/booking-room/price/{room}', 'calculateBookingRoomPrice');
-});
 
 // trips routes
 Route::prefix('trips')->controller(TripController::class)->group(function () {

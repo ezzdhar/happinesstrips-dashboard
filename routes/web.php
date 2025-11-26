@@ -4,6 +4,7 @@ use App\Http\Controllers\LanguageController;
 use App\Livewire\Dashboard\Amenity\AmenityData;
 use App\Livewire\Dashboard\BookingHotel\BookingHotelData;
 use App\Livewire\Dashboard\BookingHotel\CreateBookingHotel;
+use App\Livewire\Dashboard\BookingHotel\Custom\BookingCustomHotelData;
 use App\Livewire\Dashboard\BookingHotel\ShowBookingHotel;
 use App\Livewire\Dashboard\BookingHotel\UpdateBookingHotel;
 use App\Livewire\Dashboard\BookingTrip\BookingTripData;
@@ -34,9 +35,10 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
-	 $room = Room::first();
+	 $room = Room::find(1);
+	return  $room->isDateRangeCovered(Carbon::parse('2025-11-27'), Carbon::parse('2025-11-28'));
 	$room->priceForDate(Carbon::parse('2025-11-24'));
-	 $room->totalPriceForPeriod(Carbon::parse('2025-11-24'), Carbon::parse('2025-11-26'), 'egp');
+	$room->totalPriceForPeriod(Carbon::parse('2025-11-24'), Carbon::parse('2025-11-26'), 'egp');
 	return $room->calculateBookingPrice(
 		checkIn: Carbon::parse('2025-11-24'),
 		checkOut: Carbon::parse('2025-11-26'),
@@ -89,12 +91,12 @@ Route::middleware(['web-language'])->group(function () {
 		// Hotel Bookings
 		Route::prefix('bookings/hotels')->middleware('permission:show_booking_hotel')->group(function () {
 			Route::get('/', BookingHotelData::class)->name('bookings.hotels');
+			Route::get('/custom', BookingCustomHotelData::class)->name('bookings.hotels.custom');
 			Route::get('/create', CreateBookingHotel::class)->name('bookings.hotels.create')->middleware('permission:create_booking_hotel');
 			Route::get('/edit/{booking}', UpdateBookingHotel::class)->name('bookings.hotels.edit')->middleware('permission:update_booking_hotel');
 			Route::get('/show/{booking}', ShowBookingHotel::class)->name('bookings.hotels.show');
 			Route::get('/print/{booking}', function (Booking $booking) {
 				$booking->load(['user', 'bookingHotel.hotel', 'bookingHotel.room', 'travelers']);
-
 				return view('livewire.dashboard.booking-hotel.print-booking-hotel', compact('booking'));
 			})->name('bookings.hotels.print');
 		});

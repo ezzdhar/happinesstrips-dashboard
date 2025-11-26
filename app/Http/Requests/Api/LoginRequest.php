@@ -16,6 +16,7 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['bail', 'required', 'email'],
             'password' => ['bail', 'required', 'min:8'],
+	        'fcm_token' => 'required|string|max:255',
         ];
     }
 

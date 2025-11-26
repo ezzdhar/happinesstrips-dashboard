@@ -54,6 +54,7 @@
 
 	@can('show_booking_hotel')
 		<x-menu-item noWireNavigate title="{{__('lang.hotel_bookings')}}" icon="hugeicons.tap-02" link="{{route('bookings.hotels')}}"/>
+		<x-menu-item noWireNavigate title="{{__('lang.custom_hotel_bookings')}}" icon="hugeicons.tap-02" link="{{route('bookings.hotels.custom')}}"/>
 	@endcan
 
 	@can('show_booking_trip')

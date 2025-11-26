@@ -16,6 +16,7 @@ return new class extends Migration
 	        $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('trip_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('type')->default('hotel'); // hotel or trip
+	        $table->boolean('is_special')->default(false);
 
             $table->date('check_in')->nullable();
             $table->date('check_out')->nullable();
@@ -24,8 +25,8 @@ return new class extends Migration
             $table->integer('adults_count')->default(1);
             $table->integer('children_count')->default(0);
 
-            $table->decimal('price', 8);
-            $table->decimal('total_price', 8);
+            $table->decimal('price', 8)->default(0);
+            $table->decimal('total_price', 8)->default(0);
             $table->string('currency')->default('egp');
 
             $table->text('notes')->nullable();
