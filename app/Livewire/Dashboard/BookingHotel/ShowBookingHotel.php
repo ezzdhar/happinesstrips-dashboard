@@ -4,6 +4,7 @@ namespace App\Livewire\Dashboard\BookingHotel;
 
 use App\Models\Booking;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -41,6 +42,7 @@ class ShowBookingHotel extends Component
         ]);
     }
 
+	#[On('render')]
     public function render(): View
     {
         return view('livewire.dashboard.booking-hotel.show-booking-hotel');

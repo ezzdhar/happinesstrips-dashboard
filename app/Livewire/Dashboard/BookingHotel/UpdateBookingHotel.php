@@ -25,7 +25,6 @@ class UpdateBookingHotel extends Component
 	public $selected_room;
 	public $check_in;
 	public $check_out;
-	public $status;
 	public $notes;
 	public $currency = 'egp';
 	public $nights_count = 1;
@@ -52,7 +51,6 @@ class UpdateBookingHotel extends Component
 		$this->nights_count = $booking->nights_count;
 		$this->notes = $booking->notes;
 		$this->currency = $booking->currency;
-		$this->status = $booking->status->value;
 		$this->adults_count = $booking->adults_count;
 
 		// استخراج أعمار الأطفال من المسافرين الحاليين
@@ -290,7 +288,6 @@ class UpdateBookingHotel extends Component
 			'check_out' => 'required|date|after:check_in',
 			'nights_count' => 'required|integer|min:1',
 			'currency' => 'required|in:egp,usd',
-			'status' => 'required|in:pending,under_payment,under_cancellation,cancelled,completed',
 			'notes' => 'nullable|string',
 
 			// تحقق من الأعداد والأعمار
@@ -323,7 +320,6 @@ class UpdateBookingHotel extends Component
 				'check_in' => $this->check_in,
 				'check_out' => $this->check_out,
 				'currency' => $this->currency,
-				'status' => $this->status,
 				'notes' => $this->notes,
 				'travelers' => $this->travelers,
 				// البيانات الديناميكية الجديدة

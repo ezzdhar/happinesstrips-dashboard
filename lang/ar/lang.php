@@ -882,5 +882,6 @@ return [
 	'fcm_token' => 'رمز FCM',
 	'no_children' => 'لا يوجد أطفال',
 	'recalculate_price' => 'إعادة حساب السعر',
+	'update_status' => 'تحديث الحالة',
 
 ];

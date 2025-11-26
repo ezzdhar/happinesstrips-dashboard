@@ -132,7 +132,6 @@ class HotelBookingService
 					'total_price' => $pricingResult['grand_total'],
 					'currency' => strtoupper($data['currency']),
 					'notes' => $data['notes'] ?? null,
-					'status' => $data['status'],
 				]);
 
 				// 3. تحديث تفاصيل الفندق
