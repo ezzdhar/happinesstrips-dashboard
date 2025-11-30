@@ -22,7 +22,7 @@ class SocialLoginRequest extends FormRequest
             'provider_token' => ['required', 'string'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
-            'fcm_token' => ['nullable', 'string', 'max:255'],
+            'fcm_token' => ['required', 'string', 'max:255'],
         ];
     }
 }
