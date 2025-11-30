@@ -26,7 +26,7 @@ class UpdateBookingHotel extends Component
 	public $check_in;
 	public $check_out;
 	public $notes;
-	public $currency = 'egp';
+	public $currency;
 	public $nights_count = 1;
 
 	// خصائص الأعداد والأسعار (تمت إضافتها لتطابق الإضافة)
@@ -50,7 +50,7 @@ class UpdateBookingHotel extends Component
 		$this->check_out = $booking->check_out?->format('Y-m-d');
 		$this->nights_count = $booking->nights_count;
 		$this->notes = $booking->notes;
-		$this->currency = $booking->currency;
+		$this->currency = strtolower($booking->currency);
 		$this->adults_count = $booking->adults_count;
 
 		// استخراج أعمار الأطفال من المسافرين الحاليين
@@ -330,7 +330,7 @@ class UpdateBookingHotel extends Component
 			$bookingService->updateBooking($this->booking, $data);
 
 			flash()->success(__('lang.updated_successfully', ['attribute' => __('lang.booking')]));
-			$this->redirectIntended(default: route('bookings.hotels'));
+			$this->redirectIntended(default: route('bookings.hotels.show',$this->booking->id));
 
 		} catch (\Exception $e) {
 			flash()->error($e->getMessage());

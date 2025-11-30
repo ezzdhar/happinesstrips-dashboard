@@ -190,4 +190,65 @@ class HotelBookingService
 			throw new Exception($e->getMessage());
 		}
 	}
+
+	public function createCustomBooking(array $data): Booking
+	{
+		// 3. بدء الترانزكشن وإنشاء البيانات
+		try {
+			return DB::transaction(function () use ($data) {
+				// Create Booking
+				$checkIn = Carbon::parse($data['check_in']);
+				$checkOut = Carbon::parse($data['check_out']);
+				$nights_count = $checkIn->diffInDays($checkOut);
+				$booking = Booking::create([
+					'user_id' => $data['user_id'],
+					'check_in' => $data['check_in'],
+					'check_out' => $data['check_out'],
+					'adults_count' => $data['adults_count'],
+					'children_count' => count($data['children_ages'] ?? []),
+					'nights_count' => $nights_count,
+					'price' => 0,
+					'total_price' => 0,
+					'currency' => strtoupper($data['currency']),
+					'notes' => $data['notes'] ?? null,
+					'status' => $data['status'] ?? Status::Pending,
+					'is_special' => true
+				]);
+
+				// Create Hotel Booking Details
+				BookingHotel::create([
+					'booking_id' => $booking->id,
+					'hotel_id' => $data['hotel_id'],
+					'room_id' => null,
+					'room_includes' => null,
+					'adults_price' => 0,
+					'children_price' => 0,
+					'children_breakdown' => [],
+					'pricing_details' => 0,
+				]);
+
+				// Create Travelers
+				foreach ($data['travelers'] as $travelerData) {
+					BookingTraveler::create([
+						'booking_id' => $booking->id,
+						'full_name' => $travelerData['full_name'],
+						'phone_key' => $travelerData['phone_key'] ?? '+20',
+						'phone' => $travelerData['phone'],
+						'nationality' => $travelerData['nationality'],
+						'age' => $travelerData['age'],
+						'id_type' => $travelerData['id_type'],
+						'id_number' => $travelerData['id_number'],
+						'type' => $travelerData['type'],
+					]);
+				}
+
+				return $booking;
+			});
+		} catch (Exception $e) {
+			// نقوم بتسجيل الخطأ هنا، ونعيد رميه ليمسك به الكنترولر أو اللايف واير
+			Log::error('Booking creation error: ' . $e->getMessage());
+			throw new Exception(__('lang.error_occurred'));
+		}
+	}
+
 }

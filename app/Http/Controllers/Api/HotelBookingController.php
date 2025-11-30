@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\HotelRoomBookingRequest;
+use App\Http\Requests\Api\HotelRoomCustomBookingRequest;
 use App\Models\Booking;
 use App\Models\BookingHotel;
 use App\Models\BookingTraveler;
@@ -32,9 +33,17 @@ class HotelBookingController extends Controller
 		}
 	}
 
-	public function hotelCustomBooking()
+	public function hotelCustomBooking(HotelRoomCustomBookingRequest $request, HotelBookingService $bookingService)
 	{
-
+		try {
+			$data = $request->validated();
+			$data['currency'] = $request->attributes->get('currency', 'egp');
+			$data['user_id'] = auth()->id();
+			$bookingService->createCustomBooking($data);
+			return $this->responseCreated(message: __('lang.created_successfully', ['attribute' => __('lang.booking')]));
+		} catch (\Exception $e) {
+			return $this->responseError(message: $e->getMessage());
+		}
 	}
 
 }

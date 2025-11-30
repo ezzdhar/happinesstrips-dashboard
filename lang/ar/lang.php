@@ -883,5 +883,6 @@ return [
 	'no_children' => 'لا يوجد أطفال',
 	'recalculate_price' => 'إعادة حساب السعر',
 	'update_status' => 'تحديث الحالة',
+	'hotel_id' => 'الفندق',
 
 ];

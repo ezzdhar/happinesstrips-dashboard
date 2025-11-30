@@ -25,12 +25,14 @@ Route::controller(GuestController::class)->group(function () {
 Route::prefix('hotels')->controller(HotelController::class)->group(function () {
 	Route::get('/', 'hotels');
 	Route::get('/details/{hotel}', 'hotelDetails');
+
 	// rooms routes
 	Route::prefix('rooms')->controller(RoomController::class)->group(function () {
 		Route::get('/', 'rooms');
 		Route::get('/{room}', 'roomDetails');
 		Route::get('/calculate/booking-room/price/{room}', 'calculateBookingRoomPrice');
 	});
+
 	//bookings
 	Route::prefix('booking')->middleware('auth:sanctum')->controller(HotelBookingController::class)->group(function () {
 		Route::post('/', 'hotelRoomBooking');
