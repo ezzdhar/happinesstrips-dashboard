@@ -35,8 +35,9 @@ Route::prefix('hotels')->controller(HotelController::class)->group(function () {
 
 	//bookings
 	Route::prefix('booking')->middleware('auth:sanctum')->controller(HotelBookingController::class)->group(function () {
-		Route::post('/', 'hotelRoomBooking');
-		Route::post('/custom', 'hotelCustomBooking');
+		Route::post('/', 'myBooking');
+		Route::post('/create', 'createBooking');
+		Route::post('/create/custom', 'createCustomBooking');
 	});
 });
 

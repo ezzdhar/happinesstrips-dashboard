@@ -7,7 +7,7 @@ use App\Traits\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
-class HotelRoomBookingRequest extends FormRequest
+class CreateRoomBookingRequest extends FormRequest
 {
 	use ApiResponse;
 	public function rules(): array

@@ -5,7 +5,7 @@ namespace App\Http\Requests\Api;
 use App\Traits\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
 
-class HotelRoomCustomBookingRequest extends FormRequest
+class CreateRoomCustomBookingRequest extends FormRequest
 {
 	use ApiResponse;
 	public function rules(): array
