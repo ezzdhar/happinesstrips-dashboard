@@ -11,6 +11,7 @@ use App\Models\BookingHotel;
 use App\Models\BookingTraveler;
 use App\Models\Room;
 use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\Booking\HotelBookingService;
@@ -19,10 +20,11 @@ class HotelBookingController extends Controller
 {
 	use ApiResponse;
 
-	public function myBooking()
+	public function myBooking(Request $request)
 	{
-      $bookings = Booking::where('user_id', auth()->id())->get();
-		return $this->responseOk(message: __('lang.created_successfully',BookingHotelResource::collection($bookings)));
+		$bookings = Booking::where('user_id', auth()->id())->with(['bookingHotel'])
+			->paginate($request->per_page ?? 15);
+		return $this->responseOk(message: __('lang.created_successfully'), data: BookingHotelResource::collection($bookings), paginate: true);
 	}
 
 	public function createBooking(CreateRoomBookingRequest $request, HotelBookingService $bookingService)
