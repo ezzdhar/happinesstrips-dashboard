@@ -8,6 +8,7 @@ use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,7 +25,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('viewLogViewer', function (User $user) {
+	    Schema::defaultStringLength(191);
+
+	    Gate::define('viewLogViewer', function (User $user) {
             return (auth()->check() && auth()->user()->email === 'superadmin@admin.com') || app()->environment('local');
         });
 
