@@ -45,14 +45,14 @@ return new class extends PulseMigration
             $table->bigInteger('value')->nullable();
 
             $table->index('timestamp'); // For trimming...
-            $table->index('type'); // For purging...
+            $table->index('type',100); // For purging...
             $table->index('key_hash'); // For mapping...
             $table->index(['timestamp', 'type', 'key_hash', 'value']); // For aggregate queries...
         });
 
         Schema::create('pulse_aggregates', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('bucket');
+            $table->unsignedInteger('bucket',100);
             $table->unsignedMediumInteger('period');
             $table->string('type');
             $table->mediumText('key');
