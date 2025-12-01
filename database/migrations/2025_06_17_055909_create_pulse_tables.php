@@ -50,26 +50,34 @@ return new class extends PulseMigration
             $table->index(['timestamp', 'type', 'key_hash', 'value']); // For aggregate queries...
         });
 
-        Schema::create('pulse_aggregates', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger('bucket',100);
-            $table->unsignedMediumInteger('period');
-            $table->string('type');
-            $table->mediumText('key');
-            match ($this->driver()) {
-                'mariadb', 'mysql' => $table->char('key_hash', 16)->charset('binary')->virtualAs('unhex(md5(`key`))'),
-                'pgsql' => $table->uuid('key_hash')->storedAs('md5("key")::uuid'),
-                'sqlite' => $table->string('key_hash'),
-            };
-            $table->string('aggregate');
-            $table->decimal('value', 20, 2);
-            $table->unsignedInteger('count')->nullable();
+	    Schema::create('pulse_aggregates', function (Blueprint $table) {
+		    $table->id(); // ده الـ auto_increment الوحيد في الجدول
 
-            $table->unique(['bucket', 'period', 'type', 'aggregate', 'key_hash']); // Force "on duplicate update"...
-            $table->index(['period', 'bucket']); // For trimming...
-            $table->index('type'); // For purging...
-            $table->index(['period', 'type', 'aggregate', 'bucket']); // For aggregate queries...
-        });
+		    // مهم: bucket يكون رقم عادي من غير autoIncrement ولا primary
+		    $table->unsignedInteger('bucket');
+
+		    $table->unsignedMediumInteger('period');
+
+		    // نقلل الطول عشان الـ composite index ما يكسرش حد الـ 1000 bytes
+		    $table->string('type', 100);
+		    $table->mediumText('key');
+
+		    match ($this->driver()) {
+			    'mariadb', 'mysql' => $table->char('key_hash', 16)->charset('binary')->virtualAs('unhex(md5(`key`))'),
+			    'pgsql' => $table->uuid('key_hash')->storedAs('md5("key")::uuid'),
+			    'sqlite' => $table->string('key_hash'),
+		    };
+
+		    $table->string('aggregate', 100);
+		    $table->decimal('value', 20, 2);
+		    $table->unsignedInteger('count')->nullable();
+
+		    $table->unique(['bucket', 'period', 'type', 'aggregate', 'key_hash']); // For "on duplicate update"...
+		    $table->index(['period', 'bucket']); // For trimming...
+		    $table->index('type'); // For purging...
+		    $table->index(['period', 'type', 'aggregate', 'bucket']); // For aggregate queries...
+	    });
+
     }
 
     /**
