@@ -28,7 +28,7 @@ class ProfileController extends Controller
 			'phone' => PhoneService::formatNumber($request->phone),
 			'image' => $request->image ? FileService::save($request->image) : auth()->user()->image,
 		]);
-		return $this->responseOk(message: __('lang.success'),data: UserResource::make(auth()->user()));
+		return $this->responseOk(message: __('lang.updated_successfully', ['attribute' => __('lang.profile')]),data: UserResource::make(auth()->user()));
 
 	}
 
@@ -48,12 +48,12 @@ class ProfileController extends Controller
 	public function deleteAccount()
 	{
 		auth()->user()->delete();
-		return $this->responseOk(message: __('lang.success'));
+		return $this->responseOk(message: __('lang.deleted_successfully', ['attribute' => __('lang.profile')]));
 	}
 
 	public function changeLanguage(Request $request)
 	{
 		auth()->user()->update(['language' => $request->language]);
-		return $this->responseOk(message: __('lang.success'));
+		return $this->responseOk(message: __('lang.updated_successfully', ['attribute' => __('lang.language')]));
 	}
 }

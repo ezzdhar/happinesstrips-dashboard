@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\HotelTypeResource;
@@ -27,8 +28,8 @@ class DataController extends Controller
 
 	public function cities(Request $request)
 	{
-		$cities= City::get(['id', 'name','image']);
-		return $this->responseOk(message: __('lang.hotel_types'), data: CityResource::collection($cities));
+		$cities = City::get(['id', 'name', 'image']);
+		return $this->responseOk(message: __('lang.cities'), data: CityResource::collection($cities));
 	}
 
 	public function categories(Request $request)
@@ -42,5 +43,18 @@ class DataController extends Controller
 		$subCategories = SubCategory::active()->when($request->main_category_id, fn(Builder $query) => $query->where('main_category_id', $request->main_category_id))
 			->get(['id', 'name', 'image']);
 		return $this->responseOk(message: __('lang.sub_categories'), data: SubCategoryResource::collection($subCategories));
+	}
+
+	//bookingStatus
+	public function bookingStatus()
+	{
+		$data = [
+			['value' => Status::Pending, 'name' => __('lang.pending')],
+			['value' => Status::UnderPayment, 'name' => __('lang.under_payment')],
+			['value' => Status::UnderCancellation, 'name' => __('lang.under_cancellation')],
+			['value' => Status::Cancelled, 'name' => __('lang.cancelled')],
+			['value' => Status::Completed, 'name' => __('lang.completed')],
+		];
+		return $this->responseOk(message: __('lang.booking_status'), data: $data);
 	}
 }

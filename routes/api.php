@@ -36,6 +36,7 @@ Route::prefix('hotels')->controller(HotelController::class)->group(function () {
 	//bookings
 	Route::prefix('booking')->middleware('auth:sanctum')->controller(HotelBookingController::class)->group(function () {
 		Route::get('/', 'myBooking');
+		Route::get('/details/{booking}', 'bookingDetails');
 		Route::post('/create', 'createBooking');
 		Route::post('/create/custom', 'createCustomBooking');
 	});
@@ -55,6 +56,7 @@ Route::controller(DataController::class)->group(function () {
 	Route::get('/cities', 'cities');
 	Route::get('/categories', 'categories');
 	Route::get('/sub-categories', 'subCategories');
+	Route::get('/booking-status', 'bookingStatus');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
