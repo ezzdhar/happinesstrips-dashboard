@@ -35,6 +35,7 @@ class TripBookingController extends Controller
 		if ($booking->user_id != auth()->id()) {
 			return $this->responseError(message: __('lang.unauthorized'));
 		}
+		$booking->load(['bookingTrip', 'trip', 'user', 'travelers']);
 		return $this->responseOk(message: __('lang.booking_details'), data: new BookingTripResource($booking));
 	}
 }

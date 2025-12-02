@@ -34,6 +34,7 @@ class HotelBookingController extends Controller
 		if ($booking->user_id != auth()->id()) {
 			return $this->responseError(message: __('lang.unauthorized'));
 		}
+		 $booking->load(['bookingHotel.hotel','bookingHotel.room', 'user', 'travelers']);
 		return $this->responseOk(message: __('lang.booking_details'), data: new BookingHotelResource($booking));
 	}
 
