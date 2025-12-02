@@ -885,5 +885,6 @@ return [
 	'update_status' => 'تحديث الحالة',
 	'hotel_id' => 'الفندق',
 	'unauthorized' => 'غير مصرح',
+	'my_booking' => 'حجزي',
 
 ];

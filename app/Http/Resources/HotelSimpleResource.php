@@ -15,6 +15,7 @@ class HotelSimpleResource extends JsonResource
 			'id' => $this->id,
 			'city' => $this->city->name,
 			'name' => $this->name,
+			'type' =>  $this->hotelTypes->pluck('name')->toArray(),
 			'rating' => (int) $this->rating,
 			'main_image' => FileService::get($this->files->first()->path),
 			'cheapest_room_today' => $this->getCheapestRoomForToday($currency),
