@@ -205,7 +205,7 @@ class HotelBookingService
 					'check_in' => $data['check_in'],
 					'check_out' => $data['check_out'],
 					'adults_count' => $data['adults_count'],
-					'children_count' => count($data['children_ages'] ?? []),
+					'children_count' => $data['children_count'] ?? count($data['children_ages'] ?? []),
 					'nights_count' => $nights_count,
 					'price' => 0,
 					'total_price' => 0,
