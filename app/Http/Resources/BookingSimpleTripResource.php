@@ -6,24 +6,23 @@ use App\Services\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BookingSimpleHotelResource extends JsonResource
+class BookingSimpleTripResource extends JsonResource
 {
 	public function toArray(Request $request): array
 	{
 		return [
 			'id' => $this->id,
 			'type' => $this->type,
-			'is_special' => $this->is_special,
-			'name'=> $this->bookingHotel->room->name,
+			'name'=> $this->trip->name,
 			'booking_number' => $this->booking_number,
 			'total_price' => $this->total_price,
 			'currency' => $this->currency,
-			'city' => $this->bookingHotel->hotel->city->name,
+			'city' => $this->trip->city->name,
 			'status' => [
 				'title' => $this->status->title(),
 				'value' => $this->status->value
 			],
-			'main_image' => FileService::get($this->bookingHotel->hotel->files->first()->path),
+			'main_image' => FileService::get($this->trip->files->first()->path),
 		];
 	}
 }

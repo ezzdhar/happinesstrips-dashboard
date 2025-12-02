@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\HotelController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoomController;
+use App\Http\Controllers\Api\TripBookingController;
 use App\Http\Controllers\Api\TripController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,9 +23,13 @@ Route::controller(GuestController::class)->group(function () {
 });
 
 // hotels routes
-Route::prefix('hotels')->controller(HotelController::class)->group(function () {
-	Route::get('/', 'hotels');
-	Route::get('/details/{hotel}', 'hotelDetails');
+Route::prefix('hotels')->group(function () {
+
+	// hotels
+	Route::controller(HotelController::class)->group(function () {
+		Route::get('/', 'hotels');
+		Route::get('/details/{hotel}', 'hotelDetails');
+	});
 
 	// rooms routes
 	Route::prefix('rooms')->controller(RoomController::class)->group(function () {
@@ -33,13 +38,7 @@ Route::prefix('hotels')->controller(HotelController::class)->group(function () {
 		Route::get('/calculate/booking-room/price/{room}', 'calculateBookingRoomPrice');
 	});
 
-	//bookings
-	Route::prefix('booking')->middleware('auth:sanctum')->controller(HotelBookingController::class)->group(function () {
-		Route::get('/', 'myBooking');
-		Route::get('/details/{booking}', 'bookingDetails');
-		Route::post('/create', 'createBooking');
-		Route::post('/create/custom', 'createCustomBooking');
-	});
+
 });
 
 
@@ -47,6 +46,25 @@ Route::prefix('hotels')->controller(HotelController::class)->group(function () {
 Route::prefix('trips')->controller(TripController::class)->group(function () {
 	Route::get('/', 'trips');
 	Route::get('/{trip}', 'tripDetails');
+});
+
+//bookings
+Route::prefix('booking')->middleware('auth:sanctum')->group(function () {
+
+	//bookings hotels
+	Route::prefix('hotels')->controller(HotelBookingController::class)->group(function () {
+		Route::get('/', 'myBooking');
+		Route::get('/details/{booking}', 'bookingDetails');
+		Route::post('/create', 'createBooking');
+		Route::post('/create/custom', 'createCustomBooking');
+	});
+
+	//bookings trips
+	Route::prefix('trips')->controller(TripBookingController::class)->group(function () {
+		Route::get('/', 'myBooking');
+		Route::get('/details/{booking}', 'bookingDetails');
+		Route::post('/create', 'createBooking');
+	});
 });
 
 

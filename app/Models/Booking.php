@@ -54,7 +54,7 @@ class Booking extends Model
 
 	public function trip(): BelongsTo
 	{
-		return $this->belongsTo(Trip::class);
+		return $this->belongsTo(Trip::class)->withDefault(['name' => null]);
 	}
 
 	public function bookingHotel(): HasOne

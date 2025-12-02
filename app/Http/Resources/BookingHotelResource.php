@@ -17,8 +17,8 @@ class BookingHotelResource extends JsonResource
 		$room = $bookingHotel ? $bookingHotel->room : null;
 
 		return [
-			// 1. معلومات الحجز الأساسية
 			'id' => $this->id,
+			'is_special' => $this->is_special,
 			'booking_number' => $this->booking_number,
 			'status' => [
 				'value' => $this->status->value,
