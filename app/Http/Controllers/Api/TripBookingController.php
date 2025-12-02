@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\CreateRoomBookingRequest;
+use App\Http\Requests\Api\CreateTripBookingRequest;
 use App\Http\Resources\BookingSimpleHotelResource;
 use App\Http\Resources\BookingSimpleTripResource;
 use App\Http\Resources\BookingTripResource;
 use App\Models\Booking;
+use App\Services\Booking\HotelBookingService;
 use App\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -37,5 +40,19 @@ class TripBookingController extends Controller
 		}
 		$booking->load(['bookingTrip', 'trip', 'user', 'travelers']);
 		return $this->responseOk(message: __('lang.booking_details'), data: new BookingTripResource($booking));
+	}
+
+
+	public function createBooking(CreateTripBookingRequest $request, HotelBookingService $bookingService)
+	{
+		try {
+			$data = $request->validated();
+			$data['currency'] = $request->attributes->get('currency', 'egp');
+			$data['user_id'] = auth()->id();
+			$bookingService->createBooking($data);
+			return $this->responseCreated(message: __('lang.created_successfully', ['attribute' => __('lang.booking')]));
+		} catch (\Exception $e) {
+			return $this->responseError(message: $e->getMessage());
+		}
 	}
 }
