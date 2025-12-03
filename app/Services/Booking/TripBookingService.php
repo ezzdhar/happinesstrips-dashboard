@@ -25,10 +25,6 @@ class TripBookingService
 		// 1. جلب الغرفة
 		$trip = Trip::find($data['trip_id']);
 
-		if (!$trip) {
-			throw new Exception(__('lang.trip_not_found'));
-		}
-
 		// 2. حساب السعر (نفس اللوجيك المستخدم لديك)
 		$pricingResult = TripPricingService::calculateTripPriceWithAges(
 			trip: $trip,

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\TripType;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\CreateRoomBookingRequest;
 use App\Http\Requests\Api\CreateTripBookingRequest;
-use App\Http\Resources\BookingSimpleHotelResource;
 use App\Http\Resources\BookingSimpleTripResource;
 use App\Http\Resources\BookingTripResource;
 use App\Models\Booking;
-use App\Services\Booking\HotelBookingService;
+use App\Models\Trip;
+use App\Services\Booking\TripBookingService;
 use App\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -43,13 +43,18 @@ class TripBookingController extends Controller
 	}
 
 
-	public function createBooking(CreateTripBookingRequest $request, HotelBookingService $bookingService)
+	public function createBooking(CreateTripBookingRequest $request, TripBookingService $tripBookingService)
 	{
+		$trip = Trip::find($request->trip_id);
 		try {
 			$data = $request->validated();
 			$data['currency'] = $request->attributes->get('currency', 'egp');
 			$data['user_id'] = auth()->id();
-			$bookingService->createBooking($data);
+			if ($trip->type->value === TripType::Fixed) {
+				$data['check_in'] = $trip->duration_from;
+				$data['check_out'] = $trip->duration_to;
+			}
+			$tripBookingService->createBooking($data);
 			return $this->responseCreated(message: __('lang.created_successfully', ['attribute' => __('lang.booking')]));
 		} catch (\Exception $e) {
 			return $this->responseError(message: $e->getMessage());

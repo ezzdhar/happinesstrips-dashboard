@@ -886,5 +886,7 @@ return [
 	'hotel_id' => 'الفندق',
 	'unauthorized' => 'غير مصرح',
 	'my_booking' => 'حجزي',
-
+	'check_in_required_for_trip' => 'تاريخ  الوصول مطلوب',
+	'check_out_required_trip' => 'تاريخ  المغادره مطلوب',
+	'check_in_must_be_on_or_after_trip_check_in' => 'يجب أن يكون تاريخ الوصول مساوي أو بعد تاريخ وصول الرحلة',
 ];

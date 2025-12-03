@@ -14,6 +14,7 @@ class TripSimpleResource extends JsonResource
 
 		return [
 			'id' => $this->id,
+			'type' => $this->type->value,
 			'main_category' => $this->mainCategory->name,
 			'sub_category' => $this->subCategory->name,
 			'city' => $this->city->name,
