@@ -19,6 +19,8 @@ class TripSimpleResource extends JsonResource
 			'sub_category' => $this->subCategory->name,
 			'city' => $this->city->name,
 			'name' => $this->name,
+			'duration_from' => $this->duration_from,
+			'duration_to' => $this->duration_to,
 			'rating' => (int)$this->rating,
 			'main_image' => FileService::get($this->files->first()->path),
 			'price' => $this->price[$currency] . __('lang.' . strtolower($currency)),

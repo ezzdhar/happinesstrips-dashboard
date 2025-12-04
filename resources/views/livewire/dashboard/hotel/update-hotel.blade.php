@@ -110,10 +110,11 @@
 							@foreach($hotel->files as $file)
 								<div class="relative mb-4">
 									<img src="{{$file->path ? FileService::get($file->path) : null}}" alt="" class="w-24 h-24 object-cover rounded">
-									<x-button icon="o-trash" spinner="deleteSweetAlert({{$file->id}})"
-										size="w-16 h-16" class="object-cover rounded btn-sm absolute top-1 right-1 bg-red-500 text-white hover:bg-red-600 mt-2"
-										deleteLabel="{{__('lang.delete_image')}}" wire:click="deleteSweetAlert({{$file->id}})"
-										wire:loading.attr="disabled" wire:target="deleteSweetAlert({{$file->id}})"
+									<x-button icon="o-trash" size="w-16 h-16"
+									          class="object-cover rounded btn-sm absolute top-1 right-1 bg-red-500 text-white hover:bg-red-600 mt-2"
+									          deleteLabel="{{__('lang.delete_image')}}" wire:click="delete({{$file->id}})"
+									          wire:loading.attr="disabled" wire:target="delete({{$file->id}})" spinner="delete({{$file->id}})"
+									          wire:confirm="{{__('lang.confirm_delete', ['attribute' => __('lang.image')])}}"
 									/>
 								</div>
 							@endforeach
@@ -121,7 +122,7 @@
 					</div>
 
 					{{-- Add More Images --}}
-						<x-image-library wire:model="images" wire:library="library" :preview="$library" label="{{__('lang.add_more_images')}}"/>
+					<x-image-library wire:model="images" wire:library="library" :preview="$library" label="{{__('lang.add_more_images')}}"/>
 				</div>
 
 			</div>

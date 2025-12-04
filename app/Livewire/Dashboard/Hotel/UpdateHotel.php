@@ -236,22 +236,8 @@ class UpdateHotel extends Component
         $this->resetValidation();
     }
 
-    public function deleteSweetAlert($id): void
+    public function delete($id): void
     {
-        sweetalert()
-            ->showDenyButton()
-            ->timer(0)
-            ->iconColor('#FFA500')
-            ->option('confirmButtonText', __('lang.confirm'))
-            ->option('denyButtonText', __('lang.cancel'))
-            ->option('id', $id)
-            ->info(__('lang.confirm_delete', ['attribute' => __('lang.image')]));
-    }
-
-    #[On('sweetalert:confirmed')]
-    public function delete(array $payload): void
-    {
-        $id = $payload['envelope']['options']['id'];
         $file = File::find($id);
         if ($file && $file->fileable_id === $this->hotel->id) {
             FileService::delete($file->path);
