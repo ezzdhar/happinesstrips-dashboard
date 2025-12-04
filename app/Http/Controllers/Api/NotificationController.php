@@ -51,11 +51,11 @@ class NotificationController extends Controller
 	public function send(Request $request)
 	{
 		$user = User::find(auth()->id());
+		$rand = rand(1, 100);
 		$data = [
-			'id' => rand(1, 100),
+			'id' => $rand,
 			'type' => fake()->randomElement(['booking_trip', 'booking_hotel']),
 		];
-		$rand = rand(1, 100);
 		$title = [
 			'en' => 'New Trip Booking Pending Confirmation Booking Number' . $rand,
 			'ar' => 'حجز رحلة جديد في انتظار التأكيد رقم الحجز ' . $rand,
