@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\CalculateBookingRoomPriceRequest;
 use App\Http\Requests\Api\GetRoomDetailsRequest;
 use App\Http\Requests\Api\GetRoomRequest;
 use App\Http\Resources\RoomResource;
@@ -36,13 +37,13 @@ class RoomController extends Controller
 		return $this->responseOk(message: __('lang.room_details'), data: new RoomResource($room));
 	}
 
-	public function calculateBookingRoomPrice(GetRoomDetailsRequest $request, Room $room)
+	public function calculateBookingRoomPrice(CalculateBookingRoomPriceRequest $request, Room $room)
 	{
 		$calculate_booking_price = $room->calculateBookingPrice(
 			checkIn: Carbon::parse($request->start_date),
 			checkOut: Carbon::parse($request->end_date),
 			adultsCount: $request->adults_count,
-			childrenAges: $request->childrenAges ?? [],
+			childrenAges: $request->children_ages ?? [],
 			currency: $request->attributes->get('currency', 'egp')
 		);
 		if (!$calculate_booking_price['success']) {

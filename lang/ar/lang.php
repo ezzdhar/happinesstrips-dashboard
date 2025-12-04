@@ -889,5 +889,6 @@ return [
 	'check_in_required_for_trip' => 'تاريخ  الوصول مطلوب',
 	'check_out_required_trip' => 'تاريخ  المغادره مطلوب',
 	'update_hotels' => 'تحديث الفندق',
+	'trip_required' => 'الرحلة مطلوبة',
 	'check_in_must_be_on_or_after_trip_check_in' => 'يجب أن يكون تاريخ الوصول مساوي أو بعد تاريخ وصول الرحلة',
 ];

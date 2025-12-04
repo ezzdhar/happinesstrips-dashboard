@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\Status;
+use App\Enums\TripType;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\CalculateBookingTripPriceRequest;
 use App\Http\Resources\TripResource;
 use App\Http\Resources\TripSimpleResource;
 use App\Models\Trip;
+use App\Services\TripPricingService;
 use App\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -36,7 +39,25 @@ class TripController extends Controller
 
 	public function tripDetails(Trip $trip)
 	{
-		 $trip->load(['mainCategory', 'subCategory', 'city', 'hotels.files', 'files']);
+		$trip->load(['mainCategory', 'subCategory', 'city', 'hotels.files', 'files']);
 		return $this->responseOk(message: __('lang.trip_details'), data: new TripResource($trip));
+	}
+
+	public function calculateBookingTripPrice(CalculateBookingTripPriceRequest $request, Trip $trip)
+	{
+		$currency = $request->attributes->get('currency', 'egp');
+		if ($trip->type->value === TripType::Fixed) {
+			$request->check_in = $trip->duration_from;
+			$request->check_out = $trip->duration_to;
+		}
+		 $pricingResult = TripPricingService::calculateTripPriceWithAges(
+			trip: $trip,
+			checkIn: $request->check_in,
+			checkOut: $request->check_out,
+			adultsCount: (int)$request->adults_count,
+			childrenAges: $request->children_ages,
+			currency: $currency
+		);
+		return $this->responseOk(message: __('lang.trip_details'), data: $pricingResult);
 	}
 }

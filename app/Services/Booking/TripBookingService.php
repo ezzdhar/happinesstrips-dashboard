@@ -22,10 +22,8 @@ class TripBookingService
 	 */
 	public function createBooking(array $data): Booking
 	{
-		// 1. جلب الغرفة
 		$trip = Trip::find($data['trip_id']);
 
-		// 2. حساب السعر (نفس اللوجيك المستخدم لديك)
 		$pricingResult = TripPricingService::calculateTripPriceWithAges(
 			trip: $trip,
 			checkIn: $data['check_in'],

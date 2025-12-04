@@ -46,6 +46,7 @@ Route::prefix('hotels')->group(function () {
 Route::prefix('trips')->controller(TripController::class)->group(function () {
 	Route::get('/', 'trips');
 	Route::get('/{trip}', 'tripDetails');
+	Route::get('/calculate/booking-trip/price/{trip}', 'calculateBookingTripPrice');
 });
 
 //bookings

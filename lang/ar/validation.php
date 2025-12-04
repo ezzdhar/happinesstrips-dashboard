@@ -241,6 +241,7 @@ return [
 	    'travelers.*.id_number'  => 'رقم الهوية',
 	    'travelers.*.type'  => 'نوع المسافر',
 	    'hotel_id' => 'الفندق',
+	    'children_ages.*' => 'عمر الأطفال',
     ],
 
 ];
