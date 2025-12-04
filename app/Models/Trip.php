@@ -70,6 +70,16 @@ class Trip extends Model
 	{
 		return $this->belongsTo(City::class)->withDefault(['name'=>null]);
 	}
-
+	public function bookingRatings()
+	{
+		return $this->hasManyThrough(
+			BookingRating::class,
+			Booking::class,
+			'trip_id',     // foreign key on bookings
+			'booking_id',  // foreign key on booking_ratings
+			'id',          // local key on trips
+			'id'           // local key on bookings
+		);
+	}
 
 }

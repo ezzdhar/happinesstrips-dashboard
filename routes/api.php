@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BookingRatingController;
 use App\Http\Controllers\Api\DataController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\GuestController;
@@ -65,7 +66,9 @@ Route::prefix('booking')->middleware('auth:sanctum')->group(function () {
 		Route::get('/', 'myBooking');
 		Route::get('/details/{booking}', 'bookingDetails');
 		Route::post('/create', 'createBooking');
+		Route::post('/rating', 'rating');
 	});
+
 });
 
 

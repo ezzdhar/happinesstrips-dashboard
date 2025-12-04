@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\TripType;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\TripRatingRequest;
 use App\Http\Requests\Api\CreateTripBookingRequest;
 use App\Http\Resources\BookingSimpleTripResource;
 use App\Http\Resources\BookingTripResource;
 use App\Models\Booking;
+use App\Models\BookingRating;
 use App\Models\Trip;
 use App\Services\Booking\TripBookingService;
 use App\Traits\ApiResponse;
@@ -59,5 +61,24 @@ class TripBookingController extends Controller
 		} catch (\Exception $e) {
 			return $this->responseError(message: $e->getMessage());
 		}
+	}
+
+	public function rating(TripRatingRequest $request)
+	{
+		$booking = Booking::with('trip')->findOrFail($request->booking_id);
+		$trip = $booking->trip;
+
+		BookingRating::updateOrCreate(['booking_id' => $booking->id, 'user_id' => auth()->id()],
+			[
+				'rating' => $request->rating,
+			]
+		);
+
+		$avgRating = BookingRating::whereHas('booking', function ($q) use ($trip) {
+			$q->where('trip_id', $trip->id);
+		})->avg('rating');
+
+		$trip->update(['rating' => round($avgRating, 1)]);
+		return $this->responseOk(message: __('lang.rating_updated'));
 	}
 }

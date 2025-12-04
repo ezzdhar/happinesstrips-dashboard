@@ -106,5 +106,8 @@ class Booking extends Model
 	{
 		return $query->when($isSpecial, fn($q) => $q->where('is_special', $isSpecial));
 	}
-
+	public function ratings():hasMany
+	{
+		return $this->hasMany(BookingRating::class);
+	}
 }
