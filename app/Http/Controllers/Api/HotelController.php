@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\GetCheapestRoomRequest;
+use App\Http\Requests\Api\GetRoomRequest;
 use App\Http\Resources\HotelResource;
 use App\Http\Resources\HotelSimpleResource;
+use App\Http\Resources\HotelWithCheapestRoomResource;
 use App\Models\Hotel;
+use App\Models\Room;
 use App\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -36,4 +40,33 @@ class HotelController extends Controller
 	{
 		return $this->responseOk(message: __('lang.hotel_details'), data: new HotelResource($hotel));
 	}
+
+	public function cheapestRoom(GetCheapestRoomRequest $request, Hotel $hotel)
+	{
+		$currency = $request->attributes->get('currency', 'egp');
+
+		// الحصول على أرخص غرفة بناءً على المعايير المحددة
+		$cheapestRoomData = $hotel->getCheapestRoomForPeriod(
+			$request->start_date,
+			$request->end_date,
+			$request->adults_count,
+			$request->children_count ?? 0,
+			$currency
+		);
+
+		if ($cheapestRoomData === null) {
+			return $this->responseOk(message: __('lang.no_available_rooms'));
+
+		}
+
+		// إضافة بيانات الفندق للنتيجة
+		$hotelResource = new HotelWithCheapestRoomResource($hotel);
+		$result = array_merge($hotelResource->toArray($request), ['cheapest_room' => $cheapestRoomData]);
+		return $this->responseOk(
+			message: __('lang.hotel_details'),
+			data: $result
+		);
+	}
+
+
 }

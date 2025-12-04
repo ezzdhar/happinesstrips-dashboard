@@ -5,20 +5,17 @@ namespace App\Http\Requests\Api;
 use App\Traits\ApiResponse;
 use Illuminate\Foundation\Http\FormRequest;
 
-class GetRoomRequest extends FormRequest
+class GetCheapestRoomRequest extends FormRequest
 {
 	use ApiResponse;
 
 	public function rules(): array
 	{
 		return [
-			'hotel_id' => 'required|exists:hotels,id',
-			'adults_count' => 'required|integer|min:1',
-			'children_count' => 'nullable|integer|min:0',
-			'childrenAges' => 'nullable|array',
-			'childrenAges.*' => 'nullable|integer|min:1|max:12',
 			'start_date' => 'required|date|after_or_equal:today',
 			'end_date' => 'required|date|after:start_date',
+			'adults_count' => 'required|integer|min:1',
+			'children_count' => 'nullable|integer|min:0',
 		];
 	}
 
@@ -27,3 +24,4 @@ class GetRoomRequest extends FormRequest
 		return true;
 	}
 }
+

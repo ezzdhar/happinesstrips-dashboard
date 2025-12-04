@@ -30,6 +30,7 @@ Route::prefix('hotels')->group(function () {
 	Route::controller(HotelController::class)->group(function () {
 		Route::get('/', 'hotels');
 		Route::get('/details/{hotel}', 'hotelDetails');
+		Route::get('/cheapest-room/{hotel}', 'cheapestRoom');
 	});
 
 	// rooms routes

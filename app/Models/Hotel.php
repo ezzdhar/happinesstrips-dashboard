@@ -52,6 +52,66 @@ class Hotel extends Model
 	}
 
 	/**
+	 * الحصول على أرخص غرفة متاحة بناءً على فترة زمنية محددة ومعايير الحجز
+	 * Get the cheapest available room based on booking criteria.
+	 */
+	public function getCheapestRoomForPeriod(string $startDate, string $endDate, int $adultsCount, int $childrenCount = 0, string $currency = 'egp'): ?array
+	{
+		$cheapestRoom = null;
+		$lowestPrice = null;
+		$cheapestCalculation = null;
+
+		// البحث عن الغرف المتاحة للمعايير المطلوبة
+		$availableRooms = $this->rooms()
+			->where('status', Status::Active)
+			->where('adults_count', '>=', $adultsCount)
+			->when($childrenCount > 0, fn($q) => $q->where('children_count', '>=', $childrenCount))
+			->get();
+
+		foreach ($availableRooms as $room) {
+			// حساب السعر الإجمالي للغرفة
+			$calculation = $room->calculateBookingPrice(
+				$startDate,
+				$endDate,
+				$adultsCount,
+				[], // children_ages - فارغة لأننا نحسب السعر الأساسي فقط
+				$currency
+			);
+
+			// تخطي الغرف غير المتاحة أو التي فشل حساب سعرها
+			if (!isset($calculation['success']) || !$calculation['success']) {
+				continue;
+			}
+
+			$totalPrice = $calculation['grand_total'];
+
+			if ($lowestPrice === null || $totalPrice < $lowestPrice) {
+				$lowestPrice = $totalPrice;
+				$cheapestRoom = $room;
+				$cheapestCalculation = $calculation;
+			}
+		}
+
+		if ($cheapestRoom === null || $cheapestCalculation === null) {
+			return null;
+		}
+
+		return [
+			'room_id' => $cheapestRoom->id,
+			'room_name' => $cheapestRoom->name,
+			'adults_count' => $cheapestRoom->adults_count,
+			'children_count' => $cheapestRoom->children_count,
+			'start_date' => $startDate,
+			'end_date' => $endDate,
+			'nights_count' => $cheapestCalculation['nights_count'],
+			'price_per_night' => $lowestPrice / $cheapestCalculation['nights_count'],
+			'total_price' => $lowestPrice,
+			'currency' => strtoupper($currency),
+//			'calculation_details' => $cheapestCalculation,
+		];
+	}
+
+	/**
 	 * الحصول على أرخص غرفة متاحة في الفندق بناءً على سعر اليوم الحالي
 	 * تستخدم لعرض أقل سعر متاح في الفندق اليوم مع بيانات الغرفة
 	 *
@@ -128,7 +188,6 @@ class Hotel extends Model
 			'price_period_end' => $currentPeriod['end_date'] ?? null,
 			'price_per_night' => $lowestPrice,
 			'currency' => strtoupper($currency),
-
 		];
 	}
 
