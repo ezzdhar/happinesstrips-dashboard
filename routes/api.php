@@ -96,6 +96,7 @@ Route::middleware('auth:sanctum')->group(function () {
 		Route::post('/read-all', 'readAll');
 		Route::post('/delete', 'delete');
 		Route::get('/unread/count', 'unreadNotificationCount');
+		Route::post('/send', 'send');
 	});
 
 	// profile
