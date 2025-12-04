@@ -63,22 +63,5 @@ class TripBookingController extends Controller
 		}
 	}
 
-	public function rating(TripRatingRequest $request)
-	{
-		$booking = Booking::with('trip')->findOrFail($request->booking_id);
-		$trip = $booking->trip;
 
-		BookingRating::updateOrCreate(['booking_id' => $booking->id, 'user_id' => auth()->id()],
-			[
-				'rating' => $request->rating,
-			]
-		);
-
-		$avgRating = BookingRating::whereHas('booking', function ($q) use ($trip) {
-			$q->where('trip_id', $trip->id);
-		})->avg('rating');
-
-		$trip->update(['rating' => round($avgRating, 1)]);
-		return $this->responseOk(message: __('lang.rating_updated'));
-	}
 }

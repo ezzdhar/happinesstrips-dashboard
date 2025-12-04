@@ -66,8 +66,8 @@ Route::prefix('booking')->middleware('auth:sanctum')->group(function () {
 		Route::get('/', 'myBooking');
 		Route::get('/details/{booking}', 'bookingDetails');
 		Route::post('/create', 'createBooking');
-		Route::post('/rating', 'rating');
 	});
+	Route::post('/rating', BookingRatingController::class);
 
 });
 
