@@ -47,4 +47,10 @@ return [
         'client_secret' => env('APPLE_CLIENT_SECRET'),
         'redirect' => env('APPLE_REDIRECT_URI'),
     ],
+
+    'chatbot' => [
+        'provider' => env('CHATBOT_PROVIDER', 'openai'),
+        'model' => env('CHATBOT_MODEL', 'gpt-4o-mini'),
+        'max_tokens' => env('CHATBOT_MAX_TOKENS', 1000),
+    ],
 ];

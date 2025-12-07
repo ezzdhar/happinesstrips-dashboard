@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\BookingRatingController;
+use App\Http\Controllers\Api\ChatBotController;
 use App\Http\Controllers\Api\DataController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\GuestController;
@@ -112,3 +113,33 @@ Route::middleware('auth:sanctum')->group(function () {
 		Route::post('/delete-account', 'deleteAccount');
 	});
 });
+
+// Chatbot routes
+Route::prefix('chat')->group(function () {
+	// Public FAQ endpoints
+	Route::controller(ChatBotController::class)->group(function () {
+		Route::get('/faqs', 'faqs');
+		Route::get('/faqs/{faq}', 'getFaq');
+	});
+
+	// Authenticated chatbot endpoints with rate limiting
+	Route::middleware(['auth:sanctum', 'throttle:60,1'])->controller(ChatBotController::class)->group(function () {
+		Route::post('/send', 'send');
+		Route::get('/history', 'history');
+		Route::post('/feedback', 'feedback');
+	});
+});
+
+use Prism\Prism\Facades\Prism;
+use Prism\Prism\Enums\Provider;
+Route::get('/test-chat', function (){
+	$response = Prism::text()
+		->using(Provider::OpenAI, 'gpt-4o')
+		->withPrompt('Tell me a short story about a brave knight.')
+		->asText();
+
+	echo $response->text;
+});
+
+
+
