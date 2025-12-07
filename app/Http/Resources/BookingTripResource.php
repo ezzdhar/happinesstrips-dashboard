@@ -52,11 +52,12 @@ class BookingTripResource extends JsonResource
 			// --- 2. المعلومات المالية (Pricing Summary) ---
 			'financials' => [
 				'currency' => strtoupper($this->currency),
-				'base_price' => (float) $this->price,
-				'total_price' => (float) $this->total_price,
+				'base_price' => (float)$this->price,
+				'total_price' => (float)$this->total_price,
 
 				// تفاصيل البالغين (من جدول booking_trips)
-				'adults_total' => $bookingTrip ? (float) $bookingTrip->adults_price : 0,
+				'adults_total' => $bookingTrip ? (float)$bookingTrip->adults_price : 0,
+				'adult_price_per_person' => (float)$this->price,
 
 				// تفاصيل الأطفال
 				'children_breakdown' => [
@@ -80,7 +81,7 @@ class BookingTripResource extends JsonResource
 					'value' => $trip->type->value,
 					'label' => __('lang.' . $trip->type->value),
 				],
-				'price_per_night' => $trip->type->value === 'flexible' ? (float) $this->price : null,
+				'price_per_night' => $trip->type->value === 'flexible' ? (float)$this->price : null,
 			] : null,
 
 			// --- 4. بيانات المسافرين (Travelers) ---
@@ -147,7 +148,8 @@ class BookingTripResource extends JsonResource
 				$childData = $breakdown[$key];
 				$items[] = [
 					'label' => __('lang.child') . " $number (" . ($childData['age'] ?? '?') . ' ' . __('lang.years') . ')',
-					'price' => (float) ($childData['price'] ?? 0),
+					'price' => (float)($childData['price'] ?? 0),
+					'percentage' => (float)($childData['percentage'] ?? 0),
 					'is_free' => false,
 					'tag' => null,
 				];
@@ -160,7 +162,8 @@ class BookingTripResource extends JsonResource
 				$childNum = 4 + $index;
 				$items[] = [
 					'label' => __('lang.child') . " $childNum (" . ($child['age'] ?? '?') . ' ' . __('lang.years') . ')',
-					'price' => (float) ($child['price'] ?? 0),
+					'price' => (float)($child['price'] ?? 0),
+					'percentage' => (float)($childData['percentage'] ?? 0),
 					'is_free' => false,
 					'tag' => null,
 				];

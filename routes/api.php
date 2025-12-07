@@ -51,26 +51,7 @@ Route::prefix('trips')->controller(TripController::class)->group(function () {
 	Route::get('/calculate/booking-trip/price/{trip}', 'calculateBookingTripPrice');
 });
 
-//bookings
-Route::prefix('booking')->middleware('auth:sanctum')->group(function () {
 
-	//bookings hotels
-	Route::prefix('hotels')->controller(HotelBookingController::class)->group(function () {
-		Route::get('/', 'myBooking');
-		Route::get('/details/{booking}', 'bookingDetails');
-		Route::post('/create', 'createBooking');
-		Route::post('/create/custom', 'createCustomBooking');
-	});
-
-	//bookings trips
-	Route::prefix('trips')->controller(TripBookingController::class)->group(function () {
-		Route::get('/', 'myBooking');
-		Route::get('/details/{booking}', 'bookingDetails');
-		Route::post('/create', 'createBooking');
-	});
-	Route::post('/rating', BookingRatingController::class);
-
-});
 
 
 // data routes
@@ -98,6 +79,27 @@ Route::middleware('auth:sanctum')->group(function () {
 		Route::post('/delete', 'delete');
 		Route::get('/unread/count', 'unreadNotificationCount');
 		Route::post('/send', 'send');
+	});
+
+	//bookings
+	Route::prefix('booking')->group(function () {
+
+		//bookings hotels
+		Route::prefix('hotels')->controller(HotelBookingController::class)->group(function () {
+			Route::get('/', 'myBooking');
+			Route::get('/details/{booking}', 'bookingDetails');
+			Route::post('/create', 'createBooking');
+			Route::post('/create/custom', 'createCustomBooking');
+		});
+
+		//bookings trips
+		Route::prefix('trips')->controller(TripBookingController::class)->group(function () {
+			Route::get('/', 'myBooking');
+			Route::get('/details/{booking}', 'bookingDetails');
+			Route::post('/create', 'createBooking');
+		});
+		Route::post('/rating', BookingRatingController::class);
+
 	});
 
 	// profile

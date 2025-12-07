@@ -257,10 +257,6 @@ class CreateBookingTrip extends Component
 		}
 	}
 
-	public function getChildAgeThreshold(): int
-	{
-		return TripPricingService::getChildAgeThreshold();
-	}
 
 	public function updatedCurrency(): void
 	{
@@ -279,7 +275,6 @@ class CreateBookingTrip extends Component
 			$this->sub_total = 0;
 			$this->total_price = 0;
 			$this->pricing_result = null;
-
 			return;
 		}
 

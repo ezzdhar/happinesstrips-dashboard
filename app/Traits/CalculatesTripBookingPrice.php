@@ -132,6 +132,7 @@ trait CalculatesTripBookingPrice
             if ($age < $freeChildAge) {
                 $breakdown['free_children'][] = [
                     'age' => $age,
+                    'percentage' => 0,
                     'price' => 0,
                 ];
 
@@ -151,6 +152,7 @@ trait CalculatesTripBookingPrice
 
                 $breakdown['additional_children'][] = [
                     'age' => $age,
+                    'percentage' => (float) $trip->additional_child_price_percentage,
                     'price' => $childPrice,
                     'note' => 'Charged as adult (age >= '.$adultAge.')',
                 ];
@@ -170,8 +172,17 @@ trait CalculatesTripBookingPrice
                 nightsCount: $nightsCount
             );
 
+            // Get the percentage for this child position
+            $percentage = match ($paidChildrenCount) {
+                1 => (float) $trip->first_child_price_percentage,
+                2 => (float) $trip->second_child_price_percentage,
+                3 => (float) $trip->third_child_price_percentage,
+                default => (float) $trip->additional_child_price_percentage,
+            };
+
             $childData = [
                 'age' => $age,
+                'percentage' => $percentage,
                 'price' => $childPrice,
             ];
 
@@ -235,9 +246,7 @@ trait CalculatesTripBookingPrice
             'nights' => $calculation['nights_count'],
             'adults' => $adultsCount,
             'children' => count($childrenAges),
-            'base_price_label' => $trip->type->value === TripType::Fixed
-                ? 'السعر الأساسي للرحلة الكاملة'
-                : 'السعر الأساسي لليلة الواحدة',
+            'base_price_label' => $trip->type->value === TripType::Fixed ? 'السعر الأساسي للرحلة الكاملة' : 'السعر الأساسي لليلة الواحدة',
             'base_price' => $calculation['base_price'],
             'adults_total' => $calculation['adults_price'],
             'children_total' => $calculation['children_breakdown']['total_children_price'],

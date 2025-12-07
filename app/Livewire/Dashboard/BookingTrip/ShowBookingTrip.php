@@ -33,7 +33,7 @@ class ShowBookingTrip extends Component
 
         $this->calculated_price = $booking->price;
         $this->total_price = $booking->total_price;
-        $this->child_age_threshold = TripPricingService::getChildAgeThreshold();
+        $this->child_age_threshold = $booking->trip->adult_age;
 
         // Load pricing details from BookingTrip if exists
         if ($booking->bookingTrip) {
