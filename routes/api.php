@@ -132,13 +132,40 @@ Route::prefix('chat')->group(function () {
 
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\Enums\Provider;
-Route::get('/test-chat', function (){
-	$response = Prism::text()
-		->using(Provider::OpenAI, 'gpt-4o')
-		->withPrompt('Tell me a short story about a brave knight.')
-		->asText();
+use Prism\Prism\Exceptions\PrismException;
+use Prism\Prism\Exceptions\PrismRateLimitedException;
 
-	echo $response->text;
+Route::get('/test-chat', function () {
+	try {
+		$response = Prism::text()
+			->using(Provider::OpenAI, 'gpt-4o')
+			->withPrompt('Tell me a short story about a brave knight.')
+			->asText();
+
+		return response()->json([
+			'success' => true,
+			'message' => $response->text,
+			'usage' => $response->usage ?? null,
+		]);
+	} catch (PrismRateLimitedException $e) {
+		return response()->json([
+			'success' => false,
+			'error' => 'Rate limit exceeded. Please try again later.',
+			'details' => $e->getMessage(),
+		], 429);
+	} catch (PrismException $e) {
+		return response()->json([
+			'success' => false,
+			'error' => 'AI service error occurred.',
+			'details' => $e->getMessage(),
+		], 500);
+	} catch (\Exception $e) {
+		return response()->json([
+			'success' => false,
+			'error' => 'An unexpected error occurred.',
+			'details' => $e->getMessage(),
+		], 500);
+	}
 });
 
 
