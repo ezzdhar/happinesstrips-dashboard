@@ -37,6 +37,7 @@
         "php-flasher/flasher-laravel": "^2.1",
         "php-flasher/flasher-sweetalert-laravel": "^2.1",
         "php-flasher/flasher-toastr-laravel": "^2.1",
+        "prism-php/prism": "^0.99.0",
         "realrashid/sweet-alert": "^7.3",
         "robsontenorio/mary": "^2.3",
         "simplesoftwareio/simple-qrcode": "^4.2",
