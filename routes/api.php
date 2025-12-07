@@ -13,6 +13,11 @@ use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\TripBookingController;
 use App\Http\Controllers\Api\TripController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
+use Prism\Prism\Facades\Prism;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Exceptions\PrismException;
+use Prism\Prism\Exceptions\PrismRateLimitedException;
 
 // guest routes
 Route::controller(GuestController::class)->group(function () {
@@ -130,22 +135,161 @@ Route::prefix('chat')->group(function () {
 	});
 });
 
-use Prism\Prism\Facades\Prism;
-use Prism\Prism\Enums\Provider;
-use Prism\Prism\Exceptions\PrismException;
-use Prism\Prism\Exceptions\PrismRateLimitedException;
 
-Route::get('/test-chat', function () {
+
+Route::get('/test-chat/{message}', function () {
+	$message = request()->route('message');
+
+	// إنشاء Tools من الـ API endpoints المتاحة
+	$tools = [
+		\Prism\Prism\Tool::as('get_all_hotels')
+			->for('Get list of all available hotels with their details, amenities, and pricing')
+			->withStringParameter('city_id', 'Filter hotels by city ID (optional)')
+			->withStringParameter('hotel_type_id', 'Filter hotels by hotel type ID (optional)')
+			->using(function (string $city_id = '', string $hotel_type_id = '') {
+				$params = array_filter(['city_id' => $city_id, 'hotel_type_id' => $hotel_type_id]);
+				$response = Http::get(config('app.url') . '/api/hotels', $params);
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch hotels']);
+			}),
+
+		\Prism\Prism\Tool::as('get_hotel_details')
+			->for('Get detailed information about a specific hotel including rooms, amenities, location, and reviews')
+			->withStringParameter('hotel_id', 'The ID of the hotel')
+			->using(function (string $hotel_id) {
+				$response = Http::get(config('app.url') . '/api/hotels/details/' . $hotel_id);
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch hotel details']);
+			}),
+
+		\Prism\Prism\Tool::as('get_cheapest_room')
+			->for('Get the cheapest available room for a specific hotel')
+			->withStringParameter('hotel_id', 'The ID of the hotel')
+			->using(function (string $hotel_id) {
+				$response = Http::get(config('app.url') . '/api/hotels/cheapest-room/' . $hotel_id);
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch cheapest room']);
+			}),
+
+		\Prism\Prism\Tool::as('get_all_rooms')
+			->for('Get list of all available rooms with details like capacity, price, and amenities')
+			->withStringParameter('hotel_id', 'Filter rooms by hotel ID (optional)')
+			->using(function (string $hotel_id = '') {
+				$params = $hotel_id ? ['hotel_id' => $hotel_id] : [];
+				$response = Http::get(config('app.url') . '/api/hotels/rooms', $params);
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch rooms']);
+			}),
+
+		\Prism\Prism\Tool::as('get_room_details')
+			->for('Get detailed information about a specific room including capacity, amenities, and availability')
+			->withStringParameter('room_id', 'The ID of the room')
+			->using(function (string $room_id) {
+				$response = Http::get(config('app.url') . '/api/hotels/rooms/' . $room_id);
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch room details']);
+			}),
+
+		\Prism\Prism\Tool::as('calculate_room_booking_price')
+			->for('Calculate the total price for booking a room based on dates and number of guests')
+			->withStringParameter('room_id', 'The ID of the room')
+			->withStringParameter('check_in', 'Check-in date in format YYYY-MM-DD')
+			->withStringParameter('check_out', 'Check-out date in format YYYY-MM-DD')
+			->withStringParameter('guests', 'Number of guests')
+			->using(function (string $room_id, string $check_in, string $check_out, string $guests) {
+				$params = ['check_in' => $check_in, 'check_out' => $check_out, 'guests' => $guests];
+				$response = Http::get(config('app.url') . '/api/hotels/rooms/calculate/booking-room/price/' . $room_id, $params);
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to calculate price']);
+			}),
+
+		\Prism\Prism\Tool::as('get_all_trips')
+			->for('Get list of all available trips with destinations, activities, and schedules')
+			->withStringParameter('category_id', 'Filter trips by category ID (optional)')
+			->withStringParameter('sub_category_id', 'Filter trips by sub-category ID (optional)')
+			->using(function (string $category_id = '', string $sub_category_id = '') {
+				$params = array_filter(['category_id' => $category_id, 'sub_category_id' => $sub_category_id]);
+				$response = Http::get(config('app.url') . '/api/trips', $params);
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch trips']);
+			}),
+
+		\Prism\Prism\Tool::as('get_trip_details')
+			->for('Get detailed information about a specific trip including itinerary, included services, and pricing')
+			->withStringParameter('trip_id', 'The ID of the trip')
+			->using(function (string $trip_id) {
+				$response = Http::get(config('app.url') . '/api/trips/' . $trip_id);
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch trip details']);
+			}),
+
+		\Prism\Prism\Tool::as('calculate_trip_booking_price')
+			->for('Calculate the total price for booking a trip based on date and number of guests')
+			->withStringParameter('trip_id', 'The ID of the trip')
+			->withStringParameter('booking_date', 'Booking date in format YYYY-MM-DD')
+			->withStringParameter('guests', 'Number of guests')
+			->using(function (string $trip_id, string $booking_date, string $guests) {
+				$params = ['booking_date' => $booking_date, 'guests' => $guests];
+				$response = Http::get(config('app.url') . '/api/trips/calculate/booking-trip/price/' . $trip_id, $params);
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to calculate price']);
+			}),
+
+		\Prism\Prism\Tool::as('get_hotel_types')
+			->for('Get list of all hotel types (e.g., resort, apartment, hotel, etc.)')
+			->using(function () {
+				$response = Http::get(config('app.url') . '/api/hotel-types');
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch hotel types']);
+			}),
+
+		\Prism\Prism\Tool::as('get_cities')
+			->for('Get list of all available cities where hotels and trips are offered')
+			->using(function () {
+				$response = Http::get(config('app.url') . '/api/cities');
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch cities']);
+			}),
+
+		\Prism\Prism\Tool::as('get_categories')
+			->for('Get list of all trip categories (e.g., adventure, cultural, beach, etc.)')
+			->using(function () {
+				$response = Http::get(config('app.url') . '/api/categories');
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch categories']);
+			}),
+
+		\Prism\Prism\Tool::as('get_sub_categories')
+			->for('Get list of all trip sub-categories for more specific trip filtering')
+			->using(function () {
+				$response = Http::get(config('app.url') . '/api/sub-categories');
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch sub-categories']);
+			}),
+
+		\Prism\Prism\Tool::as('get_booking_status')
+			->for('Get list of all possible booking status values (e.g., pending, confirmed, cancelled)')
+			->using(function () {
+				$response = Http::get(config('app.url') . '/api/booking-status');
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch booking status']);
+			}),
+
+		\Prism\Prism\Tool::as('get_faqs')
+			->for('Get list of frequently asked questions and their answers')
+			->using(function () {
+				$response = Http::get(config('app.url') . '/api/chat/faqs');
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch FAQs']);
+			}),
+
+		\Prism\Prism\Tool::as('get_faq_details')
+			->for('Get detailed information about a specific frequently asked question')
+			->withStringParameter('faq_id', 'The ID of the FAQ')
+			->using(function (string $faq_id) {
+				$response = Http::get(config('app.url') . '/api/chat/faqs/' . $faq_id);
+				return $response->successful() ? $response->body() : json_encode(['error' => 'Failed to fetch FAQ details']);
+			}),
+	];
+
 	try {
 		$response = Prism::text()
 			->using(Provider::Gemini, 'gemini-2.0-flash')
-			->withPrompt('Tell me a short story about a brave knight.')
+			->withPrompt($message)
+			->withTools($tools)
 			->asText();
 
 		return response()->json([
 			'success' => true,
 			'message' => $response->text,
 			'usage' => $response->usage ?? null,
+			'tool_calls' => $response->toolCalls ?? null,
+			'steps' => $response->steps ?? null,
 		]);
 	} catch (PrismRateLimitedException $e) {
 		return response()->json([
