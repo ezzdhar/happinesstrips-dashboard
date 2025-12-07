@@ -1,0 +1,3167 @@
+{
+	"info": {
+		"_postman_id": "dd9ebaec-2688-4e27-b9bc-0da4e00d9d26",
+		"name": "Ezzdhar",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19569626",
+		"_collection_link": "https://speeding-escape-932657.postman.co/workspace/ezzdhar~eea1a935-e9d4-4228-8392-332820ab83c2/collection/19569626-dd9ebaec-2688-4e27-b9bc-0da4e00d9d26?action=share&source=collection_link&creator=19569626"
+	},
+	"item": [
+		{
+			"name": "favorites",
+			"item": [
+				{
+					"name": "favorites",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/favorites?model=trip",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"favorites"
+							],
+							"query": [
+								{
+									"key": "model",
+									"value": "trip",
+									"description": "hotel or trip"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "toggle Favorite",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "model",
+									"value": "trip",
+									"description": "hotel or trip",
+									"type": "text"
+								},
+								{
+									"key": "id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/favorites/toggle",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"favorites",
+								"toggle"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			]
+		},
+		{
+			"name": "Guest",
+			"item": [
+				{
+					"name": "social login or register",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "rawan",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "essam@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "provider",
+									"value": "google",
+									"description": "google or apple",
+									"type": "text"
+								},
+								{
+									"key": "provider_token",
+									"type": "text"
+								},
+								{
+									"key": "provider_id",
+									"type": "text"
+								},
+								{
+									"key": "fcm_token",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/social-login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"social-login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "rawan",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "essam@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "fcm_token",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "send code",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "ar",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "essam@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/send/code",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"send",
+								"code"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify Code",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "ar",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "essam@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "verification_code",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/verify-code",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"verify-code"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset password",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "$2y$12$lKLPBP1GlcywPnqPZceE4OcTWQNMrTgoshgoz91DrvvuTFMGiUI32",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "ar",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/reset/password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reset",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "ar",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "essam@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "fcm_token",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			]
+		},
+		{
+			"name": "hotels",
+			"item": [
+				{
+					"name": "rooms",
+					"item": [
+						{
+							"name": "rooms",
+							"protocolProfileBehavior": {
+								"strictSSL": false,
+								"followRedirects": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{local_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "string"
+									},
+									{
+										"key": "password",
+										"value": "{{api_password}}",
+										"type": "string"
+									},
+									{
+										"key": "lang",
+										"value": "{{lang}}",
+										"type": "string"
+									},
+									{
+										"key": "currency",
+										"value": "{{currency}}",
+										"type": "string"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/hotels/rooms?per_page&page=1&name=&hotel_id=1&adults_count=1&children_count=&start_date=2025-12-04&end_date=2025-12-05&min_price=&max_price=",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hotels",
+										"rooms"
+									],
+									"query": [
+										{
+											"key": "per_page",
+											"value": null
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "name",
+											"value": ""
+										},
+										{
+											"key": "hotel_id",
+											"value": "1"
+										},
+										{
+											"key": "adults_count",
+											"value": "1"
+										},
+										{
+											"key": "children_count",
+											"value": ""
+										},
+										{
+											"key": "start_date",
+											"value": "2025-12-04"
+										},
+										{
+											"key": "end_date",
+											"value": "2025-12-05"
+										},
+										{
+											"key": "min_price",
+											"value": ""
+										},
+										{
+											"key": "max_price",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "room details",
+							"protocolProfileBehavior": {
+								"strictSSL": false,
+								"followRedirects": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{local_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "string"
+									},
+									{
+										"key": "password",
+										"value": "{{api_password}}",
+										"type": "string"
+									},
+									{
+										"key": "lang",
+										"value": "{{lang}}",
+										"type": "string"
+									},
+									{
+										"key": "currency",
+										"value": "{{currency}}",
+										"type": "string"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/hotels/rooms/:room?name=&adults_count=2&children_count=&start_date=2025-11-26&end_date=2025-11-28",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hotels",
+										"rooms",
+										":room"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": ""
+										},
+										{
+											"key": "adults_count",
+											"value": "2"
+										},
+										{
+											"key": "children_count",
+											"value": ""
+										},
+										{
+											"key": "start_date",
+											"value": "2025-11-26"
+										},
+										{
+											"key": "end_date",
+											"value": "2025-11-28"
+										}
+									],
+									"variable": [
+										{
+											"key": "room",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Calculate Booking Room Price",
+							"protocolProfileBehavior": {
+								"strictSSL": false,
+								"followRedirects": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{local_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "string"
+									},
+									{
+										"key": "password",
+										"value": "{{api_password}}",
+										"type": "string"
+									},
+									{
+										"key": "lang",
+										"value": "{{lang}}",
+										"type": "string"
+									},
+									{
+										"key": "currency",
+										"value": "{{currency}}",
+										"type": "string"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/hotels/rooms/calculate/booking-room/price/:room?adults_count=2&children_ages[]&start_date=2025-11-26&end_date=2025-11-28",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hotels",
+										"rooms",
+										"calculate",
+										"booking-room",
+										"price",
+										":room"
+									],
+									"query": [
+										{
+											"key": "adults_count",
+											"value": "2"
+										},
+										{
+											"key": "children_ages[]",
+											"value": null
+										},
+										{
+											"key": "start_date",
+											"value": "2025-11-26"
+										},
+										{
+											"key": "end_date",
+											"value": "2025-11-28"
+										}
+									],
+									"variable": [
+										{
+											"key": "room",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					]
+				},
+				{
+					"name": "create hotel Room custom Booking",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "hotel_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "check_in",
+									"value": "2025-12-03",
+									"type": "text"
+								},
+								{
+									"key": "check_out",
+									"value": "2025-12-05",
+									"type": "text"
+								},
+								{
+									"key": "adults_count",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "children_count",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "children_ages[]",
+									"value": [
+										""
+									],
+									"description": "أعمار الاطفال عند التحديد من البداية",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][full_name]",
+									"value": [
+										"عصام حمدي العجمي"
+									],
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][phone_key]",
+									"value": "+20",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][phone]",
+									"value": [
+										"1002694325"
+									],
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][nationality]",
+									"value": "مصري",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][age]",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][id_type]",
+									"value": "passport ",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][id_number]",
+									"value": "2662626262",
+									"description": "passport or national_id",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][type]",
+									"value": "adult",
+									"description": "adult or child",
+									"type": "text"
+								},
+								{
+									"key": "notes",
+									"value": "notes",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/booking/hotels/create/custom",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"booking",
+								"hotels",
+								"create",
+								"custom"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create hotel Room Booking",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "room_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "check_in",
+									"value": "2025-12-05",
+									"type": "text"
+								},
+								{
+									"key": "check_out",
+									"value": "2025-12-06",
+									"type": "text"
+								},
+								{
+									"key": "adults_count",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "children_count",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "children_ages[]",
+									"value": "6",
+									"description": "أعمار الاطفال عند التحديد من البداية",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][full_name]",
+									"value": "ESSAM",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][phone_key]",
+									"value": "+20",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][phone]",
+									"value": [
+										"1002694325"
+									],
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][nationality]",
+									"value": "مصري",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][age]",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][id_type]",
+									"value": "passport ",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][id_number]",
+									"value": "2662626262",
+									"description": "passport or national_id",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][type]",
+									"value": "adult",
+									"description": "adult or child",
+									"type": "text"
+								},
+								{
+									"key": "notes",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/booking/hotels/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"booking",
+								"hotels",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hotel Details",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/hotels/details/:hotel_id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hotels",
+								"details",
+								":hotel_id"
+							],
+							"variable": [
+								{
+									"key": "hotel_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hotel cheapest room",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/hotels/cheapest-room/:hotel_id?start_date=2025-12-04&end_date=2025-12-05&adults_count=1&children_count",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hotels",
+								"cheapest-room",
+								":hotel_id"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2025-12-04"
+								},
+								{
+									"key": "end_date",
+									"value": "2025-12-05"
+								},
+								{
+									"key": "adults_count",
+									"value": "1"
+								},
+								{
+									"key": "children_count",
+									"value": null
+								}
+							],
+							"variable": [
+								{
+									"key": "hotel_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all hotels",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/hotels?per_page&page=1&name=&city_id=&hotel_type_id=&adults_count=&children_count=&rating=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hotels"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "city_id",
+									"value": ""
+								},
+								{
+									"key": "hotel_type_id",
+									"value": ""
+								},
+								{
+									"key": "adults_count",
+									"value": ""
+								},
+								{
+									"key": "children_count",
+									"value": ""
+								},
+								{
+									"key": "rating",
+									"value": "",
+									"description": "desc or asc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			]
+		},
+		{
+			"name": "trips",
+			"item": [
+				{
+					"name": "create trip  Booking",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "trip_id",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "check_in",
+									"value": "2025-12-07",
+									"type": "text"
+								},
+								{
+									"key": "check_out",
+									"value": "2025-12-10",
+									"type": "text"
+								},
+								{
+									"key": "adults_count",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "children_count",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "children_ages[]",
+									"value": "6",
+									"description": "أعمار الاطفال عند التحديد من البداية",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][full_name]",
+									"value": [
+										"عصام حمدي العجمي"
+									],
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][phone_key]",
+									"value": "+20",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][phone]",
+									"value": [
+										"1002694325"
+									],
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][nationality]",
+									"value": "مصري",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][age]",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][id_type]",
+									"value": "passport ",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][id_number]",
+									"value": "2662626262",
+									"description": "passport or national_id",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][type]",
+									"value": "adult",
+									"description": "adult or child",
+									"type": "text"
+								},
+								{
+									"key": "notes",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/booking/trips/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"booking",
+								"trips",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all trips",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/trips?per_page=15&page=1&name=&city_id=&hotel_id=&main_category_id=&sub_category_id=&rating=&price=&duration_from&duration_to&is_featured",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"trips"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "15"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "city_id",
+									"value": ""
+								},
+								{
+									"key": "hotel_id",
+									"value": ""
+								},
+								{
+									"key": "main_category_id",
+									"value": ""
+								},
+								{
+									"key": "sub_category_id",
+									"value": ""
+								},
+								{
+									"key": "rating",
+									"value": "",
+									"description": "desc or asc"
+								},
+								{
+									"key": "price",
+									"value": "",
+									"description": "desc or asc"
+								},
+								{
+									"key": "duration_from",
+									"value": null
+								},
+								{
+									"key": "duration_to",
+									"value": null
+								},
+								{
+									"key": "is_featured",
+									"value": null,
+									"description": "set 1 to get offers"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "trip Details",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/trips/:tripl_id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"trips",
+								":tripl_id"
+							],
+							"variable": [
+								{
+									"key": "tripl_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "calculate booking trip price",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true,
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/trips/calculate/booking-trip/price/:trip?check_in&check_out&children_ages[]=6&adults_count=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"trips",
+								"calculate",
+								"booking-trip",
+								"price",
+								":trip"
+							],
+							"query": [
+								{
+									"key": "check_in",
+									"value": null
+								},
+								{
+									"key": "check_out",
+									"value": null
+								},
+								{
+									"key": "children_ages[]",
+									"value": "6"
+								},
+								{
+									"key": "adults_count",
+									"value": "1"
+								}
+							],
+							"variable": [
+								{
+									"key": "trip",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			]
+		},
+		{
+			"name": "data",
+			"item": [
+				{
+					"name": "categories",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sub-categories",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/sub-categories?main_category_id=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"sub-categories"
+							],
+							"query": [
+								{
+									"key": "main_category_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "booking status",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/booking-status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"booking-status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hotel-types",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/hotel-types",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hotel-types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cities",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/cities",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			]
+		},
+		{
+			"name": "notifications",
+			"item": [
+				{
+					"name": "get notifications",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/notifications",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unread count",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/notifications/unread/count",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"notifications",
+								"unread",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read one notification",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/notifications/read?notification_id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"notifications",
+								"read"
+							],
+							"query": [
+								{
+									"key": "notification_id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete one notification ",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/notifications/delete?notification_id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"notifications",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "notification_id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read-all  notification ",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/notifications/read-all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"notifications",
+								"read-all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "send test",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/notifications/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"notifications",
+								"send"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			]
+		},
+		{
+			"name": "profile",
+			"item": [
+				{
+					"name": "user info",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update password",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "old_password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "new_password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/profile/update/password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"update",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update language",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "language",
+									"value": "ar",
+									"description": "ar or en",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/profile/update/language",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"update",
+								"language"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/profile/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete account",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/profile/delete-account",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"delete-account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": " essam1",
+									"type": "text"
+								},
+								{
+									"key": "phone_key",
+									"value": "+20",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "01002694325",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "file://C:\\Users\\Mega Tech\\Desktop\\images.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/profile/update",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			]
+		},
+		{
+			"name": "my booking",
+			"item": [
+				{
+					"name": "hotels",
+					"item": [
+						{
+							"name": "hotel booking",
+							"protocolProfileBehavior": {
+								"strictSSL": false,
+								"followRedirects": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{local_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "string"
+									},
+									{
+										"key": "password",
+										"value": "{{api_password}}",
+										"type": "string"
+									},
+									{
+										"key": "lang",
+										"value": "{{lang}}",
+										"type": "string"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/booking/hotels?per_page&page&city_id&is_special=&status&booking_number",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"booking",
+										"hotels"
+									],
+									"query": [
+										{
+											"key": "per_page",
+											"value": null
+										},
+										{
+											"key": "page",
+											"value": null
+										},
+										{
+											"key": "city_id",
+											"value": null
+										},
+										{
+											"key": "is_special",
+											"value": "",
+											"description": "enter true for get special booking"
+										},
+										{
+											"key": "status",
+											"value": null
+										},
+										{
+											"key": "booking_number",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "details hotel booking",
+							"protocolProfileBehavior": {
+								"strictSSL": false,
+								"followRedirects": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{local_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "string"
+									},
+									{
+										"key": "password",
+										"value": "{{api_password}}",
+										"type": "string"
+									},
+									{
+										"key": "lang",
+										"value": "{{lang}}",
+										"type": "string"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/booking/hotels/details/:booking",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"booking",
+										"hotels",
+										"details",
+										":booking"
+									],
+									"variable": [
+										{
+											"key": "booking",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "trips",
+					"item": [
+						{
+							"name": "trip booking",
+							"protocolProfileBehavior": {
+								"strictSSL": false,
+								"followRedirects": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{local_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "string"
+									},
+									{
+										"key": "password",
+										"value": "{{api_password}}",
+										"type": "string"
+									},
+									{
+										"key": "lang",
+										"value": "{{lang}}",
+										"type": "string"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/booking/trips?per_page&page&city_id&status&booking_number&main_category_id&sub_category_id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"booking",
+										"trips"
+									],
+									"query": [
+										{
+											"key": "per_page",
+											"value": null
+										},
+										{
+											"key": "page",
+											"value": null
+										},
+										{
+											"key": "city_id",
+											"value": null
+										},
+										{
+											"key": "status",
+											"value": null
+										},
+										{
+											"key": "booking_number",
+											"value": null
+										},
+										{
+											"key": "main_category_id",
+											"value": null
+										},
+										{
+											"key": "sub_category_id",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "details trip  booking",
+							"protocolProfileBehavior": {
+								"strictSSL": false,
+								"followRedirects": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{local_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "string"
+									},
+									{
+										"key": "password",
+										"value": "{{api_password}}",
+										"type": "string"
+									},
+									{
+										"key": "lang",
+										"value": "{{lang}}",
+										"type": "string"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/booking/trips/details/:booking",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"booking",
+										"trips",
+										"details",
+										":booking"
+									],
+									"variable": [
+										{
+											"key": "booking",
+											"value": "16"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "rating booking",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "rating",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "booking_id",
+									"value": "8",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/booking/rating",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"booking",
+								"rating"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			]
+		}
+	]
+}
