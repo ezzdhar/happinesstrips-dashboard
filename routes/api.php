@@ -138,7 +138,7 @@ use Prism\Prism\Exceptions\PrismRateLimitedException;
 Route::get('/test-chat', function () {
 	try {
 		$response = Prism::text()
-			->using(Provider::OpenAI, 'gpt-4o')
+			->using(Provider::Gemini, 'gemini-2.0-flash')
 			->withPrompt('Tell me a short story about a brave knight.')
 			->asText();
 
