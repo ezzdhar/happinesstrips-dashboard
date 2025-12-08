@@ -308,7 +308,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{local_token}}",
+											"value": "local_token",
 											"type": "string"
 										}
 									]
@@ -322,24 +322,24 @@
 									},
 									{
 										"key": "password",
-										"value": "{{api_password}}",
+										"value": "api_password",
 										"type": "string"
 									},
 									{
 										"key": "lang",
-										"value": "{{lang}}",
+										"value": "lang",
 										"type": "string"
 									},
 									{
 										"key": "currency",
-										"value": "{{currency}}",
+										"value": "currency",
 										"type": "string"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/api/v1/hotels/rooms?per_page&page=1&name=&hotel_id=1&adults_count=1&children_count=&start_date=2025-12-04&end_date=2025-12-05&min_price=&max_price=",
+									"raw": "baseUrl/api/v1/hotels/rooms?per_page&page=1&name=&hotel_id=1&adults_count=1&children_count=&start_date=2025-12-04&end_date=2025-12-05&min_price=&max_price=",
 									"host": [
-										"{{baseUrl}}"
+										"baseUrl"
 									],
 									"path": [
 										"api",
@@ -405,7 +405,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{local_token}}",
+											"value": "local_token",
 											"type": "string"
 										}
 									]
@@ -419,24 +419,24 @@
 									},
 									{
 										"key": "password",
-										"value": "{{api_password}}",
+										"value": "api_password",
 										"type": "string"
 									},
 									{
 										"key": "lang",
-										"value": "{{lang}}",
+										"value": "lang",
 										"type": "string"
 									},
 									{
 										"key": "currency",
-										"value": "{{currency}}",
+										"value": "currency",
 										"type": "string"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/api/v1/hotels/rooms/:room?name=&adults_count=2&children_count=&start_date=2025-11-26&end_date=2025-11-28",
+									"raw": "baseUrl/api/v1/hotels/rooms/:room?name=&adults_count=2&children_count=&start_date=2025-11-26&end_date=2025-11-28",
 									"host": [
-										"{{baseUrl}}"
+										"baseUrl"
 									],
 									"path": [
 										"api",
@@ -489,7 +489,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{local_token}}",
+											"value": "local_token",
 											"type": "string"
 										}
 									]
@@ -503,24 +503,24 @@
 									},
 									{
 										"key": "password",
-										"value": "{{api_password}}",
+										"value": "api_password",
 										"type": "string"
 									},
 									{
 										"key": "lang",
-										"value": "{{lang}}",
+										"value": "lang",
 										"type": "string"
 									},
 									{
 										"key": "currency",
-										"value": "{{currency}}",
+										"value": "currency",
 										"type": "string"
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/api/v1/hotels/rooms/calculate/booking-room/price/:room?adults_count=2&children_ages[]&start_date=2025-11-26&end_date=2025-11-28",
+									"raw": "baseUrl/api/v1/hotels/rooms/calculate/booking-room/price/:room?adults_count=2&children_ages[]&start_date=2025-11-26&end_date=2025-11-28",
 									"host": [
-										"{{baseUrl}}"
+										"baseUrl"
 									],
 									"path": [
 										"api",
@@ -592,7 +592,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -606,17 +606,17 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							},
 							{
 								"key": "currency",
-								"value": "{{currency}}",
+								"value": "currency",
 								"type": "string"
 							}
 						],
@@ -710,9 +710,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/booking/hotels/create/custom",
+							"raw": "baseUrl/api/v1/booking/hotels/create/custom",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -738,7 +738,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -752,17 +752,17 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							},
 							{
 								"key": "currency",
-								"value": "{{currency}}",
+								"value": "currency",
 								"type": "string"
 							}
 						],
@@ -851,9 +851,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/booking/hotels/create",
+							"raw": "baseUrl/api/v1/booking/hotels/create",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -878,7 +878,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -892,24 +892,24 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							},
 							{
 								"key": "currency",
-								"value": "{{currency}}",
+								"value": "currency",
 								"type": "string"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/hotels/details/:hotel_id",
+							"raw": "baseUrl/api/v1/hotels/details/:hotel_id",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -940,7 +940,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -954,24 +954,24 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							},
 							{
 								"key": "currency",
-								"value": "{{currency}}",
+								"value": "currency",
 								"type": "string"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/hotels/cheapest-room/:hotel_id?start_date=2025-12-04&end_date=2025-12-05&adults_count=1&children_count",
+							"raw": "baseUrl/api/v1/hotels/cheapest-room/:hotel_id?start_date=2025-12-04&end_date=2025-12-05&adults_count=1&children_count",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -1020,7 +1020,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -1034,24 +1034,24 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							},
 							{
 								"key": "currency",
-								"value": "{{currency}}",
+								"value": "currency",
 								"type": "string"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/hotels?per_page&page=1&name=&city_id=&hotel_type_id=&adults_count=&children_count=&rating=",
+							"raw": "baseUrl/api/v1/hotels?per_page&page=1&name=&city_id=&hotel_type_id=&adults_count=&children_count=&rating=",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -1132,7 +1132,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -1146,17 +1146,17 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							},
 							{
 								"key": "currency",
-								"value": "{{currency}}",
+								"value": "currency",
 								"type": "string"
 							}
 						],
@@ -1247,9 +1247,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/booking/trips/create",
+							"raw": "baseUrl/api/v1/booking/trips/create",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -1274,7 +1274,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -1288,24 +1288,24 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							},
 							{
 								"key": "currency",
-								"value": "{{currency}}",
+								"value": "currency",
 								"type": "string"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/trips?per_page=15&page=1&name=&city_id=&hotel_id=&main_category_id=&sub_category_id=&rating=&price=&duration_from&duration_to&is_featured",
+							"raw": "baseUrl/api/v1/trips?per_page=15&page=1&name=&city_id=&hotel_id=&main_category_id=&sub_category_id=&rating=&price=&duration_from&duration_to&is_featured",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -1381,7 +1381,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -1395,24 +1395,24 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							},
 							{
 								"key": "currency",
-								"value": "{{currency}}",
+								"value": "currency",
 								"type": "string"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/trips/:tripl_id",
+							"raw": "baseUrl/api/v1/trips/:tripl_id",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -1443,7 +1443,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -1457,17 +1457,17 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							},
 							{
 								"key": "currency",
-								"value": "{{currency}}",
+								"value": "currency",
 								"type": "string"
 							}
 						],
@@ -1476,9 +1476,9 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/trips/calculate/booking-trip/price/:trip?check_in&check_out&children_ages[]=6&adults_count=1",
+							"raw": "baseUrl/api/v1/trips/calculate/booking-trip/price/:trip?check_in&check_out&children_ages[]=6&adults_count=1",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -1552,7 +1552,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -1566,19 +1566,19 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/categories",
+							"raw": "baseUrl/api/v1/categories",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -1601,7 +1601,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -1615,19 +1615,19 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/sub-categories?main_category_id=",
+							"raw": "baseUrl/api/v1/sub-categories?main_category_id=",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -1656,7 +1656,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -1670,19 +1670,19 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/booking-status",
+							"raw": "baseUrl/api/v1/booking-status",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -1705,7 +1705,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -1719,19 +1719,19 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/hotel-types",
+							"raw": "baseUrl/api/v1/hotel-types",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
@@ -1754,7 +1754,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{local_token}}",
+									"value": "local_token",
 									"type": "string"
 								}
 							]
@@ -1768,19 +1768,19 @@
 							},
 							{
 								"key": "password",
-								"value": "{{api_password}}",
+								"value": "api_password",
 								"type": "string"
 							},
 							{
 								"key": "lang",
-								"value": "{{lang}}",
+								"value": "lang",
 								"type": "string"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/v1/cities",
+							"raw": "baseUrl/api/v1/cities",
 							"host": [
-								"{{baseUrl}}"
+								"baseUrl"
 							],
 							"path": [
 								"api",
