@@ -26,21 +26,14 @@ class ChatbotController extends Controller
         // Process the message
         $result = $this->chatbotService->processMessage($message, $conversationHistory, $sessionId);
 
-        // Return response
+        // Return simplified response with data field
         return response()->json([
             'success' => $result['success'],
-            'data' => [
-                'chat_session' => $result['session_id'], // Return as chat_session to client
-                'message' => $result['message'],
-                'api_calls' => $result['api_calls'] ?? [],
-                'api_results' => $result['api_results'] ?? [],
-                'suggested_actions' => $result['suggested_actions'] ?? [],
-                'intent' => $result['intent'] ?? null,
-                'needs_user_input' => $result['needs_user_input'] ?? false,
-            ],
-            'meta' => [
-                'usage' => $result['usage'] ?? null,
-            ],
+            'chat_session' => $result['session_id'],
+            'message' => $result['message'],
+            'data' => $result['data'] ?? null,
+            'data_type' => $result['data_type'] ?? null,
+            'suggestions' => $result['suggestions'] ?? [],
         ], $result['success'] ? 200 : 500);
     }
 

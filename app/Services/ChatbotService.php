@@ -18,8 +18,10 @@ class ChatbotService
     public function processMessage(string $userMessage, ?array $conversationHistory = null, ?string $sessionId = null): array
     {
         try {
-            // Generate session ID if not provided (using random string instead of UUID to avoid firewall blocks)
-            $sessionId = $sessionId ?? 'session-'.time().'-'.Str::random(8);
+            // Generate session ID ONLY if not provided (preserve existing session)
+            if (empty($sessionId)) {
+                $sessionId = 'session-'.time().'-'.Str::random(8);
+            }
 
             // Get learning context from previous conversations
             $learningContext = $this->getLearningContext($userMessage);
@@ -42,10 +44,17 @@ class ChatbotService
             // Try to extract structured response
             $structuredResponse = $this->parseStructuredResponse($aiResponse);
 
-            // Execute API calls if suggested
-            $apiResults = [];
+            // Execute API calls if suggested and extract data
+            $data = null;
+            $dataType = null;
+            
             if (! empty($structuredResponse['api_calls'])) {
                 $apiResults = $this->executeApiCalls($structuredResponse['api_calls']);
+
+                // Extract data from API results for frontend
+                $extractedData = $this->extractDataFromApiResults($apiResults, $structuredResponse['intent'] ?? 'general_inquiry');
+                $data = $extractedData['data'];
+                $dataType = $extractedData['data_type'];
 
                 // Enhance response message with API results
                 $structuredResponse['response_message'] = $this->enhanceResponseWithResults(
@@ -59,20 +68,13 @@ class ChatbotService
                 'success' => true,
                 'session_id' => $sessionId,
                 'message' => $structuredResponse['response_message'] ?? $aiResponse,
-                'api_calls' => $structuredResponse['api_calls'] ?? [],
-                'api_results' => $apiResults,
-                'suggested_actions' => $structuredResponse['suggested_actions'] ?? [],
-                'intent' => $structuredResponse['intent'] ?? 'general_inquiry',
-                'needs_user_input' => $structuredResponse['needs_user_input'] ?? false,
-                'raw_response' => $aiResponse,
-                'usage' => [
-                    'prompt_tokens' => $response->usage->promptTokens,
-                    'completion_tokens' => $response->usage->completionTokens,
-                ],
+                'data' => $data,
+                'data_type' => $dataType,
+                'suggestions' => $structuredResponse['suggested_actions'] ?? [],
             ];
 
-            // Store conversation for learning
-            $this->storeConversation($sessionId, $userMessage, $result);
+            // Store conversation for learning (with all metadata for internal use)
+            $this->storeConversation($sessionId, $userMessage, $result, $structuredResponse);
 
             return $result;
 
@@ -86,10 +88,9 @@ class ChatbotService
                 'success' => false,
                 'session_id' => $sessionId ?? 'session-'.time().'-'.Str::random(8),
                 'message' => 'عذراً، حدث خطأ في معالجة رسالتك. يرجى المحاولة مرة أخرى.',
-                'error' => config('app.debug') ? $e->getMessage() : 'Internal error',
-                'api_calls' => [],
-                'api_results' => [],
-                'suggested_actions' => ['حاول مرة أخرى', 'اتصل بخدمة العملاء'],
+                'data' => null,
+                'data_type' => null,
+                'suggestions' => ['حاول مرة أخرى', 'اتصل بخدمة العملاء'],
             ];
         }
     }
@@ -100,9 +101,8 @@ class ChatbotService
     protected function getLearningContext(string $userMessage): string
     {
         try {
-            // Get similar successful conversations
+            // Get similar successful conversations (prioritize those with positive feedback)
             $similarConversations = ChatbotConversation::query()
-                ->where('was_helpful', true)
                 ->where(function ($query) use ($userMessage) {
                     $keywords = explode(' ', Str::limit($userMessage, 50, ''));
                     foreach ($keywords as $keyword) {
@@ -111,9 +111,14 @@ class ChatbotService
                         }
                     }
                 })
+                ->where(function ($query) {
+                    // Prioritize conversations with positive feedback
+                    $query->where('was_helpful', true)
+                        ->orWhereNull('was_helpful'); // Include unrated but recent conversations
+                })
                 ->latest()
-                ->limit(3)
-                ->get(['user_message', 'bot_response', 'intent']);
+                ->limit(5)
+                ->get(['user_message', 'bot_response', 'intent', 'was_helpful']);
 
             if ($similarConversations->isEmpty()) {
                 return '';
@@ -121,8 +126,9 @@ class ChatbotService
 
             $context = "\n\n## أمثلة من محادثات سابقة ناجحة:\n";
             foreach ($similarConversations as $conv) {
-                $context .= "- المستخدم: {$conv->user_message}\n";
-                $context .= "  الرد: ".Str::limit($conv->bot_response, 100)."\n";
+                $helpful = $conv->was_helpful ? '✅' : '';
+                $context .= "- {$helpful} المستخدم: {$conv->user_message}\n";
+                $context .= "  الرد: ".Str::limit($conv->bot_response, 150)."\n";
             }
 
             return $context;
@@ -150,17 +156,17 @@ class ChatbotService
     /**
      * Store conversation for future learning
      */
-    protected function storeConversation(string $sessionId, string $userMessage, array $result): void
+    protected function storeConversation(string $sessionId, string $userMessage, array $result, array $structuredResponse = []): void
     {
         try {
             ChatbotConversation::create([
                 'session_id' => $sessionId,
                 'user_message' => $userMessage,
                 'bot_response' => $result['message'],
-                'api_calls' => $result['api_calls'] ?? null,
-                'api_results' => $result['api_results'] ?? null,
-                'suggested_actions' => $result['suggested_actions'] ?? null,
-                'intent' => $result['intent'] ?? 'general_inquiry',
+                'api_calls' => $structuredResponse['api_calls'] ?? null,
+                'api_results' => $result['data'] ?? null,
+                'suggested_actions' => $result['suggestions'] ?? null,
+                'intent' => $structuredResponse['intent'] ?? 'general_inquiry',
                 'was_helpful' => null, // Will be updated via feedback
             ]);
         } catch (Exception $e) {
@@ -261,6 +267,134 @@ class ChatbotService
         }
 
         return $results;
+    }
+
+    /**
+     * Extract structured data from API results for frontend
+     */
+    protected function extractDataFromApiResults(array $apiResults, string $intent): array
+    {
+        $data = null;
+        $dataType = null;
+
+        foreach ($apiResults as $result) {
+            if (! $result['success'] || ! isset($result['data']['data'])) {
+                continue;
+            }
+
+            $responseData = $result['data']['data'];
+            $endpoint = $result['endpoint'] ?? '';
+
+            // Determine data type based on endpoint
+            if (str_contains($endpoint, '/cities')) {
+                $dataType = 'cities';
+                $data = $this->formatSimpleList($responseData);
+            } elseif (str_contains($endpoint, '/hotel-types')) {
+                $dataType = 'hotel_types';
+                $data = $this->formatSimpleList($responseData);
+            } elseif (str_contains($endpoint, '/categories')) {
+                $dataType = 'categories';
+                $data = $this->formatSimpleList($responseData);
+            } elseif (str_contains($endpoint, '/sub-categories')) {
+                $dataType = 'sub_categories';
+                $data = $this->formatSimpleList($responseData);
+            } elseif (str_contains($endpoint, '/hotels/rooms') && ! str_contains($endpoint, '/calculate')) {
+                $dataType = 'rooms';
+                $data = $this->formatRoomsList($responseData);
+            } elseif (str_contains($endpoint, '/hotels') && ! str_contains($endpoint, '/rooms')) {
+                $dataType = 'hotels';
+                $data = $this->formatHotelsList($responseData);
+            } elseif (str_contains($endpoint, '/trips')) {
+                $dataType = 'trips';
+                $data = $this->formatTripsList($responseData);
+            }
+
+            // Only return first successful data extraction
+            if ($data !== null) {
+                break;
+            }
+        }
+
+        return [
+            'data' => $data,
+            'data_type' => $dataType,
+        ];
+    }
+
+    /**
+     * Format simple list (cities, categories, etc.)
+     */
+    protected function formatSimpleList(array $items): array
+    {
+        $formatted = [];
+        
+        foreach ($items as $item) {
+            $formatted[] = [
+                'id' => $item['id'] ?? null,
+                'name' => $item['name'] ?? $item['title'] ?? 'غير محدد',
+            ];
+        }
+
+        return $formatted;
+    }
+
+    /**
+     * Format hotels list
+     */
+    protected function formatHotelsList(array $items): array
+    {
+        $formatted = [];
+        
+        foreach ($items as $item) {
+            $formatted[] = [
+                'id' => $item['id'] ?? null,
+                'name' => $item['name'] ?? 'غير محدد',
+                'price' => $item['price'] ?? $item['min_price'] ?? null,
+                'rating' => $item['rating'] ?? null,
+                'city' => $item['city']['name'] ?? null,
+            ];
+        }
+
+        return $formatted;
+    }
+
+    /**
+     * Format rooms list
+     */
+    protected function formatRoomsList(array $items): array
+    {
+        $formatted = [];
+        
+        foreach ($items as $item) {
+            $formatted[] = [
+                'id' => $item['id'] ?? null,
+                'name' => $item['name'] ?? 'غير محدد',
+                'price' => $item['price'] ?? null,
+                'capacity' => $item['capacity'] ?? null,
+                'hotel' => $item['hotel']['name'] ?? null,
+            ];
+        }
+
+        return $formatted;
+    }
+
+    /**
+     * Format trips list
+     */
+    protected function formatTripsList(array $items): array
+    {
+        $formatted = [];
+        
+        foreach ($items as $item) {
+            $formatted[] = [
+                'id' => $item['id'] ?? null,
+                'name' => $item['name'] ?? $item['title'] ?? 'غير محدد',
+                'price' => $item['price'] ?? null,
+                'category' => $item['category']['name'] ?? null,
+            ];
+        }
+
+        return $formatted;
     }
 
     /**
