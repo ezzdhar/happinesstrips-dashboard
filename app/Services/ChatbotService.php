@@ -251,12 +251,16 @@ class ChatbotService
     protected function executeApiCalls(array $apiCalls): array
     {
         $results = [];
+        $collectedData = []; // Store data from previous API calls
 
         foreach ($apiCalls as $index => $call) {
             try {
                 $endpoint = $call['endpoint'] ?? '';
                 $method = strtoupper($call['method'] ?? 'GET');
                 $params = $call['params'] ?? [];
+
+                // Resolve parameters using data from previous API calls
+                $params = $this->resolveApiParameters($params, $collectedData);
 
                 // Only allow GET requests
                 if ($method !== 'GET') {
@@ -283,12 +287,19 @@ class ChatbotService
                 $response = Http::timeout(10)->get($fullUrl);
 
                 if ($response->successful()) {
+                    $responseData = $response->json();
+                    
                     $results[$index] = [
                         'success' => true,
                         'endpoint' => $endpoint,
-                        'data' => $response->json(),
+                        'data' => $responseData,
                         'status' => $response->status(),
                     ];
+
+                    // Collect data for next API calls
+                    if (isset($responseData['data']) && is_array($responseData['data'])) {
+                        $collectedData = array_merge($collectedData, $responseData['data']);
+                    }
                 } else {
                     $results[$index] = [
                         'success' => false,
@@ -308,6 +319,56 @@ class ChatbotService
         }
 
         return $results;
+    }
+
+    /**
+     * Resolve API parameters by replacing placeholders with actual IDs
+     */
+    protected function resolveApiParameters(array $params, array $collectedData): array
+    {
+        foreach ($params as $key => $value) {
+            if (! is_string($value)) {
+                continue;
+            }
+
+            // Check if value looks like a placeholder or city/category name
+            $lowerValue = mb_strtolower($value);
+
+            // Try to find matching ID in collected data
+            foreach ($collectedData as $item) {
+                if (! is_array($item) || ! isset($item['name'])) {
+                    continue;
+                }
+
+                $itemName = mb_strtolower($item['name']);
+
+                // Match by name (القاهرة, الإسكندرية, etc.)
+                if (str_contains($lowerValue, $itemName) || str_contains($itemName, $lowerValue)) {
+                    $params[$key] = $item['id'];
+                    break;
+                }
+
+                // Match by placeholder pattern (CAIRO_ID, ALEXANDRIA_ID, etc.)
+                if (str_contains($lowerValue, 'cairo') && str_contains($itemName, 'قاهر')) {
+                    $params[$key] = $item['id'];
+                    break;
+                }
+                if (str_contains($lowerValue, 'alexandria') && str_contains($itemName, 'إسكندر')) {
+                    $params[$key] = $item['id'];
+                    break;
+                }
+                if (str_contains($lowerValue, 'luxor') && str_contains($itemName, 'أقصر')) {
+                    $params[$key] = $item['id'];
+                    break;
+                }
+                if (str_contains($lowerValue, 'aswan') && str_contains($itemName, 'أسوان')) {
+                    $params[$key] = $item['id'];
+                    break;
+                }
+            }
+        }
+
+        return $params;
     }
 
     /**
