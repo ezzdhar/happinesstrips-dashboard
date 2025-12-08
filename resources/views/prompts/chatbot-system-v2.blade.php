@@ -129,7 +129,21 @@
 
 ## أمثلة واقعية:
 
-**مثال 1**: "في إيه فنادق؟"
+**مثال 1**: "اعرضي كل الفنادق" أو "عايز أشوف كل الفنادق الموجودة"
+```json
+{
+  "api_calls": [{
+    "endpoint": "/api/v1/hotels",
+    "method": "GET",
+    "params": {}
+  }],
+  "response_message": "جاري عرض كل الفنادق المتاحة...",
+  "suggested_actions": ["فلترة حسب المدينة", "فلترة حسب السعر"],
+  "intent": "hotel_search_all"
+}
+```
+
+**مثال 2**: "في إيه فنادق؟" (سؤال عام بدون تحديد)
 ```json
 {
   "api_calls": [{
@@ -138,12 +152,12 @@
     "params": {}
   }],
   "response_message": "عندنا فنادق في المدن دي. اختار المدينة اللي تحبها:",
-  "suggested_actions": ["البحث عن رحلات"],
+  "suggested_actions": ["عرض كل الفنادق", "البحث عن رحلات"],
   "intent": "hotel_search_needs_city"
 }
 ```
 
-**مثال 2**: "فنادق في القاهرة" أو "عايز فنادق في الإسكندرية"
+**مثال 3**: "فنادق في القاهرة" أو "عايز فنادق في الإسكندرية"
 ```json
 {
   "api_calls": [
@@ -164,7 +178,7 @@
 }
 ```
 
-**مثال 3**: "فنادق 5 نجوم رخيصة في الإسكندرية"
+**مثال 4**: "فنادق 5 نجوم رخيصة في الإسكندرية"
 ```json
 {
   "api_calls": [
@@ -274,3 +288,1527 @@
 - **استخدم السياق دائماً** - إذا المستخدم ذكر فندق أو رحلة في رسالة سابقة، استخدم ID الخاص بها
 
 **تذكر**: أنت للبحث والاستفسار فقط، ليس للحجز أو المعاملات!
+
+"item": [
+		{
+			"name": "hotels",
+			"item": [
+				{
+					"name": "rooms",
+					"item": [
+						{
+							"name": "rooms",
+							"protocolProfileBehavior": {
+								"strictSSL": false,
+								"followRedirects": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{local_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "string"
+									},
+									{
+										"key": "password",
+										"value": "{{api_password}}",
+										"type": "string"
+									},
+									{
+										"key": "lang",
+										"value": "{{lang}}",
+										"type": "string"
+									},
+									{
+										"key": "currency",
+										"value": "{{currency}}",
+										"type": "string"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/hotels/rooms?per_page&page=1&name=&hotel_id=1&adults_count=1&children_count=&start_date=2025-12-04&end_date=2025-12-05&min_price=&max_price=",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hotels",
+										"rooms"
+									],
+									"query": [
+										{
+											"key": "per_page",
+											"value": null
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "name",
+											"value": ""
+										},
+										{
+											"key": "hotel_id",
+											"value": "1"
+										},
+										{
+											"key": "adults_count",
+											"value": "1"
+										},
+										{
+											"key": "children_count",
+											"value": ""
+										},
+										{
+											"key": "start_date",
+											"value": "2025-12-04"
+										},
+										{
+											"key": "end_date",
+											"value": "2025-12-05"
+										},
+										{
+											"key": "min_price",
+											"value": ""
+										},
+										{
+											"key": "max_price",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "room details",
+							"protocolProfileBehavior": {
+								"strictSSL": false,
+								"followRedirects": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{local_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "string"
+									},
+									{
+										"key": "password",
+										"value": "{{api_password}}",
+										"type": "string"
+									},
+									{
+										"key": "lang",
+										"value": "{{lang}}",
+										"type": "string"
+									},
+									{
+										"key": "currency",
+										"value": "{{currency}}",
+										"type": "string"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/hotels/rooms/:room?name=&adults_count=2&children_count=&start_date=2025-11-26&end_date=2025-11-28",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hotels",
+										"rooms",
+										":room"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": ""
+										},
+										{
+											"key": "adults_count",
+											"value": "2"
+										},
+										{
+											"key": "children_count",
+											"value": ""
+										},
+										{
+											"key": "start_date",
+											"value": "2025-11-26"
+										},
+										{
+											"key": "end_date",
+											"value": "2025-11-28"
+										}
+									],
+									"variable": [
+										{
+											"key": "room",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Calculate Booking Room Price",
+							"protocolProfileBehavior": {
+								"strictSSL": false,
+								"followRedirects": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{local_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "string"
+									},
+									{
+										"key": "password",
+										"value": "{{api_password}}",
+										"type": "string"
+									},
+									{
+										"key": "lang",
+										"value": "{{lang}}",
+										"type": "string"
+									},
+									{
+										"key": "currency",
+										"value": "{{currency}}",
+										"type": "string"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/hotels/rooms/calculate/booking-room/price/:room?adults_count=2&children_ages[]&start_date=2025-11-26&end_date=2025-11-28",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"hotels",
+										"rooms",
+										"calculate",
+										"booking-room",
+										"price",
+										":room"
+									],
+									"query": [
+										{
+											"key": "adults_count",
+											"value": "2"
+										},
+										{
+											"key": "children_ages[]",
+											"value": null
+										},
+										{
+											"key": "start_date",
+											"value": "2025-11-26"
+										},
+										{
+											"key": "end_date",
+											"value": "2025-11-28"
+										}
+									],
+									"variable": [
+										{
+											"key": "room",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					]
+				},
+				{
+					"name": "create hotel Room custom Booking",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "hotel_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "check_in",
+									"value": "2025-12-03",
+									"type": "text"
+								},
+								{
+									"key": "check_out",
+									"value": "2025-12-05",
+									"type": "text"
+								},
+								{
+									"key": "adults_count",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "children_count",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "children_ages[]",
+									"value": [
+										""
+									],
+									"description": "أعمار الاطفال عند التحديد من البداية",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][full_name]",
+									"value": [
+										"عصام حمدي العجمي"
+									],
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][phone_key]",
+									"value": "+20",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][phone]",
+									"value": [
+										"1002694325"
+									],
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][nationality]",
+									"value": "مصري",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][age]",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][id_type]",
+									"value": "passport ",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][id_number]",
+									"value": "2662626262",
+									"description": "passport or national_id",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][type]",
+									"value": "adult",
+									"description": "adult or child",
+									"type": "text"
+								},
+								{
+									"key": "notes",
+									"value": "notes",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/booking/hotels/create/custom",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"booking",
+								"hotels",
+								"create",
+								"custom"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create hotel Room Booking",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "room_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "check_in",
+									"value": "2025-12-05",
+									"type": "text"
+								},
+								{
+									"key": "check_out",
+									"value": "2025-12-06",
+									"type": "text"
+								},
+								{
+									"key": "adults_count",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "children_count",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "children_ages[]",
+									"value": "6",
+									"description": "أعمار الاطفال عند التحديد من البداية",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][full_name]",
+									"value": "ESSAM",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][phone_key]",
+									"value": "+20",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][phone]",
+									"value": [
+										"1002694325"
+									],
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][nationality]",
+									"value": "مصري",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][age]",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][id_type]",
+									"value": "passport ",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][id_number]",
+									"value": "2662626262",
+									"description": "passport or national_id",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][type]",
+									"value": "adult",
+									"description": "adult or child",
+									"type": "text"
+								},
+								{
+									"key": "notes",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/booking/hotels/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"booking",
+								"hotels",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hotel Details",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/hotels/details/:hotel_id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hotels",
+								"details",
+								":hotel_id"
+							],
+							"variable": [
+								{
+									"key": "hotel_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hotel cheapest room",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/hotels/cheapest-room/:hotel_id?start_date=2025-12-04&end_date=2025-12-05&adults_count=1&children_count",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hotels",
+								"cheapest-room",
+								":hotel_id"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2025-12-04"
+								},
+								{
+									"key": "end_date",
+									"value": "2025-12-05"
+								},
+								{
+									"key": "adults_count",
+									"value": "1"
+								},
+								{
+									"key": "children_count",
+									"value": null
+								}
+							],
+							"variable": [
+								{
+									"key": "hotel_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all hotels",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/hotels?per_page&page=1&name=&city_id=&hotel_type_id=&adults_count=&children_count=&rating=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hotels"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "city_id",
+									"value": ""
+								},
+								{
+									"key": "hotel_type_id",
+									"value": ""
+								},
+								{
+									"key": "adults_count",
+									"value": ""
+								},
+								{
+									"key": "children_count",
+									"value": ""
+								},
+								{
+									"key": "rating",
+									"value": "",
+									"description": "desc or asc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			]
+		},
+		{
+			"name": "trips",
+			"item": [
+				{
+					"name": "create trip  Booking",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "trip_id",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "check_in",
+									"value": "2025-12-07",
+									"type": "text"
+								},
+								{
+									"key": "check_out",
+									"value": "2025-12-10",
+									"type": "text"
+								},
+								{
+									"key": "adults_count",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "children_count",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "children_ages[]",
+									"value": "6",
+									"description": "أعمار الاطفال عند التحديد من البداية",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][full_name]",
+									"value": [
+										"عصام حمدي العجمي"
+									],
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][phone_key]",
+									"value": "+20",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][phone]",
+									"value": [
+										"1002694325"
+									],
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][nationality]",
+									"value": "مصري",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][age]",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][id_type]",
+									"value": "passport ",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][id_number]",
+									"value": "2662626262",
+									"description": "passport or national_id",
+									"type": "text"
+								},
+								{
+									"key": "travelers[0][type]",
+									"value": "adult",
+									"description": "adult or child",
+									"type": "text"
+								},
+								{
+									"key": "notes",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/booking/trips/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"booking",
+								"trips",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all trips",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/trips?per_page=15&page=1&name=&city_id=&hotel_id=&main_category_id=&sub_category_id=&rating=&price=&duration_from&duration_to&is_featured",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"trips"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "15"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "city_id",
+									"value": ""
+								},
+								{
+									"key": "hotel_id",
+									"value": ""
+								},
+								{
+									"key": "main_category_id",
+									"value": ""
+								},
+								{
+									"key": "sub_category_id",
+									"value": ""
+								},
+								{
+									"key": "rating",
+									"value": "",
+									"description": "desc or asc"
+								},
+								{
+									"key": "price",
+									"value": "",
+									"description": "desc or asc"
+								},
+								{
+									"key": "duration_from",
+									"value": null
+								},
+								{
+									"key": "duration_to",
+									"value": null
+								},
+								{
+									"key": "is_featured",
+									"value": null,
+									"description": "set 1 to get offers"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "trip Details",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/trips/:tripl_id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"trips",
+								":tripl_id"
+							],
+							"variable": [
+								{
+									"key": "tripl_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "calculate booking trip price",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true,
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							},
+							{
+								"key": "currency",
+								"value": "{{currency}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/trips/calculate/booking-trip/price/:trip?check_in&check_out&children_ages[]=6&adults_count=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"trips",
+								"calculate",
+								"booking-trip",
+								"price",
+								":trip"
+							],
+							"query": [
+								{
+									"key": "check_in",
+									"value": null
+								},
+								{
+									"key": "check_out",
+									"value": null
+								},
+								{
+									"key": "children_ages[]",
+									"value": "6"
+								},
+								{
+									"key": "adults_count",
+									"value": "1"
+								}
+							],
+							"variable": [
+								{
+									"key": "trip",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			]
+		},
+		{
+			"name": "data",
+			"item": [
+				{
+					"name": "categories",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sub-categories",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/sub-categories?main_category_id=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"sub-categories"
+							],
+							"query": [
+								{
+									"key": "main_category_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "booking status",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/booking-status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"booking-status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hotel-types",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/hotel-types",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hotel-types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cities",
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{local_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "string"
+							},
+							{
+								"key": "password",
+								"value": "{{api_password}}",
+								"type": "string"
+							},
+							{
+								"key": "lang",
+								"value": "{{lang}}",
+								"type": "string"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/cities",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			]
+		}
+	]
