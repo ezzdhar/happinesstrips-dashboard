@@ -23,7 +23,7 @@ class ChatbotMessageRequest extends FormRequest
     {
         return [
             'message' => ['required', 'string', 'max:1000'],
-            'session_id' => ['nullable', 'string', 'uuid'],
+            'session_id' => ['nullable', 'string', 'max:100', 'regex:/^[a-zA-Z0-9\-]+$/'],
             'conversation_history' => ['nullable', 'array'],
             'conversation_history.*.role' => ['required_with:conversation_history', 'string', 'in:user,assistant'],
             'conversation_history.*.content' => ['required_with:conversation_history', 'string'],
@@ -39,6 +39,8 @@ class ChatbotMessageRequest extends FormRequest
             'message.required' => 'الرسالة مطلوبة',
             'message.string' => 'الرسالة يجب أن تكون نص',
             'message.max' => 'الرسالة يجب ألا تتجاوز 1000 حرف',
+            'session_id.regex' => 'معرف الجلسة غير صالح',
+            'session_id.max' => 'معرف الجلسة طويل جداً',
             'conversation_history.array' => 'سجل المحادثة يجب أن يكون مصفوفة',
         ];
     }
