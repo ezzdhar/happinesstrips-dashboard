@@ -47,14 +47,12 @@ class ChatbotController extends Controller
     {
         $validated = $request->validate([
             'chat_session' => ['required', 'string'],
-            'conversation_id' => ['required', 'integer'],
             'was_helpful' => ['required', 'boolean'],
             'feedback' => ['nullable', 'string', 'max:500'],
         ]);
 
         $success = $this->chatbotService->submitFeedback(
             $validated['chat_session'],
-            $validated['conversation_id'],
             $validated['was_helpful'],
             $validated['feedback'] ?? null
         );

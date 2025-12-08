@@ -866,13 +866,10 @@ class ChatbotService
 	/**
 	 * Submit feedback for a conversation
 	 */
-	public function submitFeedback(string $chat_session, int $conversationId, bool $wasHelpful, ?string $feedback = null): bool
+	public function submitFeedback(string $chat_session, bool $wasHelpful, ?string $feedback = null): bool
 	{
 		try {
-			$conversation = ChatbotConversation::query()
-				->where('id', $conversationId)
-				->where('chat_session', $chat_session)
-				->first();
+			$conversation = ChatbotConversation::query()->where('chat_session', $chat_session)->first();
 
 			if (!$conversation) {
 				return false;
@@ -886,7 +883,6 @@ class ChatbotService
 			return true;
 		} catch (Exception $e) {
 			Log::error('Failed to submit feedback: ' . $e->getMessage());
-
 			return false;
 		}
 	}
