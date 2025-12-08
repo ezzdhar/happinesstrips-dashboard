@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\BookingRatingController;
+use App\Http\Controllers\Api\ChatbotController;
 use App\Http\Controllers\Api\DataController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\GuestController;
@@ -12,6 +13,12 @@ use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\TripBookingController;
 use App\Http\Controllers\Api\TripController;
 use Illuminate\Support\Facades\Route;
+
+// chatbot routes (public - no authentication)
+Route::prefix('chatbot')->controller(ChatbotController::class)->group(function () {
+	Route::post('/chat', 'chat');
+	Route::get('/capabilities', 'capabilities');
+});
 
 // guest routes
 Route::controller(GuestController::class)->group(function () {
@@ -40,9 +47,7 @@ Route::prefix('hotels')->group(function () {
 		Route::get('/calculate/booking-room/price/{room}', 'calculateBookingRoomPrice');
 	});
 
-
 });
-
 
 // trips routes
 Route::prefix('trips')->controller(TripController::class)->group(function () {
@@ -50,9 +55,6 @@ Route::prefix('trips')->controller(TripController::class)->group(function () {
 	Route::get('/{trip}', 'tripDetails');
 	Route::get('/calculate/booking-trip/price/{trip}', 'calculateBookingTripPrice');
 });
-
-
-
 
 // data routes
 Route::controller(DataController::class)->group(function () {
@@ -65,7 +67,7 @@ Route::controller(DataController::class)->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
 
-	//Favorites
+	// Favorites
 	Route::prefix('favorites')->controller(FavoriteController::class)->group(function () {
 		Route::get('/', 'favorites');
 		Route::post('/toggle', 'toggleFavorite');
@@ -81,10 +83,10 @@ Route::middleware('auth:sanctum')->group(function () {
 		Route::post('/send', 'send');
 	});
 
-	//bookings
+	// bookings
 	Route::prefix('booking')->group(function () {
 
-		//bookings hotels
+		// bookings hotels
 		Route::prefix('hotels')->controller(HotelBookingController::class)->group(function () {
 			Route::get('/', 'myBooking');
 			Route::get('/details/{booking}', 'bookingDetails');
@@ -92,7 +94,7 @@ Route::middleware('auth:sanctum')->group(function () {
 			Route::post('/create/custom', 'createCustomBooking');
 		});
 
-		//bookings trips
+		// bookings trips
 		Route::prefix('trips')->controller(TripBookingController::class)->group(function () {
 			Route::get('/', 'myBooking');
 			Route::get('/details/{booking}', 'bookingDetails');
