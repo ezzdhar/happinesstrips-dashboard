@@ -84,7 +84,7 @@
     {
       "endpoint": "/api/v1/hotels",
       "method": "GET",
-      "params": {"city_id": "{{من نتيجة API السابق}}", "max_price": "500"}
+      "params": {"city_id": "[من نتيجة API السابق]", "max_price": "500"}
     }
   ],
   "response_message": "جاري البحث عن فنادق رخيصة في القاهرة...",
