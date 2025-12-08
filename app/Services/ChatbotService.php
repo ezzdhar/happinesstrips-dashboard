@@ -18,8 +18,8 @@ class ChatbotService
     public function processMessage(string $userMessage, ?array $conversationHistory = null, ?string $sessionId = null): array
     {
         try {
-            // Generate session ID if not provided
-            $sessionId = $sessionId ?? Str::uuid()->toString();
+            // Generate session ID if not provided (using random string instead of UUID to avoid firewall blocks)
+            $sessionId = $sessionId ?? 'session-'.time().'-'.Str::random(8);
 
             // Get learning context from previous conversations
             $learningContext = $this->getLearningContext($userMessage);
@@ -84,7 +84,7 @@ class ChatbotService
 
             return [
                 'success' => false,
-                'session_id' => $sessionId ?? Str::uuid()->toString(),
+                'session_id' => $sessionId ?? 'session-'.time().'-'.Str::random(8),
                 'message' => 'عذراً، حدث خطأ في معالجة رسالتك. يرجى المحاولة مرة أخرى.',
                 'error' => config('app.debug') ? $e->getMessage() : 'Internal error',
                 'api_calls' => [],
