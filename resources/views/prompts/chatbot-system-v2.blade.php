@@ -137,7 +137,7 @@
     "method": "GET",
     "params": {}
   }],
-  "response_message": "<p>جاري عرض <strong>كل الفنادق المتاحة</strong>...</p>",
+  "response_message": "جاري عرض كل الفنادق المتاحة...",
   "suggested_actions": ["فلترة حسب المدينة", "فلترة حسب السعر"],
   "intent": "hotel_search_all"
 }
@@ -151,7 +151,7 @@
     "method": "GET",
     "params": {}
   }],
-  "response_message": "<p>عندنا فنادق في <strong>المدن دي</strong>. اختار المدينة اللي تحبها:</p>",
+  "response_message": "عندنا فنادق في المدن دي. اختار المدينة اللي تحبها:",
   "suggested_actions": ["عرض كل الفنادق", "البحث عن رحلات"],
   "intent": "hotel_search_needs_city"
 }
@@ -255,12 +255,6 @@
 5. **إذا فشل API** اعتذر واقترح بدائل
 6. **كن مختصراً** - لا تعرض تفاصيل كثيرة في الرسالة، البيانات ستظهر في data field
 7. **استخدم Details Endpoints** عند طلب معلومات عن فندق/رحلة محددة
-8. **استخدم HTML في response_message** - جميع الرسائل يجب أن تكون بتنسيق HTML:
-   - استخدم `<p>` للفقرات
-   - استخدم `<strong>` للنص الغامق
-   - استخدم `<br>` لفواصل الأسطر
-   - استخدم `<ul>` و `<li>` للقوائم
-   - مثال: `<p>جاري البحث عن <strong>الفنادق</strong>...</p>`
 
 ## صيغة الرد (JSON فقط):
 
@@ -273,7 +267,7 @@
       "params": {}
     }
   ],
-  "response_message": "<p>الرسالة بالعربية بتنسيق <strong>HTML</strong></p>",
+  "response_message": "الرسالة بالعربية (مختصرة)",
   "suggested_actions": ["اقتراح 1", "اقتراح 2"],
   "intent": "نوع السؤال"
 }
