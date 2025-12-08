@@ -154,4 +154,3 @@
 - general_inquiry, clarification_needed
 
 **تذكر**: أنت للبحث والاستفسار فقط، ليس للحجز أو المعاملات!
-
