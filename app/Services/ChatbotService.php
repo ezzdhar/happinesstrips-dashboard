@@ -23,11 +23,14 @@ class ChatbotService
                 $sessionId = 'session-'.time().'-'.Str::random(8);
             }
 
+            // Get conversation history from database for this session
+            $sessionHistory = $this->getSessionHistory($sessionId);
+
             // Get learning context from previous conversations
             $learningContext = $this->getLearningContext($userMessage);
 
-            // Build enhanced prompt with learning
-            $enhancedPrompt = $this->buildEnhancedPrompt($userMessage, $learningContext);
+            // Build enhanced prompt with learning and session history
+            $enhancedPrompt = $this->buildEnhancedPrompt($userMessage, $learningContext, $sessionHistory);
 
             // Get AI response
             $response = Prism::text()
@@ -96,6 +99,38 @@ class ChatbotService
     }
 
     /**
+     * Get conversation history from current session
+     */
+    protected function getSessionHistory(string $sessionId): string
+    {
+        try {
+            // Get recent conversations from this session
+            $conversations = ChatbotConversation::query()
+                ->where('session_id', $sessionId)
+                ->latest()
+                ->limit(5) // Last 5 messages
+                ->get(['user_message', 'bot_response'])
+                ->reverse(); // Oldest first
+
+            if ($conversations->isEmpty()) {
+                return '';
+            }
+
+            $history = "\n\n## سياق المحادثة الحالية:\n";
+            foreach ($conversations as $conv) {
+                $history .= "المستخدم: {$conv->user_message}\n";
+                $history .= "البوت: ".Str::limit($conv->bot_response, 100)."\n\n";
+            }
+
+            return $history;
+        } catch (Exception $e) {
+            Log::warning('Failed to get session history: '.$e->getMessage());
+
+            return '';
+        }
+    }
+
+    /**
      * Get learning context from previous similar conversations
      */
     protected function getLearningContext(string $userMessage): string
@@ -140,12 +175,18 @@ class ChatbotService
     }
 
     /**
-     * Build enhanced prompt with learning context
+     * Build enhanced prompt with learning context and session history
      */
-    protected function buildEnhancedPrompt(string $userMessage, string $learningContext): string
+    protected function buildEnhancedPrompt(string $userMessage, string $learningContext, string $sessionHistory): string
     {
         $prompt = $userMessage;
 
+        // Add session history first (most important context)
+        if ($sessionHistory) {
+            $prompt .= $sessionHistory;
+        }
+
+        // Add learning context from similar conversations
         if ($learningContext) {
             $prompt .= $learningContext;
         }
