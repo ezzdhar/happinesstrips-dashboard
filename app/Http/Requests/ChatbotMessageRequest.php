@@ -23,6 +23,7 @@ class ChatbotMessageRequest extends FormRequest
     {
         return [
             'message' => ['required', 'string', 'max:1000'],
+            'session_id' => ['nullable', 'string', 'uuid'],
             'conversation_history' => ['nullable', 'array'],
             'conversation_history.*.role' => ['required_with:conversation_history', 'string', 'in:user,assistant'],
             'conversation_history.*.content' => ['required_with:conversation_history', 'string'],

@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('chatbot')->controller(ChatbotController::class)->group(function () {
 	Route::post('/chat', 'chat');
 	Route::get('/capabilities', 'capabilities');
+	Route::post('/feedback', 'feedback');
+	Route::get('/history', 'history');
 });
 
 // guest routes
