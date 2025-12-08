@@ -469,31 +469,13 @@ class ChatbotService
 
     /**
      * Enhance response message with API results
+     * Note: Data is already in the 'data' field, so just return the base message
      */
     protected function enhanceResponseWithResults(string $baseMessage, array $apiResults, string $intent): string
     {
-        $enhanced = $baseMessage."\n\n";
-
-        foreach ($apiResults as $result) {
-            if (! $result['success']) {
-                continue;
-            }
-
-            $data = $result['data'] ?? [];
-
-            // Format based on intent
-            if (str_contains($intent, 'city') || str_contains($intent, 'data_request')) {
-                $enhanced .= $this->formatDataList($data);
-            } elseif (str_contains($intent, 'hotel')) {
-                $enhanced .= $this->formatHotelList($data);
-            } elseif (str_contains($intent, 'trip')) {
-                $enhanced .= $this->formatTripList($data);
-            } elseif (str_contains($intent, 'price')) {
-                $enhanced .= $this->formatPriceInfo($data);
-            }
-        }
-
-        return trim($enhanced);
+        // Don't add API data to message - it's already in the 'data' field
+        // Frontend will display the data from 'data' field
+        return $baseMessage;
     }
 
     /**
