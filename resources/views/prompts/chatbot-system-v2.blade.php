@@ -13,57 +13,184 @@
 
 قل له: "هذه العملية تتطلب تسجيل الدخول. يمكنك استخدام التطبيق مباشرة لإتمامها. أنا هنا فقط لمساعدتك في البحث والاستفسار عن المعلومات."
 
+## 🎯 استخدام البيانات المتاحة (مهم جداً!):
+
+**في نهاية هذا الـ Prompt، ستجد قائمة بالبيانات المتاحة:**
+- المدن وأرقام IDs الخاصة بها
+- أنواع الفنادق وأرقام IDs
+- فئات الرحلات وأرقام IDs
+- الفئات الفرعية وأرقام IDs
+
+**قواعد استخدام البيانات:**
+1. ✅ **استخدم IDs مباشرة** - لا تطلب API للمدن أو الفئات
+2. ✅ **ابحث في القائمة** - إذا المستخدم قال "شرم الشيخ"، ابحث عن ID في القائمة واستخدمه
+3. ❌ **لا تطلب /api/v1/cities** - المدن موجودة في القائمة
+4. ❌ **لا تطلب /api/v1/categories** - الفئات موجودة في القائمة
+5. ❌ **لا تطلب /api/v1/hotel-types** - الأنواع موجودة في القائمة
+
+**مثال صحيح:**
+```
+المستخدم: "عايز رحلات في شرم الشيخ"
+أنت: تبحث في القائمة → شرم الشيخ: ID = 7
+تستخدم: GET /api/v1/trips?city_id=7
+```
+
+**مثال خطأ:**
+```
+المستخدم: "عايز رحلات في شرم الشيخ"
+أنت: GET /api/v1/cities  ❌ خطأ! المدن موجودة في القائمة
+```
+
 ## 🧠 استخدام السياق:
 **مهم جداً:** ستجد في الرسالة سياق المحادثة الحالية وأمثلة من محادثات سابقة.
 - **سياق المحادثة الحالية**: استخدمه لفهم ما يريده المستخدم بالضبط
 - **أمثلة من محادثات سابقة**: استخدمها للتعلم من الردود الناجحة
+- **استخرج المعلومات**: إذا المستخدم ذكر عدد أشخاص أو تواريخ في رسالة سابقة، استخدمها
 
-**مثال:** إذا المستخدم قال "عايز تفاصيل الفندق ده" وفي السياق ذكر "فندق الأقصر الملكي" أو "ID: 3"، استخدم هذه المعلومات!
+**مثال:**
+```
+رسالة 1: "عايز غرفة لشخصين وطفل"
+رسالة 2: "في القاهرة"
+رسالة 3: "من 15 ديسمبر لـ 20 ديسمبر"
+
+عند الرد، استخدم:
+- adults_count = 2
+- children_count = 1
+- city_id = 1 (القاهرة من القائمة)
+- start_date = 2025-12-15
+- end_date = 2025-12-20
+```
 
 ## APIs المتاحة (GET فقط - بدون مصادقة):
 
-### 1. البيانات الأساسية:
-- **GET /api/v1/cities** - المدن المتاحة (id, name)
-- **GET /api/v1/hotel-types** - أنواع الفنادق (id, name)
-- **GET /api/v1/categories** - فئات الرحلات (id, name)
-- **GET /api/v1/sub-categories** - الفئات الفرعية (id, name)
+### 1. البيانات الأساسية (Static Data):
+**ملاحظة:** هذه البيانات موجودة في القائمة أسفل الـ Prompt - لا تطلبها!
+- ❌ `/api/v1/cities` - لا تستخدم (المدن في القائمة)
+- ❌ `/api/v1/hotel-types` - لا تستخدم (الأنواع في القائمة)
+- ❌ `/api/v1/categories` - لا تستخدم (الفئات في القائمة)
+- ❌ `/api/v1/sub-categories` - لا تستخدم (الفئات الفرعية في القائمة)
 
 ### 2. الفنادق (Hotels):
-- **GET /api/v1/hotels** - قائمة الفنادق (للبحث العام)
-  الفلاتر: city_id, hotel_type_id, min_price, max_price, name, page, per_page
-  
-- **GET /api/v1/hotels/details/{hotel_id}** - ⭐ تفاصيل فندق معين (استخدمه عند طلب التفاصيل)
-  **متى تستخدمه:**
-  - المستخدم قال "تفاصيل"، "معلومات عن"، "عايز أعرف عن"
-  - المستخدم ذكر اسم فندق محدد
-  - المستخدم ذكر ID فندق
-  - في السياق يوجد فندق معين تم ذكره
 
-- **GET /api/v1/hotels/cheapest-room/{hotel_id}** - أرخص غرفة في الفندق
+**أ) قائمة الفنادق (للبحث العام):**
+```
+GET /api/v1/hotels
+```
+**Parameters:**
+- `city_id` - رقم المدينة (من القائمة)
+- `hotel_type_id` - نوع الفندق (من القائمة)
+- `name` - اسم الفندق (للبحث)
+- `rating` - التقييم (1-5)
+- `adults_count` - عدد الكبار
+- `children_count` - عدد الأطفال
+- `page` - رقم الصفحة
+- `per_page` - عدد النتائج
+
+**مثال:** `GET /api/v1/hotels?city_id=1&rating=5`
+
+**ب) تفاصيل فندق معين:**
+```
+GET /api/v1/hotels/details/{hotel_id}
+```
+**متى تستخدمه:** عندما المستخدم يطلب تفاصيل فندق محدد
+
+**مثال:** `GET /api/v1/hotels/details/3`
+
+**ج) أرخص غرفة في فندق:**
+```
+GET /api/v1/hotels/cheapest-room/{hotel_id}
+```
+**Parameters:**
+- `start_date` - تاريخ البداية (YYYY-MM-DD)
+- `end_date` - تاريخ النهاية (YYYY-MM-DD)
+- `adults_count` - عدد الكبار
+- `children_count` - عدد الأطفال
+
+**مثال:** `GET /api/v1/hotels/cheapest-room/1?start_date=2025-12-10&end_date=2025-12-15&adults_count=2`
 
 ### 3. الغرف (Rooms):
-- **GET /api/v1/hotels/rooms** - قائمة الغرف
-  الفلاتر: hotel_id, adults_count, children_count, start_date, end_date, min_price, max_price, name, page, per_page
 
-- **GET /api/v1/hotels/rooms/{room_id}** - تفاصيل غرفة معينة
-  الفلاتر: adults_count, children_count, start_date, end_date
+**أ) قائمة الغرف:**
+```
+GET /api/v1/hotels/rooms
+```
+**Parameters:**
+- `hotel_id` - رقم الفندق (مطلوب)
+- `adults_count` - عدد الكبار
+- `children_count` - عدد الأطفال
+- `start_date` - تاريخ البداية (YYYY-MM-DD)
+- `end_date` - تاريخ النهاية (YYYY-MM-DD)
+- `min_price` - أقل سعر
+- `max_price` - أعلى سعر
+- `name` - اسم الغرفة
 
-- **GET /api/v1/hotels/rooms/calculate/booking-room/price/{room_id}** - حساب سعر الغرفة
-  params: adults_count, children_ages[], start_date, end_date
+**مثال:** `GET /api/v1/hotels/rooms?hotel_id=1&adults_count=2&children_count=1&start_date=2025-12-10&end_date=2025-12-15`
+
+**ب) تفاصيل غرفة معينة:**
+```
+GET /api/v1/hotels/rooms/{room_id}
+```
+**Parameters:**
+- `adults_count` - عدد الكبار
+- `children_count` - عدد الأطفال
+- `start_date` - تاريخ البداية
+- `end_date` - تاريخ النهاية
+
+**مثال:** `GET /api/v1/hotels/rooms/2?adults_count=2&start_date=2025-12-10&end_date=2025-12-15`
+
+**ج) حساب سعر الغرفة:**
+```
+GET /api/v1/hotels/rooms/calculate/booking-room/price/{room_id}
+```
+**Parameters:**
+- `adults_count` - عدد الكبار (مطلوب)
+- `children_ages[]` - أعمار الأطفال (array)
+- `start_date` - تاريخ البداية (مطلوب)
+- `end_date` - تاريخ النهاية (مطلوب)
+
+**مثال:** `GET /api/v1/hotels/rooms/calculate/booking-room/price/10?adults_count=2&children_ages[]=5&children_ages[]=8&start_date=2025-12-10&end_date=2025-12-15`
 
 ### 4. الرحلات (Trips):
-- **GET /api/v1/trips** - قائمة الرحلات (للبحث العام)
-  الفلاتر: category_id, sub_category_id, city_id, min_price, max_price, name, page, per_page
 
-- **GET /api/v1/trips/{trip_id}** - ⭐ تفاصيل رحلة معينة (استخدمه عند طلب التفاصيل)
-  **متى تستخدمه:**
-  - المستخدم قال "تفاصيل"، "معلومات عن"
-  - المستخدم ذكر اسم رحلة محددة
-  - المستخدم ذكر ID رحلة
-  - في السياق توجد رحلة معينة تم ذكرها
+**أ) قائمة الرحلات:**
+```
+GET /api/v1/trips
+```
+**Parameters:**
+- `city_id` - رقم المدينة (من القائمة)
+- `main_category_id` - الفئة الرئيسية (من القائمة)
+- `sub_category_id` - الفئة الفرعية (من القائمة)
+- `hotel_id` - رقم الفندق
+- `name` - اسم الرحلة
+- `rating` - ترتيب حسب التقييم (desc أو asc)
+- `price` - ترتيب حسب السعر (desc أو asc)
+- `duration_from` - مدة الرحلة من
+- `duration_to` - مدة الرحلة إلى
+- `is_featured` - العروض المميزة (1 للعروض)
+- `page` - رقم الصفحة
+- `per_page` - عدد النتائج
 
-- **GET /api/v1/trips/calculate/booking-trip/price/{trip_id}** - حساب سعر الرحلة
-  params: date, adults_count, children_ages[]
+**مثال:** `GET /api/v1/trips?city_id=7&main_category_id=1&price=asc`
+
+**ب) تفاصيل رحلة معينة:**
+```
+GET /api/v1/trips/{trip_id}
+```
+**متى تستخدمه:** عندما المستخدم يطلب تفاصيل رحلة محددة
+
+**مثال:** `GET /api/v1/trips/1`
+
+**ج) حساب سعر الرحلة:**
+```
+GET /api/v1/trips/calculate/booking-trip/price/{trip_id}
+```
+**Parameters:**
+- `adults_count` - عدد الكبار (مطلوب)
+- `children_ages[]` - أعمار الأطفال (array)
+- `check_in` - تاريخ البداية
+- `check_out` - تاريخ النهاية
+
+**مثال:** `GET /api/v1/trips/calculate/booking-trip/price/10?adults_count=2&children_ages[]=6&check_in=2025-12-10&check_out=2025-12-15`
 
 ## 🎯 قواعد اختيار API الذكي:
 
@@ -162,14 +289,9 @@
 {
   "api_calls": [
     {
-      "endpoint": "/api/v1/cities",
-      "method": "GET",
-      "params": {}
-    },
-    {
       "endpoint": "/api/v1/hotels",
       "method": "GET",
-      "params": {"city_id": "CAIRO_ID"}
+      "params": {"city_id": "1"}
     }
   ],
   "response_message": "جاري البحث عن فنادق في القاهرة...",
@@ -177,21 +299,34 @@
   "intent": "hotel_search"
 }
 ```
+**ملاحظة:** القاهرة ID = 1 من القائمة المتاحة، لا تطلب /api/v1/cities
 
-**مثال 4**: "فنادق 5 نجوم رخيصة في الإسكندرية"
+**مثال 4**: "رحلات في شرم الشيخ"
 ```json
 {
   "api_calls": [
     {
-      "endpoint": "/api/v1/cities",
+      "endpoint": "/api/v1/trips",
       "method": "GET",
-      "params": {}
-    },
+      "params": {"city_id": "7"}
+    }
+  ],
+  "response_message": "جاري البحث عن رحلات في شرم الشيخ...",
+  "suggested_actions": ["عرض التفاصيل", "تغيير الفلاتر"],
+  "intent": "trip_search"
+}
+```
+**ملاحظة:** شرم الشيخ ID = 7 من القائمة المتاحة
+
+**مثال 5**: "فنادق 5 نجوم رخيصة في الإسكندرية"
+```json
+{
+  "api_calls": [
     {
       "endpoint": "/api/v1/hotels",
       "method": "GET",
       "params": {
-        "city_id": "ALEXANDRIA_ID",
+        "city_id": "3",
         "rating": "5",
         "max_price": "1000"
       }
@@ -202,6 +337,7 @@
   "intent": "hotel_search"
 }
 ```
+**ملاحظة:** الإسكندرية ID = 3 من القائمة المتاحة
 
 **مثال 3**: "عايز تفاصيل فندق الأقصر الملكي" أو "تفاصيل الفندق ده" (وفي السياق: ID: 3)
 ```json
@@ -288,1527 +424,3 @@
 - **استخدم السياق دائماً** - إذا المستخدم ذكر فندق أو رحلة في رسالة سابقة، استخدم ID الخاص بها
 
 **تذكر**: أنت للبحث والاستفسار فقط، ليس للحجز أو المعاملات!
-
-"item": [
-		{
-			"name": "hotels",
-			"item": [
-				{
-					"name": "rooms",
-					"item": [
-						{
-							"name": "rooms",
-							"protocolProfileBehavior": {
-								"strictSSL": false,
-								"followRedirects": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "local_token",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "application/json",
-										"type": "string"
-									},
-									{
-										"key": "password",
-										"value": "api_password",
-										"type": "string"
-									},
-									{
-										"key": "lang",
-										"value": "lang",
-										"type": "string"
-									},
-									{
-										"key": "currency",
-										"value": "currency",
-										"type": "string"
-									}
-								],
-								"url": {
-									"raw": "baseUrl/api/v1/hotels/rooms?per_page&page=1&name=&hotel_id=1&adults_count=1&children_count=&start_date=2025-12-04&end_date=2025-12-05&min_price=&max_price=",
-									"host": [
-										"baseUrl"
-									],
-									"path": [
-										"api",
-										"v1",
-										"hotels",
-										"rooms"
-									],
-									"query": [
-										{
-											"key": "per_page",
-											"value": null
-										},
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "name",
-											"value": ""
-										},
-										{
-											"key": "hotel_id",
-											"value": "1"
-										},
-										{
-											"key": "adults_count",
-											"value": "1"
-										},
-										{
-											"key": "children_count",
-											"value": ""
-										},
-										{
-											"key": "start_date",
-											"value": "2025-12-04"
-										},
-										{
-											"key": "end_date",
-											"value": "2025-12-05"
-										},
-										{
-											"key": "min_price",
-											"value": ""
-										},
-										{
-											"key": "max_price",
-											"value": ""
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "room details",
-							"protocolProfileBehavior": {
-								"strictSSL": false,
-								"followRedirects": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "local_token",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "application/json",
-										"type": "string"
-									},
-									{
-										"key": "password",
-										"value": "api_password",
-										"type": "string"
-									},
-									{
-										"key": "lang",
-										"value": "lang",
-										"type": "string"
-									},
-									{
-										"key": "currency",
-										"value": "currency",
-										"type": "string"
-									}
-								],
-								"url": {
-									"raw": "baseUrl/api/v1/hotels/rooms/:room?name=&adults_count=2&children_count=&start_date=2025-11-26&end_date=2025-11-28",
-									"host": [
-										"baseUrl"
-									],
-									"path": [
-										"api",
-										"v1",
-										"hotels",
-										"rooms",
-										":room"
-									],
-									"query": [
-										{
-											"key": "name",
-											"value": ""
-										},
-										{
-											"key": "adults_count",
-											"value": "2"
-										},
-										{
-											"key": "children_count",
-											"value": ""
-										},
-										{
-											"key": "start_date",
-											"value": "2025-11-26"
-										},
-										{
-											"key": "end_date",
-											"value": "2025-11-28"
-										}
-									],
-									"variable": [
-										{
-											"key": "room",
-											"value": "2"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Calculate Booking Room Price",
-							"protocolProfileBehavior": {
-								"strictSSL": false,
-								"followRedirects": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "local_token",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "application/json",
-										"type": "string"
-									},
-									{
-										"key": "password",
-										"value": "api_password",
-										"type": "string"
-									},
-									{
-										"key": "lang",
-										"value": "lang",
-										"type": "string"
-									},
-									{
-										"key": "currency",
-										"value": "currency",
-										"type": "string"
-									}
-								],
-								"url": {
-									"raw": "baseUrl/api/v1/hotels/rooms/calculate/booking-room/price/:room?adults_count=2&children_ages[]&start_date=2025-11-26&end_date=2025-11-28",
-									"host": [
-										"baseUrl"
-									],
-									"path": [
-										"api",
-										"v1",
-										"hotels",
-										"rooms",
-										"calculate",
-										"booking-room",
-										"price",
-										":room"
-									],
-									"query": [
-										{
-											"key": "adults_count",
-											"value": "2"
-										},
-										{
-											"key": "children_ages[]",
-											"value": null
-										},
-										{
-											"key": "start_date",
-											"value": "2025-11-26"
-										},
-										{
-											"key": "end_date",
-											"value": "2025-11-28"
-										}
-									],
-									"variable": [
-										{
-											"key": "room",
-											"value": "2"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"exec": [],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					]
-				},
-				{
-					"name": "create hotel Room custom Booking",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							},
-							{
-								"key": "currency",
-								"value": "currency",
-								"type": "string"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "hotel_id",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "check_in",
-									"value": "2025-12-03",
-									"type": "text"
-								},
-								{
-									"key": "check_out",
-									"value": "2025-12-05",
-									"type": "text"
-								},
-								{
-									"key": "adults_count",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "children_count",
-									"value": "0",
-									"type": "text"
-								},
-								{
-									"key": "children_ages[]",
-									"value": [
-										""
-									],
-									"description": "أعمار الاطفال عند التحديد من البداية",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][full_name]",
-									"value": [
-										"عصام حمدي العجمي"
-									],
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][phone_key]",
-									"value": "+20",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][phone]",
-									"value": [
-										"1002694325"
-									],
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][nationality]",
-									"value": "مصري",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][age]",
-									"value": "50",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][id_type]",
-									"value": "passport ",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][id_number]",
-									"value": "2662626262",
-									"description": "passport or national_id",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][type]",
-									"value": "adult",
-									"description": "adult or child",
-									"type": "text"
-								},
-								{
-									"key": "notes",
-									"value": "notes",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "baseUrl/api/v1/booking/hotels/create/custom",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"booking",
-								"hotels",
-								"create",
-								"custom"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "create hotel Room Booking",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							},
-							{
-								"key": "currency",
-								"value": "currency",
-								"type": "string"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "room_id",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "check_in",
-									"value": "2025-12-05",
-									"type": "text"
-								},
-								{
-									"key": "check_out",
-									"value": "2025-12-06",
-									"type": "text"
-								},
-								{
-									"key": "adults_count",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "children_count",
-									"value": "0",
-									"type": "text"
-								},
-								{
-									"key": "children_ages[]",
-									"value": "6",
-									"description": "أعمار الاطفال عند التحديد من البداية",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][full_name]",
-									"value": "ESSAM",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][phone_key]",
-									"value": "+20",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][phone]",
-									"value": [
-										"1002694325"
-									],
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][nationality]",
-									"value": "مصري",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][age]",
-									"value": "50",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][id_type]",
-									"value": "passport ",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][id_number]",
-									"value": "2662626262",
-									"description": "passport or national_id",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][type]",
-									"value": "adult",
-									"description": "adult or child",
-									"type": "text"
-								},
-								{
-									"key": "notes",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "baseUrl/api/v1/booking/hotels/create",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"booking",
-								"hotels",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "hotel Details",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							},
-							{
-								"key": "currency",
-								"value": "currency",
-								"type": "string"
-							}
-						],
-						"url": {
-							"raw": "baseUrl/api/v1/hotels/details/:hotel_id",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"hotels",
-								"details",
-								":hotel_id"
-							],
-							"variable": [
-								{
-									"key": "hotel_id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "hotel cheapest room",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							},
-							{
-								"key": "currency",
-								"value": "currency",
-								"type": "string"
-							}
-						],
-						"url": {
-							"raw": "baseUrl/api/v1/hotels/cheapest-room/:hotel_id?start_date=2025-12-04&end_date=2025-12-05&adults_count=1&children_count",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"hotels",
-								"cheapest-room",
-								":hotel_id"
-							],
-							"query": [
-								{
-									"key": "start_date",
-									"value": "2025-12-04"
-								},
-								{
-									"key": "end_date",
-									"value": "2025-12-05"
-								},
-								{
-									"key": "adults_count",
-									"value": "1"
-								},
-								{
-									"key": "children_count",
-									"value": null
-								}
-							],
-							"variable": [
-								{
-									"key": "hotel_id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "all hotels",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							},
-							{
-								"key": "currency",
-								"value": "currency",
-								"type": "string"
-							}
-						],
-						"url": {
-							"raw": "baseUrl/api/v1/hotels?per_page&page=1&name=&city_id=&hotel_type_id=&adults_count=&children_count=&rating=",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"hotels"
-							],
-							"query": [
-								{
-									"key": "per_page",
-									"value": "10"
-								},
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "name",
-									"value": ""
-								},
-								{
-									"key": "city_id",
-									"value": ""
-								},
-								{
-									"key": "hotel_type_id",
-									"value": ""
-								},
-								{
-									"key": "adults_count",
-									"value": ""
-								},
-								{
-									"key": "children_count",
-									"value": ""
-								},
-								{
-									"key": "rating",
-									"value": "",
-									"description": "desc or asc"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			]
-		},
-		{
-			"name": "trips",
-			"item": [
-				{
-					"name": "create trip  Booking",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							},
-							{
-								"key": "currency",
-								"value": "currency",
-								"type": "string"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "trip_id",
-									"value": "10",
-									"type": "text"
-								},
-								{
-									"key": "check_in",
-									"value": "2025-12-07",
-									"type": "text"
-								},
-								{
-									"key": "check_out",
-									"value": "2025-12-10",
-									"type": "text"
-								},
-								{
-									"key": "adults_count",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "children_count",
-									"value": "2",
-									"type": "text"
-								},
-								{
-									"key": "children_ages[]",
-									"value": "6",
-									"description": "أعمار الاطفال عند التحديد من البداية",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][full_name]",
-									"value": [
-										"عصام حمدي العجمي"
-									],
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][phone_key]",
-									"value": "+20",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][phone]",
-									"value": [
-										"1002694325"
-									],
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][nationality]",
-									"value": "مصري",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][age]",
-									"value": "50",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][id_type]",
-									"value": "passport ",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][id_number]",
-									"value": "2662626262",
-									"description": "passport or national_id",
-									"type": "text"
-								},
-								{
-									"key": "travelers[0][type]",
-									"value": "adult",
-									"description": "adult or child",
-									"type": "text"
-								},
-								{
-									"key": "notes",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "baseUrl/api/v1/booking/trips/create",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"booking",
-								"trips",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "all trips",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							},
-							{
-								"key": "currency",
-								"value": "currency",
-								"type": "string"
-							}
-						],
-						"url": {
-							"raw": "baseUrl/api/v1/trips?per_page=15&page=1&name=&city_id=&hotel_id=&main_category_id=&sub_category_id=&rating=&price=&duration_from&duration_to&is_featured",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"trips"
-							],
-							"query": [
-								{
-									"key": "per_page",
-									"value": "15"
-								},
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "name",
-									"value": ""
-								},
-								{
-									"key": "city_id",
-									"value": ""
-								},
-								{
-									"key": "hotel_id",
-									"value": ""
-								},
-								{
-									"key": "main_category_id",
-									"value": ""
-								},
-								{
-									"key": "sub_category_id",
-									"value": ""
-								},
-								{
-									"key": "rating",
-									"value": "",
-									"description": "desc or asc"
-								},
-								{
-									"key": "price",
-									"value": "",
-									"description": "desc or asc"
-								},
-								{
-									"key": "duration_from",
-									"value": null
-								},
-								{
-									"key": "duration_to",
-									"value": null
-								},
-								{
-									"key": "is_featured",
-									"value": null,
-									"description": "set 1 to get offers"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "trip Details",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							},
-							{
-								"key": "currency",
-								"value": "currency",
-								"type": "string"
-							}
-						],
-						"url": {
-							"raw": "baseUrl/api/v1/trips/:tripl_id",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"trips",
-								":tripl_id"
-							],
-							"variable": [
-								{
-									"key": "tripl_id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "calculate booking trip price",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true,
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							},
-							{
-								"key": "currency",
-								"value": "currency",
-								"type": "string"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
-						"url": {
-							"raw": "baseUrl/api/v1/trips/calculate/booking-trip/price/:trip?check_in&check_out&children_ages[]=6&adults_count=1",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"trips",
-								"calculate",
-								"booking-trip",
-								"price",
-								":trip"
-							],
-							"query": [
-								{
-									"key": "check_in",
-									"value": null
-								},
-								{
-									"key": "check_out",
-									"value": null
-								},
-								{
-									"key": "children_ages[]",
-									"value": "6"
-								},
-								{
-									"key": "adults_count",
-									"value": "1"
-								}
-							],
-							"variable": [
-								{
-									"key": "trip",
-									"value": "10"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			]
-		},
-		{
-			"name": "data",
-			"item": [
-				{
-					"name": "categories",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							}
-						],
-						"url": {
-							"raw": "baseUrl/api/v1/categories",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"categories"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "sub-categories",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							}
-						],
-						"url": {
-							"raw": "baseUrl/api/v1/sub-categories?main_category_id=",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"sub-categories"
-							],
-							"query": [
-								{
-									"key": "main_category_id",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "booking status",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							}
-						],
-						"url": {
-							"raw": "baseUrl/api/v1/booking-status",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"booking-status"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "hotel-types",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							}
-						],
-						"url": {
-							"raw": "baseUrl/api/v1/hotel-types",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"hotel-types"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "cities",
-					"protocolProfileBehavior": {
-						"strictSSL": false,
-						"followRedirects": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "local_token",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "string"
-							},
-							{
-								"key": "password",
-								"value": "api_password",
-								"type": "string"
-							},
-							{
-								"key": "lang",
-								"value": "lang",
-								"type": "string"
-							}
-						],
-						"url": {
-							"raw": "baseUrl/api/v1/cities",
-							"host": [
-								"baseUrl"
-							],
-							"path": [
-								"api",
-								"v1",
-								"cities"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			]
-		}
-	]
