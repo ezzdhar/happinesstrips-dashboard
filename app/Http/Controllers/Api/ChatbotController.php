@@ -22,6 +22,9 @@ class ChatbotController extends Controller
 
         // Get chat_session from request (renamed from session_id to avoid WAF blocking)
         $sessionId = $request->input('chat_session');
+		if ($sessionId){
+			$conversationHistory = $this->chatbotService->getConversationHistory($sessionId);
+		}
 
         // Process the message
         $result = $this->chatbotService->processMessage($message, $conversationHistory, $sessionId);
