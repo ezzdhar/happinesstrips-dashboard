@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('chatbot_conversations', function (Blueprint $table) {
             $table->id();
-            $table->string('session_id')->index();
+            $table->string('chat_session')->index();
             $table->text('user_message');
             $table->text('bot_response');
             $table->json('api_calls')->nullable();

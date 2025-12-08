@@ -20,8 +20,8 @@ class ChatbotController extends Controller
         $message = $request->input('message');
         $conversationHistory = $request->input('conversation_history', []);
 
-        // Always generate session_id server-side to avoid firewall blocking
-        $sessionId = null;
+        // Get chat_session from request (renamed from session_id to avoid WAF blocking)
+        $sessionId = $request->input('chat_session');
 
         // Process the message
         $result = $this->chatbotService->processMessage($message, $conversationHistory, $sessionId);
@@ -30,7 +30,7 @@ class ChatbotController extends Controller
         return response()->json([
             'success' => $result['success'],
             'data' => [
-                'session_id' => $result['session_id'],
+                'chat_session' => $result['session_id'], // Return as chat_session to client
                 'message' => $result['message'],
                 'api_calls' => $result['api_calls'] ?? [],
                 'api_results' => $result['api_results'] ?? [],
@@ -50,14 +50,14 @@ class ChatbotController extends Controller
     public function feedback(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'session_id' => ['required', 'string'],
+            'chat_session' => ['required', 'string'],
             'conversation_id' => ['required', 'integer'],
             'was_helpful' => ['required', 'boolean'],
             'feedback' => ['nullable', 'string', 'max:500'],
         ]);
 
         $success = $this->chatbotService->submitFeedback(
-            $validated['session_id'],
+            $validated['chat_session'],
             $validated['conversation_id'],
             $validated['was_helpful'],
             $validated['feedback'] ?? null
@@ -74,12 +74,12 @@ class ChatbotController extends Controller
      */
     public function history(Request $request): JsonResponse
     {
-        $sessionId = $request->input('session_id');
+        $sessionId = $request->input('chat_session');
 
         if (! $sessionId) {
             return response()->json([
                 'success' => false,
-                'message' => 'Session ID is required',
+                'message' => 'Chat session is required',
             ], 400);
         }
 
