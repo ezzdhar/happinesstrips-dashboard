@@ -441,62 +441,30 @@ class ChatbotService
     }
 
     /**
-     * Format hotels list
+     * Format hotels list - return all data from API
      */
     protected function formatHotelsList(array $items): array
     {
-        $formatted = [];
-        
-        foreach ($items as $item) {
-            $formatted[] = [
-                'id' => $item['id'] ?? null,
-                'name' => $item['name'] ?? 'غير محدد',
-                'price' => $item['price'] ?? $item['min_price'] ?? null,
-                'rating' => $item['rating'] ?? null,
-                'city' => $item['city']['name'] ?? null,
-            ];
-        }
-
-        return $formatted;
+        // Return all data as-is from API
+        return $items;
     }
 
     /**
-     * Format rooms list
+     * Format rooms list - return all data from API
      */
     protected function formatRoomsList(array $items): array
     {
-        $formatted = [];
-        
-        foreach ($items as $item) {
-            $formatted[] = [
-                'id' => $item['id'] ?? null,
-                'name' => $item['name'] ?? 'غير محدد',
-                'price' => $item['price'] ?? null,
-                'capacity' => $item['capacity'] ?? null,
-                'hotel' => $item['hotel']['name'] ?? null,
-            ];
-        }
-
-        return $formatted;
+        // Return all data as-is from API
+        return $items;
     }
 
     /**
-     * Format trips list
+     * Format trips list - return all data from API
      */
     protected function formatTripsList(array $items): array
     {
-        $formatted = [];
-        
-        foreach ($items as $item) {
-            $formatted[] = [
-                'id' => $item['id'] ?? null,
-                'name' => $item['name'] ?? $item['title'] ?? 'غير محدد',
-                'price' => $item['price'] ?? null,
-                'category' => $item['category']['name'] ?? null,
-            ];
-        }
-
-        return $formatted;
+        // Return all data as-is from API
+        return $items;
     }
 
     /**
