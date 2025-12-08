@@ -29,13 +29,16 @@ class ChatbotService
             // Get learning context from previous conversations
             $learningContext = $this->getLearningContext($userMessage);
 
+            // Get static data context (cities, hotel types, categories)
+            $staticDataContext = $this->getStaticDataContext();
+
             // Build enhanced prompt with learning and session history
             $enhancedPrompt = $this->buildEnhancedPrompt($userMessage, $learningContext, $sessionHistory);
 
-            // Get AI response
+            // Get AI response with static data context in system prompt
             $response = Prism::text()
                 ->using(Provider::Gemini, 'gemini-2.0-flash')
-                ->withSystemPrompt(view('prompts.chatbot-system-v2'))
+                ->withSystemPrompt(view('prompts.chatbot-system-v2')->render() . "\n\n" . $staticDataContext)
                 ->withPrompt($enhancedPrompt)
                 ->withMaxTokens(2000)
                 ->usingTemperature(0.7)
@@ -170,6 +173,87 @@ class ChatbotService
         } catch (Exception $e) {
             Log::warning('Failed to get learning context: '.$e->getMessage());
 
+            return '';
+        }
+    }
+
+    /**
+     * Get static data context (cities, hotel types, categories) for AI
+     * This allows AI to use IDs directly without making API calls
+     */
+    protected function getStaticDataContext(): string
+    {
+        try {
+            $baseUrl = rtrim(config('app.url'), '/');
+            $context = "\n\n## 📊 البيانات المتاحة (استخدمها مباشرة):\n\n";
+
+            // Fetch cities
+            try {
+                $citiesResponse = Http::timeout(5)->get($baseUrl.'/api/v1/cities');
+                if ($citiesResponse->successful()) {
+                    $cities = $citiesResponse->json('data', []);
+                    $context .= "### المدن المتاحة:\n";
+                    foreach ($cities as $city) {
+                        $context .= "- {$city['name']}: ID = {$city['id']}\n";
+                    }
+                    $context .= "\n";
+                }
+            } catch (Exception $e) {
+                Log::warning('Failed to fetch cities for context: '.$e->getMessage());
+            }
+
+            // Fetch hotel types
+            try {
+                $typesResponse = Http::timeout(5)->get($baseUrl.'/api/v1/hotel-types');
+                if ($typesResponse->successful()) {
+                    $types = $typesResponse->json('data', []);
+                    $context .= "### أنواع الفنادق المتاحة:\n";
+                    foreach ($types as $type) {
+                        $context .= "- {$type['name']}: ID = {$type['id']}\n";
+                    }
+                    $context .= "\n";
+                }
+            } catch (Exception $e) {
+                Log::warning('Failed to fetch hotel types for context: '.$e->getMessage());
+            }
+
+            // Fetch categories
+            try {
+                $categoriesResponse = Http::timeout(5)->get($baseUrl.'/api/v1/categories');
+                if ($categoriesResponse->successful()) {
+                    $categories = $categoriesResponse->json('data', []);
+                    $context .= "### فئات الرحلات المتاحة:\n";
+                    foreach ($categories as $category) {
+                        $context .= "- {$category['name']}: ID = {$category['id']}\n";
+                    }
+                    $context .= "\n";
+                }
+            } catch (Exception $e) {
+                Log::warning('Failed to fetch categories for context: '.$e->getMessage());
+            }
+
+            // Fetch sub-categories
+            try {
+                $subCategoriesResponse = Http::timeout(5)->get($baseUrl.'/api/v1/sub-categories');
+                if ($subCategoriesResponse->successful()) {
+                    $subCategories = $subCategoriesResponse->json('data', []);
+                    if (!empty($subCategories)) {
+                        $context .= "### الفئات الفرعية المتاحة:\n";
+                        foreach ($subCategories as $subCategory) {
+                            $context .= "- {$subCategory['name']}: ID = {$subCategory['id']}\n";
+                        }
+                        $context .= "\n";
+                    }
+                }
+            } catch (Exception $e) {
+                Log::warning('Failed to fetch sub-categories for context: '.$e->getMessage());
+            }
+
+            $context .= "**تعليمات مهمة:** عندما المستخدم يذكر اسم مدينة أو فئة، استخدم الـ ID المقابل مباشرة في الـ API call. لا تطلب من المستخدم اختيار ID!\n";
+
+            return $context;
+        } catch (Exception $e) {
+            Log::warning('Failed to build static data context: '.$e->getMessage());
             return '';
         }
     }
