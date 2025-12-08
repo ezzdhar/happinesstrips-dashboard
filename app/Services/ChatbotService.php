@@ -552,7 +552,154 @@ class ChatbotService
     }
 
     /**
+     * Format hotels data for message display
+     */
+    protected function formatHotelsForMessage(array $data): string
+    {
+        if (! isset($data['data']) || empty($data['data'])) {
+            return '';
+        }
+
+        $hotels = $data['data'];
+        $message = "🏨 الفنادق المتاحة:\n\n";
+        $count = 0;
+        $maxDisplay = 5;
+
+        foreach ($hotels as $hotel) {
+            if ($count >= $maxDisplay) {
+                $remaining = count($hotels) - $maxDisplay;
+                $message .= "... وهناك {$remaining} فنادق أخرى";
+                break;
+            }
+
+            $name = $hotel['name'] ?? 'غير محدد';
+            $city = $hotel['city'] ?? 'غير محدد';
+            $rating = $hotel['rating'] ?? 'N/A';
+            $id = $hotel['id'] ?? '';
+            
+            // Get price from cheapest_room_today if available
+            $price = 'غير متوفر';
+            if (isset($hotel['cheapest_room_today']['price_per_night'])) {
+                $price = $hotel['cheapest_room_today']['price_per_night'];
+                $currency = $hotel['cheapest_room_today']['currency'] ?? 'جنيه';
+                $price = "{$price} {$currency}";
+            }
+
+            $message .= "📍 {$name}\n";
+            $message .= "   🏙️ المدينة: {$city}\n";
+            $message .= "   💰 السعر: {$price}\n";
+            $message .= "   ⭐ التقييم: {$rating}\n";
+            $message .= "   🆔 ID: {$id}\n\n";
+
+            $count++;
+        }
+
+        return $message;
+    }
+
+    /**
+     * Format trips data for message display
+     */
+    protected function formatTripsForMessage(array $data): string
+    {
+        if (! isset($data['data']) || empty($data['data'])) {
+            return '';
+        }
+
+        $trips = $data['data'];
+        $message = "🎒 الرحلات المتاحة:\n\n";
+        $count = 0;
+        $maxDisplay = 5;
+
+        foreach ($trips as $trip) {
+            if ($count >= $maxDisplay) {
+                $remaining = count($trips) - $maxDisplay;
+                $message .= "... وهناك {$remaining} رحلات أخرى";
+                break;
+            }
+
+            $name = $trip['name'] ?? 'غير محدد';
+            $price = $trip['price'] ?? 'غير متوفر';
+            $city = $trip['city'] ?? 'غير محدد';
+            $category = $trip['main_category'] ?? 'غير محدد';
+            $id = $trip['id'] ?? '';
+
+            $message .= "🗺️ {$name}\n";
+            $message .= "   🏙️ المدينة: {$city}\n";
+            $message .= "   📂 الفئة: {$category}\n";
+            $message .= "   💰 السعر: {$price}\n";
+            $message .= "   🆔 ID: {$id}\n\n";
+
+            $count++;
+        }
+
+        return $message;
+    }
+
+    /**
+     * Format rooms data for message display
+     */
+    protected function formatRoomsForMessage(array $data): string
+    {
+        if (! isset($data['data']) || empty($data['data'])) {
+            return '';
+        }
+
+        $rooms = $data['data'];
+        $message = "🛏️ الغرف المتاحة:\n\n";
+        $count = 0;
+        $maxDisplay = 5;
+
+        foreach ($rooms as $room) {
+            if ($count >= $maxDisplay) {
+                $remaining = count($rooms) - $maxDisplay;
+                $message .= "... وهناك {$remaining} غرف أخرى";
+                break;
+            }
+
+            $name = $room['name'] ?? 'غير محدد';
+            $price = $room['price'] ?? 'غير متوفر';
+            $capacity = $room['capacity'] ?? 'N/A';
+            $id = $room['id'] ?? '';
+
+            $message .= "🚪 {$name}\n";
+            $message .= "   💰 السعر: {$price}\n";
+            $message .= "   👥 السعة: {$capacity}\n";
+            $message .= "   🆔 ID: {$id}\n\n";
+
+            $count++;
+        }
+
+        return $message;
+    }
+
+    /**
+     * Format cities data for message display
+     */
+    protected function formatCitiesForMessage(array $data): string
+    {
+        if (! isset($data['data']) || empty($data['data'])) {
+            return '';
+        }
+
+        $cities = $data['data'];
+        $message = "📋 المدن المتاحة:\n\n";
+        $count = 0;
+
+        foreach ($cities as $city) {
+            $count++;
+            $name = $city['name'] ?? 'غير محدد';
+            $id = $city['id'] ?? '';
+
+            $message .= "{$count}. {$name} (ID: {$id})\n";
+        }
+
+        return $message;
+    }
+
+    /**
      * Enhance response message with API results
+     * Adds useful summary from data to message
      */
     protected function enhanceResponseWithResults(string $baseMessage, array $apiResults, string $intent): string
     {
@@ -564,16 +711,17 @@ class ChatbotService
             }
 
             $data = $result['data'] ?? [];
+            $endpoint = $result['endpoint'] ?? '';
 
-            // Format based on intent
-            if (str_contains($intent, 'city') || str_contains($intent, 'data_request')) {
-                $enhanced .= $this->formatDataList($data);
-            } elseif (str_contains($intent, 'hotel')) {
-                $enhanced .= $this->formatHotelList($data);
-            } elseif (str_contains($intent, 'trip')) {
-                $enhanced .= $this->formatTripList($data);
-            } elseif (str_contains($intent, 'price')) {
-                $enhanced .= $this->formatPriceInfo($data);
+            // Format based on endpoint type
+            if (str_contains($endpoint, '/hotels') && ! str_contains($endpoint, '/rooms')) {
+                $enhanced .= $this->formatHotelsForMessage($data);
+            } elseif (str_contains($endpoint, '/trips')) {
+                $enhanced .= $this->formatTripsForMessage($data);
+            } elseif (str_contains($endpoint, '/rooms')) {
+                $enhanced .= $this->formatRoomsForMessage($data);
+            } elseif (str_contains($endpoint, '/cities')) {
+                $enhanced .= $this->formatCitiesForMessage($data);
             }
         }
 
