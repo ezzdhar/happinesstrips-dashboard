@@ -19,7 +19,9 @@ class ChatbotController extends Controller
     {
         $message = $request->input('message');
         $conversationHistory = $request->input('conversation_history', []);
-        $sessionId = $request->input('session_id');
+
+        // Always generate session_id server-side to avoid firewall blocking
+        $sessionId = null;
 
         // Process the message
         $result = $this->chatbotService->processMessage($message, $conversationHistory, $sessionId);

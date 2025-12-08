@@ -39,8 +39,6 @@ class ChatbotMessageRequest extends FormRequest
             'message.required' => 'الرسالة مطلوبة',
             'message.string' => 'الرسالة يجب أن تكون نص',
             'message.max' => 'الرسالة يجب ألا تتجاوز 1000 حرف',
-            'session_id.regex' => 'معرف الجلسة غير صالح',
-            'session_id.max' => 'معرف الجلسة طويل جداً',
             'conversation_history.array' => 'سجل المحادثة يجب أن يكون مصفوفة',
         ];
     }
