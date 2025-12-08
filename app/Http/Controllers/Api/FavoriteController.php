@@ -46,7 +46,7 @@ class FavoriteController extends Controller
 			->where('favoritable_type', $modelClass)
 			->pluck('favoritable_id');
 
-		$items = $modelClass::whereIn('id', $favoriteIds)->get();
+		$items = $modelClass::whereIn('id', $favoriteIds)->paginate(request()->query('limit', 10));
 
 		return $this->responseOk(
 			message: __('lang.favorites'),
