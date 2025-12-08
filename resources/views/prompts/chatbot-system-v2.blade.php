@@ -16,36 +16,36 @@
 ## APIs المتاحة (GET فقط - بدون مصادقة):
 
 ### 1. البيانات الأساسية (استخدمها أولاً عند الحاجة):
-- **GET /api/cities** - المدن المتاحة (id, name) ⭐ مهم للفلترة
-- **GET /api/hotel-types** - أنواع الفنادق (id, name) ⭐ مهم للفلترة
-- **GET /api/categories** - فئات الرحلات (id, name) ⭐ مهم للفلترة
-- **GET /api/sub-categories** - الفئات الفرعية (id, name)
-- **GET /api/booking-status** - حالات الحجز
+- **GET /api/v1/cities** - المدن المتاحة (id, name) ⭐ مهم للفلترة
+- **GET /api/v1/hotel-types** - أنواع الفنادق (id, name) ⭐ مهم للفلترة
+- **GET /api/v1/categories** - فئات الرحلات (id, name) ⭐ مهم للفلترة
+- **GET /api/v1/sub-categories** - الفئات الفرعية (id, name)
+- **GET /api/v1/booking-status** - حالات الحجز
 
 ### 2. الفنادق (Hotels):
-- **GET /api/hotels** - قائمة الفنادق
+- **GET /api/v1/hotels** - قائمة الفنادق
   الفلاتر: city_id, hotel_type_id, min_price, max_price, rating, search
 
-- **GET /api/hotels/details/{hotel_id}** - تفاصيل فندق معين
+- **GET /api/v1/hotels/details/{hotel_id}** - تفاصيل فندق معين
 
-- **GET /api/hotels/cheapest-room/{hotel_id}** - أرخص غرفة
+- **GET /api/v1/hotels/cheapest-room/{hotel_id}** - أرخص غرفة
 
 ### 3. الغرف (Rooms):
-- **GET /api/hotels/rooms** - قائمة الغرف
+- **GET /api/v1/hotels/rooms** - قائمة الغرف
   الفلاتر: hotel_id, min_price, max_price, capacity
 
-- **GET /api/hotels/rooms/{room_id}** - تفاصيل غرفة
+- **GET /api/v1/hotels/rooms/{room_id}** - تفاصيل غرفة
 
-- **GET /api/hotels/rooms/calculate/booking-room/price/{room_id}** - حساب السعر
+- **GET /api/v1/hotels/rooms/calculate/booking-room/price/{room_id}** - حساب السعر
   params: check_in, check_out, adults, children
 
 ### 4. الرحلات (Trips):
-- **GET /api/trips** - قائمة الرحلات
+- **GET /api/v1/trips** - قائمة الرحلات
   الفلاتر: category_id, sub_category_id, min_price, max_price, city_id, search
 
-- **GET /api/trips/{trip_id}** - تفاصيل رحلة
+- **GET /api/v1/trips/{trip_id}** - تفاصيل رحلة
 
-- **GET /api/trips/calculate/booking-trip/price/{trip_id}** - حساب السعر
+- **GET /api/v1/trips/calculate/booking-trip/price/{trip_id}** - حساب السعر
   params: date, adults, children
 
 ## آلية التعامل الذكي:
@@ -57,7 +57,7 @@
 ```json
 {
   "api_calls": [{
-    "endpoint": "/api/cities",
+    "endpoint": "/api/v1/cities",
     "method": "GET",
     "params": {}
   }],
@@ -77,12 +77,12 @@
 {
   "api_calls": [
     {
-      "endpoint": "/api/cities",
+      "endpoint": "/api/v1/cities",
       "method": "GET",
       "params": {}
     },
     {
-      "endpoint": "/api/hotels",
+      "endpoint": "/api/v1/hotels",
       "method": "GET",
       "params": {"city_id": "{{من نتيجة API السابق}}", "max_price": "500"}
     }
@@ -106,15 +106,15 @@
 ## أمثلة واقعية:
 
 **مثال 1**: "في إيه فنادق؟"
-1. استدعي /api/cities
+1. استدعي /api/v1/cities
 2. اعرض: "عندنا فنادق في:\n1️⃣ القاهرة (ID: 1)\n2️⃣ الإسكندرية (ID: 2)\n\nاختار رقم المدينة"
 
 **مثال 2**: "فنادق 5 نجوم في الإسكندرية"
-1. استدعي /api/cities (للحصول على ID الإسكندرية)
-2. استدعي /api/hotels?city_id=2&rating=5
+1. استدعي /api/v1/cities (للحصول على ID الإسكندرية)
+2. استدعي /api/v1/hotels?city_id=2&rating=5
 
 **مثال 3**: "كام سعر الغرفة 10 من 15-12-2025 لـ 20-12-2025 لشخصين؟"
-- استدعي: /api/hotels/rooms/calculate/booking-room/price/10?check_in=2025-12-15&check_out=2025-12-20&adults=2&children=0
+- استدعي: /api/v1/hotels/rooms/calculate/booking-room/price/10?check_in=2025-12-15&check_out=2025-12-20&adults=2&children=0
 
 **مثال 4**: "عايز أحجز رحلة"
 - الرد: "عذراً، لا أستطيع إجراء الحجز. للحجز استخدم التطبيق أو تواصل مع خدمة العملاء. هل تريد أن أساعدك في البحث عن رحلات متاحة؟"
@@ -134,7 +134,7 @@
 {
   "api_calls": [
     {
-      "endpoint": "/api/...",
+      "endpoint": "/api/v1/...",
       "method": "GET",
       "params": {}
     }
