@@ -21,7 +21,7 @@ class ChatbotService
 
             // Get AI response
             $response = Prism::text()
-                ->using(Provider::Gemini, 'gemini-1.5-flash')
+                ->using(Provider::Gemini, 'gemini-2.0-flash')
                 ->withSystemPrompt(view('prompts.chatbot-system'))
                 ->withPrompt($userMessage)
                 ->withMaxTokens(2000)
