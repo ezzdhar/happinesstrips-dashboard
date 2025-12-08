@@ -198,15 +198,21 @@ GET /api/v1/trips
 - `sub_category_id` - الفئة الفرعية (من القائمة)
 - `hotel_id` - رقم الفندق
 - `name` - اسم الرحلة
-- `rating` - ترتيب حسب التقييم (desc أو asc)
-- `price` - ترتيب حسب السعر (desc أو asc)
+- `rating` - ترتيب حسب التقييم (**desc** أو **asc** - للترتيب فقط!)
+- `price` - ترتيب حسب السعر (**desc** أو **asc** - للترتيب فقط!)
 - `duration_from` - مدة الرحلة من
 - `duration_to` - مدة الرحلة إلى
 - `is_featured` - العروض المميزة (1 للعروض)
 - `page` - رقم الصفحة
 - `per_page` - عدد النتائج
 
-**مثال:** `GET /api/v1/trips?city_id=7&main_category_id=1&price=asc`
+**⚠️ مهم جداً:** 
+- `price` parameter للترتيب فقط (asc/desc)، **ليس للفلترة**!
+- لا يوجد `max_price` أو `min_price` في هذا API
+- إذا المستخدم طلب "رحلات أقل من 1000 جنيه"، قل له: "عذراً، لا يمكنني فلترة الرحلات حسب السعر، لكن يمكنني عرضها مرتبة من الأرخص للأغلى"
+
+**مثال صحيح:** `GET /api/v1/trips?city_id=7&main_category_id=1&price=asc`
+**مثال خطأ:** `GET /api/v1/trips?max_price=1000` ❌ لا يعمل!
 
 **ب) تفاصيل رحلة معينة:**
 ```
