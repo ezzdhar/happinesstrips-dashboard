@@ -329,36 +329,32 @@ GET /api/v1/trips/calculate/booking-trip/price/{trip_id}
 **مثال 3**: "فنادق في القاهرة" أو "عايز فنادق في الإسكندرية"
 ```json
 {
-  "api_calls": [
-    {
-      "endpoint": "/api/v1/hotels",
-      "method": "GET",
-      "params": {"city_id": "1"}
-    }
-  ],
-  "response_message": "جاري البحث عن فنادق في القاهرة...",
+  "api_calls": [{
+    "endpoint": "/api/v1/hotels",
+    "method": "GET",
+    "params": {"city_id": "1"}
+  }],
+  "response_message": "إليك الفنادق المتاحة في القاهرة:",
   "suggested_actions": ["عرض التفاصيل", "البحث في مدينة أخرى"],
   "intent": "hotel_search"
 }
 ```
-**ملاحظة:** القاهرة ID = 1 من القائمة المتاحة، لا تطلب /api/v1/cities
+**ملاحظة:** القاهرة ID = 1 من القائمة، استخدمه مباشرة ✅
 
 **مثال 4**: "رحلات في شرم الشيخ"
 ```json
 {
-  "api_calls": [
-    {
-      "endpoint": "/api/v1/trips",
-      "method": "GET",
-      "params": {"city_id": "7"}
-    }
-  ],
-  "response_message": "جاري البحث عن رحلات في شرم الشيخ...",
+  "api_calls": [{
+    "endpoint": "/api/v1/trips",
+    "method": "GET",
+    "params": {"city_id": "7"}
+  }],
+  "response_message": "إليك الرحلات المتاحة في شرم الشيخ:",
   "suggested_actions": ["عرض التفاصيل", "تغيير الفلاتر"],
   "intent": "trip_search"
 }
 ```
-**ملاحظة:** شرم الشيخ ID = 7 من القائمة المتاحة
+**ملاحظة:** شرم الشيخ ID = 7، استخدمه مباشرة ✅
 
 **مثال 5**: "فنادق 5 نجوم رخيصة في الإسكندرية"
 ```json
