@@ -15,16 +15,16 @@ class ChatbotService
     /**
      * Process user message and generate response using Gemini AI
      */
-    public function processMessage(string $userMessage, ?array $conversationHistory = null, ?string $sessionId = null): array
+    public function processMessage(string $userMessage, ?array $conversationHistory = null, ?string $chat_session = null): array
     {
         try {
             // Generate session ID ONLY if not provided (preserve existing session)
-            if (empty($sessionId)) {
-                $sessionId = 'session-'.time().'-'.Str::random(8);
+            if (empty($chat_session)) {
+                $chat_session = 'session-'.time().'-'.Str::random(8);
             }
 
             // Get conversation history from database for this session
-            $sessionHistory = $this->getSessionHistory($sessionId);
+            $sessionHistory = $this->getSessionHistory($chat_session);
 
             // Get learning context from previous conversations
             $learningContext = $this->getLearningContext($userMessage);
@@ -69,7 +69,7 @@ class ChatbotService
 
             $result = [
                 'success' => true,
-                'session_id' => $sessionId,
+                'chat_session' => $chat_session,
                 'message' => $structuredResponse['response_message'] ?? $aiResponse,
                 'data' => $data,
                 'data_type' => $dataType,
@@ -77,7 +77,7 @@ class ChatbotService
             ];
 
             // Store conversation for learning (with all metadata for internal use)
-            $this->storeConversation($sessionId, $userMessage, $result, $structuredResponse);
+            $this->storeConversation($chat_session, $userMessage, $result, $structuredResponse);
 
             return $result;
 
@@ -89,7 +89,7 @@ class ChatbotService
 
             return [
                 'success' => false,
-                'session_id' => $sessionId ?? 'session-'.time().'-'.Str::random(8),
+                'chat_session' => $chat_session ?? 'session-'.time().'-'.Str::random(8),
                 'message' => 'عذراً، حدث خطأ في معالجة رسالتك. يرجى المحاولة مرة أخرى.',
                 'data' => null,
                 'data_type' => null,
@@ -101,12 +101,12 @@ class ChatbotService
     /**
      * Get conversation history from current session
      */
-    protected function getSessionHistory(string $sessionId): string
+    protected function getSessionHistory(string $chat_session): string
     {
         try {
             // Get recent conversations from this session
             $conversations = ChatbotConversation::query()
-                ->where('session_id', $sessionId)
+                ->where('chat_session', $chat_session)
                 ->latest()
                 ->limit(5) // Last 5 messages
                 ->get(['user_message', 'bot_response'])
@@ -197,11 +197,11 @@ class ChatbotService
     /**
      * Store conversation for future learning
      */
-    protected function storeConversation(string $sessionId, string $userMessage, array $result, array $structuredResponse = []): void
+    protected function storeConversation(string $chat_session, string $userMessage, array $result, array $structuredResponse = []): void
     {
         try {
             ChatbotConversation::create([
-                'session_id' => $sessionId,
+                'chat_session' => $chat_session,
                 'user_message' => $userMessage,
                 'bot_response' => $result['message'],
                 'api_calls' => $structuredResponse['api_calls'] ?? null,
@@ -639,12 +639,12 @@ class ChatbotService
     /**
      * Submit feedback for a conversation
      */
-    public function submitFeedback(string $sessionId, int $conversationId, bool $wasHelpful, ?string $feedback = null): bool
+    public function submitFeedback(string $chat_session, int $conversationId, bool $wasHelpful, ?string $feedback = null): bool
     {
         try {
             $conversation = ChatbotConversation::query()
                 ->where('id', $conversationId)
-                ->where('session_id', $sessionId)
+                ->where('chat_session', $chat_session)
                 ->first();
 
             if (! $conversation) {
@@ -667,11 +667,11 @@ class ChatbotService
     /**
      * Get conversation history by session
      */
-    public function getConversationHistory(string $sessionId, int $limit = 10): array
+    public function getConversationHistory(string $chat_session, int $limit = 10): array
     {
         try {
             return ChatbotConversation::query()
-                ->where('session_id', $sessionId)
+                ->where('chat_session', $chat_session)
                 ->latest()
                 ->limit($limit)
                 ->get(['user_message', 'bot_response', 'intent', 'created_at'])

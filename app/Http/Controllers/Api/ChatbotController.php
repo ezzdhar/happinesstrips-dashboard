@@ -20,19 +20,19 @@ class ChatbotController extends Controller
         $message = $request->input('message');
         $conversationHistory = $request->input('conversation_history', []);
 
-        // Get chat_session from request (renamed from session_id to avoid WAF blocking)
-        $sessionId = $request->input('chat_session');
-		if ($sessionId){
-			$conversationHistory = $this->chatbotService->getConversationHistory($sessionId);
+        // Get chat_session from request (renamed from chat_session to avoid WAF blocking)
+        $chat_session = $request->input('chat_session');
+		if ($chat_session){
+			$conversationHistory = $this->chatbotService->getConversationHistory($chat_session);
 		}
 
         // Process the message
-        $result = $this->chatbotService->processMessage($message, $conversationHistory, $sessionId);
+        $result = $this->chatbotService->processMessage($message, $conversationHistory, $chat_session);
 
         // Return simplified response with data field
         return response()->json([
             'success' => $result['success'],
-            'chat_session' => $result['session_id'],
+            'chat_session' => $result['chat_session'],
             'message' => $result['message'],
             'data' => $result['data'] ?? null,
             'data_type' => $result['data_type'] ?? null,
@@ -70,16 +70,16 @@ class ChatbotController extends Controller
      */
     public function history(Request $request): JsonResponse
     {
-        $sessionId = $request->input('chat_session');
+        $chat_session = $request->input('chat_session');
 
-        if (! $sessionId) {
+        if (! $chat_session) {
             return response()->json([
                 'success' => false,
                 'message' => 'Chat session is required',
             ], 400);
         }
 
-        $history = $this->chatbotService->getConversationHistory($sessionId);
+        $history = $this->chatbotService->getConversationHistory($chat_session);
 
         return response()->json([
             'success' => true,
