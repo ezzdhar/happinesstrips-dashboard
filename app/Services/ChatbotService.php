@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Carbon\Carbon; // إضافة Carbon للتواريخ
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Facades\Prism;
 
@@ -19,59 +20,56 @@ class ChatbotService
 	public function processMessage(string $userMessage, array $conversationHistory, ?string $chat_session = null): array
 	{
 		try {
-			// 1. إدارة الجلسة
 			if (empty($chat_session)) {
 				$chat_session = 'session-' . time() . '-' . Str::random(8);
 			}
 
-			// 2. تجهيز السياق
 			$historyText = $this->formatHistoryForPrompt($conversationHistory);
 			$staticDataContext = $this->getStaticDataContext();
 
-			// 3. بناء البرومبت الأولي
 			$systemPrompt = view('prompts.chatbot-system-v3')->render() . "\n\n" . $staticDataContext;
-			$enhancedPrompt = $historyText . "\nالمستخدم: " . $userMessage;
 
-			// 4. استدعاء الذكاء الاصطناعي (Pass 1 - Planning)
+			// إضافة التاريخ الحالي للبرومبت ليتمكن الـ AI من حساب "غداً" بدقة
+			$today = Carbon::now()->format('Y-m-d');
+			$enhancedPrompt = $historyText . "\nتاريخ اليوم: $today\nالمستخدم: " . $userMessage;
+
+			// Pass 1: Planning
 			$response = Prism::text()
 				->using(Provider::Gemini, 'gemini-2.0-flash')
 				->withSystemPrompt($systemPrompt)
 				->withPrompt($enhancedPrompt)
 				->withMaxTokens(1000)
-				->usingTemperature(0.5) // حرارة منخفضة لضمان الدقة في JSON
+				->usingTemperature(0.5)
 				->asText();
 
 			$aiResponse = $response->text;
 			$structuredResponse = $this->parseStructuredResponse($aiResponse);
 
-			// 5. تنفيذ الـ APIs (Agent Execution)
 			$data = null;
 			$dataType = null;
 			$finalMessage = $structuredResponse['response_message'] ?? $aiResponse;
 			$apiSuccess = true;
 
 			if (!empty($structuredResponse['api_calls'])) {
-				// تنفيذ سلسلة الاستدعاءات
+				// تنفيذ الـ APIs
 				$executionResult = $this->executeApiCalls($structuredResponse['api_calls']);
 
 				$apiResults = $executionResult['results'];
 				$apiSuccess = $executionResult['success'];
 
-				// استخراج البيانات للفرونت إند
 				$extracted = $this->extractDataFromApiResults($apiResults);
 				$data = $extracted['data'];
 				$dataType = $extracted['data_type'];
 
-				// 6. التحقق من النتائج (Agent Observation) - سيناريو الخطأ
-				// إذا فشلت العمليات أو عادت ببيانات فارغة، نطلب من الـ AI صياغة رد جديد بناءً على الخطأ
+				// Recovery Mode (إذا فشلت العملية أو عادت البيانات فارغة رغم النجاح)
 				if (!$apiSuccess || empty($data)) {
 					$errorContext = json_encode($apiResults, JSON_UNESCAPED_UNICODE);
 
-					// استدعاء ثاني للذكاء الاصطناعي لشرح المشكلة (Recovery Mode)
+					// نطلب من الـ AI تحليل سبب الفشل (مثل نقص التواريخ أو عدم توفر غرف)
 					$recoveryResponse = Prism::text()
 						->using(Provider::Gemini, 'gemini-2.0-flash')
-						->withSystemPrompt("أنت مساعد ذكي. حاولت تنفيذ طلب المستخدم لكن حدث خطأ أو لم توجد بيانات. اشرح المشكلة للمستخدم بلطف واقترح بدائل.\nسياق الخطأ من الـ API: $errorContext")
-						->withPrompt("المستخدم سأل: $userMessage\nالرد السابق المقترح: $finalMessage\n\nقم بصياغة رد نهائي يوضح المشكلة:")
+						->withSystemPrompt("أنت مساعد ذكي. فشل البحث أو لم يتم العثور على بيانات. حلل رد الـ API واشرح السبب للمستخدم.\nتلميح: إذا كان الخطأ يتعلق بـ start_date أو params، اطلب من المستخدم تحديدها.\nسياق النتائج: $errorContext")
+						->withPrompt("سؤال المستخدم: $userMessage\nالرد السابق: $finalMessage\n\nصغ رداً جديداً يوضح المشكلة ويقترح الحل:")
 						->asText();
 
 					$finalMessage = $recoveryResponse->text;
@@ -87,7 +85,6 @@ class ChatbotService
 				'suggestions' => $structuredResponse['suggested_actions'] ?? [],
 			];
 
-			// 7. تخزين المحادثة
 			$this->storeConversation($chat_session, $userMessage, $result, $structuredResponse);
 
 			return $result;
@@ -98,13 +95,10 @@ class ChatbotService
 		}
 	}
 
-	/**
-	 * تنفيذ استدعاءات API مع دعم الـ Chaining
-	 */
 	protected function executeApiCalls(array $apiCalls): array
 	{
 		$results = [];
-		$collectedData = []; // لتخزين نتائج الطلبات السابقة
+		$collectedData = [];
 		$allSuccess = true;
 		$baseUrl = rtrim(config('app.url'), '/');
 
@@ -113,18 +107,15 @@ class ChatbotService
 				$endpoint = $call['endpoint'] ?? '';
 				$params = $call['params'] ?? [];
 
-				// 1. حل الباراميترز (Chaining Logic)
-				// نستبدل PLACEHOLDERS بالقيم الحقيقية من الطلبات السابقة
+				// حل الباراميترز (Chaining + Dynamic Dates)
 				$params = $this->resolveApiParameters($params, $collectedData);
 
-				// التحقق من وجود ID مطلوب ولكنه مفقود (بسبب فشل طلب سابق)
 				if ($this->hasMissingDependencies($params)) {
 					$results[$index] = ['success' => false, 'error' => 'Missing dependency from previous call'];
 					$allSuccess = false;
-					break; // توقف السلسلة
+					break;
 				}
 
-				// 2. تنفيذ الطلب
 				$response = Http::timeout(8)->get($baseUrl . $endpoint, $params);
 
 				if ($response->successful()) {
@@ -135,10 +126,7 @@ class ChatbotService
 						'data' => $responseData,
 					];
 
-					// 3. تجميع البيانات للاستخدام في الخطوة التالية
-					// نخزن أول عنصر في الـ data أو الـ data نفسها
 					if (isset($responseData['data'])) {
-						// إذا كانت قائمة، نأخذ العنصر الأول لاستخراج الـ IDs (تخمين ذكي)
 						$firstItem = is_array($responseData['data']) && !empty($responseData['data'])
 							? (array_key_exists(0, $responseData['data']) ? $responseData['data'][0] : $responseData['data'])
 							: $responseData['data'];
@@ -146,11 +134,12 @@ class ChatbotService
 						$collectedData = array_merge($collectedData, is_array($firstItem) ? $firstItem : []);
 					}
 				} else {
+					// هنا نسجل جسم الخطأ كاملاً ليقرأه الـ AI في الـ Recovery Mode
 					$results[$index] = [
 						'success' => false,
 						'endpoint' => $endpoint,
 						'status' => $response->status(),
-						'error' => $response->body()
+						'error' => $response->json() ?? $response->body() // محاولة قراءة JSON Error message
 					];
 					$allSuccess = false;
 				}
@@ -164,16 +153,25 @@ class ChatbotService
 	}
 
 	/**
-	 * حل الباراميترز واستبدال الـ Placeholders
+	 * دالة ذكية لحل الباراميترز والتواريخ الافتراضية
 	 */
 	protected function resolveApiParameters(array $params, array $collectedData): array
 	{
 		foreach ($params as $key => $value) {
 			if (!is_string($value)) continue;
 
-			// البحث عن نمط PLACEHOLDER مثل HOTEL_ID_FROM_FIRST_API
+			// 1. استبدال التواريخ الافتراضية
+			if ($value === 'TOMORROW_DATE') {
+				$params[$key] = Carbon::tomorrow()->format('Y-m-d');
+				continue;
+			}
+			if ($value === 'AFTER_TOMORROW_DATE') {
+				$params[$key] = Carbon::tomorrow()->addDay()->format('Y-m-d');
+				continue;
+			}
+
+			// 2. استبدال الـ Placeholders (Chaining)
 			if (str_contains($value, '_FROM_') || str_contains($value, 'HOTEL_ID') || str_contains($value, 'TRIP_ID')) {
-				// محاولة ذكية لإيجاد القيمة في البيانات المجمعة
 				if ($key === 'hotel_id' && isset($collectedData['id'])) {
 					$params[$key] = $collectedData['id'];
 				} elseif ($key === 'city_id' && isset($collectedData['city_id'])) {
@@ -186,28 +184,21 @@ class ChatbotService
 		return $params;
 	}
 
-	/**
-	 * التحقق مما إذا كان هناك باراميتر معتمد مفقود
-	 */
+	// ... (باقي الدوال كما هي دون تغيير) ...
+
 	protected function hasMissingDependencies(array $params): bool
 	{
 		foreach ($params as $value) {
 			if (is_string($value) && (str_contains($value, '_FROM_API'))) {
-				return true; // ما زال الـ Placeholder موجوداً ولم يتم استبداله
+				return true;
 			}
 		}
 		return false;
 	}
 
-	/**
-	 * استخراج البيانات للفرونت إند
-	 */
 	protected function extractDataFromApiResults(array $apiResults): array
 	{
-		// نبحث عن آخر نتيجة ناجحة تحتوي على بيانات ذات معنى
-		// نبدأ من الأخير للأول لأن النتيجة النهائية عادة تكون في آخر API call
 		$reversedResults = array_reverse($apiResults);
-
 		foreach ($reversedResults as $result) {
 			if (!$result['success'] || empty($result['data']['data'])) continue;
 
@@ -218,30 +209,20 @@ class ChatbotService
 			if (str_contains($endpoint, '/hotels')) return ['data' => $data, 'data_type' => 'hotels'];
 			if (str_contains($endpoint, '/trips')) return ['data' => $data, 'data_type' => 'trips'];
 			if (str_contains($endpoint, '/cities')) return ['data' => $data, 'data_type' => 'cities'];
-			if (str_contains($endpoint, 'calculate')) return ['data' => $result['data'], 'data_type' => 'price_calculation']; // للأسعار الهيكل مختلف قليلاً
+			if (str_contains($endpoint, 'calculate')) return ['data' => $result['data'], 'data_type' => 'price_calculation'];
 		}
-
 		return ['data' => null, 'data_type' => null];
 	}
 
-	/**
-	 * جلب البيانات الثابتة (Cached) لتضمينها في البرومبت
-	 */
 	protected function getStaticDataContext(): string
 	{
 		return Cache::remember('chatbot_static_context_v3', 3600, function () {
 			$baseUrl = rtrim(config('app.url'), '/');
 			$context = "\n\n## 📊 البيانات المتاحة (استخدم هذه الـ IDs):\n\n";
-
-			// جلب المدن
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/cities', 'المدن المتاحة');
-			// جلب الفئات
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/categories', 'فئات الرحلات');
-			// جلب الفئات الفرعية
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/sub-categories', 'الفئات الفرعية');
-			// جلب أنواع الفنادق
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/hotel-types', 'أنواع الفنادق');
-
 			return $context;
 		});
 	}
@@ -263,8 +244,6 @@ class ChatbotService
 		}
 		return "";
 	}
-
-	// --- Helper Methods ---
 
 	protected function formatHistoryForPrompt(array $history): string
 	{
@@ -316,7 +295,6 @@ class ChatbotService
 		];
 	}
 
-	// Public API methods required by Controller
 	public function submitFeedback($session, $helpful, $feedback) {
 		return ChatbotConversation::where('chat_session', $session)->latest()->first()?->update([
 			'was_helpful' => $helpful, 'feedback' => $feedback
