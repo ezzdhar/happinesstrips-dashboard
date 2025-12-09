@@ -27,15 +27,20 @@ class ChatbotService
 			$historyText = $this->formatHistoryForPrompt($conversationHistory);
 			$staticDataContext = $this->getStaticDataContext();
 
-			$systemPrompt = view('prompts.chatbot-system-v2')->render() . "\n\n" . $staticDataContext;
+			$systemPrompt = view('prompts.chatbot-system-v3')->render() . "\n\n" . $staticDataContext;
 
 			// إضافة التاريخ الحالي للبرومبت ليتمكن الـ AI من حساب "غداً" بدقة
 			$today = Carbon::now()->format('Y-m-d');
 			$enhancedPrompt = $historyText . "\nتاريخ اليوم: $today\nالمستخدم: " . $userMessage;
 
 			// Pass 1: Planning
-			$response = Prism::text()->using(Provider::Gemini, 'gemini-2.0-flash')->withSystemPrompt($systemPrompt)->withPrompt($enhancedPrompt)
-				->withMaxTokens(1000)->usingTemperature(0.5)->asText();
+			$response = Prism::text()
+				->using(Provider::Gemini, 'gemini-2.0-flash')
+				->withSystemPrompt($systemPrompt)
+				->withPrompt($enhancedPrompt)
+				->withMaxTokens(1000)
+				->usingTemperature(0.5)
+				->asText();
 
 			$aiResponse = $response->text;
 			$structuredResponse = $this->parseStructuredResponse($aiResponse);
@@ -218,8 +223,6 @@ class ChatbotService
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/categories', 'فئات الرحلات');
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/sub-categories', 'الفئات الفرعية');
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/hotel-types', 'أنواع الفنادق');
-			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/hotels', 'الفنادق');
-			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/trips', 'الرحلات');
 			return $context;
 		});
 	}
