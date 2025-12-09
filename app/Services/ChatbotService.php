@@ -27,7 +27,7 @@ class ChatbotService
 			$historyText = $this->formatHistoryForPrompt($conversationHistory);
 			$staticDataContext = $this->getStaticDataContext();
 
-			$systemPrompt = view('prompts.chatbot-system-v3')->render() . "\n\n" . $staticDataContext;
+			$systemPrompt = view('prompts.chatbot-system-v2')->render() . "\n\n" . $staticDataContext;
 
 			// إضافة التاريخ الحالي للبرومبت ليتمكن الـ AI من حساب "غداً" بدقة
 			$today = Carbon::now()->format('Y-m-d');
@@ -223,6 +223,8 @@ class ChatbotService
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/categories', 'فئات الرحلات');
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/sub-categories', 'الفئات الفرعية');
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/hotel-types', 'أنواع الفنادق');
+			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/hotels', 'الفنادق');
+			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/trips', 'الرحلات');
 			return $context;
 		});
 	}
