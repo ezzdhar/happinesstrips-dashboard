@@ -223,15 +223,66 @@ class ChatbotService
 
 	protected function resolveApiParameters(array $params, array $collectedData): array
 	{
-		// نفس المنطق السابق، ممتاز ولا يحتاج تغيير جذري
-		// يقوم بتبديل النصوص بـ IDs بناءً على CollectedData أو القوائم الثابتة
+		// تحويل الـ placeholders إلى القيم الفعلية من نتائج API السابقة
+		foreach ($params as $key => $value) {
+			if (!is_string($value)) {
+				continue;
+			}
+
+			// البحث عن placeholders مثل HOTEL_ID_FROM_FIRST_API
+			if (str_contains(strtoupper($value), '_FROM_FIRST_API') ||
+			    str_contains(strtoupper($value), '_FROM_PREVIOUS_API') ||
+			    str_contains(strtoupper($value), 'HOTEL_ID') && !is_numeric($value)) {
+
+				// محاولة استخراج ID من البيانات المجمعة
+				if (!empty($collectedData)) {
+					// إذا كانت البيانات المجمعة array of items
+					if (isset($collectedData[0]) && is_array($collectedData[0])) {
+						// أخذ أول عنصر (غالباً النتيجة الأكثر صلة)
+						if (isset($collectedData[0]['id'])) {
+							$params[$key] = (string) $collectedData[0]['id'];
+						}
+					}
+					// إذا كان العنصر الأول مباشرة
+					elseif (isset($collectedData['id'])) {
+						$params[$key] = (string) $collectedData['id'];
+					}
+				}
+			}
+		}
+
 		return $params;
 	}
 
 	protected function getLearningContext(string $userMessage): string
 	{
-		// نفس المنطق السابق للتعلم من المحادثات الناجحة
-		return ''; // اختصاراً هنا، لكن اترك الكود الأصلي الخاص بك
+		// جلب أمثلة من المحادثات الناجحة المشابهة
+		try {
+			$similarConversations = ChatbotConversation::where('was_helpful', true)
+				->where('user_message', 'LIKE', '%' . substr($userMessage, 0, 20) . '%')
+				->latest()
+				->limit(2)
+				->get(['user_message', 'bot_response', 'api_calls']);
+
+			if ($similarConversations->isEmpty()) {
+				return '';
+			}
+
+			$context = "\n\n## أمثلة من محادثات سابقة ناجحة:\n";
+			foreach ($similarConversations as $conv) {
+				$context .= "User: {$conv->user_message}\n";
+				$context .= "Bot Response: " . Str::limit($conv->bot_response, 80) . "\n";
+				if ($conv->api_calls) {
+					$context .= "API Calls Used: " . json_encode($conv->api_calls) . "\n";
+				}
+				$context .= "---\n";
+			}
+
+			return $context;
+		} catch (Exception $e) {
+			Log::warning('Failed to get learning context: ' . $e->getMessage());
+			return '';
+		}
 	}
 
 	protected function parseStructuredResponse(string $response): array
