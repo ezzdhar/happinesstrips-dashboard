@@ -214,6 +214,7 @@ class ChatbotService
 		return ['data' => null, 'data_type' => null];
 	}
 
+
 	protected function getStaticDataContext(): string
 	{
 		return Cache::remember('chatbot_static_context_v3', 3600, function () {
