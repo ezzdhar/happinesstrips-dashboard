@@ -27,7 +27,7 @@ class ChatbotService
 			$historyText = $this->formatHistoryForPrompt($conversationHistory);
 			$staticDataContext = $this->getStaticDataContext();
 
-			$systemPrompt = view('prompts.chatbot-system-v3')->render() . "\n\n" . $staticDataContext;
+			$systemPrompt = view('prompts.chatbot-system-v2')->render() . "\n\n" . $staticDataContext;
 
 			// إضافة التاريخ الحالي للبرومبت ليتمكن الـ AI من حساب "غداً" بدقة
 			$today = Carbon::now()->format('Y-m-d');
