@@ -223,6 +223,8 @@ class ChatbotService
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/categories', 'فئات الرحلات');
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/sub-categories', 'الفئات الفرعية');
 			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/hotel-types', 'أنواع الفنادق');
+			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/hotels', ' الفنادق');
+			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/trips', 'الرحلات');
 			return $context;
 		});
 	}
