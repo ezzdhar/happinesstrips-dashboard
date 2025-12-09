@@ -229,7 +229,6 @@ class ChatbotService
 		});
 	}
 
-
 	private function fetchAndFormatList(string $url, string $title): string
 	{
 		try {
