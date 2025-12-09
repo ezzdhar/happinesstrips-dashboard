@@ -19,39 +19,46 @@ class ChatbotController extends Controller
 	}
 
 	/**
-	 * Process chatbot message and return AI-generated response
+	 * معالجة رسالة الشات بوت
 	 */
 	public function chat(ChatbotMessageRequest $request): JsonResponse
 	{
 		$message = $request->input('message');
-		$conversationHistory = $request->input('conversation_history', []);
 
-		// Get chat_session from request (renamed from chat_session to avoid WAF blocking)
+		// استعادة الجلسة أو إنشاء واحدة جديدة
 		$chat_session = $request->input('chat_session');
+
+		// جلب تاريخ المحادثة إذا وجد
+		$conversationHistory = [];
 		if ($chat_session) {
-			$conversationHistory = $this->chatbotService->getConversationHistory($chat_session);
+			$conversationHistory = $this->chatbotService->getConversationHistoryForContext($chat_session);
 		}
 
-		// Process the message
+		// معالجة الرسالة
 		$result = $this->chatbotService->processMessage($message, $conversationHistory, $chat_session);
 
-		// Return simplified response with data field
+		// إرجاع الرد بصيغة JSON نظيفة للموبايل
 		return response()->json([
 			'success' => $result['success'],
 			'chat_session' => $result['chat_session'],
-			'message' => $result['message'],
-			'data' => $result['data'] ?? null,
-			'data_type' => $result['data_type'] ?? null,
-			'suggestions' => $result['suggestions'] ?? [],
+			'message' => $result['message'], // رسالة نصية قصيرة من البوت
+			'data' => $result['data'] ?? null, // البيانات الخام لعرضها كـ Cards في التطبيق
+			'data_type' => $result['data_type'] ?? null, // نوع البيانات (hotels, trips, etc)
+			'suggestions' => $result['suggestions'] ?? [], // اقتراحات أزرار
 		], $result['success'] ? 200 : 500);
 	}
 
 	/**
-	 * Submit feedback for a conversation
+	 * إرسال التقييم
 	 */
 	public function feedback(ChatbotFeedbackRequest $request): JsonResponse
 	{
-		$success = $this->chatbotService->submitFeedback($request->chat_session, $request->was_helpful, $request->feedback ?? null);
+		$success = $this->chatbotService->submitFeedback(
+			$request->chat_session,
+			$request->was_helpful,
+			$request->feedback ?? null
+		);
+
 		return response()->json([
 			'success' => $success,
 			'message' => $success ? 'شكراً على ملاحظاتك!' : 'فشل في حفظ الملاحظات',
@@ -59,17 +66,14 @@ class ChatbotController extends Controller
 	}
 
 	/**
-	 * Get conversation history for a session
+	 * جلب سجل المحادثة
 	 */
 	public function history(Request $request): JsonResponse
 	{
 		$chat_session = $request->input('chat_session');
 
 		if (!$chat_session) {
-			return response()->json([
-				'success' => false,
-				'message' => 'Chat session is required',
-			], 400);
+			return response()->json(['success' => false, 'message' => 'Chat session is required'], 400);
 		}
 
 		$history = $this->chatbotService->getConversationHistory($chat_session);
@@ -78,47 +82,17 @@ class ChatbotController extends Controller
 	}
 
 	/**
-	 * Get chatbot capabilities and available APIs
+	 * القدرات المتاحة (للتوثيق أو للفرونت إند)
 	 */
 	public function capabilities(): JsonResponse
 	{
 		return response()->json([
 			'success' => true,
 			'data' => [
-				'name' => 'Happiness Trips Chatbot',
-				'version' => '1.0',
-				'description' => 'مساعد ذكي لحجز الفنادق والرحلات السياحية',
-				'capabilities' => [
-					'البحث عن الفنادق والغرف',
-					'البحث عن الرحلات السياحية',
-					'حساب أسعار الحجز',
-					'عرض تفاصيل الفنادق والرحلات',
-					'الإجابة على الأسئلة العامة',
-				],
-				'available_apis' => [
-					'hotels' => [
-						'GET /api/v1/hotels',
-						'GET /api/v1/hotels/details/{hotel_id}',
-						'GET /api/v1/hotels/cheapest-room/{hotel_id}',
-					],
-					'rooms' => [
-						'GET /api/v1/hotels/rooms',
-						'GET /api/v1/hotels/rooms/{room_id}',
-						'GET /api/v1/hotels/rooms/calculate/booking-room/price/{room_id}',
-					],
-					'trips' => [
-						'GET /api/v1/trips',
-						'GET /api/v1/trips/{trip_id}',
-						'GET /api/v1/trips/calculate/booking-trip/price/{trip_id}',
-					],
-					'data' => [
-						'GET /api/v1/hotel-types',
-						'GET /api/v1/cities',
-						'GET /api/v1/categories',
-						'GET /api/v1/sub-categories',
-					],
-				],
-			],
+				'name' => 'Happiness Trips Assistant',
+				'version' => '2.0',
+				'features' => ['Hotel Search', 'Trip Search', 'Price Calculation', 'Smart Context'],
+			]
 		]);
 	}
 }
