@@ -34,13 +34,8 @@ class ChatbotService
 			$enhancedPrompt = $historyText . "\nتاريخ اليوم: $today\nالمستخدم: " . $userMessage;
 
 			// Pass 1: Planning
-			$response = Prism::text()
-				->using(Provider::Gemini, 'gemini-2.0-flash')
-				->withSystemPrompt($systemPrompt)
-				->withPrompt($enhancedPrompt)
-				->withMaxTokens(1000)
-				->usingTemperature(0.5)
-				->asText();
+			$response = Prism::text()->using(Provider::Gemini, 'gemini-2.0-flash')->withSystemPrompt($systemPrompt)->withPrompt($enhancedPrompt)
+				->withMaxTokens(1000)->usingTemperature(0.5)->asText();
 
 			$aiResponse = $response->text;
 			$structuredResponse = $this->parseStructuredResponse($aiResponse);
