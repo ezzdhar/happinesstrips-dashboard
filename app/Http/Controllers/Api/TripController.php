@@ -32,7 +32,7 @@ class TripController extends Controller
 			->when($request->duration_to, fn($q, $duration_to) => $q->durationTo($duration_to))
 			->when($request->rating, fn(Builder $query, $rating) => $query->orderBy('rating', $rating))
 			->when($request->price, function (Builder $query, $direction) use ($currency) {
-				return $query->orderByRaw("CAST(price->'$.$currency' AS DECIMAL(10,2)) $direction");
+				return $query->orderByRaw("CAST(JSON_UNQUOTE(JSON_EXTRACT(price, '$.{$currency}')) AS DECIMAL(10,2)) {$direction}");
 			})->paginate($request->per_page ?? 15);
 		return $this->responseOk(message: __('lang.trips'), data: TripSimpleResource::collection($trips), paginate: true);
 	}
