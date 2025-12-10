@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
-use Carbon\Carbon; // إضافة Carbon للتواريخ
+use Carbon\Carbon;
+
+// إضافة Carbon للتواريخ
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Facades\Prism;
 
@@ -33,9 +35,11 @@ class ChatbotService
 			$today = Carbon::now()->format('Y-m-d');
 			$enhancedPrompt = $historyText . "\nتاريخ اليوم: $today\nالمستخدم: " . $userMessage;
 
-			// Pass 1: Planning
+			$prism_provider = config('prism.prism_provider');
+			$prism_provider_model = config('prism.prism_provider_model');
+				// Pass 1: Planning
 			$response = Prism::text()
-				->using(Provider::Gemini, 'gemini-2.0-flash')
+				->using($prism_provider, $prism_provider_model)
 				->withSystemPrompt($systemPrompt)
 				->withPrompt($enhancedPrompt)
 				->withMaxTokens(1000)
@@ -298,13 +302,15 @@ class ChatbotService
 		];
 	}
 
-	public function submitFeedback($session, $helpful, $feedback) {
+	public function submitFeedback($session, $helpful, $feedback)
+	{
 		return ChatbotConversation::where('chat_session', $session)->latest()->first()?->update([
 			'was_helpful' => $helpful, 'feedback' => $feedback
 		]);
 	}
 
-	public function getConversationHistory(string $chat_session) {
+	public function getConversationHistory(string $chat_session)
+	{
 		return ChatbotConversation::where('chat_session', $chat_session)->latest()->limit(20)->get();
 	}
 }
