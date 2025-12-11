@@ -48,10 +48,7 @@ class FavoriteController extends Controller
 
 		$items = $modelClass::whereIn('id', $favoriteIds)->paginate(request()->query('per_page', 10));
 
-		return $this->responseOk(
-			message: __('lang.favorites'),
-			data: $resource::collection($items)
-		);
+		return $this->responseOk(message: __('lang.favorites'),data: $resource::collection($items),paginate: true);
 	}
 
 	public function toggleFavorite(ToggleFavoriteRequest $request)

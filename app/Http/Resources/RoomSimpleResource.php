@@ -15,6 +15,7 @@ class RoomSimpleResource extends JsonResource
 		return [
 			'id' => $this->id,
 			'name' => $this->name,
+			'is_featured' => $this->is_featured,
 			'adults_count' => $this->adults_count,
 			'children_count' => $this->children_count,
 			'price' => (float)$this->calculateBookingPrice(

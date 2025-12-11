@@ -892,4 +892,6 @@ return [
 	'trip_required' => 'الرحلة مطلوبة',
 	'check_in_must_be_on_or_after_trip_check_in' => 'يجب أن يكون تاريخ الوصول مساوي أو بعد تاريخ وصول الرحلة',
 	'rating_updated' => 'تم التقييم بنجاح',
+	'room_details' => 'تفاصيل الغرفة',
+	'categories' => 'التصنيفات',
 ];

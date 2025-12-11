@@ -10,6 +10,7 @@ use App\Http\Resources\RoomResource;
 use App\Http\Resources\RoomSimpleResource;
 use App\Models\Room;
 use App\Traits\ApiResponse;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -22,6 +23,7 @@ class RoomController extends Controller
 		$rooms = Room::query()
 			->filter($request->name)
 			->hotelId($request->hotel_id)
+			->when($request->is_featured, fn(Builder $query) => $query->where('is_featured', $request->is_featured))
 			->where('adults_count', (int)$request->adults_count)
 			->when($request->children_count, fn($q) => $q->where('children_count', $request->children_count))
 			->isAvailableRangeCovered()
