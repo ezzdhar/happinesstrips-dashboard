@@ -32,8 +32,7 @@ trait TripFilter
 	public function scopeNameFilter($query, $search = null)
 	{
 		return $query->when($search, function ($q) use ($search) {
-			$q->where('name->ar', 'like', "%{$search}%")
-				->orWhere('name->en', 'like', "%{$search}%");
+			$q->where('name->ar', 'like', "%{$search}%")->orWhere('name->en', 'like', "%{$search}%");
 		});
 	}
 
