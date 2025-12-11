@@ -892,4 +892,6 @@ return [
 	'trip_required' => 'Trip is required',
 	'check_in_must_be_on_or_after_trip_check_in' => 'Check-in must be on or after the trip start date',
 	'rating_updated' => 'Rating updated successfully',
+	'room_details' => 'Room Details',
+	'categories' => 'Categories',
 ];
