@@ -26,7 +26,7 @@
 								{{$amenity->name}}
 							</th>
 							<th class="text-center">
-								<x-icon :name="$amenity->icon" class="w-6 h-6 inline-block"/>
+								<i class="{{ $amenity->icon }} text-primary" style="font-size: 1.5rem;"></i>
 							</th>
 							<th class="text-center text-nowrap">{{formatDate($amenity->created_at, true) }}</th>
 							<td>

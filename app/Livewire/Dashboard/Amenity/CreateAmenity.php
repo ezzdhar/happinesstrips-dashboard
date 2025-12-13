@@ -15,6 +15,7 @@ class CreateAmenity extends Component
 
     public $icon;
 
+
     public function render()
     {
         return view('livewire.dashboard.amenity.create-amenity');
