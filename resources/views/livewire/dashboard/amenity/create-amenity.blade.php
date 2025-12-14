@@ -4,8 +4,14 @@
 		<div class="grid grid-cols-1 gap-3">
 			<x-input label="{{ __('lang.name').' ('.__('lang.ar').')' }}" wire:model="name_ar" placeholder="{{ __('lang.name').' ('.__('lang.ar').')' }}" icon="o-language"/>
 			<x-input label="{{ __('lang.name').' ('.__('lang.en').')' }}" wire:model="name_en" placeholder="{{ __('lang.name').' ('.__('lang.en').')' }}" icon="o-language"/>
-			<x-input label="{{ __('lang.icon') }}" wire:model="icon" placeholder="o-star" icon="o-sparkles" hint="{{__('lang.icon_hint')}}"/>
-		</div>
+			<x-icon-select
+					label="{{ __('lang.icon') }}"
+					wire:model.live="icon"
+					:value="$icon"
+					placeholder="{{ __('lang.select') }} {{ __('lang.icon') }}"
+					hint="{{ __('lang.icon_hint') }}"
+					required
+			/>		</div>
 		<x-slot:actions>
 			<x-button label="{{__('lang.cancel')}}" @click="$wire.modalAdd = false;$wire.resetData()" wire:loading.attr="disabled"/>
 			<x-button label="{{__('lang.save')}}" class="btn-primary" wire:click="saveAdd" wire:loading.attr="disabled" wire:target="saveAdd" spinner="saveAdd"/>
