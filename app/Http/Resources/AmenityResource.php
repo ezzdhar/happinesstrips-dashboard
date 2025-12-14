@@ -12,7 +12,7 @@ class AmenityResource extends JsonResource
 		return [
 			'id' => $this->id,
 			'name' => $this->name,
-			'icon' => $this->name,
+			'icon' => $this->icon,
 		];
 	}
 }
