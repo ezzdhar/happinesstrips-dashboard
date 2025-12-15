@@ -54,7 +54,8 @@ class RoomController extends Controller
         if (! $calculate_booking_price['success']) {
             return $this->responseError(message: $calculate_booking_price['error']);
         }
-
-        return $this->responseOk(message: __('lang.calculate_booking_room_price'), data: $calculate_booking_price);
+	    $room = new RoomResource(resource: $room);
+	    $data = array_merge($calculate_booking_price, ['room' => $room]);
+        return $this->responseOk(message: __('lang.calculate_booking_room_price'), data: $data);
     }
 }
