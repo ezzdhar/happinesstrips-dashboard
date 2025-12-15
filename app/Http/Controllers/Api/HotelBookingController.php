@@ -25,6 +25,7 @@ class HotelBookingController extends Controller
 			->when($request->is_special, fn(Builder $query, $is_special) => $query->where('is_special', 1))
 			->when($request->city_id, fn(Builder $query, $city) => $query->whereHas('bookingHotel.hotel', fn(Builder $q) => $q->where('city_id', $city)))
 			->when($request->booking_number, fn(Builder $query, $booking_number) => $query->where('booking_number', $booking_number))
+			->latest()
 			->paginate($request->per_page ?? 15);
 		return $this->responseOk(message: __('lang.my_booking'), data: BookingSimpleHotelResource::collection($bookings), paginate: true);
 	}

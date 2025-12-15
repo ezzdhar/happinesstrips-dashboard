@@ -30,6 +30,7 @@ class TripBookingController extends Controller
 			->when($request->main_category_id, fn(Builder $query, $main_category) => $query->whereHas('trip', fn(Builder $q) => $q->where('main_category_id', $main_category)))
 			->when($request->sub_category_id, fn(Builder $query, $sub_category) => $query->whereHas('trip', fn(Builder $q) => $q->where('sub_category_id', $sub_category)))
 			->when($request->booking_number, fn(Builder $query, $booking_number) => $query->where('booking_number', $booking_number))
+			->latest()
 			->paginate($request->per_page ?? 15);
 		return $this->responseOk(message: __('lang.my_booking'), data: BookingSimpleTripResource::collection($bookings), paginate: true);
 	}
