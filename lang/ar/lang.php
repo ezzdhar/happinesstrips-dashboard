@@ -387,6 +387,8 @@ return [
 	'fixed' => 'ثابتة',
 	'flexible' => 'مرنة',
 	'is_featured' => 'إضافة الي العروض',
+	'discount_percentage' => 'نسبة الخصم',
+	'discount_for_featured_items' => 'خصم للعناصر المميزة',
 	'program' => 'البرنامج',
 	'trip_information' => 'معلومات الرحلة',
 	'trip_details' => 'تفاصيل الرحلة',

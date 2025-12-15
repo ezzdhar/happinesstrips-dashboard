@@ -30,7 +30,10 @@
 							['id' => TripType::Fixed, 'name' => __('lang.fixed')],
 							['id' => TripType::Flexible, 'name' => __('lang.flexible')],
 						]"/>
-					<x-checkbox label="{{ __('lang.is_featured') }}" wire:model="is_featured" :checked="$is_featured ? true :false"/>
+					<x-checkbox label="{{ __('lang.is_featured') }}" wire:model.live="is_featured"/>
+					@if($is_featured)
+						<x-input type="number" step="0.01" min="0" max="100" label="{{ __('lang.discount_percentage') }}" wire:model="discount_percentage" placeholder="0.00" suffix="%" icon="o-tag"/>
+					@endif
 				</div>
 			</div>
 

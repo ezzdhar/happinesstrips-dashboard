@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('trips', function (Blueprint $table) {
+            $table->decimal('discount_percentage', 5, 2)->default(0)->after('is_featured')->comment('Discount percentage for featured trips');
+        });
+
+        Schema::table('rooms', function (Blueprint $table) {
+            $table->decimal('discount_percentage', 5, 2)->default(0)->after('is_featured')->comment('Discount percentage for featured rooms');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('trips', function (Blueprint $table) {
+            $table->dropColumn('discount_percentage');
+        });
+
+        Schema::table('rooms', function (Blueprint $table) {
+            $table->dropColumn('discount_percentage');
+        });
+    }
+};

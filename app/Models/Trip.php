@@ -15,7 +15,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Trip extends Model
 {
-	use HasFactory, HasTranslations, TripFilter;
+    use HasFactory, HasTranslations, TripFilter;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
@@ -28,26 +28,26 @@ class Trip extends Model
             'duration_from' => 'date',
             'duration_to' => 'date',
             'is_featured' => 'boolean',
+            'discount_percentage' => 'decimal:2',
             'status' => Status::class,
             'type' => TripType::class,
             'nights_count' => 'integer',
         ];
     }
 
-	public function favorites(): MorphMany
-	{
-		return $this->morphMany(Favorite::class, 'favoritable');
-	}
-
-
-	public function mainCategory(): BelongsTo
+    public function favorites(): MorphMany
     {
-        return $this->belongsTo(MainCategory::class)->withDefault(['name'=>null]);
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
+
+    public function mainCategory(): BelongsTo
+    {
+        return $this->belongsTo(MainCategory::class)->withDefault(['name' => null]);
     }
 
     public function subCategory(): BelongsTo
     {
-        return $this->belongsTo(SubCategory::class)->withDefault(['name'=>null]);
+        return $this->belongsTo(SubCategory::class)->withDefault(['name' => null]);
     }
 
     public function hotels(): BelongsToMany
@@ -65,21 +65,20 @@ class Trip extends Model
         return $this->morphMany(File::class, 'fileable');
     }
 
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class)->withDefault(['name' => null]);
+    }
 
-	public function city(): BelongsTo
-	{
-		return $this->belongsTo(City::class)->withDefault(['name'=>null]);
-	}
-	public function bookingRatings()
-	{
-		return $this->hasManyThrough(
-			BookingRating::class,
-			Booking::class,
-			'trip_id',     // foreign key on bookings
-			'booking_id',  // foreign key on booking_ratings
-			'id',          // local key on trips
-			'id'           // local key on bookings
-		);
-	}
-
+    public function bookingRatings()
+    {
+        return $this->hasManyThrough(
+            BookingRating::class,
+            Booking::class,
+            'trip_id',     // foreign key on bookings
+            'booking_id',  // foreign key on booking_ratings
+            'id',          // local key on trips
+            'id'           // local key on bookings
+        );
+    }
 }

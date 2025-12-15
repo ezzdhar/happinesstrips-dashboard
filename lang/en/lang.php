@@ -387,6 +387,8 @@ return [
 	'fixed' => 'Fixed',
 	'flexible' => 'Flexible',
 	'is_featured' => 'Add to Offers',
+	'discount_percentage' => 'Discount Percentage',
+	'discount_for_featured_items' => 'Discount for featured items',
 	'program' => 'Program',
 	'trip_information' => 'Trip Information',
 	'trip_details' => 'Trip Details',
