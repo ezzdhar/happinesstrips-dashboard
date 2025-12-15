@@ -103,7 +103,6 @@ Route::middleware('auth:sanctum')->group(function () {
 			Route::post('/create', 'createBooking');
 		});
 		Route::post('/rating', BookingRatingController::class);
-
 	});
 
 	// profile

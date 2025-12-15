@@ -36,7 +36,7 @@ class HotelResource extends JsonResource
             'image' => $this->files->map(function ($image) {
                 return FileService::get($image->path);
             }),
-            'cheapest_room_today' => $this->getCheapestRoomForToday($currency),
+            'cheapest_room' => $this->getCheapestRoomForToday($currency),
         ];
     }
 }

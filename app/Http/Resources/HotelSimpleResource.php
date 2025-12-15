@@ -18,7 +18,7 @@ class HotelSimpleResource extends JsonResource
 			'type' =>  $this->hotelTypes->pluck('name')->toArray(),
 			'rating' => (int) $this->rating,
 			'main_image' => FileService::get($this->files->first()->path),
-			'cheapest_room_today' => $this->getCheapestRoomForToday($currency),
+			'cheapest_room' => $this->getCheapestRoomForToday($currency),
 		];
 	}
 }
