@@ -55,11 +55,13 @@ class Hotel extends Model
 	 * الحصول على أرخص غرفة متاحة بناءً على فترة زمنية محددة ومعايير الحجز
 	 * Get the cheapest available room based on booking criteria.
 	 */
-	public function getCheapestRoomForPeriod(string $startDate, string $endDate, int $adultsCount, int $childrenCount = 0, string $currency = 'egp'): ?array
+	public function getCheapestRoomForPeriod(string $startDate, string $endDate, int $adultsCount, array $childrenAges = [], string $currency = 'egp'): ?array
 	{
 		$cheapestRoom = null;
 		$lowestPrice = null;
 		$cheapestCalculation = null;
+
+		$childrenCount = count($childrenAges);
 
 		// البحث عن الغرف المتاحة للمعايير المطلوبة
 		$availableRooms = $this->rooms()
@@ -69,12 +71,12 @@ class Hotel extends Model
 			->get();
 
 		foreach ($availableRooms as $room) {
-			// حساب السعر الإجمالي للغرفة
+			// حساب السعر الإجمالي للغرفة مع أعمار الأطفال
 			$calculation = $room->calculateBookingPrice(
 				$startDate,
 				$endDate,
 				$adultsCount,
-				[], // children_ages - فارغة لأننا نحسب السعر الأساسي فقط
+				$childrenAges,
 				$currency
 			);
 
@@ -101,6 +103,7 @@ class Hotel extends Model
 			'room_name' => $cheapestRoom->name,
 			'adults_count' => $cheapestRoom->adults_count,
 			'children_count' => $cheapestRoom->children_count,
+			'children_ages' => $childrenAges,
 			'start_date' => $startDate,
 			'end_date' => $endDate,
 			'nights_count' => $cheapestCalculation['nights_count'],

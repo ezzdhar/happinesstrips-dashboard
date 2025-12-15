@@ -15,7 +15,8 @@ class GetCheapestRoomRequest extends FormRequest
 			'start_date' => 'required|date|after_or_equal:today',
 			'end_date' => 'required|date|after:start_date',
 			'adults_count' => 'required|integer|min:1',
-			'children_count' => 'nullable|integer|min:0',
+			'children_ages' => 'nullable|array',
+			'children_ages.*' => 'integer|min:0|max:18',
 		];
 	}
 

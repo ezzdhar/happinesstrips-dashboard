@@ -50,7 +50,7 @@ class HotelController extends Controller
 			$request->start_date,
 			$request->end_date,
 			$request->adults_count,
-			$request->children_count ?? 0,
+			$request->children_ages ?? [],
 			$currency
 		);
 
