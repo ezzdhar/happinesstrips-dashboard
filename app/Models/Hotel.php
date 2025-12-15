@@ -83,7 +83,7 @@ class Hotel extends Model
 				continue;
 			}
 
-			$totalPrice = $calculation['grand_total'];
+			$totalPrice = $calculation['total_price'];
 
 			if ($lowestPrice === null || $totalPrice < $lowestPrice) {
 				$lowestPrice = $totalPrice;

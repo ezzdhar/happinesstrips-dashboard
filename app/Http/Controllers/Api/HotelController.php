@@ -62,10 +62,7 @@ class HotelController extends Controller
 		// إضافة بيانات الفندق للنتيجة
 		$hotelResource = new HotelWithCheapestRoomResource($hotel);
 		$result = array_merge($hotelResource->toArray($request), ['cheapest_room' => $cheapestRoomData]);
-		return $this->responseOk(
-			message: __('lang.hotel_details'),
-			data: $result
-		);
+		return $this->responseOk(message: __('lang.hotel_details'), data: $result);
 	}
 
 

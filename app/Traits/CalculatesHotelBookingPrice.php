@@ -99,7 +99,7 @@ trait CalculatesHotelBookingPrice
 
 			// Totals
 			'subtotal' => $adultsTotal + $childrenBreakdown['total'],
-			'grand_total' => $grandTotal,
+			'total_price' => $grandTotal,
 
 			// Daily breakdown
 			'daily_breakdown' => $dailyBreakdown['days'],

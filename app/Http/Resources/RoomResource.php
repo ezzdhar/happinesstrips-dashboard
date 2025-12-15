@@ -24,7 +24,8 @@ class RoomResource extends JsonResource
 				adultsCount: $request->adults_count,
 				childrenAges: $request->childrenAges ?? [],
 				currency: $currency
-			)['grand_total'],
+			)['total_price'],
+			'currency' => $currency,
 			'amenities' => AmenityResource::collection($this->whenLoaded('amenities')),
 			'main_image' => FileService::get($this->files->first()->path),
 			'image' => $this->files->map(function ($image) {
