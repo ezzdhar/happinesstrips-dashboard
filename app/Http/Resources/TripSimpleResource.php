@@ -23,8 +23,10 @@ class TripSimpleResource extends JsonResource
 			'duration_to' => $this->duration_to,
 			'rating' => (int)$this->rating,
 			'main_image' => FileService::get($this->files->first()->path),
-			'price' => $this->price[$currency] . __('lang.' . strtolower($currency)),
-			'is_featured' => $this->is_featured,
+			'currency' => $currency,
+			'is_featured' => $this->is_featured ? true : false,
+			'price' => (float) $this->price[$currency],
+//			'price_before_discount' =>   $this->price_before_discount[$currency],
 		];
 	}
 }

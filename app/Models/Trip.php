@@ -81,4 +81,15 @@ class Trip extends Model
             'id'           // local key on bookings
         );
     }
+	public function priceBeforeDiscountAttribute(): array
+	{
+		if ($this->discount_percentage > 0 && $this->is_featured) {
+			$priceBeforeDiscount = [];
+			foreach ($this->price as $currency => $amount) {
+				$priceBeforeDiscount[$currency] = round($amount + ($amount * ($this->discount_percentage / 100)), 2);
+			}
+			return $priceBeforeDiscount;
+		}
+		return $this->price;
+	}
 }
