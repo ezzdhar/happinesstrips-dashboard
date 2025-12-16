@@ -11,7 +11,7 @@ class HotelSimpleResource extends JsonResource
 	public function toArray(Request $request): array
 	{
 		$currency = $request->attributes->get('currency', 'egp');
-		$is_featured = $request->attributes->get('is_featured', false);
+		$is_featured = $request->get('is_featured', false);
 		return [
 			'id' => $this->id,
 			'city' => $this->city->name,

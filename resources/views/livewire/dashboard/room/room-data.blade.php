@@ -57,13 +57,13 @@
 							<th class="text-center text-nowrap">
 								<x-badge :value="$room->status->title()" class="bg-{{$room->status->color()}}"/>
 							</th>
-							<div class="text-center">
+							<th class="text-center">
 								@if($room->is_featured)
-									<x-badge :value="{{__('lang.yes')}}" class="bg-success"/>
+									<x-badge :value="__('lang.yes')" class="bg-green-500"/>
 								@else
-									<x-badge :value="{{__('lang.no')}}" class="bg-error"/>
+									<x-badge :value="__('lang.no')" class="bg-red-500"/>
 								@endif
-							</div>
+							</th>
 							<th class="text-center text-nowrap">{{formatDate($room->created_at, true) }}</th>
 							<td>
 								<div class="flex gap-2 justify-center">
