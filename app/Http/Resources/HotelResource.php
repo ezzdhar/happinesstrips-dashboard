@@ -13,7 +13,7 @@ class HotelResource extends JsonResource
     public function toArray(Request $request): array
     {
 	    $currency = $request->attributes->get('currency', 'egp');
-
+	    $is_featured = $request->attributes->get('is_featured', false);
         return [
             'id' => $this->id,
             'city' => $this->city->name,
@@ -36,7 +36,7 @@ class HotelResource extends JsonResource
             'image' => $this->files->map(function ($image) {
                 return FileService::get($image->path);
             }),
-            'cheapest_room' => $this->getCheapestRoomForToday($currency),
+            'cheapest_room' => $this->getCheapestRoomForToday($currency,$is_featured),
         ];
     }
 }

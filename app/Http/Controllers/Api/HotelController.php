@@ -15,52 +15,58 @@ use Illuminate\Http\Request;
 
 class HotelController extends Controller
 {
-    use ApiResponse;
+	use ApiResponse;
 
-    public function hotels(Request $request)
-    {
-        $hotels = Hotel::status(Status::Active)
-            ->when($request->name, fn (Builder $query) => $query->filter($request->name))
-            ->when($request->city_id, fn (Builder $query) => $query->where('city_id', $request->city_id))
-            ->when($request->rating, fn (Builder $query) => $query->orderBy('rating', $request->rating))
-            ->when($request->hotel_type_id, fn (Builder $query) => $query->whereHas('hotelTypes', fn (Builder $q) => $q->where('hotel_type_id', $request->hotel_type_id)))
-            ->when($request->adults_count, function ($q) use ($request) {
-                $q->whereHas('rooms', fn (Builder $q) => $q->where('adults_count', $request->adults_count)
-                    ->when($request->children_count, function ($q) use ($request) {
-                        $q->where('children_count', $request->children_count);
-                    }));
-            })->paginate($request->per_page ?? 15);
+	public function hotels(Request $request)
+	{
+		$hotels = Hotel::status(Status::Active)
+			->when($request->name, fn(Builder $query) => $query->filter($request->name))
+			->when($request->city_id, fn(Builder $query) => $query->where('city_id', $request->city_id))
+			->when($request->rating, fn(Builder $query) => $query->orderBy('rating', $request->rating))
+			->when($request->hotel_type_id, fn(Builder $query) => $query->whereHas('hotelTypes', fn(Builder $q) => $q->where('hotel_type_id', $request->hotel_type_id)))
+			->when($request->adults_count, function ($q) use ($request) {
+				$q->whereHas('rooms', fn(Builder $q) => $q->where('adults_count', $request->adults_count)
+					->when($request->children_count, function ($q) use ($request) {
+						$q->where('children_count', $request->children_count);
+					}));
+			})->when($request->is_featured, function (Builder $query) use ($request) {
+				$query->whereHas('rooms', function ($q) use ($request) {
+					$isFeatured = filter_var($request->is_featured, FILTER_VALIDATE_BOOLEAN);
+					return $q->where('is_featured', $isFeatured ? 1 : 0);
+				});
+			})->paginate($request->per_page ?? 15);
 
-        return $this->responseOk(message: __('lang.hotel'), data: HotelSimpleResource::collection($hotels), paginate: true);
-    }
+		return $this->responseOk(message: __('lang.hotel'), data: HotelSimpleResource::collection($hotels), paginate: true);
+	}
 
-    public function hotelDetails(Hotel $hotel)
-    {
-        return $this->responseOk(message: __('lang.hotel_details'), data: new HotelResource($hotel));
-    }
+	public function hotelDetails(Hotel $hotel)
+	{
+		return $this->responseOk(message: __('lang.hotel_details'), data: new HotelResource($hotel));
+	}
 
-    public function cheapestRoom(GetCheapestRoomRequest $request, Hotel $hotel)
-    {
-        $currency = $request->attributes->get('currency', 'egp');
+	public function cheapestRoom(GetCheapestRoomRequest $request, Hotel $hotel)
+	{
+		$currency = $request->attributes->get('currency', 'egp');
+		$is_featured = $request->attributes->get('is_featured', false);
 
-        // الحصول على أرخص غرفة بناءً على المعايير المحددة
-        $cheapestRoomData = $hotel->getCheapestRoomForPeriod(
-            $request->start_date,
-            $request->end_date,
-            $request->adults_count,
-            $request->children_ages ?? [],
-            $currency
-        );
+		// الحصول على أرخص غرفة بناءً على المعايير المحددة
+		$cheapestRoomData = $hotel->getCheapestRoomForPeriod(
+			$request->start_date,
+			$request->end_date,
+			$request->adults_count,
+			$request->children_ages ?? [],
+			$currency
+		);
 
-        if ($cheapestRoomData === null) {
-            return $this->responseOk(message: __('lang.no_available_rooms'));
+		if ($cheapestRoomData === null) {
+			return $this->responseOk(message: __('lang.no_available_rooms'));
 
-        }
+		}
 
-        // إضافة بيانات الفندق للنتيجة
-        $hotelResource = new HotelWithCheapestRoomResource($hotel);
-        $result = array_merge($hotelResource->toArray($request), ['cheapest_room' => $cheapestRoomData]);
+		// إضافة بيانات الفندق للنتيجة
+		$hotelResource = new HotelWithCheapestRoomResource($hotel);
+		$result = array_merge($hotelResource->toArray($request), ['cheapest_room' => $cheapestRoomData]);
 
-        return $this->responseOk(message: __('lang.hotel_details'), data: $result);
-    }
+		return $this->responseOk(message: __('lang.hotel_details'), data: $result);
+	}
 }

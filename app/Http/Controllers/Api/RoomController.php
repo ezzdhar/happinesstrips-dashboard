@@ -24,7 +24,6 @@ class RoomController extends Controller
             ->hotelId($request->hotel_id)
             ->when($request->is_featured, function (Builder $query) use ($request) {
                 $isFeatured = filter_var($request->is_featured, FILTER_VALIDATE_BOOLEAN);
-
                 return $query->where('is_featured', $isFeatured ? 1 : 0);
             })
             ->where('adults_count', (int) $request->adults_count)
