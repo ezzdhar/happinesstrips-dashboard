@@ -226,7 +226,7 @@
 							{{-- الإجمالي --}}
 							<div class="flex justify-between items-center text-xl font-bold">
 								<span>{{ __('lang.grand_total') }}</span>
-								<span class="text-primary">{{ number_format($pricing_result['grand_total'], 2) }} {{ $pricing_result['currency'] }}</span>
+								<span class="text-primary">{{ number_format($pricing_result['total_price'], 2) }} {{ $pricing_result['currency'] }}</span>
 							</div>
 						</div>
 					</div>

@@ -16,19 +16,15 @@ class RoomSimpleResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'is_featured' => $this->is_featured ? true : false,
             'adults_count' => $this->adults_count,
             'children_count' => $this->children_count,
-            'price' => (float) $this->calculateBookingPrice(
-                checkIn: Carbon::parse($request->start_date),
-                checkOut: Carbon::parse($request->end_date),
-                adultsCount: $request->adults_count,
-                childrenAges: $request->childrenAges ?? [],
-                currency: $currency
-            )['total_price'],
             'currency' => $currency,
             'amenities' => AmenityResource::collection($this->whenLoaded('amenities')),
             'main_image' => FileService::get($this->files->first()->path),
+	        'is_featured' => $this->is_featured ? true : false,
+	        'price' => $this->price,
+	        'price_before_discount' => (float) $this->price_before_discount,
+	        'discount_percentage' =>(float) $this->discount_percentage,
         ];
     }
 }

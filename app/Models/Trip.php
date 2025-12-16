@@ -81,15 +81,23 @@ class Trip extends Model
             'id'           // local key on bookings
         );
     }
-	public function priceBeforeDiscountAttribute(): array
-	{
-		if ($this->discount_percentage > 0 && $this->is_featured) {
-			$priceBeforeDiscount = [];
-			foreach ($this->price as $currency => $amount) {
-				$priceBeforeDiscount[$currency] = round($amount + ($amount * ($this->discount_percentage / 100)), 2);
-			}
-			return $priceBeforeDiscount;
-		}
-		return $this->price;
-	}
+
+    /**
+     * Calculate price before discount for featured trips
+     * Returns the original price before applying discount_percentage
+     */
+    public function getPriceBeforeDiscountAttribute(): ?array
+    {
+        if (!$this->is_featured || $this->discount_percentage <= 0) {
+            return $this->price;
+        }
+
+        $priceBeforeDiscount = [];
+        foreach ($this->price as $currency => $amount) {
+            $originalPrice = $amount + ($amount * ($this->discount_percentage / 100));
+            $priceBeforeDiscount[$currency] = round($originalPrice, 2);
+        }
+
+        return $priceBeforeDiscount;
+    }
 }
