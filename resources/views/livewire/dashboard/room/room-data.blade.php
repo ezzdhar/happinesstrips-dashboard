@@ -32,6 +32,7 @@
 						<th class="text-center">{{__('lang.children_count')}}</th>
 {{--						<th class="text-center">{{__('lang.amenities')}}</th>--}}
 						<th class="text-center">{{__('lang.status')}}</th>
+						<th class="text-center">{{__('lang.is_featured')}}</th>
 						<th class="text-center">{{__('lang.created_at')}}</th>
 						<th class="text-center">{{__('lang.action')}}</th>
 					</tr>
@@ -56,6 +57,13 @@
 							<th class="text-center text-nowrap">
 								<x-badge :value="$room->status->title()" class="bg-{{$room->status->color()}}"/>
 							</th>
+							<div class="text-center">
+								@if($room->is_featured)
+									<x-badge :value="{{__('lang.yes')}}" class="bg-success"/>
+								@else
+									<x-badge :value="{{__('lang.no')}}" class="bg-error"/>
+								@endif
+							</div>
 							<th class="text-center text-nowrap">{{formatDate($room->created_at, true) }}</th>
 							<td>
 								<div class="flex gap-2 justify-center">
