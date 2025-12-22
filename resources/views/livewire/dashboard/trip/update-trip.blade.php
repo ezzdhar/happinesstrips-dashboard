@@ -114,18 +114,18 @@
 
 			{{-- Current Images Section --}}
 			@if($trip->files->count() > 0)
-				<div class="border-b pb-4">
-					<h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">
-						<x-icon name="o-photo" class="w-5 h-5 inline"/> {{ __('lang.current_images') }}
-					</h3>
-					<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+				{{-- Current Images --}}
+				<div class="mb-8">
+					<label class="block text-sm font-medium mb-2">{{__('lang.current_images')}}</label>
+					<div class="flex gap-2 flex-wrap">
 						@foreach($trip->files as $file)
-							<div class="relative group">
-								<img src="{{ FileService::get($file->path) }}" alt="Trip Image" class="w-full h-32 object-cover rounded-lg">
-								<button type="button" wire:click="deleteSweetAlert({{$file->id}})"
-								        class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-									<x-icon name="o-trash" class="w-4 h-4"/>
-								</button>
+							<div class="relative mb-4">
+								<img src="{{$file->path ? FileService::get($file->path) : null}}" alt="" class="w-24 h-24 object-cover rounded">
+								<x-button icon="o-trash" size="w-16 h-16" class="object-cover rounded btn-sm absolute top-1 right-1 bg-red-500 text-white hover:bg-red-600 mt-2"
+								          deleteLabel="{{__('lang.delete_image')}}" wire:click="delete({{$file->id}})"
+								          wire:loading.attr="disabled" wire:target="delete({{$file->id}})" spinner="delete({{$file->id}})"
+								          wire:confirm="{{__('lang.confirm_delete', ['attribute' => __('lang.image')])}}"
+								/>
 							</div>
 						@endforeach
 					</div>

@@ -204,7 +204,7 @@ class UpdateRoom extends Component
 		if ($file) {
 			FileService::delete($file->path);
 			$file->delete();
-			$this->hotel->refresh();
+			$this->room->refresh();
 			flash()->success(__('lang.deleted_successfully', ['attribute' => __('lang.image')]));
 		}
 	}
