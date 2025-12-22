@@ -4,6 +4,7 @@ namespace App\Livewire\Dashboard\Room;
 
 use App\Enums\Status;
 use App\Models\Amenity;
+use App\Models\File;
 use App\Models\Hotel;
 use App\Models\Room;
 use App\Services\FileService;
@@ -196,4 +197,15 @@ class UpdateRoom extends Component
         unset($this->price_periods[$index]);
         $this->price_periods = array_values($this->price_periods);
     }
+
+	public function delete($id): void
+	{
+		$file = File::find($id);
+		if ($file) {
+			FileService::delete($file->path);
+			$file->delete();
+			$this->hotel->refresh();
+			flash()->success(__('lang.deleted_successfully', ['attribute' => __('lang.image')]));
+		}
+	}
 }

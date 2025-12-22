@@ -73,15 +73,18 @@
 			</div>
 
 			@if($room->files->isNotEmpty())
-				<div class="mt-4">
-					<h4 class="font-semibold mb-2">{{ __('lang.current_images') }}</h4>
-					<div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+				<div class="mb-4">
+					<label class="block text-sm font-medium mb-2">{{__('lang.current_images')}}</label>
+					<div class="flex gap-2 flex-wrap">
 						@foreach($room->files as $file)
-							<div class="relative">
-								<img src="{{FileService::get($file->path)}}" alt="Room image" class="w-full h-32 object-cover rounded">
-								<button type="button" wire:click="deleteImage({{$file->id}})" class="absolute top-1 right-1 btn btn-xs btn-error">
-									<x-icon name="o-trash" class="w-4 h-4"/>
-								</button>
+							<div class="relative mb-4">
+								<img src="{{$file->path ? FileService::get($file->path) : null}}" alt="" class="w-24 h-24 object-cover rounded">
+								<x-button icon="o-trash" size="w-16 h-16"
+								          class="object-cover rounded btn-sm absolute top-1 right-1 bg-red-500 text-white hover:bg-red-600 mt-2"
+								          deleteLabel="{{__('lang.delete_image')}}" wire:click="delete({{$file->id}})"
+								          wire:loading.attr="disabled" wire:target="delete({{$file->id}})" spinner="delete({{$file->id}})"
+								          wire:confirm="{{__('lang.confirm_delete', ['attribute' => __('lang.image')])}}"
+								/>
 							</div>
 						@endforeach
 					</div>
