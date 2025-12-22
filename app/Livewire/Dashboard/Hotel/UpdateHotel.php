@@ -239,8 +239,8 @@ class UpdateHotel extends Component
     public function delete($id): void
     {
         $file = File::find($id);
-        if ($file && $file->fileable_id === $this->hotel->id) {
-            FileService::delete($file->path);
+        if ($file) {
+	        FileService::delete($file->path);
             $file->delete();
             $this->hotel->refresh();
             flash()->success(__('lang.deleted_successfully', ['attribute' => __('lang.image')]));
