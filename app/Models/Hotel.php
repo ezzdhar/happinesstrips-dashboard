@@ -72,8 +72,7 @@ class Hotel extends Model
 			->when($is_featured, function (Builder $query) use ($is_featured) {
 				$isFeatured = filter_var($is_featured, FILTER_VALIDATE_BOOLEAN);
 				return $query->where('is_featured', $isFeatured ? 1 : 0);
-			})
-			->get();
+			})->get();
 
 		foreach ($availableRooms as $room) {
 			// حساب السعر الإجمالي للغرفة مع أعمار الأطفال
@@ -130,7 +129,9 @@ class Hotel extends Model
 		$cheapestRoom = null;
 		$lowestPrice = null;
 
-		$rooms = $this->rooms()->where('status', Status::Active)->when($is_featured, function (Builder $query) use ($is_featured) {
+		$rooms = $this->rooms()
+			->where('status', Status::Active)
+			->when($is_featured, function (Builder $query) use ($is_featured) {
 			$isFeatured = filter_var($is_featured, FILTER_VALIDATE_BOOLEAN);
 			return $query->where('is_featured', $isFeatured ? 1 : 0);
 		})->get();
