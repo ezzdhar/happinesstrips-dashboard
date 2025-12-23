@@ -82,6 +82,8 @@ trait CalculatesHotelBookingPrice
 			'room_name' => $this->name,
 			'hotel_id' => $hotel->id,
 			'hotel_name' => $hotel->name,
+			'city' => $hotel->city->name,
+			'rating' => (int) $hotel->rating,
 			'check_in' => $startDate->format('Y-m-d'),
 			'check_out' => $endDate->format('Y-m-d'),
 			'nights_count' => (int)$nightsCount,
