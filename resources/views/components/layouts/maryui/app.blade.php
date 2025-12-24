@@ -1,6 +1,6 @@
 @php use App\Services\FileService; @endphp
 		<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark" data-theme="dark" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="light" data-theme="light" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 @include('partials.head')
 
 {{--<body class="min-h-screen font-sans antialiased bg-base-200">--}}
