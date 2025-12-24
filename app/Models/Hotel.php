@@ -15,237 +15,249 @@ use Spatie\Translatable\HasTranslations;
 
 class Hotel extends Model
 {
-	use HasFactory, HasTranslations;
+    use HasFactory, HasTranslations;
 
-	protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
+    protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
-	public array $translatable = ['name', 'address', 'description', 'facilities'];
+    public array $translatable = ['name', 'address', 'description', 'facilities'];
 
-	protected function casts(): array
-	{
-		return [
-			'status' => Status::class,
-			'rating' => 'integer',
-			'latitude' => 'decimal:7',
-			'longitude' => 'decimal:7',
-			'first_child_price_percentage' => 'decimal:2',
-			'second_child_price_percentage' => 'decimal:2',
-			'third_child_price_percentage' => 'decimal:2',
-			'additional_child_price_percentage' => 'decimal:2',
-			'free_child_age' => 'integer',
-			'adult_age' => 'integer',
-		];
-	}
+    protected function casts(): array
+    {
+        return [
+            'status' => Status::class,
+            'rating' => 'integer',
+            'latitude' => 'decimal:7',
+            'longitude' => 'decimal:7',
+            'first_child_price_percentage' => 'decimal:2',
+            'second_child_price_percentage' => 'decimal:2',
+            'third_child_price_percentage' => 'decimal:2',
+            'additional_child_price_percentage' => 'decimal:2',
+            'free_child_age' => 'integer',
+            'adult_age' => 'integer',
+        ];
+    }
 
-	public function user(): BelongsTo
-	{
-		return $this->belongsTo(User::class, 'user_id')->withDefault(['name' => null]);
-	}
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id')->withDefault(['name' => null]);
+    }
 
-	public function city(): BelongsTo
-	{
-		return $this->belongsTo(City::class, 'city_id')->withDefault(['name' => null]);
-	}
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class, 'city_id')->withDefault(['name' => null]);
+    }
 
-	public function rooms(): HasMany
-	{
-		return $this->hasMany(Room::class, 'hotel_id');
-	}
+    public function rooms(): HasMany
+    {
+        return $this->hasMany(Room::class, 'hotel_id');
+    }
 
-	/**
-	 * الحصول على أرخص غرفة متاحة بناءً على فترة زمنية محددة ومعايير الحجز
-	 * Get the cheapest available room based on booking criteria.
-	 */
-	public function getCheapestRoomForPeriod(string $startDate, string $endDate, int $adultsCount, array $childrenAges = [], string $currency = 'egp', $is_featured = false): ?array
-	{
-		$cheapestRoom = null;
-		$lowestPrice = null;
-		$cheapestCalculation = null;
+    /**
+     * الحصول على أرخص غرفة متاحة بناءً على فترة زمنية محددة ومعايير الحجز
+     * Get the cheapest available room based on booking criteria.
+     */
+    public function getCheapestRoomForPeriod(string $startDate, string $endDate, int $adultsCount, array $childrenAges = [], string $currency = 'egp', $is_featured = false): ?array
+    {
+        $cheapestRoom = null;
+        $lowestPrice = null;
+        $cheapestCalculation = null;
 
-		$childrenCount = count($childrenAges);
+        $childrenCount = count($childrenAges);
 
-		// البحث عن الغرف المتاحة للمعايير المطلوبة
-		$availableRooms = $this->rooms()
-			->where('status', Status::Active)
-			->where('adults_count', '>=', $adultsCount)
-			->when($childrenCount > 0, fn($q) => $q->where('children_count', '>=', $childrenCount))
-			->when($is_featured, function (Builder $query) use ($is_featured) {
-				$isFeatured = filter_var($is_featured, FILTER_VALIDATE_BOOLEAN);
-				return $query->where('is_featured', $isFeatured ? 1 : 0);
-			})->get();
+        // البحث عن الغرف المتاحة للمعايير المطلوبة
+        $availableRooms = $this->rooms()
+            ->where('status', Status::Active)
+            ->where('adults_count', '>=', $adultsCount)
+            ->when($childrenCount > 0, fn ($q) => $q->where('children_count', '>=', $childrenCount))
+            ->when($is_featured, function (Builder $query) use ($is_featured) {
+                $isFeatured = filter_var($is_featured, FILTER_VALIDATE_BOOLEAN);
 
-		foreach ($availableRooms as $room) {
-			// حساب السعر الإجمالي للغرفة مع أعمار الأطفال
-			$calculation = $room->calculateBookingPrice(
-				$startDate,
-				$endDate,
-				$adultsCount,
-				$childrenAges,
-				$currency
-			);
+                return $query->where('is_featured', $isFeatured ? 1 : 0);
+            })->get();
 
-			// تخطي الغرف غير المتاحة أو التي فشل حساب سعرها
-			if (!isset($calculation['success']) || !$calculation['success']) {
-				continue;
-			}
+        foreach ($availableRooms as $room) {
+            // حساب السعر الإجمالي للغرفة مع أعمار الأطفال
+            $calculation = $room->calculateBookingPrice(
+                $startDate,
+                $endDate,
+                $adultsCount,
+                $childrenAges,
+                $currency
+            );
 
-			$totalPrice = $calculation['total_price'];
+            // تخطي الغرف غير المتاحة أو التي فشل حساب سعرها
+            if (! isset($calculation['success']) || ! $calculation['success']) {
+                continue;
+            }
 
-			if ($lowestPrice === null || $totalPrice < $lowestPrice) {
-				$lowestPrice = $totalPrice;
-				$cheapestRoom = $room;
-				$cheapestCalculation = $calculation;
-			}
-		}
+            $totalPrice = $calculation['total_price'];
 
-		if ($cheapestRoom === null || $cheapestCalculation === null) {
-			return null;
-		}
+            if ($lowestPrice === null || $totalPrice < $lowestPrice) {
+                $lowestPrice = $totalPrice;
+                $cheapestRoom = $room;
+                $cheapestCalculation = $calculation;
+            }
+        }
 
-		return [
-			'room_id' => $cheapestRoom->id,
-			'room_name' => $cheapestRoom->name,
-			'adults_count' => $cheapestRoom->adults_count,
-			'children_count' => $cheapestRoom->children_count,
-			'start_date' => $startDate,
-			'end_date' => $endDate,
-			'nights_count' => $cheapestCalculation['nights_count'],
-			'price_per_night' => $lowestPrice / $cheapestCalculation['nights_count'],
-			'total_price' => $lowestPrice,
-			'currency' => strtoupper($currency),
-			//			'calculation_details' => $cheapestCalculation,
-		];
-	}
+        if ($cheapestRoom === null || $cheapestCalculation === null) {
+            return null;
+        }
 
-	/**
-	 * الحصول على أرخص غرفة متاحة في الفندق بناءً على سعر اليوم الحالي
-	 * تستخدم لعرض أقل سعر متاح في الفندق اليوم مع بيانات الغرفة
-	 *
-	 * Get the cheapest available room based on today's price.
-	 */
-	public function getCheapestRoomForToday(string $currency = 'egp', $is_featured = false): ?array
-	{
-		$today = now();
-		$cheapestRoom = null;
-		$lowestPrice = null;
+        return [
+            'room_id' => $cheapestRoom->id,
+            'room_name' => $cheapestRoom->name,
+            'adults_count' => $cheapestRoom->adults_count,
+            'children_count' => $cheapestRoom->children_count,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'nights_count' => $cheapestCalculation['nights_count'],
+            'price_per_night' => $lowestPrice / $cheapestCalculation['nights_count'],
+            'total_price' => $lowestPrice,
+            'currency' => strtoupper($currency),
+            //			'calculation_details' => $cheapestCalculation,
+        ];
+    }
 
-		$rooms = $this->rooms()
-			->where('status', Status::Active)
-			->when($is_featured, function (Builder $query) use ($is_featured) {
-			$isFeatured = filter_var($is_featured, FILTER_VALIDATE_BOOLEAN);
-			return $query->where('is_featured', $isFeatured ? 1 : 0);
-		})->get();
-		foreach ($rooms as $room) {
-			$todayPrice = $room->priceForDate($today, $currency);
+    /**
+     * الحصول على أرخص غرفة متاحة في الفندق بناءً على سعر اليوم الحالي
+     * تستخدم لعرض أقل سعر متاح في الفندق اليوم مع بيانات الغرفة
+     *
+     * Get the cheapest available room based on today's price.
+     */
+    public function getCheapestRoomForToday(string $currency = 'egp', $is_featured = false): ?array
+    {
+        $today = now();
+        $cheapestRoom = null;
+        $lowestPrice = null;
 
-			if ($todayPrice === null) {
-				continue;
-			}
+        $rooms = $this->rooms()->where('status', Status::Active)->when($is_featured, function (Builder $query) use ($is_featured) {
+            $isFeatured = filter_var($is_featured, FILTER_VALIDATE_BOOLEAN);
 
-			if ($lowestPrice === null || $todayPrice < $lowestPrice) {
-				$lowestPrice = $todayPrice;
-				$cheapestRoom = $room;
-			}
-		}
+            return $query->where('is_featured', $isFeatured ? 1 : 0);
+        })->get();
+        foreach ($rooms as $room) {
+            $todayPrice = $room->priceForDate($today, $currency);
+            if ($todayPrice === null) {
+                continue;
+            }
+            if ($lowestPrice === null || $todayPrice < $lowestPrice) {
+                $lowestPrice = $todayPrice;
+                $cheapestRoom = $room;
+            }
+        }
 
-		if ($cheapestRoom === null) {
-			return [
-				'room_id' => null,
-				'room_name' => null,
-				'adults_count' => null,
-				'children_count' => null,
-				'price_period_start' => null,
-				'price_period_end' => null,
-				'price_per_night' => null,
-				'currency' => strtoupper($currency),
-				'start_date' => null,
-				'end_date' => null,
-			];
-		}
+        if ($cheapestRoom === null) {
+            return [
+                'room_id' => null,
+                'room_name' => null,
+                'adults_count' => null,
+                'children_count' => null,
+                'price_period_start' => null,
+                'price_period_end' => null,
+                'price_per_night' => null,
+                'currency' => strtoupper($currency),
+                'start_date' => null,
+                'end_date' => null,
+                'price_before_discount' => null,
+                'discount_percentage' => null,
+            ];
+        }
 
-		$currentPeriod = $cheapestRoom->findPricePeriodForDate($today);
+        $currentPeriod = $cheapestRoom->findPricePeriodForDate($today);
 
-		if ($currentPeriod === null) {
-			return null;
-		}
+        if ($currentPeriod === null) {
+            return null;
+        }
 
-		// نحسب بكرا ونتأكد إنه جوّه الفترة
-		$periodStart = isset($currentPeriod['start_date'])
-			? Carbon::parse($currentPeriod['start_date'])
-			: null;
+        // نحسب بكرا ونتأكد إنه جوّه الفترة
+        $periodStart = isset($currentPeriod['start_date'])
+            ? Carbon::parse($currentPeriod['start_date'])
+            : null;
 
-		$periodEnd = isset($currentPeriod['end_date'])
-			? Carbon::parse($currentPeriod['end_date'])
-			: null;
+        $periodEnd = isset($currentPeriod['end_date'])
+            ? Carbon::parse($currentPeriod['end_date'])
+            : null;
 
-		$nextDateInPeriod = null;
+        $nextDateInPeriod = null;
 
-		if ($periodStart && $periodEnd) {
-			$tomorrow = $today->copy()->addDay();
+        if ($periodStart && $periodEnd) {
+            $tomorrow = $today->copy()->addDay();
 
-			if ($tomorrow->betweenIncluded($periodStart, $periodEnd)) {
-				$nextDateInPeriod = $tomorrow->toDateString(); // 2000-11-16
-			}
-		}
+            if ($tomorrow->betweenIncluded($periodStart, $periodEnd)) {
+                $nextDateInPeriod = $tomorrow->toDateString(); // 2000-11-16
+            }
+        }
 
-		return [
-			'room_id' => $cheapestRoom->id,
-			'room_name' => $cheapestRoom->name,
-			'adults_count' => $cheapestRoom->adults_count,
-			'children_count' => $cheapestRoom->children_count,
-			'start_date' => $nextDateInPeriod,
-			'end_date' => Carbon::parse($nextDateInPeriod)->addDay()->toDateString(),
-			'price_period_start' => $currentPeriod['start_date'] ?? null,
-			'price_period_end' => $currentPeriod['end_date'] ?? null,
-			'price_per_night' => $lowestPrice,
-			'currency' => strtoupper($currency),
-		];
-	}
+        // حساب السعر قبل الخصم ونسبة الخصم
+        $priceBeforeDiscount = $lowestPrice;
+        $discountPercentage = 0;
 
-	public function favorites(): MorphMany
-	{
-		return $this->morphMany(Favorite::class, 'favoritable');
-	}
+        if ($cheapestRoom->is_featured && $cheapestRoom->discount_percentage > 0) {
+            // السعر الحالي هو بعد الخصم، نحسب السعر الأصلي
+            $priceBeforeDiscount = $lowestPrice + ($lowestPrice * ($cheapestRoom->discount_percentage / 100));
+            $discountPercentage = $cheapestRoom->discount_percentage;
+        }
 
-	public function trips(): BelongsToMany
-	{
-		return $this->belongsToMany(Trip::class, 'hotel_trip');
-	}
+        return [
+            'room_id' => $cheapestRoom->id,
+            'room_name' => $cheapestRoom->name,
+            'adults_count' => $cheapestRoom->adults_count,
+            'children_count' => $cheapestRoom->children_count,
+            'start_date' => $nextDateInPeriod,
+            'end_date' => Carbon::parse($nextDateInPeriod)->addDay()->toDateString(),
+            'price_period_start' => $currentPeriod['start_date'] ?? null,
+            'price_period_end' => $currentPeriod['end_date'] ?? null,
+            'currency' => strtoupper($currency),
+            'price_per_night' => $lowestPrice,
+            'price_before_discount' => (float) round($priceBeforeDiscount, 2),
+            'discount_percentage' => (float) $discountPercentage,
+        ];
+    }
 
-	public function hotelTypes(): BelongsToMany
-	{
-		return $this->belongsToMany(HotelType::class, 'hotel_hotel_type', 'hotel_id', 'hotel_type_id');
-	}
+    public function favorites(): MorphMany
+    {
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
 
-	public function bookingHotels(): HasMany
-	{
-		return $this->hasMany(BookingHotel::class);
-	}
+    public function trips(): BelongsToMany
+    {
+        return $this->belongsToMany(Trip::class, 'hotel_trip');
+    }
 
-	public function files(): MorphMany
-	{
-		return $this->morphMany(File::class, 'fileable');
-	}
+    public function hotelTypes(): BelongsToMany
+    {
+        return $this->belongsToMany(HotelType::class, 'hotel_hotel_type', 'hotel_id', 'hotel_type_id');
+    }
 
-	public function scopeStatus($query, $status = null)
-	{
-		return $query->when($status, fn($q) => $q->where('status', $status));
-	}
+    public function bookingHotels(): HasMany
+    {
+        return $this->hasMany(BookingHotel::class);
+    }
 
-	public function scopeHotelTypeFilter($query, $hotel_type_id = null)
-	{
-		return $query->when($hotel_type_id, function ($q) use ($hotel_type_id) {
-			$q->whereHas('hotelTypes', function ($q2) use ($hotel_type_id) {
-				$q2->where('hotel_type_id', $hotel_type_id);
-			});
-		});
-	}
+    public function files(): MorphMany
+    {
+        return $this->morphMany(File::class, 'fileable');
+    }
 
-	public function scopeFilter($query, $search = null)
-	{
-		return $query->when($search, function ($q) use ($search) {
-			$q->where('name->ar', 'like', "%{$search}%")
-				->orWhere('name->en', 'like', "%{$search}%");
-		});
-	}
+    public function scopeStatus($query, $status = null)
+    {
+        return $query->when($status, fn ($q) => $q->where('status', $status));
+    }
+
+    public function scopeHotelTypeFilter($query, $hotel_type_id = null)
+    {
+        return $query->when($hotel_type_id, function ($q) use ($hotel_type_id) {
+            $q->whereHas('hotelTypes', function ($q2) use ($hotel_type_id) {
+                $q2->where('hotel_type_id', $hotel_type_id);
+            });
+        });
+    }
+
+    public function scopeFilter($query, $search = null)
+    {
+        return $query->when($search, function ($q) use ($search) {
+            $q->where('name->ar', 'like', "%{$search}%")
+                ->orWhere('name->en', 'like', "%{$search}%");
+        });
+    }
 }
