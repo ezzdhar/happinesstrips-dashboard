@@ -19,7 +19,7 @@ class NotificationController extends Controller
 //        auth()->user()->unreadNotifications->markAsRead();
 		$notifications = auth()->user()->notifications()->paginate(request()->query('limit', 10));
 		$data = NotificationResource::collection($notifications);
-		return $this->responseOk(__('lang.success'), $data);
+		return $this->responseOk(__('lang.success'), $data,true);
 	}
 
 	public function read(NotificationRequest $request)
