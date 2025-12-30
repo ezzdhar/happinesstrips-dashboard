@@ -32,6 +32,34 @@ class UserNotification extends Notification
 
 	public function toFcm($notifiable)
 	{
+		// Check if Firebase credentials file exists
+		$credentialsPath = config('fcm.credentials_path');
+
+		if (!file_exists($credentialsPath)) {
+			\Log::error('Firebase credentials file not found', [
+				'path' => $credentialsPath,
+				'user_id' => $notifiable->id,
+			]);
+
+			// Silently fail to prevent breaking the notification system
+			return null;
+		}
+
+		// Validate JSON format
+		$jsonContent = file_get_contents($credentialsPath);
+		$jsonData = json_decode($jsonContent, true);
+
+		if (json_last_error() !== JSON_ERROR_NONE) {
+			\Log::error('Firebase credentials JSON is invalid', [
+				'path' => $credentialsPath,
+				'error' => json_last_error_msg(),
+				'user_id' => $notifiable->id,
+			]);
+
+			// Silently fail to prevent breaking the notification system
+			return null;
+		}
+
 		try {
 			$message = FcmMessage::create($this->title[$notifiable->lang ?? 'en'], $this->body[$notifiable->lang ?? 'en'])
 				->image(public_path('logo.svg'))
@@ -57,7 +85,8 @@ class UserNotification extends Notification
 				'trace' => $e->getTraceAsString(),
 			]);
 
-			throw $e;
+			// Silently fail to prevent breaking the notification system
+			return null;
 		}
 	}
 }
