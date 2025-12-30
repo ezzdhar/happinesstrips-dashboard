@@ -32,13 +32,32 @@ class UserNotification extends Notification
 
 	public function toFcm($notifiable)
 	{
-		return FcmMessage::create($this->title[$notifiable->lang ?? 'en'], $this->body[$notifiable->lang ?? 'en'])
-			->image(public_path('logo.svg'))
-			->sound('default')
-			->clickAction('OPEN_ACTIVITY')
-			->icon(public_path('favicon.ico'))
-			->color('#FF5733')
-			->priority(MessagePriority::HIGH)
-			->data($this->data);
+		try {
+			$message = FcmMessage::create($this->title[$notifiable->lang ?? 'en'], $this->body[$notifiable->lang ?? 'en'])
+				->image(public_path('logo.svg'))
+				->sound('default')
+				->clickAction('OPEN_ACTIVITY')
+				->icon(public_path('favicon.ico'))
+				->color('#FF5733')
+				->priority(MessagePriority::HIGH)
+				->data($this->data);
+
+			\Log::info('FCM Notification prepared successfully', [
+				'user_id' => $notifiable->id,
+				'title' => $this->title[$notifiable->lang ?? 'en'],
+				'body' => $this->body[$notifiable->lang ?? 'en'],
+				'data' => $this->data,
+			]);
+
+			return $message;
+		} catch (\Exception $e) {
+			\Log::error('FCM Notification preparation failed', [
+				'user_id' => $notifiable->id,
+				'error' => $e->getMessage(),
+				'trace' => $e->getTraceAsString(),
+			]);
+
+			throw $e;
+		}
 	}
 }
