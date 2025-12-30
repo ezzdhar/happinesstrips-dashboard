@@ -1,5 +1,5 @@
 @php use App\Services\FileService; @endphp
-		<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="light" data-theme="light" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 @include('partials.head')
 
