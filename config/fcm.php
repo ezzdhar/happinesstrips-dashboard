@@ -9,7 +9,7 @@ return [
     | Your Firebase project ID from the Firebase Console
     |
     */
-    'project_id' => env('FIREBASE_PROJECT_ID','happiness-597ed'),
+    'project_id' => env('FIREBASE_PROJECT_ID', 'happiness-597ed'),
 
     /*
     |--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ return [
     | If you need to use a different location, you can modify this value directly in the published config.
     |
     */
-    'credentials_path' => public_path('firebase.json'),
+    'credentials_path' => storage_path('app/firebase.json'),
 
     /*
     |--------------------------------------------------------------------------

@@ -48,7 +48,6 @@ Route::prefix('hotels')->group(function () {
 		Route::get('/{room}', 'roomDetails');
 		Route::get('/calculate/booking-room/price/{room}', 'calculateBookingRoomPrice');
 	});
-
 });
 
 // trips routes
@@ -111,6 +110,7 @@ Route::middleware('auth:sanctum')->group(function () {
 		Route::post('/update', 'update');
 		Route::post('/update/password', 'changePassword');
 		Route::post('/update/language', 'changeLanguage');
+		Route::post('/update/fcm-token', 'updateFcmToken');
 		Route::post('/logout', 'logout');
 		Route::post('/delete-account', 'deleteAccount');
 	});

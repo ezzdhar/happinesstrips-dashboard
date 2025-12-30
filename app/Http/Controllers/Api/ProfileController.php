@@ -28,8 +28,7 @@ class ProfileController extends Controller
 			'phone' => PhoneService::formatNumber($request->phone),
 			'image' => $request->image ? FileService::save($request->image) : auth()->user()->image,
 		]);
-		return $this->responseOk(message: __('lang.updated_successfully', ['attribute' => __('lang.profile')]),data: UserResource::make(auth()->user()));
-
+		return $this->responseOk(message: __('lang.updated_successfully', ['attribute' => __('lang.profile')]), data: UserResource::make(auth()->user()));
 	}
 
 	public function changePassword(ChangePasswordRequest $request)
@@ -55,5 +54,16 @@ class ProfileController extends Controller
 	{
 		auth()->user()->update(['language' => $request->language]);
 		return $this->responseOk(message: __('lang.updated_successfully', ['attribute' => __('lang.language')]));
+	}
+
+	public function updateFcmToken(Request $request)
+	{
+		$request->validate([
+			'fcm_token' => 'required|string',
+		]);
+
+		auth()->user()->update(['fcm_token' => $request->fcm_token]);
+
+		return $this->responseOk(message: __('lang.updated_successfully', ['attribute' => 'FCM Token']));
 	}
 }
