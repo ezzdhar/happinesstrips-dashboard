@@ -83,14 +83,14 @@ class NotificationFirebaseHelper
                 $errorCode = $responseBody['error']['details'][0]['errorCode'] ?? null;
 
                 // If token is unregistered, clear it from database
-                if ($errorCode === 'UNREGISTERED') {
-                    Log::warning('FCM token is unregistered, clearing from database', [
-                        'user_id' => $user->id,
-                        'token' => $user->fcm_token,
-                    ]);
-
-                    $user->update(['fcm_token' => null]);
-                }
+//                if ($errorCode === 'UNREGISTERED') {
+//                    Log::warning('FCM token is unregistered, clearing from database', [
+//                        'user_id' => $user->id,
+//                        'token' => $user->fcm_token,
+//                    ]);
+//
+//                    $user->update(['fcm_token' => null]);
+//                }
 
                 Log::error('FCM notification failed', [
                     'user_id' => $user->id,

@@ -18,7 +18,8 @@ class UserResource extends JsonResource
 			'phone' => $this->phone,
 			'points' => $this->points,
 			'image' => FileService::get($this->image),
-			'fcm_token' =>  $this->fcm_token,
+			'fcm_token' => $this->fcm_token,
+			'country_iso_code' => $this->country_iso_code,
 		];
 	}
 }

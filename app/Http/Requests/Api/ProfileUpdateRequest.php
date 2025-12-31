@@ -16,6 +16,7 @@ class ProfileUpdateRequest extends FormRequest
             'phone_key' => 'required|string|max:255',
             'phone' => 'required|string|max:255|unique:users,phone,'.auth()->id(),
             'image' => 'nullable|image|max:4048',
+	        'country_iso_code' => 'nullable|string|max:255',
         ];
     }
 

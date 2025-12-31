@@ -27,6 +27,7 @@ class ProfileController extends Controller
 			'phone_key' => $request->phone_key,
 			'phone' => PhoneService::formatNumber($request->phone),
 			'image' => $request->image ? FileService::save($request->image) : auth()->user()->image,
+			'country_iso_code' => $request->country_iso_code
 		]);
 		return $this->responseOk(message: __('lang.updated_successfully', ['attribute' => __('lang.profile')]), data: UserResource::make(auth()->user()));
 	}
