@@ -18,7 +18,6 @@ class TripSimpleResource extends JsonResource
             'main_category' => $this->mainCategory->name,
             'sub_category' => $this->subCategory->name,
 		    'city' => $this->city->name,
-		    'city_id' => $this->city_id,
             'name' => $this->name,
             'duration_from' => $this->duration_from,
             'duration_to' => $this->duration_to,

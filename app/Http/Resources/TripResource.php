@@ -39,6 +39,7 @@ class TripResource extends JsonResource
 			}),
 			'program' => $this->program,
 			'notes' => $this->notes,
+			'hotels' => HotelSimpleResource::collection($this->whenLoaded('hotels'))
 		];
 	}
 }
