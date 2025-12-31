@@ -31,21 +31,47 @@ use App\Livewire\Dashboard\Trip\UpdateTrip;
 use App\Livewire\Dashboard\User\UserData;
 use App\Models\Booking;
 use App\Models\Room;
-use Illuminate\Support\Carbon;
+use App\Models\User;
+use App\Notifications\UserNotification;
+use App\Services\NotificationFirebaseHelper;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
-	 $room = Room::find(1);
-	return  $room->isDateRangeCovered(Carbon::parse('2025-11-27'), Carbon::parse('2025-11-28'));
-	$room->priceForDate(Carbon::parse('2025-11-24'));
-	$room->totalPriceForPeriod(Carbon::parse('2025-11-24'), Carbon::parse('2025-11-26'), 'egp');
-	return $room->calculateBookingPrice(
-		checkIn: Carbon::parse('2025-11-24'),
-		checkOut: Carbon::parse('2025-11-26'),
-		adultsCount: 2,
-		childrenAges: [],
-		currency: 'egp'
-	);
+    // Get a user with FCM token for testing
+    $user = User::find(18);
+
+    if (!$user) {
+        return response()->json([
+            'error' => 'No user found with FCM token. Please register a user with FCM token first.',
+        ], 404);
+    }
+
+    $title = [
+        'en' => 'Trip Booking Status Updated',
+        'ar' => 'تم تحديث حالة حجز الرحلة',
+    ];
+    $body = [
+        'en' => 'Your booking has been updated successfully',
+        'ar' => 'تم تحديث حالة حجزك بنجاح',
+    ];
+    $data = ['id' => '123', 'type' => 'booking_trip'];
+
+    try {
+        $user->notify(new UserNotification($title, $body, $data, $user->language ?? 'en'));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Notification sent successfully',
+            'user_id' => $user->id,
+            'user_email' => $user->email,
+            'fcm_token' => substr($user->fcm_token, 0, 20) . '...',
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'user_id' => $user->id,
+        ], 500);
+    }
 });
 
 

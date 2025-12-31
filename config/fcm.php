@@ -23,7 +23,7 @@ return [
     | If you need to use a different location, you can modify this value directly in the published config.
     |
     */
-    'credentials_path' => storage_path('app/public/firebase.json'),
+    'credentials_path' => storage_path('firebase.json'),
 
     /*
     |--------------------------------------------------------------------------
