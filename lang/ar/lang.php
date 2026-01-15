@@ -896,4 +896,5 @@ return [
 	'rating_updated' => 'تم التقييم بنجاح',
 	'room_details' => 'تفاصيل الغرفة',
 	'categories' => 'التصنيفات',
+
 ];

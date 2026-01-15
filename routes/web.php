@@ -33,12 +33,12 @@ use App\Models\Booking;
 use App\Models\Room;
 use App\Models\User;
 use App\Notifications\UserNotification;
-use App\Services\NotificationFirebaseHelper;
+use App\Services\NotificationFirebaseService;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
     // Get a user with FCM token for testing
-    $user = User::find(18);
+	  $user = User::find(18);
 
     if (!$user) {
         return response()->json([

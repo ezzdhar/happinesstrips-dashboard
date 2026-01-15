@@ -7,7 +7,7 @@ use Google\Client as GoogleClient;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class NotificationFirebaseHelper
+class NotificationFirebaseService
 {
     public static function send($user, array $data): void
     {

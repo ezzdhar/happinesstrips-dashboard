@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Services\NotificationFirebaseHelper;
+use App\Services\NotificationFirebaseService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
@@ -37,20 +37,20 @@ class UserNotification extends Notification
         try {
             $lang = $notifiable->language ?? $notifiable->lang ?? 'en';
 
-            NotificationFirebaseHelper::send($notifiable, [
+            NotificationFirebaseService::send($notifiable, [
                 'title' => $this->title[$lang] ?? $this->title['en'] ?? '',
                 'body' => $this->body[$lang] ?? $this->body['en'] ?? '',
                 'type' => $this->data,
             ]);
 
-            \Log::info('FCM Notification sent via NotificationFirebaseHelper', [
+            \Log::info('FCM Notification sent via NotificationFirebaseService', [
                 'user_id' => $notifiable->id,
                 'title' => $this->title[$lang] ?? $this->title['en'] ?? '',
                 'body' => $this->body[$lang] ?? $this->body['en'] ?? '',
                 'data' => $this->data,
             ]);
         } catch (\Exception $e) {
-            \Log::error('FCM Notification via NotificationFirebaseHelper failed', [
+            \Log::error('FCM Notification via NotificationFirebaseService failed', [
                 'user_id' => $notifiable->id ?? null,
                 'error' => $e->getMessage(),
             ]);
