@@ -3,14 +3,17 @@
 namespace App\Services;
 
 use App\Models\ChatbotConversation;
+use App\Models\Hotel;
+use App\Models\Trip;
+use App\Models\City;
+use App\Models\MainCategory;
+use App\Models\SubCategory;
+use App\Models\Room;
 use Exception;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-
-// إضافة Carbon للتواريخ
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Facades\Prism;
 
@@ -37,7 +40,7 @@ class ChatbotService
 
 			$prism_provider = config('prism.prism_provider');
 			$prism_provider_model = config('prism.prism_provider_model');
-				// Pass 1: Planning
+			// Pass 1: Planning
 			$response = Prism::text()
 				->using($prism_provider, $prism_provider_model)
 				->withSystemPrompt($systemPrompt)
@@ -52,27 +55,29 @@ class ChatbotService
 			$data = null;
 			$dataType = null;
 			$finalMessage = $structuredResponse['response_message'] ?? $aiResponse;
-			$apiSuccess = true;
+			$finalMessage = $structuredResponse['response_message'] ?? $aiResponse;
+			$dbSuccess = true;
 
-			if (!empty($structuredResponse['api_calls'])) {
-				// تنفيذ الـ APIs
-				$executionResult = $this->executeApiCalls($structuredResponse['api_calls']);
+			if (!empty($structuredResponse['db_actions'])) {
+				// تنفيذ العمليات على الداتابيز مباشرة
+				$executionResult = $this->executeDbActions($structuredResponse['db_actions']);
 
-				$apiResults = $executionResult['results'];
-				$apiSuccess = $executionResult['success'];
+				$dbResults = $executionResult['results'];
+				$dbSuccess = $executionResult['success'];
 
-				$extracted = $this->extractDataFromApiResults($apiResults);
-				$data = $extracted['data'];
-				$dataType = $extracted['data_type'];
+				// استخراج البيانات لعرضها
+				$data = $this->extractDataFromDbResults($dbResults);
+				$dataType = $data['type'] ?? null;
+				$data = $data['data'] ?? null;
 
 				// Recovery Mode (إذا فشلت العملية أو عادت البيانات فارغة رغم النجاح)
-				if (!$apiSuccess || empty($data)) {
-					$errorContext = json_encode($apiResults, JSON_UNESCAPED_UNICODE);
+				if (!$dbSuccess || empty($data)) {
+					$errorContext = json_encode($dbResults, JSON_UNESCAPED_UNICODE);
 
-					// نطلب من الـ AI تحليل سبب الفشل (مثل نقص التواريخ أو عدم توفر غرف)
+					// نطلب من الـ AI تحليل سبب الفشل
 					$recoveryResponse = Prism::text()
 						->using(Provider::Gemini, 'gemini-2.0-flash')
-						->withSystemPrompt("أنت مساعد ذكي. فشل البحث أو لم يتم العثور على بيانات. حلل رد الـ API واشرح السبب للمستخدم.\nتلميح: إذا كان الخطأ يتعلق بـ start_date أو params، اطلب من المستخدم تحديدها.\nسياق النتائج: $errorContext")
+						->withSystemPrompt("أنت مساعد ذكي. فشل البحث في قاعدة البيانات أو لم يتم العثور على نتائج. حلل السبب واشرح للمستخدم.\nتلميح: ربما التواريخ غير متاحة أو الفلاتر ضيقة جداً.\nسياق النتائج: $errorContext")
 						->withPrompt("سؤال المستخدم: $userMessage\nالرد السابق: $finalMessage\n\nصغ رداً جديداً يوضح المشكلة ويقترح الحل:")
 						->asText();
 
@@ -92,62 +97,58 @@ class ChatbotService
 			$this->storeConversation($chat_session, $userMessage, $result, $structuredResponse);
 
 			return $result;
-
 		} catch (Exception $e) {
 			Log::error('Chatbot error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
 			return $this->getErrorResponse($chat_session);
 		}
 	}
 
-	protected function executeApiCalls(array $apiCalls): array
+	protected function executeDbActions(array $actions): array
 	{
 		$results = [];
 		$collectedData = [];
 		$allSuccess = true;
-		$baseUrl = rtrim(config('app.url'), '/');
 
-		foreach ($apiCalls as $index => $call) {
+		foreach ($actions as $index => $action) {
 			try {
-				$endpoint = $call['endpoint'] ?? '';
-				$params = $call['params'] ?? [];
+				$actionName = $action['action'] ?? '';
+				$params = $action['params'] ?? [];
 
-				// حل الباراميترز (Chaining + Dynamic Dates)
-				$params = $this->resolveApiParameters($params, $collectedData);
+				// حل الباراميترز (Dynamic Dates & Chaining)
+				$params = $this->resolveDbParameters($params, $collectedData);
 
-				if ($this->hasMissingDependencies($params)) {
-					$results[$index] = ['success' => false, 'error' => 'Missing dependency from previous call'];
-					$allSuccess = false;
-					break;
-				}
+				// تنفيذ الاستعلام
+				$queryResult = $this->processDbQuery($actionName, $params);
 
-				$response = Http::timeout(8)->get($baseUrl . $endpoint, $params);
-
-				if ($response->successful()) {
-					$responseData = $response->json();
+				if ($queryResult['success']) {
 					$results[$index] = [
 						'success' => true,
-						'endpoint' => $endpoint,
-						'data' => $responseData,
+						'action'  => $actionName,
+						'data'    => $queryResult['data'],
 					];
 
-					if (isset($responseData['data'])) {
-						$firstItem = is_array($responseData['data']) && !empty($responseData['data'])
-							? (array_key_exists(0, $responseData['data']) ? $responseData['data'][0] : $responseData['data'])
-							: $responseData['data'];
+					// جمع البيانات للخطوات التالية (Chaining)
+					if (!empty($queryResult['data'])) {
+						$firstItem = is_array($queryResult['data']) && array_key_exists(0, $queryResult['data'])
+							? $queryResult['data'][0]
+							: $queryResult['data'];
 
-						$collectedData = array_merge($collectedData, is_array($firstItem) ? $firstItem : []);
+						if (is_array($firstItem)) {
+							$collectedData = array_merge($collectedData, $firstItem);
+						} elseif (is_object($firstItem)) {
+							$collectedData = array_merge($collectedData, $firstItem->toArray());
+						}
 					}
 				} else {
-					// هنا نسجل جسم الخطأ كاملاً ليقرأه الـ AI في الـ Recovery Mode
 					$results[$index] = [
 						'success' => false,
-						'endpoint' => $endpoint,
-						'status' => $response->status(),
-						'error' => $response->json() ?? $response->body() // محاولة قراءة JSON Error message
+						'action'  => $actionName,
+						'error'   => $queryResult['error'] ?? 'Unknown DB Error'
 					];
 					$allSuccess = false;
 				}
 			} catch (Exception $e) {
+				Log::error("DB Action Failed: " . $e->getMessage());
 				$results[$index] = ['success' => false, 'error' => $e->getMessage()];
 				$allSuccess = false;
 			}
@@ -156,15 +157,102 @@ class ChatbotService
 		return ['results' => $results, 'success' => $allSuccess];
 	}
 
-	/**
-	 * دالة ذكية لحل الباراميترز والتواريخ الافتراضية
-	 */
-	protected function resolveApiParameters(array $params, array $collectedData): array
+	protected function processDbQuery(string $action, array $params): array
+	{
+		try {
+			$data = [];
+
+			switch ($action) {
+				case 'search_hotels':
+					$query = Hotel::query()->where('status', 'active');
+
+					if (!empty($params['city_id'])) $query->where('city_id', $params['city_id']);
+					if (!empty($params['name'])) $query->scopeFilter($params['name']);
+					if (!empty($params['rating'])) $query->where('rating', $params['rating']);
+					if (!empty($params['hotel_type_id'])) $query->scopeHotelTypeFilter($params['hotel_type_id']);
+
+					$data = $query->with(['city', 'hotelTypes'])->limit(10)->get();
+					break;
+
+				case 'get_hotel_details':
+					if (empty($params['id'])) throw new Exception("Hotel ID required");
+					$data = Hotel::with(['city', 'hotelTypes', 'rooms' => function ($q) {
+						$q->where('status', 'active');
+					}, 'files'])->find($params['id']);
+					break;
+
+				case 'check_room_availability':
+					if (empty($params['hotel_id'])) throw new Exception("Hotel ID required");
+					$hotel = Hotel::find($params['hotel_id']);
+					if (!$hotel) throw new Exception("Hotel not found");
+
+					$startDate = $params['start_date'] ?? Carbon::tomorrow()->format('Y-m-d');
+					$endDate = $params['end_date'] ?? Carbon::tomorrow()->addDay()->format('Y-m-d');
+					$adults = $params['adults_count'] ?? 2;
+
+					// استخدام دالة الفندق الذكية لجلب الغرف وارخص سعر
+					// ملاحظة: نحتاج جلب كل الغرف المتاحة وليس فقط الأرخص للعرض
+					// سنقوم بعمل فلتر يدوي للغرف هنا
+					$rooms = $hotel->rooms()->where('status', 'active')
+						->where('adults_count', '>=', $adults)
+						->get();
+
+					$availableRooms = [];
+					foreach ($rooms as $room) {
+						$calc = $room->calculateBookingPrice($startDate, $endDate, $adults, [], 'egp');
+						if ($calc['success']) {
+							$roomData = $room->toArray();
+							$roomData['calculated_price'] = $calc;
+							$availableRooms[] = $roomData;
+						}
+					}
+					$data = $availableRooms;
+					break;
+
+				case 'search_trips':
+					$query = Trip::query()->where('status', 'active');
+
+					if (!empty($params['city_id'])) $query->where('city_id', $params['city_id']);
+					if (!empty($params['main_category_id'])) $query->where('main_category_id', $params['main_category_id']);
+					if (!empty($params['sub_category_id'])) $query->where('sub_category_id', $params['sub_category_id']);
+					if (!empty($params['name'])) $query->scopeFilter($params['name']); // Assuming filter scope exists or standard where
+
+					// ترتيب بالسعر اذا طلب
+					if (!empty($params['sort_price'])) {
+						// هذا يتطلب معالجة خاصة لأن السعر JSON، لكن للتبسيط:
+						// يمكننا تجاهل الترتيب المعقد الآن أو جلبه كما هو
+					}
+
+					$data = $query->with(['city', 'mainCategory', 'subCategory'])->limit(10)->get();
+					break;
+
+				case 'get_trip_details':
+					if (empty($params['id'])) throw new Exception("Trip ID required");
+					$data = Trip::with(['city', 'mainCategory', 'subCategory', 'hotels', 'files'])->find($params['id']);
+					break;
+
+				case 'get_cities':
+					$query = City::query();
+					if (!empty($params['name'])) $query->scopeFilter($params['name']);
+					$data = $query->limit(20)->get();
+					break;
+
+				default:
+					return ['success' => false, 'error' => "Unknown action: $action"];
+			}
+
+			return ['success' => true, 'data' => $data];
+		} catch (Exception $e) {
+			return ['success' => false, 'error' => $e->getMessage()];
+		}
+	}
+
+	protected function resolveDbParameters(array $params, array $collectedData): array
 	{
 		foreach ($params as $key => $value) {
 			if (!is_string($value)) continue;
 
-			// 1. استبدال التواريخ الافتراضية
+			// تواريخ
 			if ($value === 'TOMORROW_DATE') {
 				$params[$key] = Carbon::tomorrow()->format('Y-m-d');
 				continue;
@@ -174,80 +262,72 @@ class ChatbotService
 				continue;
 			}
 
-			// 2. استبدال الـ Placeholders (Chaining)
-			if (str_contains($value, '_FROM_') || str_contains($value, 'HOTEL_ID') || str_contains($value, 'TRIP_ID')) {
-				if ($key === 'hotel_id' && isset($collectedData['id'])) {
-					$params[$key] = $collectedData['id'];
-				} elseif ($key === 'city_id' && isset($collectedData['city_id'])) {
-					$params[$key] = $collectedData['city_id'];
-				} elseif (isset($collectedData[$key])) {
-					$params[$key] = $collectedData[$key];
+			// Chaining
+			if (str_contains($value, 'HOTEL_ID') || str_contains($value, 'TRIP_ID') || str_contains($value, 'CITY_ID')) {
+				// محاولة ذكية لإيجاد الـ ID من البيانات السابقة
+				if ($key === 'id' || str_ends_with($key, '_id')) {
+					if (isset($collectedData['id'])) {
+						$params[$key] = $collectedData['id'];
+					} elseif (isset($collectedData[$key])) {
+						$params[$key] = $collectedData[$key];
+					}
 				}
 			}
 		}
 		return $params;
 	}
 
-	// ... (باقي الدوال كما هي دون تغيير) ...
-
-	protected function hasMissingDependencies(array $params): bool
+	protected function extractDataFromDbResults(array $results): array
 	{
-		foreach ($params as $value) {
-			if (is_string($value) && (str_contains($value, '_FROM_API'))) {
-				return true;
+		// نأخذ آخر نتيجة ناجحة وفيها بيانات
+		$reversed = array_reverse($results);
+		foreach ($reversed as $res) {
+			if ($res['success'] && !empty($res['data'])) {
+				$action = $res['action'];
+				$type = 'generic';
+
+				if (str_contains($action, 'hotel')) $type = 'hotels';
+				if (str_contains($action, 'trip')) $type = 'trips';
+				if (str_contains($action, 'room')) $type = 'rooms';
+				if (str_contains($action, 'cities')) $type = 'cities';
+
+				return ['data' => $res['data'], 'type' => $type];
 			}
 		}
-		return false;
-	}
-
-	protected function extractDataFromApiResults(array $apiResults): array
-	{
-		$reversedResults = array_reverse($apiResults);
-		foreach ($reversedResults as $result) {
-			if (!$result['success'] || empty($result['data']['data'])) continue;
-
-			$endpoint = $result['endpoint'];
-			$data = $result['data']['data'];
-
-			if (str_contains($endpoint, '/hotels/rooms')) return ['data' => $data, 'data_type' => 'rooms'];
-			if (str_contains($endpoint, '/hotels')) return ['data' => $data, 'data_type' => 'hotels'];
-			if (str_contains($endpoint, '/trips')) return ['data' => $data, 'data_type' => 'trips'];
-			if (str_contains($endpoint, '/cities')) return ['data' => $data, 'data_type' => 'cities'];
-			if (str_contains($endpoint, 'calculate')) return ['data' => $result['data'], 'data_type' => 'price_calculation'];
-		}
-		return ['data' => null, 'data_type' => null];
+		return ['data' => null, 'type' => null];
 	}
 
 
 	protected function getStaticDataContext(): string
 	{
-		return Cache::remember('chatbot_static_context_v3', 3600, function () {
-			$baseUrl = rtrim(config('app.url'), '/');
-			$context = "\n\n## 📊 البيانات المتاحة (استخدم هذه الـ IDs):\n\n";
-			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/cities', 'المدن المتاحة');
-			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/categories', 'فئات الرحلات');
-			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/sub-categories', 'الفئات الفرعية');
-			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/hotel-types', 'أنواع الفنادق');
-//			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/hotels', ' الفنادق');
-//			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/trips', 'الرحلات');
+		return Cache::remember('chatbot_static_context_v4_db', 3600, function () {
+			$context = "\n\n## 📊 البيانات المتاحة (IDs):\n\n";
+			$context .= $this->fetchFromDbAndFormat('City', 'المدن المتاحة');
+			$context .= $this->fetchFromDbAndFormat('MainCategory', 'فئات الرحلات');
+			$context .= $this->fetchFromDbAndFormat('SubCategory', 'الفئات الفرعية');
+			$context .= $this->fetchFromDbAndFormat('HotelType', 'أنواع الفنادق');
+			//			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/hotels', ' الفنادق');
+			//			$context .= $this->fetchAndFormatList($baseUrl . '/api/v1/trips', 'الرحلات');
 			return $context;
 		});
 	}
 
-	private function fetchAndFormatList(string $url, string $title): string
+
+
+	private function fetchFromDbAndFormat(string $modelName, string $title): string
 	{
 		try {
-			$response = Http::timeout(3)->get($url, ['per_page' => 100]);
-			if ($response->successful()) {
-				$items = $response->json('data', []);
-				$text = "### {$title}:\n";
-				foreach ($items as $item) {
-					$text .= "- {$item['name']}: ID = {$item['id']}\n";
-				}
-				return $text . "\n";
+			$modelClass = "App\\Models\\$modelName";
+			$items = $modelClass::limit(100)->get();
+
+			$text = "### {$title}:\n";
+			foreach ($items as $item) {
+				$name = is_array($item->name) ? ($item->name['ar'] ?? $item->name['en'] ?? '') : $item->name;
+				$text .= "- {$name}: ID = {$item->id}\n";
 			}
+			return $text . "\n";
 		} catch (Exception $e) {
-			Log::warning("Failed to fetch {$title}");
+			Log::warning("Failed to fetch {$title}: " . $e->getMessage());
 		}
 		return "";
 	}
@@ -278,7 +358,7 @@ class ChatbotService
 			return json_decode($matches[1], true) ?? [];
 		}
 		$decoded = json_decode($response, true);
-		return is_array($decoded) ? $decoded : ['response_message' => $response, 'api_calls' => []];
+		return is_array($decoded) ? $decoded : ['response_message' => $response, 'db_actions' => []];
 	}
 
 	protected function storeConversation($session, $msg, $result, $structured)
@@ -287,7 +367,7 @@ class ChatbotService
 			'chat_session' => $session,
 			'user_message' => $msg,
 			'bot_response' => $result['message'],
-			'api_calls' => $structured['api_calls'] ?? null,
+			'api_calls' => $structured['db_actions'] ?? null, // storing db_actions in api_calls column for now
 			'intent' => $structured['intent'] ?? 'unknown',
 		]);
 	}
@@ -305,7 +385,8 @@ class ChatbotService
 	public function submitFeedback($session, $helpful, $feedback)
 	{
 		return ChatbotConversation::where('chat_session', $session)->latest()->first()?->update([
-			'was_helpful' => $helpful, 'feedback' => $feedback
+			'was_helpful' => $helpful,
+			'feedback' => $feedback
 		]);
 	}
 

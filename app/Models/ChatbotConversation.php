@@ -6,17 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChatbotConversation extends Model
 {
-    protected $fillable = [
-        'chat_session',
-        'user_message',
-        'bot_response',
-        'api_calls',
-        'api_results',
-        'suggested_actions',
-        'intent',
-        'was_helpful',
-        'feedback',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected function casts(): array
     {
