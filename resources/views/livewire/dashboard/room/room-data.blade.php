@@ -41,8 +41,8 @@
 					@forelse($rooms as $room)
 						<tr class="bg-base-200">
 							<th class="text-center">{{$rooms->firstItem() + $loop->index}}</th>
-							<th class="text-nowrap">{{$room->name}}</th>
-							<th class="text-center text-nowrap">{{$room->hotel->name}}</th>
+							<th class="text-nowrap">{{$room?->name}}</th>
+							<th class="text-center text-nowrap">{{$room->hotel?->name}}</th>
 							<th class="text-center text-nowrap">{{$room->adults_count}}</th>
 							<th class="text-center text-nowrap">{{$room->children_count}}</th>
 {{--							<th class="text-center">--}}

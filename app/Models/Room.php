@@ -97,11 +97,14 @@ class Room extends Model
         ) >= DATEDIFF(?, ?) -- مقارنة المجموع بالفترة المطلوبة
     ", [
 			// للـ Sum (حساب التقاطع)
-			$endDate, $startDate,
+			$endDate,
+			$startDate,
 			// للـ Where الداخلي (تحسين الأداء)
-			$endDate, $startDate,
+			$endDate,
+			$startDate,
 			// للمقارنة النهائية (حساب عدد ليالي الحجز)
-			$endDate, $startDate,
+			$endDate,
+			$startDate,
 		]);
 	}
 
@@ -147,7 +150,6 @@ class Room extends Model
 			$max = $maxPrice ?? PHP_FLOAT_MAX; // رقم كبير جداً في حال عدم وجود حد أقصى
 
 			return $grandTotal >= $min && $grandTotal <= $max;
-
 		})->pluck('id'); // نأخذ الـ IDs فقط
 
 		// 3. إرجاع استعلام SQL يقتصر على الغرف التي اجتازت الفلتر
