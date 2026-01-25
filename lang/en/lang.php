@@ -935,4 +935,6 @@ return [
 	'max_files_reached' => 'Maximum files reached',
 	'browse' => 'Browse',
 	'or' => 'or',
+	'copy_room' => 'Copy Room',
+	'copy_of' => 'Copy of',
 ];

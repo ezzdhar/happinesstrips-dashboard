@@ -41,7 +41,11 @@ class CreateRoom extends Component
     public $egp_gaps_warning = '';
     public $usd_gaps_warning = '';
 
-    public function mount(): void
+    // Clone mode
+    public ?Room $sourceRoom = null;
+    public bool $isCloneMode = false;
+
+    public function mount(?Room $room = null): void
     {
         $this->hotels = Hotel::status(Status::Active)->get(['id', 'name'])->map(fn($h) => [
             'id' => $h->id,
@@ -54,7 +58,60 @@ class CreateRoom extends Component
             'icon' => $a->icon,
         ])->toArray();
 
+        // If cloning from an existing room
+        if ($room) {
+            $this->isCloneMode = true;
+            $this->sourceRoom = $room;
+            $this->loadFromSourceRoom($room);
+        }
+
         view()->share('breadcrumbs', $this->breadcrumbs());
+    }
+
+    protected function loadFromSourceRoom(Room $room): void
+    {
+        // Basic info - add "نسخة من" prefix to name
+        $this->name_ar = __('lang.copy_of') . ' ' . $room->getTranslation('name', 'ar');
+        $this->name_en = 'Copy of ' . $room->getTranslation('name', 'en');
+        $this->hotel_id = $room->hotel_id;
+        $this->status = $room->status->value;
+        $this->is_featured = $room->is_featured;
+        $this->discount_percentage = $room->discount_percentage ?? 0;
+        $this->adults_count = $room->adults_count;
+        $this->children_count = $room->children_count;
+        $this->includes_ar = $room->getTranslation('includes', 'ar');
+        $this->includes_en = $room->getTranslation('includes', 'en');
+        $this->adult_age = $room->adult_age ?? 12;
+
+        // Selected amenities
+        $this->selected_amenities = $room->amenities->pluck('id')->toArray();
+
+        // Price periods EGP
+        $this->price_periods_egp = $room->pricePeriodsEgp()->get()->map(fn($p) => [
+            'start_date' => $p->start_date->format('Y-m-d'),
+            'end_date' => $p->end_date->format('Y-m-d'),
+            'price' => $p->price,
+        ])->toArray();
+
+        // Price periods USD
+        $this->price_periods_usd = $room->pricePeriodsUsd()->get()->map(fn($p) => [
+            'start_date' => $p->start_date->format('Y-m-d'),
+            'end_date' => $p->end_date->format('Y-m-d'),
+            'price' => $p->price,
+        ])->toArray();
+
+        // Children policy
+        $this->children_policy = [];
+        for ($i = 0; $i < $this->children_count; $i++) {
+            $childPolicies = $room->childrenPolicies()->where('child_number', $i + 1)->get();
+            $this->children_policy[$i] = [
+                'ranges' => $childPolicies->map(fn($p) => [
+                    'from_age' => $p->from_age,
+                    'to_age' => $p->to_age,
+                    'price_percentage' => $p->price_percentage,
+                ])->toArray() ?: [['from_age' => 0, 'to_age' => 11, 'price_percentage' => 0]]
+            ];
+        }
     }
 
     public function breadcrumbs(): array

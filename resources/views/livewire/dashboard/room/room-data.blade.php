@@ -77,6 +77,12 @@
                                 <th class="text-center text-nowrap">{{ formatDate($room->created_at, true) }}</th>
                                 <td>
                                     <div class="flex gap-2 justify-center">
+                                        @can('create_room')
+                                            <x-button noWireNavigate tooltip="{{ __('lang.copy_room') }}"
+                                                icon="o-document-duplicate" class="btn-sm btn-ghost text-primary"
+                                                link="{{ route('rooms.clone', $room->id) }}" />
+                                        @endcan
+
                                         @can('update_room')
                                             <x-button noWireNavigate tooltip="{{ __('lang.update') }}" icon="o-pencil"
                                                 class="btn-sm btn-ghost" link="{{ route('rooms.edit', $room->id) }}" />

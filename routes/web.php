@@ -107,6 +107,7 @@ Route::middleware(['web-language'])->group(function () {
 		Route::prefix('rooms')->middleware('permission:show_room')->group(function () {
 			Route::get('/', RoomData::class)->name('rooms');
 			Route::get('/create-room', CreateRoom::class)->name('rooms.create')->middleware('permission:create_room');
+			Route::get('/clone/{room}', CreateRoom::class)->name('rooms.clone')->middleware('permission:create_room');
 			Route::get('/edit/{room}', UpdateRoom::class)->name('rooms.edit')->middleware('permission:update_room');
 		});
 

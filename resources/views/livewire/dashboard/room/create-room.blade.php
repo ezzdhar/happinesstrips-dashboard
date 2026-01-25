@@ -205,8 +205,8 @@
             @endif
 
             <div class="mt-3">
-                <x-file required wire:model="images" label="{{ __('lang.images') }}" accept="image/*" multiple />
-                <x-progress class="progress-primary h-0.5" indeterminate wire:loading wire:target="images" />
+                <x-dropzone-images wire:model="images" label="{{ __('lang.images') }}" :max-files="10"
+                    :max-file-size="5" />
             </div>
 
             <div class="mt-6 flex justify-end gap-2 px-4 pb-4">
