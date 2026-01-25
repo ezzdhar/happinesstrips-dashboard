@@ -26,7 +26,6 @@ class UpdateHotel extends Component
 
     public Hotel $hotel;
 
-    public $user_id;
 
     public $city_id;
 
@@ -60,18 +59,6 @@ class UpdateHotel extends Component
 
     public $facilities_en;
 
-    public $first_child_price_percentage;
-
-    public $second_child_price_percentage;
-
-    public $third_child_price_percentage;
-
-    public $additional_child_price_percentage;
-
-    public $free_child_age;
-
-    public $adult_age;
-
     public $images = [];
 
     public $cities = [];
@@ -100,9 +87,7 @@ class UpdateHotel extends Component
             ];
         })->toArray();
         $this->library = collect();
-        $this->users = User::role('hotel')->get(['id', 'name'])->toArray();
         $this->hotel_type_ids = $this->hotel->hotelTypes->pluck('id')->toArray();
-        $this->user_id = $this->hotel->user_id;
         $this->city_id = $this->hotel->city_id;
         $this->email = $this->hotel->email;
         $this->name_ar = $this->hotel->getTranslation('name', 'ar');
@@ -119,12 +104,6 @@ class UpdateHotel extends Component
         $this->address_en = $this->hotel->getTranslation('address', 'en');
         $this->facilities_ar = $this->hotel->getTranslation('facilities', 'ar');
         $this->facilities_en = $this->hotel->getTranslation('facilities', 'en');
-        $this->first_child_price_percentage = $this->hotel->first_child_price_percentage;
-        $this->second_child_price_percentage = $this->hotel->second_child_price_percentage;
-        $this->third_child_price_percentage = $this->hotel->third_child_price_percentage;
-        $this->additional_child_price_percentage = $this->hotel->additional_child_price_percentage;
-        $this->free_child_age = $this->hotel->free_child_age;
-        $this->adult_age = $this->hotel->adult_age;
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 
@@ -144,7 +123,6 @@ class UpdateHotel extends Component
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
             'city_id' => 'required|exists:cities,id',
             'hotel_type_ids' => 'required|array|min:1',
             'hotel_type_ids.*' => 'exists:hotel_types,id',
@@ -163,12 +141,7 @@ class UpdateHotel extends Component
             'address_en' => 'required|string',
             'facilities_ar' => 'required|string',
             'facilities_en' => 'required|string',
-            'first_child_price_percentage' => 'required|numeric|min:0|max:100',
-            'second_child_price_percentage' => 'required|numeric|min:0|max:100',
-            'third_child_price_percentage' => 'required|numeric|min:0|max:100',
-            'additional_child_price_percentage' => 'required|numeric|min:0|max:100',
-            'free_child_age' => 'required|integer|min:0|max:18',
-            'adult_age' => 'required|integer|min:1|max:25|gt:free_child_age',
+
             'images.*' => 'nullable|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
         ];
     }
@@ -178,7 +151,6 @@ class UpdateHotel extends Component
         $this->validate();
 
         $this->hotel->update([
-            'user_id' => $this->user_id,
             'city_id' => $this->city_id,
             'email' => $this->email,
             'name' => [
@@ -203,12 +175,7 @@ class UpdateHotel extends Component
                 'ar' => $this->facilities_ar,
                 'en' => $this->facilities_en,
             ],
-            'first_child_price_percentage' => $this->first_child_price_percentage,
-            'second_child_price_percentage' => $this->second_child_price_percentage,
-            'third_child_price_percentage' => $this->third_child_price_percentage,
-            'additional_child_price_percentage' => $this->additional_child_price_percentage,
-            'free_child_age' => $this->free_child_age,
-            'adult_age' => $this->adult_age,
+
         ]);
 
         // Save new images
@@ -240,7 +207,7 @@ class UpdateHotel extends Component
     {
         $file = File::find($id);
         if ($file) {
-	        FileService::delete($file->path);
+            FileService::delete($file->path);
             $file->delete();
             $this->hotel->refresh();
             flash()->success(__('lang.deleted_successfully', ['attribute' => __('lang.image')]));

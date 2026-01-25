@@ -896,5 +896,29 @@ return [
 	'rating_updated' => 'تم التقييم بنجاح',
 	'room_details' => 'تفاصيل الغرفة',
 	'categories' => 'التصنيفات',
+	'from_age' => 'من عمر',
+	'to_age' => 'إلى عمر',
+	'price_percentage' => 'نسبة السعر',
+	'additional_children' => 'الأطفال الإضافيون',
+	'hotel_images' => 'صور الفندق',
+	'age_range' => 'نطاق العمر',
+	'add_age_range' => 'إضافة نطاق عمر',
+	'create_booking_trip' => 'إنشاء حجز رحلة',
+	'show_booking_trip'   => 'عرض حجز رحلة',
+	'update_booking_trip' => 'تحديث حجز رحلة',
+	'delete_booking_trip' => 'حذف حجز رحلة',
 
+	// Hotel Bookings
+	'booking_hotel_mng'   => 'إدارة حجوزات الفنادق',
+	'create_booking_hotel' => 'إنشاء حجز فندق',
+	'show_booking_hotel'  => 'عرض حجز فندق',
+	'update_booking_hotel' => 'تحديث حجز فندق',
+	'delete_booking_hotel' => 'حذف حجز فندق',
+
+	// Amenities
+	'amenities_mng'       => 'إدارة المرافق',
+	'create_amenity'      => 'إنشاء مرفق',
+	'show_amenity'        => 'عرض مرفق',
+	'update_amenity'      => 'تحديث مرفق',
+	'delete_amenity'      => 'حذف مرفق',
 ];

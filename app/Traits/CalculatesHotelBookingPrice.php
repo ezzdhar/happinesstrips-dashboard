@@ -37,7 +37,9 @@ trait CalculatesHotelBookingPrice
 		// Check if date range is covered
 		if (!$this->isDateRangeCovered($startDate, $endDate)) {
 			$uncoveredDates = $this->getUncoveredDates($startDate, $endDate);
-			return $this->errorResponse(__('lang.date_range_not_covered'), [
+			return $this->errorResponse(
+				__('lang.date_range_not_covered'),
+				[
 					'uncovered_dates' => $uncoveredDates,
 				]
 			);
@@ -107,71 +109,68 @@ trait CalculatesHotelBookingPrice
 			'daily_breakdown' => $dailyBreakdown['days'],
 			'price_per_night_average' => $nightsCount > 0 ? round($adultPricePerPerson / $nightsCount, 2) : 0,
 
-			// Hotel policies
-			'hotel_policies' => [
-				'free_child_age' => (int)$hotel->free_child_age,
-				'adult_age' => (int)$hotel->adult_age,
-				'first_child_percentage' => (float)$hotel->first_child_price_percentage,
-				'second_child_percentage' => (float)$hotel->second_child_price_percentage,
-				'third_child_percentage' => (float)$hotel->third_child_price_percentage,
-				'additional_child_percentage' => (float)$hotel->additional_child_price_percentage,
-			],
+			// Hotel policies - now using room policy if available
+			'policies' => $this->getRoomPolicySummary(),
 		];
 	}
 
 	/**
-	 * حساب أسعار الأطفال بناءً على سياسات الفندق (طفل مجاني، طفل مخفض، أو كبالغ)
-	 * تستخدم لتطبيق نسب التخفيض على الأطفال حسب أعمارهم وترتيبهم (أول طفل، ثاني طفل، إلخ)
-	 * وتصنيفهم إلى (مجاني، طفل بتخفيض، أو يُحسب كبالغ)
+	 * حساب أسعار الأطفال بناءً على سياسة الغرفة الجديدة
+	 * تستخدم لتطبيق نسب التخفيض على الأطفال حسب أعمارهم ونطاقات العمر المحددة
 	 *
-	 * Calculate children pricing based on hotel policy.
+	 * Calculate children pricing based on room policy.
 	 */
 	protected function calculateChildrenPricing($hotel, float $adultPricePerPerson, array $childrenAges): array
 	{
 		$breakdown = [];
 		$total = 0;
+		$adultAge = $this->adult_age ?? 12;
+		$policies = $this->childrenPolicies ?? collect();
 
 		foreach ($childrenAges as $index => $age) {
-			// Ensure age is integer
 			$age = (int)$age;
-
 			$childNumber = $index + 1;
 			$category = '';
 			$percentage = 0;
 			$price = 0;
 
-			// Free child (under free_child_age)
-			if ($age < $hotel->free_child_age) {
-				$category = 'free';
-				$percentage = 0;
-				$price = 0;
-			} // Considered as adult (adult_age or above)
-			elseif ($age >= $hotel->adult_age) {
+			// إذا كان السن يساوي أو أكبر من سن البالغ
+			if ($age >= $adultAge) {
 				$category = 'adult';
 				$percentage = 100;
 				$price = $adultPricePerPerson;
-			} // Child pricing (between free_child_age and adult_age)
-			else {
-				$category = 'child';
+			} else {
+				// البحث عن سياسة الطفل المناسبة من الجدول
+				// نبحث عن نطاق العمر المطابق لهذا الطفل
+				$childPolicy = $policies
+					->where('child_number', $childNumber)
+					->first(function ($policy) use ($age) {
+						return $age >= $policy->from_age && $age <= $policy->to_age;
+					});
 
-				if ($childNumber == 1) {
-					$percentage = $hotel->first_child_price_percentage;
-				} elseif ($childNumber == 2) {
-					$percentage = $hotel->second_child_price_percentage;
-				} elseif ($childNumber == 3) {
-					$percentage = $hotel->third_child_price_percentage;
+				if ($childPolicy) {
+					$percentage = $childPolicy->price_percentage ?? 0;
+
+					if ($percentage == 0) {
+						$category = 'free';
+						$price = 0;
+					} else {
+						$category = 'child';
+						$price = ($adultPricePerPerson * $percentage) / 100;
+					}
 				} else {
-					$percentage = $hotel->additional_child_price_percentage;
+					// لا توجد سياسة مطابقة - يحسب كبالغ
+					$category = 'adult';
+					$percentage = 100;
+					$price = $adultPricePerPerson;
 				}
-
-				$price = ($adultPricePerPerson * $percentage) / 100;
 			}
 
 			$breakdown[] = [
 				'child_number' => $childNumber,
 				'age' => $age,
 				'category' => $category,
-				'category_label' => $this->getChildCategoryLabel($category, $age, $hotel),
+				'category_label' => $this->getChildCategoryLabel($category, $age),
 				'percentage' => $percentage,
 				'price' => round($price, 2),
 			];
@@ -186,16 +185,28 @@ trait CalculatesHotelBookingPrice
 	}
 
 	/**
-	 * الحصول على تسمية توضيحية لفئة الطفل (مجاني، طفل بتخفيض، أو كبالغ)
-	 * تستخدم لعرض وصف نصي واضح للمستخدم عن سبب تسعير الطفل بهذه الطريقة
+	 * الحصول على ملخص سياسة الغرفة
+	 */
+	protected function getRoomPolicySummary(): array
+	{
+		return [
+			'adult_age' => $this->adult_age ?? 12,
+			'has_children_policy' => $this->childrenPolicies->isNotEmpty(),
+		];
+	}
+
+	/**
+	 * الحصول على تسمية توضيحية لفئة الطفل
 	 *
 	 * Get child category label.
 	 */
-	protected function getChildCategoryLabel(string $category, int $age, $hotel): string
+	protected function getChildCategoryLabel(string $category, int $age): string
 	{
+		$adultAge = $this->adult_age ?? 12;
+
 		return match ($category) {
-			'free' => __('lang.free') . " ({$age} " . __('lang.years') . ", < {$hotel->free_child_age})",
-			'adult' => __('lang.charged_as_adult') . " ({$age} " . __('lang.years') . ", ≥ {$hotel->adult_age})",
+			'free' => __('lang.free') . " ({$age} " . __('lang.years') . ")",
+			'adult' => __('lang.charged_as_adult') . " ({$age} " . __('lang.years') . ", ≥ {$adultAge})",
 			'child' => __('lang.child_price') . " ({$age} " . __('lang.years') . ')',
 			default => __('lang.unknown'),
 		};

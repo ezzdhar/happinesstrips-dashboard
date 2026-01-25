@@ -31,6 +31,7 @@ class Room extends Model
 			'discount_percentage' => 'decimal:2',
 			'adults_count' => 'integer',
 			'children_count' => 'integer',
+			'adult_age' => 'integer',
 		];
 	}
 
@@ -52,6 +53,11 @@ class Room extends Model
 	public function amenities(): BelongsToMany
 	{
 		return $this->belongsToMany(Amenity::class, 'room_amenity');
+	}
+
+	public function childrenPolicies(): HasMany
+	{
+		return $this->hasMany(RoomChildPolicy::class)->orderBy('child_number');
 	}
 
 	public function scopeStatus($query, $status = null)
@@ -156,10 +162,6 @@ class Room extends Model
 		return $query->whereIn('id', $validIds);
 	}
 
-	/**
-	 * Get the calculated price attribute
-	 * This accessor calculates the booking price based on request parameters
-	 */
 	public function getPriceAttribute(): float
 	{
 		$request = request();

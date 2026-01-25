@@ -28,7 +28,7 @@ Route::controller(GuestController::class)->group(function () {
 	Route::post('/login', 'login');
 	Route::post('/social-login', 'socialLogin');
 	Route::post('/send/code', 'sendCode');
-	Route::post('/verify-code', 'verifyCode');
+	Route::post('/verify-code', 'verifyCode');	
 	Route::post('/reset/password', 'resetPassword');
 });
 

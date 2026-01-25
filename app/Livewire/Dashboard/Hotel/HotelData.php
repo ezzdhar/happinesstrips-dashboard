@@ -48,7 +48,7 @@ class HotelData extends Component
         $data['hotels'] = Hotel::filter($this->search)
 	        ->status($this->status_filter)
 	        ->hotelTypeFilter($this->hotel_type_filter)
-	        ->with(['city', 'user', 'hotelTypes'])->withCount('rooms')->latest()->paginate(20);
+	        ->with(['city', 'hotelTypes'])->withCount('rooms')->latest()->paginate(20);
 
         return view('livewire.dashboard.hotel.hotel-data', $data);
     }

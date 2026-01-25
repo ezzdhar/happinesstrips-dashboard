@@ -28,18 +28,7 @@ class Hotel extends Model
             'rating' => 'integer',
             'latitude' => 'decimal:7',
             'longitude' => 'decimal:7',
-            'first_child_price_percentage' => 'decimal:2',
-            'second_child_price_percentage' => 'decimal:2',
-            'third_child_price_percentage' => 'decimal:2',
-            'additional_child_price_percentage' => 'decimal:2',
-            'free_child_age' => 'integer',
-            'adult_age' => 'integer',
         ];
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_id')->withDefault(['name' => null]);
     }
 
     public function city(): BelongsTo
@@ -68,7 +57,7 @@ class Hotel extends Model
         $availableRooms = $this->rooms()
             ->where('status', Status::Active)
             ->where('adults_count', '>=', $adultsCount)
-            ->when($childrenCount > 0, fn ($q) => $q->where('children_count', '>=', $childrenCount))
+            ->when($childrenCount > 0, fn($q) => $q->where('children_count', '>=', $childrenCount))
             ->when($is_featured, function (Builder $query) use ($is_featured) {
                 $isFeatured = filter_var($is_featured, FILTER_VALIDATE_BOOLEAN);
 
@@ -241,7 +230,7 @@ class Hotel extends Model
 
     public function scopeStatus($query, $status = null)
     {
-        return $query->when($status, fn ($q) => $q->where('status', $status));
+        return $query->when($status, fn($q) => $q->where('status', $status));
     }
 
     public function scopeHotelTypeFilter($query, $hotel_type_id = null)

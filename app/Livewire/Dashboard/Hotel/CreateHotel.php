@@ -21,7 +21,6 @@ class CreateHotel extends Component
 
     public bool $modalAdd = false;
 
-    public $user_id;
 
     public $city_id;
 
@@ -55,18 +54,6 @@ class CreateHotel extends Component
 
     public $facilities_en;
 
-    public $first_child_price_percentage = 0;
-
-    public $second_child_price_percentage = 0;
-
-    public $third_child_price_percentage = 0;
-
-    public $additional_child_price_percentage = 0;
-
-    public $free_child_age = 4;
-
-    public $adult_age = 12;
-
     public $images = [];
 
     public $cities = [];
@@ -97,7 +84,6 @@ class CreateHotel extends Component
         $this->library = collect();
         $this->users = User::role('hotel')->get(['id', 'name'])->toArray();
         view()->share('breadcrumbs', $this->breadcrumbs());
-
     }
 
     public function breadcrumbs(): array
@@ -121,7 +107,6 @@ class CreateHotel extends Component
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
             'city_id' => 'required|exists:cities,id',
             'hotel_type_ids' => 'required|array|min:1',
             'hotel_type_ids.*' => 'exists:hotel_types,id',
@@ -140,12 +125,7 @@ class CreateHotel extends Component
             'address_en' => 'required|string',
             'facilities_ar' => 'required|string',
             'facilities_en' => 'required|string',
-            'first_child_price_percentage' => 'required|numeric|min:0|max:100',
-            'second_child_price_percentage' => 'required|numeric|min:0|max:100',
-            'third_child_price_percentage' => 'required|numeric|min:0|max:100',
-            'additional_child_price_percentage' => 'required|numeric|min:0|max:100',
-            'free_child_age' => 'required|integer|min:0|max:18',
-            'adult_age' => 'required|integer|min:1|max:25|gt:free_child_age',
+
             'images.*' => 'nullable|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
         ];
     }
@@ -155,7 +135,6 @@ class CreateHotel extends Component
         $this->validate();
 
         $hotel = Hotel::create([
-            'user_id' => $this->user_id,
             'city_id' => $this->city_id,
             'email' => $this->email,
             'name' => [
@@ -180,12 +159,7 @@ class CreateHotel extends Component
                 'ar' => $this->facilities_ar,
                 'en' => $this->facilities_en,
             ],
-            'first_child_price_percentage' => $this->first_child_price_percentage,
-            'second_child_price_percentage' => $this->second_child_price_percentage,
-            'third_child_price_percentage' => $this->third_child_price_percentage,
-            'additional_child_price_percentage' => $this->additional_child_price_percentage,
-            'free_child_age' => $this->free_child_age,
-            'adult_age' => $this->adult_age,
+
         ]);
 
         // Save images
@@ -206,9 +180,23 @@ class CreateHotel extends Component
     public function resetData(): void
     {
         $this->reset([
-            'user_id', 'city_id', 'email', 'name_ar', 'name_en', 'status', 'rating',
-            'phone_key', 'phone', 'latitude', 'longitude', 'description_ar', 'description_en', 'address_ar',
-            'address_en', 'facilities_ar', 'facilities_en', 'images',
+            'city_id',
+            'email',
+            'name_ar',
+            'name_en',
+            'status',
+            'rating',
+            'phone_key',
+            'phone',
+            'latitude',
+            'longitude',
+            'description_ar',
+            'description_en',
+            'address_ar',
+            'address_en',
+            'facilities_ar',
+            'facilities_en',
+            'images',
         ]);
         $this->resetErrorBag();
         $this->resetValidation();
