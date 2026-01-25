@@ -121,9 +121,9 @@ class Hotel extends Model
 
         $rooms = $this->rooms()->where('status', Status::Active)->when($is_featured, function (Builder $query) use ($is_featured) {
             $isFeatured = filter_var($is_featured, FILTER_VALIDATE_BOOLEAN);
-
             return $query->where('is_featured', $isFeatured ? 1 : 0);
         })->get();
+
         foreach ($rooms as $room) {
             $todayPrice = $room->priceForDate($today, $currency);
             if ($todayPrice === null) {
@@ -152,20 +152,16 @@ class Hotel extends Model
             ];
         }
 
-        $currentPeriod = $cheapestRoom->findPricePeriodForDate($today);
+        // الآن findPricePeriodForDate ترجع object (RoomPricePeriod) وتحتاج العملة
+        $currentPeriod = $cheapestRoom->findPricePeriodForDate($today, $currency);
 
         if ($currentPeriod === null) {
             return null;
         }
 
         // نحسب بكرا ونتأكد إنه جوّه الفترة
-        $periodStart = isset($currentPeriod['start_date'])
-            ? Carbon::parse($currentPeriod['start_date'])
-            : null;
-
-        $periodEnd = isset($currentPeriod['end_date'])
-            ? Carbon::parse($currentPeriod['end_date'])
-            : null;
+        $periodStart = $currentPeriod->start_date; // Carbon object
+        $periodEnd = $currentPeriod->end_date;     // Carbon object
 
         $nextDateInPeriod = null;
 
@@ -173,7 +169,7 @@ class Hotel extends Model
             $tomorrow = $today->copy()->addDay();
 
             if ($tomorrow->betweenIncluded($periodStart, $periodEnd)) {
-                $nextDateInPeriod = $tomorrow->toDateString(); // 2000-11-16
+                $nextDateInPeriod = $tomorrow->toDateString();
             }
         }
 
@@ -182,7 +178,6 @@ class Hotel extends Model
         $discountPercentage = 0;
 
         if ($cheapestRoom->is_featured && $cheapestRoom->discount_percentage > 0) {
-            // السعر الحالي هو بعد الخصم، نحسب السعر الأصلي
             $priceBeforeDiscount = $lowestPrice + ($lowestPrice * ($cheapestRoom->discount_percentage / 100));
             $discountPercentage = $cheapestRoom->discount_percentage;
         }
@@ -193,9 +188,9 @@ class Hotel extends Model
             'adults_count' => $cheapestRoom->adults_count,
             'children_count' => $cheapestRoom->children_count,
             'start_date' => $nextDateInPeriod,
-            'end_date' => Carbon::parse($nextDateInPeriod)->addDay()->toDateString(),
-            'price_period_start' => $currentPeriod['start_date'] ?? null,
-            'price_period_end' => $currentPeriod['end_date'] ?? null,
+            'end_date' => $nextDateInPeriod ? Carbon::parse($nextDateInPeriod)->addDay()->toDateString() : null,
+            'price_period_start' => $periodStart?->format('Y-m-d'),
+            'price_period_end' => $periodEnd?->format('Y-m-d'),
             'currency' => strtoupper($currency),
             'price_per_night' => $lowestPrice,
             'price_before_discount' => (float) round($priceBeforeDiscount, 2),

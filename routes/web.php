@@ -37,41 +37,41 @@ use App\Services\NotificationFirebaseService;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
-    // Get a user with FCM token for testing
-	  $user = User::find(18);
+	// Get a user with FCM token for testing
+	$user = User::find(18);
 
-    if (!$user) {
-        return response()->json([
-            'error' => 'No user found with FCM token. Please register a user with FCM token first.',
-        ], 404);
-    }
+	if (!$user) {
+		return response()->json([
+			'error' => 'No user found with FCM token. Please register a user with FCM token first.',
+		], 404);
+	}
 
-    $title = [
-        'en' => 'Trip Booking Status Updated',
-        'ar' => 'تم تحديث حالة حجز الرحلة',
-    ];
-    $body = [
-        'en' => 'Your booking has been updated successfully',
-        'ar' => 'تم تحديث حالة حجزك بنجاح',
-    ];
-    $data = ['id' => '123', 'type' => 'booking_trip'];
+	$title = [
+		'en' => 'Trip Booking Status Updated',
+		'ar' => 'تم تحديث حالة حجز الرحلة',
+	];
+	$body = [
+		'en' => 'Your booking has been updated successfully',
+		'ar' => 'تم تحديث حالة حجزك بنجاح',
+	];
+	$data = ['id' => '123', 'type' => 'booking_trip'];
 
-    try {
-        $user->notify(new UserNotification($title, $body, $data, $user->language ?? 'en'));
+	try {
+		$user->notify(new UserNotification($title, $body, $data, $user->language ?? 'en'));
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Notification sent successfully',
-            'user_id' => $user->id,
-            'user_email' => $user->email,
-            'fcm_token' => substr($user->fcm_token, 0, 20) . '...',
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => $e->getMessage(),
-            'user_id' => $user->id,
-        ], 500);
-    }
+		return response()->json([
+			'success' => true,
+			'message' => 'Notification sent successfully',
+			'user_id' => $user->id,
+			'user_email' => $user->email,
+			'fcm_token' => substr($user->fcm_token, 0, 20) . '...',
+		]);
+	} catch (\Exception $e) {
+		return response()->json([
+			'error' => $e->getMessage(),
+			'user_id' => $user->id,
+		], 500);
+	}
 });
 
 
@@ -83,6 +83,9 @@ Route::middleware(['web-language'])->group(function () {
 
 	// authentication routes
 	Route::middleware(['auth', 'verified'])->group(function () {
+		// Session Keep Alive
+		Route::get('/keep-alive', fn() => response()->json(['success' => true, 'time' => now()->toIso8601String()]))->name('keep-alive');
+
 		Route::get('profile', Profile::class)->name('profile'); // profile
 		Route::get('dashboard', Dashboard::class)->name('dashboard'); // dashboard
 		Route::get('users', UserData::class)->name('users')->middleware('permission:show_user'); // users
@@ -139,7 +142,6 @@ Route::middleware(['web-language'])->group(function () {
 				return view('livewire.dashboard.booking-trip.print-booking-trip', compact('booking'));
 			})->name('bookings.trips.print');
 		});
-
 	});
 
 	// guest routes
