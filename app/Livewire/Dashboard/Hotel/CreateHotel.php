@@ -64,8 +64,6 @@ class CreateHotel extends Component
 
     public $users = [];
 
-    #[Rule('required')]
-    public Collection $library;
 
     public function mount(): void
     {
@@ -81,7 +79,6 @@ class CreateHotel extends Component
                 'name' => $type->name,
             ];
         })->toArray();
-        $this->library = collect();
         $this->users = User::role('hotel')->get(['id', 'name'])->toArray();
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
@@ -125,7 +122,7 @@ class CreateHotel extends Component
             'address_en' => 'required|string',
             'facilities_ar' => 'required|string',
             'facilities_en' => 'required|string',
-
+            'images' => 'required|array',
             'images.*' => 'nullable|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
         ];
     }
@@ -133,7 +130,6 @@ class CreateHotel extends Component
     public function saveAdd()
     {
         $this->validate();
-
         $hotel = Hotel::create([
             'city_id' => $this->city_id,
             'email' => $this->email,

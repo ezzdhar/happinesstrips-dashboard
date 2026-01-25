@@ -84,9 +84,6 @@ class CreateTrip extends Component
 
     public $city_id;
 
-    #[Rule('required')]
-    public Collection $library;
-
     public function mount(): void
     {
         $this->main_categories = MainCategory::get(['id', 'name'])->map(function ($category) {
@@ -108,7 +105,6 @@ class CreateTrip extends Component
             ];
         })->toArray();
 
-        $this->library = collect();
         view()->share('breadcrumbs', $this->breadcrumbs());
     }
 

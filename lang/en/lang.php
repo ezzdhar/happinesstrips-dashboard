@@ -921,4 +921,18 @@ return [
 	'price_periods_usd' => 'Price Periods (USD)',
 	'price_periods_gaps_warning' => 'Warning: There are gaps in price periods',
 	'price' => 'Price',
+
+	// Dropzone
+	'drag_drop_images' => 'Drag & Drop Images Here',
+	'or_click_to_browse' => 'Or click to browse',
+	'max_file_size' => 'Max file size',
+	'max_files' => 'Max files',
+	'uploading' => 'Uploading',
+	'new_images' => 'New Images',
+	'existing_images' => 'Existing Images',
+	'invalid_file_type' => 'Invalid file type',
+	'file_too_large' => 'File is too large',
+	'max_files_reached' => 'Maximum files reached',
+	'browse' => 'Browse',
+	'or' => 'or',
 ];

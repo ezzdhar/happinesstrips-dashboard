@@ -120,8 +120,8 @@
                     </div>
 
                     {{-- Add More Images --}}
-                    <x-image-library wire:model="images" wire:library="library" :preview="$library"
-                        label="{{ __('lang.add_more_images') }}" />
+                    <x-dropzone-images wire:model="images" label="{{ __('lang.add_more_images') }}" :max-files="10"
+                        :max-file-size="5" />
                 </div>
 
             </div>

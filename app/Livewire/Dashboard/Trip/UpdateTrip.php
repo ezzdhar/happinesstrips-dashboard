@@ -89,8 +89,6 @@ class UpdateTrip extends Component
 
 	public $city_id;
 
-	#[Rule('nullable')]
-	public Collection $library;
 
 	public function mount(): void
 	{
@@ -112,8 +110,6 @@ class UpdateTrip extends Component
 				'name' => $hotel->name,
 			];
 		})->toArray();
-
-		$this->library = collect();
 
 		// Load existing data
 		$this->main_category_id = $this->trip->main_category_id;
@@ -226,7 +222,8 @@ class UpdateTrip extends Component
 			'third_child_price_percentage' => 'required|numeric|min:0|max:100',
 			'additional_child_price_percentage' => 'required|numeric|min:0|max:100',
 			'free_child_age' => 'required|integer|min:0|max:18',
-			'adult_age' => 'required|integer|min:1|max:25|gt:free_child_age', 'notes_ar' => 'required|string',
+			'adult_age' => 'required|integer|min:1|max:25|gt:free_child_age',
+			'notes_ar' => 'required|string',
 			'notes_en' => 'required|string',
 			'program_ar' => 'required|string',
 			'program_en' => 'required|string',
