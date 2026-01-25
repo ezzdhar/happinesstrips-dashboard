@@ -917,4 +917,8 @@ return [
 	'hotel_images' => 'Hotel Images',
 	'age_range' => 'Age Range',
 	'add_age_range' => 'Add Age Range',
+	'price_periods_egp' => 'Price Periods (EGP)',
+	'price_periods_usd' => 'Price Periods (USD)',
+	'price_periods_gaps_warning' => 'Warning: There are gaps in price periods',
+	'price' => 'Price',
 ];

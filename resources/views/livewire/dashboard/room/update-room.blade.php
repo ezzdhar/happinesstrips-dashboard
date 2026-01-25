@@ -44,54 +44,108 @@
                     icon="o-sparkles" hint="{{ __('lang.select') . ' ' . __('lang.amenities') }}" />
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+            {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                 <x-trix required wire:model="includes_ar"
                     label="{{ __('lang.includes') . ' (' . __('lang.ar') . ')' }}"
                     key="{{ \Illuminate\Support\Str::random(20) }}"></x-trix>
                 <x-trix dir="ltr" required wire:model="includes_en"
                     label="{{ __('lang.includes') . ' (' . __('lang.en') . ')' }}"
                     key="{{ \Illuminate\Support\Str::random(20) }}"></x-trix>
-            </div>
+            </div> --}}
 
-            {{-- Price Periods Section --}}
-            <div class="mt-3">
+            {{-- EGP Price Periods Section --}}
+            <div class="mt-6">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-bold text-lg">{{ __('lang.price_periods') }}</h3>
-                    <x-button wire:click="addPricePeriod" icon="o-plus" class="btn-sm btn-primary">
+                    <h3 class="font-bold text-lg"><x-icon name="o-currency-dollar" class="w-5 h-5 inline" />
+                        {{ __('lang.price_periods_egp') }}</h3>
+                    <x-button wire:click="addPricePeriodEgp" icon="o-plus" class="btn-sm btn-primary"
+                        spinner="addPricePeriodEgp">
                         {{ __('lang.add_price_period') }}
                     </x-button>
                 </div>
 
-                @if (empty($price_periods))
-                    <div class="alert alert-warning">
+                @if ($egp_gaps_warning)
+                    <div class="alert alert-warning mb-3">
                         <x-icon name="o-exclamation-triangle" class="w-5 h-5" />
+                        <span>{{ $egp_gaps_warning }}</span>
+                    </div>
+                @endif
+
+                @if (empty($price_periods_egp))
+                    <div class="alert alert-info">
+                        <x-icon name="o-information-circle" class="w-5 h-5" />
                         <span>{{ __('lang.no_price_periods_added') }}</span>
                     </div>
                 @endif
 
-                @foreach ($price_periods as $index => $period)
+                @foreach ($price_periods_egp as $index => $period)
                     <div class="card bg-base-200 p-4 mb-3">
                         <div class="flex justify-between items-center mb-3">
                             <h4 class="font-semibold">{{ __('lang.price_period') }} #{{ $index + 1 }}</h4>
-                            <x-button wire:click="removePricePeriod({{ $index }})" icon="o-trash"
+                            <x-button wire:click="removePricePeriodEgp({{ $index }})" icon="o-trash"
                                 class="btn-sm btn-error btn-circle" />
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <x-input required label="{{ __('lang.start_date') }}"
-                                wire:model="price_periods.{{ $index }}.start_date" type="date"
+                                wire:model="price_periods_egp.{{ $index }}.start_date" type="date"
                                 icon="o-calendar" />
                             <x-input required label="{{ __('lang.end_date') }}"
-                                wire:model="price_periods.{{ $index }}.end_date" type="date"
+                                wire:model="price_periods_egp.{{ $index }}.end_date" type="date"
                                 icon="o-calendar" />
-                            <x-input required label="{{ __('lang.adult_price_egp') }}"
-                                wire:model="price_periods.{{ $index }}.adult_price_egp" type="number"
-                                step="0.01" min="0" placeholder="0" icon="o-currency-dollar"
+                            <x-input required label="{{ __('lang.price') }}"
+                                wire:model="price_periods_egp.{{ $index }}.price" type="number" step="0.01"
+                                min="0" placeholder="0" icon="o-currency-dollar" suffix="EGP"
                                 hint="{{ __('lang.price_per_person_per_night') }}" />
-                            <x-input required label="{{ __('lang.adult_price_usd') }}"
-                                wire:model="price_periods.{{ $index }}.adult_price_usd" type="number"
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- USD Price Periods Section --}}
+            <div class="mt-6">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-bold text-lg"><x-icon name="o-currency-dollar" class="w-5 h-5 inline" />
+                        {{ __('lang.price_periods_usd') }}</h3>
+                    <x-button wire:click="addPricePeriodUsd" icon="o-plus" class="btn-sm btn-success"
+                        spinner="addPricePeriodUsd">
+                        {{ __('lang.add_price_period') }}
+                    </x-button>
+                </div>
+
+                @if ($usd_gaps_warning)
+                    <div class="alert alert-warning mb-3">
+                        <x-icon name="o-exclamation-triangle" class="w-5 h-5" />
+                        <span>{{ $usd_gaps_warning }}</span>
+                    </div>
+                @endif
+
+                @if (empty($price_periods_usd))
+                    <div class="alert alert-info">
+                        <x-icon name="o-information-circle" class="w-5 h-5" />
+                        <span>{{ __('lang.no_price_periods_added') }}</span>
+                    </div>
+                @endif
+
+                @foreach ($price_periods_usd as $index => $period)
+                    <div class="card bg-success/10 p-4 mb-3">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-semibold">{{ __('lang.price_period') }} #{{ $index + 1 }}</h4>
+                            <x-button wire:click="removePricePeriodUsd({{ $index }})" icon="o-trash"
+                                class="btn-sm btn-error btn-circle" />
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <x-input required label="{{ __('lang.start_date') }}"
+                                wire:model="price_periods_usd.{{ $index }}.start_date" type="date"
+                                icon="o-calendar" />
+                            <x-input required label="{{ __('lang.end_date') }}"
+                                wire:model="price_periods_usd.{{ $index }}.end_date" type="date"
+                                icon="o-calendar" />
+                            <x-input required label="{{ __('lang.price') }}"
+                                wire:model="price_periods_usd.{{ $index }}.price" type="number"
                                 step="0.01" min="0" placeholder="0" icon="o-currency-dollar"
-                                hint="{{ __('lang.price_per_person_per_night') }}" />
+                                suffix="USD" hint="{{ __('lang.price_per_person_per_night') }}" />
                         </div>
                     </div>
                 @endforeach
@@ -99,13 +153,12 @@
 
             {{-- Children Policy Section --}}
             @if ($children_count > 0)
-                <div class="mt-3">
+                <div class="mt-6">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="font-bold text-lg"><x-icon name="o-user-group" class="w-5 h-5 inline" />
                             {{ __('lang.children_policy') }}</h3>
                     </div>
 
-                    {{-- Adult Age --}}
                     <div class="mb-4">
                         <x-input required label="{{ __('lang.adult_age') }}" wire:model="adult_age" type="number"
                             min="1" max="25" placeholder="12" icon="o-user-circle"
@@ -115,9 +168,7 @@
                     @foreach ($children_policy as $childIndex => $child)
                         <div class="card bg-base-200 p-4 mb-3">
                             <div class="flex justify-between items-center mb-3">
-                                <h4 class="font-semibold">
-                                    {{ __('lang.child') }} #{{ $childIndex + 1 }}
-                                </h4>
+                                <h4 class="font-semibold">{{ __('lang.child') }} #{{ $childIndex + 1 }}</h4>
                                 <x-button wire:click="addAgeRange({{ $childIndex }})" icon="o-plus"
                                     class="btn-sm btn-secondary" spinner="addAgeRange">
                                     {{ __('lang.add_age_range') }}
@@ -125,7 +176,7 @@
                             </div>
 
                             @foreach ($child['ranges'] as $rangeIndex => $range)
-                                <div class="bg-base-100 p-3 rounded-lg mb-2 {{ $rangeIndex > 0 ? 'mt-2' : '' }}">
+                                <div class="bg-base-100 p-3 rounded-lg mb-2">
                                     <div class="flex justify-between items-center mb-2">
                                         <span class="text-sm font-medium">{{ __('lang.age_range') }}
                                             #{{ $rangeIndex + 1 }}</span>
@@ -167,7 +218,6 @@
                                     class="w-24 h-24 object-cover rounded">
                                 <x-button icon="o-trash" size="w-16 h-16"
                                     class="object-cover rounded btn-sm absolute top-1 right-1 bg-red-500 text-white hover:bg-red-600 mt-2"
-                                    deleteLabel="{{ __('lang.delete_image') }}"
                                     wire:click="delete({{ $file->id }})" wire:loading.attr="disabled"
                                     wire:target="delete({{ $file->id }})" spinner="delete({{ $file->id }})"
                                     wire:confirm="{{ __('lang.confirm_delete', ['attribute' => __('lang.image')]) }}" />

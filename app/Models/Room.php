@@ -25,7 +25,6 @@ class Room extends Model
 	protected function casts(): array
 	{
 		return [
-			'price_periods' => 'array',
 			'status' => Status::class,
 			'is_featured' => 'boolean',
 			'discount_percentage' => 'decimal:2',
@@ -58,6 +57,30 @@ class Room extends Model
 	public function childrenPolicies(): HasMany
 	{
 		return $this->hasMany(RoomChildPolicy::class)->orderBy('child_number');
+	}
+
+	/**
+	 * علاقة فترات الأسعار
+	 */
+	public function pricePeriods(): HasMany
+	{
+		return $this->hasMany(RoomPricePeriod::class);
+	}
+
+	/**
+	 * فترات أسعار الجنيه المصري
+	 */
+	public function pricePeriodsEgp(): HasMany
+	{
+		return $this->pricePeriods()->where('currency', 'egp');
+	}
+
+	/**
+	 * فترات أسعار الدولار
+	 */
+	public function pricePeriodsUsd(): HasMany
+	{
+		return $this->pricePeriods()->where('currency', 'usd');
 	}
 
 	public function scopeStatus($query, $status = null)

@@ -3,18 +3,13 @@
 namespace App\Traits;
 
 use Carbon\Carbon;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 trait CalculatesHotelBookingPrice
 {
 	use ApiResponse;
 
 	/**
-	 * حساب السعر الإجمالي للحجز مع تطبيق جميع سياسات الفندق (البالغين والأطفال)
-	 * تستخدم لحساب السعر الكامل للحجز بما في ذلك البالغين والأطفال حسب أعمارهم وسياسات الفندق
-	 * وترجع تفصيل كامل بالأسعار والتواريخ والسياسات
-	 *
-	 * Calculate total booking price with all policies applied.
+	 * حساب السعر الإجمالي للحجز مع تطبيق جميع سياسات الغرفة (البالغين والأطفال)
 	 *
 	 * @param string|\DateTimeInterface $checkIn
 	 * @param string|\DateTimeInterface $checkOut
@@ -24,58 +19,43 @@ trait CalculatesHotelBookingPrice
 	public function calculateBookingPrice($checkIn, $checkOut, int $adultsCount, array $childrenAges = [], string $currency = 'egp'): array
 	{
 		$startDate = $checkIn instanceof \DateTimeInterface ? Carbon::instance($checkIn) : Carbon::parse($checkIn);
-
 		$endDate = $checkOut instanceof \DateTimeInterface ? Carbon::instance($checkOut) : Carbon::parse($checkOut);
 
-		// Normalize currency
 		$currency = $this->normalizeCurrency($currency);
-
 		if (!$currency) {
 			return $this->errorResponse('Invalid currency');
 		}
 
-		// Check if date range is covered
-		if (!$this->isDateRangeCovered($startDate, $endDate)) {
-			$uncoveredDates = $this->getUncoveredDates($startDate, $endDate);
+		// التحقق من التغطية لهذه العملة المحددة
+		if (!$this->isDateRangeCovered($startDate, $endDate, $currency)) {
+			$uncoveredDates = $this->getUncoveredDates($startDate, $endDate, $currency);
 			return $this->errorResponse(
 				__('lang.date_range_not_covered'),
-				[
-					'uncovered_dates' => $uncoveredDates,
-				]
+				['uncovered_dates' => $uncoveredDates]
 			);
 		}
 
-		// Get hotel
 		$hotel = $this->hotel;
-
-		// Calculate nights count
 		$nightsCount = $startDate->diffInDays($endDate);
 
 		if ($nightsCount <= 0) {
 			return $this->errorResponse('Invalid date range');
 		}
 
-		// Get adult price per person for the entire period
+		// حساب السعر للعملة المحددة
 		$adultPricePerPerson = $this->totalPriceForPeriod($startDate, $endDate, $currency);
 
 		if ($adultPricePerPerson === null || $adultPricePerPerson <= 0) {
 			return $this->errorResponse('Unable to calculate price');
 		}
 
-		// Calculate adults total
 		$adultsTotal = $adultPricePerPerson * $adultsCount;
 
-		// Calculate children pricing
-		$childrenBreakdown = $this->calculateChildrenPricing(
-			$hotel,
-			$adultPricePerPerson,
-			$childrenAges
-		);
+		// حساب أسعار الأطفال
+		$childrenBreakdown = $this->calculateChildrenPricing($adultPricePerPerson, $childrenAges);
 
-		// Calculate grand total
 		$grandTotal = $adultsTotal + $childrenBreakdown['total'];
 
-		// Get daily breakdown
 		$dailyBreakdown = $this->priceBreakdownForPeriod($startDate, $endDate, $currency);
 
 		return [
@@ -88,39 +68,31 @@ trait CalculatesHotelBookingPrice
 			'rating' => (int) $hotel->rating,
 			'check_in' => $startDate->format('Y-m-d'),
 			'check_out' => $endDate->format('Y-m-d'),
-			'nights_count' => (int)$nightsCount,
+			'nights_count' => (int) $nightsCount,
 			'currency' => strtoupper($currency),
 
-			// Adults
 			'adults_count' => $adultsCount,
 			'adult_price_per_person' => $adultPricePerPerson,
 			'adults_total' => $adultsTotal,
 
-			// Children
 			'children_count' => count($childrenAges),
 			'children_breakdown' => $childrenBreakdown['breakdown'],
 			'children_total' => $childrenBreakdown['total'],
 
-			// Totals
 			'subtotal' => $adultsTotal + $childrenBreakdown['total'],
 			'total_price' => $grandTotal,
 
-			// Daily breakdown
 			'daily_breakdown' => $dailyBreakdown['days'],
 			'price_per_night_average' => $nightsCount > 0 ? round($adultPricePerPerson / $nightsCount, 2) : 0,
 
-			// Hotel policies - now using room policy if available
 			'policies' => $this->getRoomPolicySummary(),
 		];
 	}
 
 	/**
-	 * حساب أسعار الأطفال بناءً على سياسة الغرفة الجديدة
-	 * تستخدم لتطبيق نسب التخفيض على الأطفال حسب أعمارهم ونطاقات العمر المحددة
-	 *
-	 * Calculate children pricing based on room policy.
+	 * حساب أسعار الأطفال بناءً على سياسة الغرفة
 	 */
-	protected function calculateChildrenPricing($hotel, float $adultPricePerPerson, array $childrenAges): array
+	protected function calculateChildrenPricing(float $adultPricePerPerson, array $childrenAges): array
 	{
 		$breakdown = [];
 		$total = 0;
@@ -128,25 +100,20 @@ trait CalculatesHotelBookingPrice
 		$policies = $this->childrenPolicies ?? collect();
 
 		foreach ($childrenAges as $index => $age) {
-			$age = (int)$age;
+			$age = (int) $age;
 			$childNumber = $index + 1;
 			$category = '';
 			$percentage = 0;
 			$price = 0;
 
-			// إذا كان السن يساوي أو أكبر من سن البالغ
 			if ($age >= $adultAge) {
 				$category = 'adult';
 				$percentage = 100;
 				$price = $adultPricePerPerson;
 			} else {
-				// البحث عن سياسة الطفل المناسبة من الجدول
-				// نبحث عن نطاق العمر المطابق لهذا الطفل
 				$childPolicy = $policies
 					->where('child_number', $childNumber)
-					->first(function ($policy) use ($age) {
-						return $age >= $policy->from_age && $age <= $policy->to_age;
-					});
+					->first(fn($policy) => $age >= $policy->from_age && $age <= $policy->to_age);
 
 				if ($childPolicy) {
 					$percentage = $childPolicy->price_percentage ?? 0;
@@ -159,7 +126,6 @@ trait CalculatesHotelBookingPrice
 						$price = ($adultPricePerPerson * $percentage) / 100;
 					}
 				} else {
-					// لا توجد سياسة مطابقة - يحسب كبالغ
 					$category = 'adult';
 					$percentage = 100;
 					$price = $adultPricePerPerson;
@@ -184,9 +150,6 @@ trait CalculatesHotelBookingPrice
 		];
 	}
 
-	/**
-	 * الحصول على ملخص سياسة الغرفة
-	 */
 	protected function getRoomPolicySummary(): array
 	{
 		return [
@@ -195,11 +158,6 @@ trait CalculatesHotelBookingPrice
 		];
 	}
 
-	/**
-	 * الحصول على تسمية توضيحية لفئة الطفل
-	 *
-	 * Get child category label.
-	 */
 	protected function getChildCategoryLabel(string $category, int $age): string
 	{
 		$adultAge = $this->adult_age ?? 12;
@@ -212,12 +170,6 @@ trait CalculatesHotelBookingPrice
 		};
 	}
 
-	/**
-	 * إرجاع رد خطأ موحد عند فشل عملية حساب السعر
-	 * تستخدم لإرجاع رسالة خطأ بصيغة موحدة تحتوي على success: false ورسالة الخطأ
-	 *
-	 * Error response format.
-	 */
 	protected function errorResponse(string $message, array $data = []): array
 	{
 		return array_merge([
@@ -227,24 +179,12 @@ trait CalculatesHotelBookingPrice
 	}
 
 	/**
-	 * حساب سعر الحجز البسيط بدون تفصيل الأطفال (حساب سريع مبسط)
-	 * تستخدم لحساب السعر بشكل أسرع بدون الدخول في تفاصيل أعمار الأطفال وسياساتهم
-	 * مفيدة عند الحاجة لعرض سعر تقريبي سريع
-	 *
-	 * Simple booking price calculation (without children breakdown).
-	 *
-	 * @param string|\DateTimeInterface $checkIn
-	 * @param string|\DateTimeInterface $checkOut
+	 * حساب سعر الحجز البسيط بدون تفصيل الأطفال
 	 */
 	public function calculateSimpleBookingPrice($checkIn, $checkOut, int $adultsCount, int $childrenCount = 0, string $currency = 'egp'): array
 	{
-		$startDate = $checkIn instanceof \DateTimeInterface
-			? Carbon::instance($checkIn)
-			: Carbon::parse($checkIn);
-
-		$endDate = $checkOut instanceof \DateTimeInterface
-			? Carbon::instance($checkOut)
-			: Carbon::parse($checkOut);
+		$startDate = $checkIn instanceof \DateTimeInterface ? Carbon::instance($checkIn) : Carbon::parse($checkIn);
+		$endDate = $checkOut instanceof \DateTimeInterface ? Carbon::instance($checkOut) : Carbon::parse($checkOut);
 
 		$currency = $this->normalizeCurrency($currency);
 
@@ -252,13 +192,12 @@ trait CalculatesHotelBookingPrice
 			return $this->errorResponse('Invalid currency');
 		}
 
-		if (!$this->isDateRangeCovered($startDate, $endDate)) {
+		if (!$this->isDateRangeCovered($startDate, $endDate, $currency)) {
 			return $this->errorResponse(__('lang.date_range_not_covered'));
 		}
 
 		$nightsCount = $startDate->diffInDays($endDate);
 		$adultPricePerPerson = $this->totalPriceForPeriod($startDate, $endDate, $currency);
-
 		$adultsTotal = $adultPricePerPerson * $adultsCount;
 
 		return [
