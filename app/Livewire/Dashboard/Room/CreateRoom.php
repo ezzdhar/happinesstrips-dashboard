@@ -329,9 +329,19 @@ class CreateRoom extends Component
     {
         $room->childrenPolicies()->delete();
 
+        if (empty($this->children_policy)) {
+            return;
+        }
+
         foreach ($this->children_policy as $childIndex => $child) {
             $childNumber = $childIndex + 1;
-            $normalizedRanges = $this->normalizeAndFillAgeRanges($child['ranges']);
+            $ranges = $child['ranges'] ?? [];
+
+            if (empty($ranges)) {
+                continue;
+            }
+
+            $normalizedRanges = $this->normalizeAndFillAgeRanges($ranges);
 
             foreach ($normalizedRanges as $range) {
                 $room->childrenPolicies()->create([
