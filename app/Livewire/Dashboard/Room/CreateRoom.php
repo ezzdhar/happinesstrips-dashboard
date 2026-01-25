@@ -100,10 +100,12 @@ class CreateRoom extends Component
             'price' => $p->price,
         ])->toArray();
 
-        // Children policy
+        // Children policy - Load all at once to avoid N+1
         $this->children_policy = [];
+        $allPolicies = $room->childrenPolicies()->get()->groupBy('child_number');
+
         for ($i = 0; $i < $this->children_count; $i++) {
-            $childPolicies = $room->childrenPolicies()->where('child_number', $i + 1)->get();
+            $childPolicies = $allPolicies->get($i + 1, collect());
             $this->children_policy[$i] = [
                 'ranges' => $childPolicies->map(fn($p) => [
                     'from_age' => $p->from_age,

@@ -229,7 +229,7 @@
 
             <div class="mt-3">
                 <x-dropzone-images wire:model="images" label="{{ __('lang.images') }}" :max-files="10"
-                    :max-file-size="5" />
+                    :max-file-size="90" />
             </div>
 
             <div class="mt-6 flex justify-end gap-2 px-4 pb-4">
