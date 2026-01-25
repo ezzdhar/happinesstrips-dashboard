@@ -939,4 +939,6 @@ return [
 	'show_amenity'        => 'عرض مرفق',
 	'update_amenity'      => 'تحديث مرفق',
 	'delete_amenity'      => 'حذف مرفق',
+	'name_ar' => 'الاسم باللغة العربية',
+	'name_en' => 'الاسم باللغة الإنجليزية',
 ];
