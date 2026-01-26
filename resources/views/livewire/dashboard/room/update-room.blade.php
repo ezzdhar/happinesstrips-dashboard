@@ -228,7 +228,7 @@
             @endif
 
             <div class="mt-3">
-                <x-dropzone-images wire:model="images" label="{{ __('lang.images') }}" :max-files="10"
+                <x-dropzone-images wire:model="images" label="{{ __('lang.images') }}" :max-files="90"
                     :max-file-size="90" />
             </div>
 

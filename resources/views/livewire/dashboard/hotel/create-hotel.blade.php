@@ -93,7 +93,7 @@
                     <x-icon name="o-photo" class="w-5 h-5 inline" /> {{ __('lang.images') }}
                 </h3>
                 {{-- <x-image-library wire:model="images" wire:library="library" :preview="$library" label="{{ __('lang.hotel_images') }}" /> --}}
-                <x-dropzone-images wire:model="images" label="{{ __('lang.images') }}" :max-files="10"
+                <x-dropzone-images wire:model="images" label="{{ __('lang.images') }}" :max-files="90"
                     :max-file-size="5" />
             </div>
 
