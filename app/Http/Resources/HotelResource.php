@@ -25,12 +25,6 @@ class HotelResource extends JsonResource
 			'description' => $this->description,
 			'address' => $this->address,
 			'facilities' => $this->facilities,
-			'first_child_price_percentage' => (int)$this->first_child_price_percentage,
-			'second_child_price_percentage' => (int)$this->second_child_price_percentage,
-			'third_child_price_percentage' => (int)$this->third_child_price_percentage,
-			'additional_child_price_percentage' => (int)$this->additional_child_price_percentage,
-			'free_child_age' => (int)$this->free_child_age,
-			'adult_age' => (int)$this->adult_age,
 			'main_image' => FileService::get($this->files->first()->path),
 			'hotel_types' => HotelTypeResource::collection($this->hotelTypes),
 			'image' => $this->files->map(function ($image) {

@@ -32,7 +32,7 @@ class CreateMainCategory extends Component
         return [
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'status' => 'required|in:'.Status::Active->value.','.Status::Inactive->value,
+            'status' => 'required|in:'.Status::Active.','.Status::Inactive,
             'image' => 'nullable|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
         ];
     }
