@@ -27,7 +27,7 @@ class SubCategory extends Model
 
     public function mainCategory(): BelongsTo
     {
-        return $this->belongsTo(MainCategory::class);
+        return $this->belongsTo(MainCategory::class)->withDefault(['name' => null]);
     }
 
     public function trips(): HasMany
