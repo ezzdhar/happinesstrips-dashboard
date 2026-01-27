@@ -49,14 +49,14 @@
                                 <th class="text-center text-nowrap">{{ $hotel->city->name }}</th>
                                 <th class="text-center">
                                     @foreach ($hotel->hotelTypes as $type)
-                                        <x-badge :value="$type->name" class="text-xs bg-blue-500 mb-1" />
+                                        <x-badge :value="$type->name" class=" whitespace-nowrap text-xs bg-blue-500 mb-1" />
                                     @endforeach
                                 </th>
                                 <th class="text-center">
                                     <div class="flex justify-center gap-0.5">
                                         @for ($i = 1; $i <= 5; $i++)
                                             <x-icon :name="$i <= $hotel->rating ? 'o-star' : 'o-star'"
-                                                class="w-4 h-4 {{ $i <= $hotel->rating ? 'text-yellow-400' : 'text-gray-300' }}" />
+                                                class="whitespace-nowrap w-4 h-4 {{ $i <= $hotel->rating ? 'text-yellow-400' : 'text-gray-300' }}" />
                                         @endfor
                                     </div>
                                 </th>

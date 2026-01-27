@@ -25,7 +25,7 @@ class CreateCity extends Component
     public function rules(): array
     {
         return [
-            'name_ar' => 'required|string|max:255',
+            'name_ar' => 'required|string|max:255|unique:name->ar',
             'name_en' => 'required|string|max:255',
 	        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];

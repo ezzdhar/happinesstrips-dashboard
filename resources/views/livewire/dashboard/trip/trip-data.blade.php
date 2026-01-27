@@ -54,10 +54,10 @@
 								</div>
 							</th>
 							<th class="text-center text-nowrap">
-								<x-badge :value="$trip->type->title()" class="bg-{{$trip->type->color()}}"/>
+								<x-badge :value="$trip->type->title()" class="whitespace-nowrap bg-{{$trip->type->color()}}"/>
 							</th>
 							<th class="text-center text-nowrap">
-								<x-badge :value="$trip->status->title()" class="bg-{{$trip->status->color()}}"/>
+								<x-badge :value="$trip->status->title()" class="whitespace-nowrap bg-{{$trip->status->color()}}"/>
 							</th>
 							<th class="text-center text-nowrap">{{formatDate($trip->created_at, true) }}</th>
 							<td>
