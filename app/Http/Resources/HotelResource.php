@@ -18,7 +18,7 @@ class HotelResource extends JsonResource
 			'id' => $this->id,
 			'city' => $this->city->name,
 			'name' => $this->name,
-			'type' => $this->hotelTypes->pluck('name')->toArray(),
+			'type' => $this->hotelTypes->pluck('name')->map(fn($name) => (string) $name)->values()->toArray(),
 			'rating' => (int)$this->rating,
 			'latitude' => (float)$this->latitude,
 			'longitude' => (float)$this->longitude,
