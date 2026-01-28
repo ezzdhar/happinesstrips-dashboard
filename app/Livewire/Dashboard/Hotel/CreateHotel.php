@@ -127,51 +127,59 @@ class CreateHotel extends Component
         ];
     }
 
-    public function saveAdd()
-    {
-        $this->validate();
-        $hotel = Hotel::create([
-            'city_id' => $this->city_id,
-            'email' => $this->email,
-            'name' => [
-                'ar' => $this->name_ar,
-                'en' => $this->name_en,
-            ],
-            'status' => $this->status,
-            'rating' => $this->rating,
-            'phone_key' => $this->phone_key,
-            'phone' => $this->phone,
-            'latitude' => $this->latitude,
-            'longitude' => $this->longitude,
-            'description' => [
-                'ar' => $this->description_ar,
-                'en' => $this->description_en,
-            ],
-            'address' => [
-                'ar' => $this->address_ar,
-                'en' => $this->address_en,
-            ],
-            'facilities' => [
-                'ar' => $this->facilities_ar,
-                'en' => $this->facilities_en,
-            ],
+	public function saveAdd()
+	{
+		try {
+			$this->validate();
 
-        ]);
+			$hotel = Hotel::create([
+				'city_id' => $this->city_id,
+				'email' => $this->email,
+				'name' => [
+					'ar' => $this->name_ar,
+					'en' => $this->name_en,
+				],
+				'status' => $this->status,
+				'rating' => $this->rating,
+				'phone_key' => $this->phone_key,
+				'phone' => $this->phone,
+				'latitude' => $this->latitude,
+				'longitude' => $this->longitude,
+				'description' => [
+					'ar' => $this->description_ar,
+					'en' => $this->description_en,
+				],
+				'address' => [
+					'ar' => $this->address_ar,
+					'en' => $this->address_en,
+				],
+				'facilities' => [
+					'ar' => $this->facilities_ar,
+					'en' => $this->facilities_en,
+				],]);
 
-        // Save images
-        if ($this->images) {
-            foreach ($this->images as $image) {
-                $hotel->files()->create([
-                    'path' => FileService::save($image, 'hotels'),
-                ]);
-            }
-        }
-        if ($this->hotel_type_ids) {
-            $hotel->hotelTypes()->attach($this->hotel_type_ids);
-        }
+			// Save images
+			if ($this->images) {
+				foreach ($this->images as $image) {
+					$hotel->files()->create([
+						'path' => FileService::save($image, 'hotels'),
+					]);
+				}
+			}
 
-        return to_route('hotels')->with('success', __('lang.added_successfully', ['attribute' => __('lang.hotel')]));
-    }
+			if ($this->hotel_type_ids) {
+				$hotel->hotelTypes()->attach($this->hotel_type_ids);
+			}
+
+			return to_route('hotels')->with('success', __('lang.added_successfully', ['attribute' => __('lang.hotel')]));
+		} catch (\Illuminate\Validation\ValidationException $e) {
+			foreach ($e->errors() as $field => $messages) {
+				foreach ($messages as $message) {
+					flash()->error($message);
+				}
+			}
+		}
+	}
 
     public function resetData(): void
     {
