@@ -69,8 +69,8 @@ new class extends Component {
 				@forelse($this->notifications as $notification)
 					<div class="block border-b border-base-200 rounded-lg p-2 hover:bg-base-200 transition mb-1 {{ $notification->read_at ?? 'bg-base-300' }}">
 						<a  class="cursor-pointer" wire:click="readNotification('{{ $notification->id }}')">
-							<div class="font-bold">{{ \Illuminate\Support\Str::limit($notification->data['title'],20) }}</div>
-							<div class="text-sm">{{ \Illuminate\Support\Str::limit($notification->data['body'],60)  }}</div>
+							<div class="font-bold">{{ \Illuminate\Support\Str::limit(is_array($notification->data['title']) ? ($notification->data['title'][app()->getLocale()] ?? $notification->data['title']['en'] ?? '') : ($notification->data['title'] ?? ''), 20) }}</div>
+							<div class="text-sm">{{ \Illuminate\Support\Str::limit(is_array($notification->data['body']) ? ($notification->data['body'][app()->getLocale()] ?? $notification->data['body']['en'] ?? '') : ($notification->data['body'] ?? ''), 60) }}</div>
 						</a>
 						<div class="text-xs mt-1" style="text-align: end">
 							<small>{{ $notification->created_at->diffForHumans() }}</small>
