@@ -14,7 +14,8 @@ class HotelWithCheapestRoomResource extends JsonResource
 			'id' => $this->id,
 			'city' => $this->city->name,
 			'name' => $this->name,
-			'type' =>  $this->hotelTypes->pluck('name')->toArray(),
+			'type' => $this->hotelTypes->pluck('name')->map(fn($name) => (string) $name)->values()->toArray(),
+			'hotel_types' => HotelTypeResource::collection($this->hotelTypes),
 			'rating' => (int) $this->rating,
 			'latitude' => (float) $this->latitude,
 			'longitude' => (float) $this->longitude,
@@ -28,7 +29,6 @@ class HotelWithCheapestRoomResource extends JsonResource
 			'free_child_age' => (int) $this->free_child_age,
 			'adult_age' => (int) $this->adult_age,
 			'main_image' => FileService::get($this->files->first()->path),
-			'hotel_types' => HotelTypeResource::collection($this->hotelTypes),
 			'image' => $this->files->map(function ($image) {
 				return FileService::get($image->path);
 			}),

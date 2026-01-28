@@ -51,10 +51,12 @@
                 </h3>
 
                 {{-- استخدام الـ Google Map Component --}}
-                <x-google-map :latitude="$latitude" :longitude="$longitude" :address-ar="$address_ar" :address-en="$address_en" dir="ltr"
-                    latitude-property="latitude" longitude-property="longitude" address-ar-property="address_ar"
-                    address-en-property="address_en" dir="ltr" height="500px" map-id="map"
-                    search-input-id="pac-input" />
+                <div wire:ignore>
+                    <x-google-map :latitude="$latitude" :longitude="$longitude" :address-ar="$address_ar" :address-en="$address_en" dir="ltr"
+                        latitude-property="latitude" longitude-property="longitude" address-ar-property="address_ar"
+                        address-en-property="address_en" height="500px" map-id="map"
+                        search-input-id="pac-input" />
+                </div>
             </div>
 
             {{-- Facilities Section --}}

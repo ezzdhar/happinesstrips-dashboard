@@ -341,9 +341,7 @@ class CreateRoom extends Component
                 continue;
             }
 
-            $normalizedRanges = $this->normalizeAndFillAgeRanges($ranges);
-
-            foreach ($normalizedRanges as $range) {
+            foreach ($ranges as $range) {
                 $room->childrenPolicies()->create([
                     'child_number' => $childNumber,
                     'from_age' => (int) $range['from_age'],
@@ -352,33 +350,5 @@ class CreateRoom extends Component
                 ]);
             }
         }
-    }
-
-    protected function normalizeAndFillAgeRanges(array $ranges): array
-    {
-        $maxAge = $this->adult_age - 1;
-        usort($ranges, fn($a, $b) => $a['from_age'] <=> $b['from_age']);
-
-        $normalizedRanges = [];
-        $currentAge = 0;
-
-        foreach ($ranges as $range) {
-            $fromAge = (int) $range['from_age'];
-            $toAge = (int) $range['to_age'];
-            $percentage = (float) $range['price_percentage'];
-
-            if ($fromAge > $currentAge) {
-                $normalizedRanges[] = ['from_age' => $currentAge, 'to_age' => $fromAge - 1, 'price_percentage' => 100];
-            }
-
-            $normalizedRanges[] = ['from_age' => max($fromAge, $currentAge), 'to_age' => min($toAge, $maxAge), 'price_percentage' => $percentage];
-            $currentAge = $toAge + 1;
-        }
-
-        if ($currentAge <= $maxAge) {
-            $normalizedRanges[] = ['from_age' => $currentAge, 'to_age' => $maxAge, 'price_percentage' => 100];
-        }
-
-        return $normalizedRanges;
     }
 }
