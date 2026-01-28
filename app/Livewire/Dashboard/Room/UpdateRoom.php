@@ -21,26 +21,46 @@ class UpdateRoom extends Component
     public Room $room;
 
     public $name_ar;
+
     public $name_en;
+
     public $status;
+
     public $is_featured;
+
     public $discount_percentage = 0;
+
     public $hotel_id;
+
     public $adults_count;
+
     public $children_count;
+
     public $includes_ar;
+
     public $includes_en;
+
     public $images = [];
+
     public $hotels = [];
+
     public $amenities = [];
+
     public $selected_amenities = [];
+
     public $children_policy = [];
+
     public $adult_age = 12;
 
     public $price_periods_egp = [];
+
     public $price_periods_usd = [];
+
     public $egp_gaps_warning = '';
+
     public $usd_gaps_warning = '';
+
+    public $isProcessing = false;
 
     public function mount(): void
     {
@@ -55,12 +75,12 @@ class UpdateRoom extends Component
         $this->includes_ar = $this->room->getTranslation('includes', 'ar');
         $this->includes_en = $this->room->getTranslation('includes', 'en');
 
-        $this->hotels = Hotel::status(Status::Active)->get(['id', 'name'])->map(fn($h) => [
+        $this->hotels = Hotel::status(Status::Active)->get(['id', 'name'])->map(fn ($h) => [
             'id' => $h->id,
             'name' => $h->name,
         ])->toArray();
 
-        $this->amenities = Amenity::get(['id', 'name', 'icon'])->map(fn($a) => [
+        $this->amenities = Amenity::get(['id', 'name', 'icon'])->map(fn ($a) => [
             'id' => $a->id,
             'name' => $a->name,
             'icon' => $a->icon,
@@ -76,14 +96,14 @@ class UpdateRoom extends Component
     protected function loadPricePeriods(): void
     {
         // تحميل فترات الجنيه من الجدول
-        $this->price_periods_egp = $this->room->pricePeriodsEgp()->get()->map(fn($p) => [
+        $this->price_periods_egp = $this->room->pricePeriodsEgp()->get()->map(fn ($p) => [
             'start_date' => $p->start_date->format('Y-m-d'),
             'end_date' => $p->end_date->format('Y-m-d'),
             'price' => $p->price,
         ])->toArray();
 
         // تحميل فترات الدولار من الجدول
-        $this->price_periods_usd = $this->room->pricePeriodsUsd()->get()->map(fn($p) => [
+        $this->price_periods_usd = $this->room->pricePeriodsUsd()->get()->map(fn ($p) => [
             'start_date' => $p->start_date->format('Y-m-d'),
             'end_date' => $p->end_date->format('Y-m-d'),
             'price' => $p->price,
@@ -136,32 +156,45 @@ class UpdateRoom extends Component
 
     public function saveUpdate()
     {
-        $this->validate();
-        $this->checkPricePeriodsGaps();
-
-        $this->room->update([
-            'name' => ['ar' => $this->name_ar, 'en' => $this->name_en],
-            'is_featured' => $this->is_featured,
-            'discount_percentage' => $this->is_featured ? $this->discount_percentage : 0,
-            'hotel_id' => $this->hotel_id,
-            'adults_count' => $this->adults_count,
-            'children_count' => $this->children_count,
-            'status' => $this->status,
-            'includes' => ['ar' => $this->includes_ar, 'en' => $this->includes_en],
-            'adult_age' => $this->adult_age,
-        ]);
-
-        $this->savePricePeriods($this->room);
-        $this->saveChildrenPolicies($this->room);
-        $this->room->amenities()->sync($this->selected_amenities ?? []);
-
-        if (!empty($this->images)) {
-            foreach ($this->images as $image) {
-                $this->room->files()->create(['path' => FileService::save($image, 'rooms')]);
-            }
+        // منع الـ double-click
+        if ($this->isProcessing) {
+            return;
         }
 
-        return to_route('rooms')->with('success', __('lang.updated_successfully', ['attribute' => __('lang.room')]));
+        $this->isProcessing = true;
+
+        try {
+            $this->validate();
+            $this->checkPricePeriodsGaps();
+
+            \DB::transaction(function () {
+                $this->room->update([
+                    'name' => ['ar' => $this->name_ar, 'en' => $this->name_en],
+                    'is_featured' => $this->is_featured,
+                    'discount_percentage' => $this->is_featured ? $this->discount_percentage : 0,
+                    'hotel_id' => $this->hotel_id,
+                    'adults_count' => $this->adults_count,
+                    'children_count' => $this->children_count,
+                    'status' => $this->status,
+                    'includes' => ['ar' => $this->includes_ar, 'en' => $this->includes_en],
+                    'adult_age' => $this->adult_age,
+                ]);
+
+                $this->savePricePeriods($this->room);
+                $this->saveChildrenPolicies($this->room);
+                $this->room->amenities()->sync($this->selected_amenities ?? []);
+
+                if (! empty($this->images)) {
+                    foreach ($this->images as $image) {
+                        $this->room->files()->create(['path' => FileService::save($image, 'rooms')]);
+                    }
+                }
+            });
+
+            return to_route('rooms')->with('success', __('lang.updated_successfully', ['attribute' => __('lang.room')]));
+        } finally {
+            $this->isProcessing = false;
+        }
     }
 
     protected function savePricePeriods(Room $room): void
@@ -236,27 +269,31 @@ class UpdateRoom extends Component
 
     protected function detectGaps(array $periods): string
     {
-        if (empty($periods)) return '';
-        usort($periods, fn($a, $b) => strtotime($a['start_date']) <=> strtotime($b['start_date']));
+        if (empty($periods)) {
+            return '';
+        }
+        usort($periods, fn ($a, $b) => strtotime($a['start_date']) <=> strtotime($b['start_date']));
 
         $gaps = [];
         $previousEnd = null;
 
         foreach ($periods as $period) {
-            if (empty($period['start_date']) || empty($period['end_date'])) continue;
+            if (empty($period['start_date']) || empty($period['end_date'])) {
+                continue;
+            }
             $startDate = strtotime($period['start_date']);
             $endDate = strtotime($period['end_date']);
 
             if ($previousEnd !== null) {
                 $expectedStart = strtotime('+1 day', $previousEnd);
                 if ($startDate > $expectedStart) {
-                    $gaps[] = date('Y-m-d', $expectedStart) . ' - ' . date('Y-m-d', strtotime('-1 day', $startDate));
+                    $gaps[] = date('Y-m-d', $expectedStart).' - '.date('Y-m-d', strtotime('-1 day', $startDate));
                 }
             }
             $previousEnd = $endDate;
         }
 
-        return empty($gaps) ? '' : __('lang.price_periods_gaps_warning') . ': ' . implode(', ', $gaps);
+        return empty($gaps) ? '' : __('lang.price_periods_gaps_warning').': '.implode(', ', $gaps);
     }
 
     public function delete($id): void
@@ -287,7 +324,7 @@ class UpdateRoom extends Component
 
             if ($childPolicies->isEmpty()) {
                 $this->children_policy[] = [
-                    'ranges' => [['from_age' => 0, 'to_age' => $this->adult_age - 1, 'price_percentage' => 0]]
+                    'ranges' => [['from_age' => 0, 'to_age' => $this->adult_age - 1, 'price_percentage' => 0]],
                 ];
             } else {
                 $ranges = [];
@@ -310,7 +347,7 @@ class UpdateRoom extends Component
 
         for ($i = 0; $i < $count; $i++) {
             $this->children_policy[] = [
-                'ranges' => [['from_age' => 0, 'to_age' => $this->adult_age - 1, 'price_percentage' => 0]]
+                'ranges' => [['from_age' => 0, 'to_age' => $this->adult_age - 1, 'price_percentage' => 0]],
             ];
         }
     }
@@ -334,19 +371,34 @@ class UpdateRoom extends Component
 
     protected function saveChildrenPolicies(Room $room): void
     {
+        // حذف السياسات القديمة أولاً
         $room->childrenPolicies()->delete();
+
+        if (empty($this->children_policy)) {
+            return;
+        }
 
         foreach ($this->children_policy as $childIndex => $child) {
             $childNumber = $childIndex + 1;
             $ranges = $child['ranges'] ?? [];
 
+            if (empty($ranges)) {
+                continue;
+            }
+
             foreach ($ranges as $range) {
-                $room->childrenPolicies()->create([
-                    'child_number' => $childNumber,
-                    'from_age' => (int) $range['from_age'],
-                    'to_age' => (int) $range['to_age'],
-                    'price_percentage' => (float) $range['price_percentage'],
-                ]);
+                // استخدام updateOrCreate لتجنب الـ duplicate entries
+                $room->childrenPolicies()->updateOrCreate(
+                    [
+                        'room_id' => $room->id,
+                        'child_number' => $childNumber,
+                        'from_age' => (int) $range['from_age'],
+                    ],
+                    [
+                        'to_age' => (int) $range['to_age'],
+                        'price_percentage' => (float) $range['price_percentage'],
+                    ]
+                );
             }
         }
     }

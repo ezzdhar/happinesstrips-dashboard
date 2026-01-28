@@ -17,42 +17,63 @@ class CreateRoom extends Component
     use WithFileUploads;
 
     public $name_ar;
+
     public $name_en;
+
     public $status;
+
     public $is_featured = false;
+
     public $discount_percentage = 0;
+
     public $hotel_id;
+
     public $adults_count = 1;
+
     public $children_count = 0;
+
     public $includes_ar;
+
     public $includes_en;
+
     public $images = [];
+
     public $hotels = [];
+
     public $amenities = [];
+
     public $selected_amenities = [];
+
     public $children_policy = [];
+
     public $adult_age = 12;
 
     // فترات الأسعار المنفصلة لكل عملة
     public $price_periods_egp = [];
+
     public $price_periods_usd = [];
 
     // تحذيرات الفجوات
     public $egp_gaps_warning = '';
+
     public $usd_gaps_warning = '';
+
+    // حماية من الـ double-click
+    public $isProcessing = false;
 
     // Clone mode
     public ?Room $sourceRoom = null;
+
     public bool $isCloneMode = false;
 
     public function mount(?Room $room = null): void
     {
-        $this->hotels = Hotel::status(Status::Active)->get(['id', 'name'])->map(fn($h) => [
+        $this->hotels = Hotel::status(Status::Active)->get(['id', 'name'])->map(fn ($h) => [
             'id' => $h->id,
             'name' => $h->name,
         ])->toArray();
 
-        $this->amenities = Amenity::get(['id', 'name', 'icon'])->map(fn($a) => [
+        $this->amenities = Amenity::get(['id', 'name', 'icon'])->map(fn ($a) => [
             'id' => $a->id,
             'name' => $a->name,
             'icon' => $a->icon,
@@ -71,8 +92,8 @@ class CreateRoom extends Component
     protected function loadFromSourceRoom(Room $room): void
     {
         // Basic info - add "نسخة من" prefix to name
-        $this->name_ar = __('lang.copy_of') . ' ' . $room->getTranslation('name', 'ar');
-        $this->name_en = 'Copy of ' . $room->getTranslation('name', 'en');
+        $this->name_ar = __('lang.copy_of').' '.$room->getTranslation('name', 'ar');
+        $this->name_en = 'Copy of '.$room->getTranslation('name', 'en');
         $this->hotel_id = $room->hotel_id;
         $this->status = $room->status->value;
         $this->is_featured = $room->is_featured;
@@ -87,14 +108,14 @@ class CreateRoom extends Component
         $this->selected_amenities = $room->amenities->pluck('id')->toArray();
 
         // Price periods EGP
-        $this->price_periods_egp = $room->pricePeriodsEgp()->get()->map(fn($p) => [
+        $this->price_periods_egp = $room->pricePeriodsEgp()->get()->map(fn ($p) => [
             'start_date' => $p->start_date->format('Y-m-d'),
             'end_date' => $p->end_date->format('Y-m-d'),
             'price' => $p->price,
         ])->toArray();
 
         // Price periods USD
-        $this->price_periods_usd = $room->pricePeriodsUsd()->get()->map(fn($p) => [
+        $this->price_periods_usd = $room->pricePeriodsUsd()->get()->map(fn ($p) => [
             'start_date' => $p->start_date->format('Y-m-d'),
             'end_date' => $p->end_date->format('Y-m-d'),
             'price' => $p->price,
@@ -107,11 +128,11 @@ class CreateRoom extends Component
         for ($i = 0; $i < $this->children_count; $i++) {
             $childPolicies = $allPolicies->get($i + 1, collect());
             $this->children_policy[$i] = [
-                'ranges' => $childPolicies->map(fn($p) => [
+                'ranges' => $childPolicies->map(fn ($p) => [
                     'from_age' => $p->from_age,
                     'to_age' => $p->to_age,
                     'price_percentage' => $p->price_percentage,
-                ])->toArray() ?: [['from_age' => 0, 'to_age' => 11, 'price_percentage' => 0]]
+                ])->toArray() ?: [['from_age' => 0, 'to_age' => 11, 'price_percentage' => 0]],
             ];
         }
     }
@@ -167,38 +188,53 @@ class CreateRoom extends Component
 
     public function saveAdd()
     {
-        $this->validate();
-        $this->checkPricePeriodsGaps();
-
-        $room = Room::create([
-            'name' => ['ar' => $this->name_ar, 'en' => $this->name_en],
-            'hotel_id' => $this->hotel_id,
-            'is_featured' => $this->is_featured,
-            'discount_percentage' => $this->is_featured ? $this->discount_percentage : 0,
-            'adults_count' => $this->adults_count,
-            'children_count' => $this->children_count,
-            'status' => $this->status,
-            'includes' => ['ar' => $this->includes_ar, 'en' => $this->includes_en],
-            'adult_age' => $this->adult_age,
-        ]);
-
-        // حفظ فترات الأسعار في الجدول
-        $this->savePricePeriods($room);
-
-        // حفظ سياسات الأطفال
-        $this->saveChildrenPolicies($room);
-
-        if (!empty($this->selected_amenities)) {
-            $room->amenities()->sync($this->selected_amenities);
+        // منع الـ double-click
+        if ($this->isProcessing) {
+            return;
         }
 
-        if (!empty($this->images)) {
-            foreach ($this->images as $image) {
-                $room->files()->create(['path' => FileService::save($image, 'rooms')]);
-            }
-        }
+        $this->isProcessing = true;
 
-        return to_route('rooms')->with('success', __('lang.added_successfully', ['attribute' => __('lang.room')]));
+        try {
+            $this->validate();
+            $this->checkPricePeriodsGaps();
+
+            $room = \DB::transaction(function () {
+                $room = Room::create([
+                    'name' => ['ar' => $this->name_ar, 'en' => $this->name_en],
+                    'hotel_id' => $this->hotel_id,
+                    'is_featured' => $this->is_featured,
+                    'discount_percentage' => $this->is_featured ? $this->discount_percentage : 0,
+                    'adults_count' => $this->adults_count,
+                    'children_count' => $this->children_count,
+                    'status' => $this->status,
+                    'includes' => ['ar' => $this->includes_ar, 'en' => $this->includes_en],
+                    'adult_age' => $this->adult_age,
+                ]);
+
+                // حفظ فترات الأسعار في الجدول
+                $this->savePricePeriods($room);
+
+                // حفظ سياسات الأطفال
+                $this->saveChildrenPolicies($room);
+
+                if (! empty($this->selected_amenities)) {
+                    $room->amenities()->sync($this->selected_amenities);
+                }
+
+                if (! empty($this->images)) {
+                    foreach ($this->images as $image) {
+                        $room->files()->create(['path' => FileService::save($image, 'rooms')]);
+                    }
+                }
+
+                return $room;
+            });
+
+            return to_route('rooms')->with('success', __('lang.added_successfully', ['attribute' => __('lang.room')]));
+        } finally {
+            $this->isProcessing = false;
+        }
     }
 
     protected function savePricePeriods(Room $room): void
@@ -266,15 +302,19 @@ class CreateRoom extends Component
 
     protected function detectGaps(array $periods): string
     {
-        if (empty($periods)) return '';
+        if (empty($periods)) {
+            return '';
+        }
 
-        usort($periods, fn($a, $b) => strtotime($a['start_date']) <=> strtotime($b['start_date']));
+        usort($periods, fn ($a, $b) => strtotime($a['start_date']) <=> strtotime($b['start_date']));
 
         $gaps = [];
         $previousEnd = null;
 
         foreach ($periods as $period) {
-            if (empty($period['start_date']) || empty($period['end_date'])) continue;
+            if (empty($period['start_date']) || empty($period['end_date'])) {
+                continue;
+            }
 
             $startDate = strtotime($period['start_date']);
             $endDate = strtotime($period['end_date']);
@@ -282,13 +322,13 @@ class CreateRoom extends Component
             if ($previousEnd !== null) {
                 $expectedStart = strtotime('+1 day', $previousEnd);
                 if ($startDate > $expectedStart) {
-                    $gaps[] = date('Y-m-d', $expectedStart) . ' - ' . date('Y-m-d', strtotime('-1 day', $startDate));
+                    $gaps[] = date('Y-m-d', $expectedStart).' - '.date('Y-m-d', strtotime('-1 day', $startDate));
                 }
             }
             $previousEnd = $endDate;
         }
 
-        return empty($gaps) ? '' : __('lang.price_periods_gaps_warning') . ': ' . implode(', ', $gaps);
+        return empty($gaps) ? '' : __('lang.price_periods_gaps_warning').': '.implode(', ', $gaps);
     }
 
     public function updatedChildrenCount(): void
@@ -303,7 +343,7 @@ class CreateRoom extends Component
 
         for ($i = 0; $i < $count; $i++) {
             $this->children_policy[] = [
-                'ranges' => [['from_age' => 0, 'to_age' => $this->adult_age - 1, 'price_percentage' => 0]]
+                'ranges' => [['from_age' => 0, 'to_age' => $this->adult_age - 1, 'price_percentage' => 0]],
             ];
         }
     }
@@ -327,6 +367,7 @@ class CreateRoom extends Component
 
     protected function saveChildrenPolicies(Room $room): void
     {
+        // حذف السياسات القديمة أولاً (في حالة الـ clone mode)
         $room->childrenPolicies()->delete();
 
         if (empty($this->children_policy)) {
@@ -342,12 +383,18 @@ class CreateRoom extends Component
             }
 
             foreach ($ranges as $range) {
-                $room->childrenPolicies()->create([
-                    'child_number' => $childNumber,
-                    'from_age' => (int) $range['from_age'],
-                    'to_age' => (int) $range['to_age'],
-                    'price_percentage' => (float) $range['price_percentage'],
-                ]);
+                // استخدام updateOrCreate لتجنب الـ duplicate entries
+                $room->childrenPolicies()->updateOrCreate(
+                    [
+                        'room_id' => $room->id,
+                        'child_number' => $childNumber,
+                        'from_age' => (int) $range['from_age'],
+                    ],
+                    [
+                        'to_age' => (int) $range['to_age'],
+                        'price_percentage' => (float) $range['price_percentage'],
+                    ]
+                );
             }
         }
     }
