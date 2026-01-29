@@ -55,7 +55,7 @@ trait HasPricePeriods
 		$totalNightsRequired = $start->diffInDays($end);
 		$coveredNights = 0;
 
-		$periods = $this->pricePeriods()->where('currency', $currency)->get();
+		$periods = $this->pricePeriods()->where('currency', $currency)->orderBy('start_date')->get();
 
 		foreach ($periods as $period) {
 			$pStart = Carbon::parse($period->start_date)->startOfDay();
@@ -89,7 +89,7 @@ trait HasPricePeriods
 		$calculatedNights = 0;
 		$totalPrice = 0.0;
 
-		$periods = $this->pricePeriods()->where('currency', $currency)->get();
+		$periods = $this->pricePeriods()->where('currency', $currency)->orderBy('start_date')->get();
 
 		foreach ($periods as $period) {
 			$pStart = Carbon::parse($period->start_date)->startOfDay();
@@ -197,7 +197,7 @@ trait HasPricePeriods
 	private function buildPriceMap(Carbon $start, Carbon $end, string $currency): array
 	{
 		$map = [];
-		$periods = $this->pricePeriods()->where('currency', $currency)->get();
+		$periods = $this->pricePeriods()->where('currency', $currency)->orderBy('start_date')->get();
 
 		foreach ($periods as $period) {
 			$pStart = Carbon::parse($period->start_date)->startOfDay();

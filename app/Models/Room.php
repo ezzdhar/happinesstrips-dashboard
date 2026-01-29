@@ -106,37 +106,31 @@ class Room extends Model
 		$startDate = Carbon::parse(request()->start_date)->format('Y-m-d');
 		$endDate = Carbon::parse(request()->end_date)->format('Y-m-d');
 		$currency = strtolower(request()->attributes->get('currency', 'egp'));
+		$nightsRequired = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
 
-		// استخدام جدول room_price_periods بدلاً من JSON column
-		return $query->whereExists(function ($subQuery) use ($startDate, $endDate, $currency) {
-			$subQuery->selectRaw('1')
-				->from('room_price_periods')
-				->whereColumn('room_price_periods.room_id', 'rooms.id')
-				->where('room_price_periods.currency', $currency)
-				->whereRaw("
-					(
-						SELECT COALESCE(SUM(
-							GREATEST(0, DATEDIFF(
-								LEAST(rpp.end_date, ?),
-								GREATEST(rpp.start_date, ?)
-							))
-						), 0)
-						FROM room_price_periods rpp
-						WHERE rpp.room_id = rooms.id
-						AND rpp.currency = ?
-						AND rpp.start_date < ?
-						AND rpp.end_date > ?
-					) >= DATEDIFF(?, ?)
-				", [
-					$endDate,
-					$startDate,
-					$currency,
-					$endDate,
-					$startDate,
-					$endDate,
-					$startDate,
-				]);
-		});
+		// التحقق من أن مجموع الليالي المغطاة >= الليالي المطلوبة
+		return $query->whereRaw("
+			(
+				SELECT COALESCE(SUM(
+					GREATEST(0, DATEDIFF(
+						LEAST(rpp.end_date, ?),
+						GREATEST(rpp.start_date, ?)
+					) + 1)
+				), 0)
+				FROM room_price_periods rpp
+				WHERE rpp.room_id = rooms.id
+				AND rpp.currency = ?
+				AND rpp.start_date <= ?
+				AND rpp.end_date >= ?
+			) >= ?
+		", [
+			$endDate,
+			$startDate,
+			$currency,
+			$endDate,
+			$startDate,
+			$nightsRequired,
+		]);
 	}
 
 	public function scopeFilterByCalculatedPrice($query)
