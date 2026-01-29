@@ -195,26 +195,15 @@ class UpdateBookingTrip extends Component
             $freeChildrenAdded = 0;
 
             for ($i = $currentTravelers; $i < $totalTravelers; $i++) {
-                if ($adultsAdded < $this->adults_count) {
-                    $type = 'adult';
-                    $adultsAdded++;
-                } elseif ($childrenAdded < $this->children_count) {
-                    $type = 'child';
-                    $childrenAdded++;
-                } else {
-                    $type = 'child';
-                    $freeChildrenAdded++;
-                }
-
                 $this->travelers[] = [
                     'full_name' => '',
                     'phone_key' => '+20',
                     'phone' => '',
                     'nationality' => 'مصر',
-                    'age' => $type === 'adult' ? 18 : 5,
+                    'age' => '',
                     'id_type' => 'passport',
                     'id_number' => '',
-                    'type' => $type,
+                    // 'type' => $type, // Removed
                 ];
             }
         }

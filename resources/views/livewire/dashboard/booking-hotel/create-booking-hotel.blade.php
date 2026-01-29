@@ -320,7 +320,7 @@
 					@foreach($travelers as $index => $traveler)
 						<div class="bg-base-200 p-4 rounded-lg mb-3" wire:key="traveler-{{ $index }}">
 							<h4 class="font-semibold mb-3">
-								{{ $traveler['type'] == 'adult' ? __('lang.adult') : __('lang.child') }} #{{ $index + 1 }}
+								{{ __('lang.traveler') }} #{{ $index + 1 }}
 							</h4>
 							<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
 								<x-input required label="{{ __('lang.full_name') }}" wire:model="travelers.{{ $index }}.full_name" icon="o-user"/>

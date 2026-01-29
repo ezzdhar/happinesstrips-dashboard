@@ -224,31 +224,17 @@ class CreateBookingTrip extends Component
 		$currentTravelers = count($this->travelers);
 
 		// Add travelers if needed
-		if ($totalTravelers > $currentTravelers) {
-			$adultsAdded = 0;
-			$childrenAdded = 0;
-
-			for ($i = $currentTravelers; $i < $totalTravelers; $i++) {
-				// Determine traveler type based on counts
-				if ($adultsAdded < $this->adults_count) {
-					$type = 'adult';
-					$adultsAdded++;
-				} else {
-					$type = 'child';
-					$childrenAdded++;
-				}
-
-				$this->travelers[] = [
-					'full_name' => '',
-					'phone_key' => '+20',
-					'phone' => '',
-					'nationality' => 'مصر',
-					'age' => '',
-					'id_type' => '',
-					'id_number' => '',
-					'type' => $type,
-				];
-			}
+		for ($i = $currentTravelers; $i < $totalTravelers; $i++) {
+			$this->travelers[] = [
+				'full_name' => '',
+				'phone_key' => '+20',
+				'phone' => '',
+				'nationality' => 'مصر',
+				'age' => '',
+				'id_type' => '',
+				'id_number' => '',
+				// 'type' => $type, // Removed
+			];
 		}
 
 		// Remove excess travelers if needed

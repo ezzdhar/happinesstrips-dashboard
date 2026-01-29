@@ -34,9 +34,9 @@ class TripBookingService
 		);
 
 		// التحقق من نجاح الحساب
-//		if (!$pricingResult['success']) {
-//			throw new Exception($pricingResult['error']);
-//		}
+		//		if (!$pricingResult['success']) {
+		//			throw new Exception($pricingResult['error']);
+		//		}
 
 		// 3. بدء الترانزكشن وإنشاء البيانات
 		try {
@@ -79,7 +79,8 @@ class TripBookingService
 						'age' => $travelerData['age'],
 						'id_type' => $travelerData['id_type'],
 						'id_number' => $travelerData['id_number'],
-						'type' => $travelerData['type'],
+						'id_number' => $travelerData['id_number'],
+						'type' => $travelerData['type'] ?? ($travelerData['age'] >= 12 ? 'adult' : 'child'),
 					]);
 				}
 				return $booking;
@@ -90,6 +91,4 @@ class TripBookingService
 			throw new Exception(__('lang.error_occurred'));
 		}
 	}
-
-
 }

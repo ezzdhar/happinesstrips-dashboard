@@ -208,7 +208,7 @@ class CreateBookingHotel extends Component
 				'age' => '',
 				'id_type' => '',
 				'id_number' => '',
-				'type' => 'adult',
+				// 'type' => 'adult', // Removed
 			];
 		}
 
@@ -222,7 +222,7 @@ class CreateBookingHotel extends Component
 				'age' => '',
 				'id_type' => 'passport',
 				'id_number' => '',
-				'type' => 'child',
+				// 'type' => 'child', // Removed
 			];
 		}
 	}

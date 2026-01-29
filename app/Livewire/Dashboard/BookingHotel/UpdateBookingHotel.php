@@ -236,49 +236,37 @@ class UpdateBookingHotel extends Component
 	 */
 	public function syncTravelersArray(): void
 	{
-		// 1. فصل البالغين والأطفال الحاليين
-		$currentAdults = collect($this->travelers)->where('type', 'adult')->values();
-		$currentChildren = collect($this->travelers)->where('type', 'child')->values();
+		$totalRequired = $this->adults_count + count($this->children_ages);
+		$currentCount = count($this->travelers);
 
-		$newTravelersList = [];
-
-		// 2. معالجة البالغين
-		for ($i = 0; $i < $this->adults_count; $i++) {
-			if (isset($currentAdults[$i])) {
-				$newTravelersList[] = $currentAdults[$i]; // إبقاء الموجود
-			} else {
-				$newTravelersList[] = $this->getEmptyTraveler('adult'); // إضافة جديد
+		// Adjust array size
+		if ($currentCount < $totalRequired) {
+			for ($i = $currentCount; $i < $totalRequired; $i++) {
+				$this->travelers[] = $this->getEmptyTraveler();
 			}
+		} elseif ($currentCount > $totalRequired) {
+			$this->travelers = array_slice($this->travelers, 0, $totalRequired);
 		}
 
-		// 3. معالجة الأطفال (بناءً على مصفوفة الأعمار children_ages)
-		foreach ($this->children_ages as $index => $age) {
-			if (isset($currentChildren[$index])) {
-				$child = $currentChildren[$index];
-				$child['age'] = $age; // تحديث العمر ليطابق المدخل في الحقل الصغير
-				$newTravelersList[] = $child;
-			} else {
-				$newChild = $this->getEmptyTraveler('child');
-				$newChild['age'] = $age;
-				$newTravelersList[] = $newChild;
-			}
-		}
-
-		$this->travelers = $newTravelersList;
+		// Update children ages if applicable (optional, maybe mapped by index?)
+		// Since we don't distinguish explicitly, we just ensure we have enough slots.
+		// The user can fill names. Age is manual input in traveler form too?
+		// In CreateBooking, age comes from children_ages for children, but traveler has its own age input.
+		// Let's just ensure size matches.
 	}
 
-	private function getEmptyTraveler($type): array
+	private function getEmptyTraveler(): array
 	{
 		return [
-			'id' => null, // جديد
+			'id' => null,
 			'full_name' => '',
 			'phone_key' => '+20',
 			'phone' => '',
 			'nationality' => '',
 			'age' => '',
-			'id_type' => $type == 'adult' ? '' : 'passport',
+			'id_type' => 'passport',
 			'id_number' => '',
-			'type' => $type,
+			// 'type' => 'adult', // Removed
 		];
 	}
 
