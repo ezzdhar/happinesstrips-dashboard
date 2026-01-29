@@ -19,19 +19,44 @@ class RoomController extends Controller
 
     public function rooms(GetRoomRequest $request)
     {
-        $rooms = Room::query()
+        $adultsCount = (int) $request->adults_count;
+        $childrenCount = (int) ($request->children_count ?? 0);
+        $totalGuests = $adultsCount + $childrenCount;
+
+        // Base query مع الفلاتر الأساسية
+        $baseQuery = Room::query()
             ->filter($request->name)
             ->hotelId($request->hotel_id)
             ->when($request->is_featured, function (Builder $query) use ($request) {
                 $isFeatured = filter_var($request->is_featured, FILTER_VALIDATE_BOOLEAN);
                 return $query->where('is_featured', $isFeatured ? 1 : 0);
             })
-            ->where('adults_count', (int) $request->adults_count)
-            ->when($request->children_count, fn ($q) => $q->where('children_count', $request->children_count))
             ->isAvailableRangeCovered()
-            ->filterByCalculatedPrice()
-            ->with(['amenities'])
-            ->paginate($request->per_page ?? 15);
+            ->with(['amenities', 'childrenPolicies']);
+
+        // أولاً: البحث عن تطابق تام (نفس عدد البالغين + عدد أطفال كافي)
+        $exactMatchQuery = clone $baseQuery;
+        $exactMatchQuery->where('adults_count', $adultsCount)
+            ->where('children_count', '>=', $childrenCount);
+
+        $exactMatchCount = $exactMatchQuery->count();
+
+        if ($exactMatchCount > 0) {
+            // يوجد تطابق تام - استخدام هذه الغرف
+            $rooms = $exactMatchQuery
+                ->filterByCalculatedPrice()
+                ->paginate($request->per_page ?? 15);
+        } else {
+            // لم يوجد تطابق تام - البحث عن غرف بسعة كافية
+            // الشروط:
+            // 1. مجموع (البالغين + الأطفال) للغرفة >= مجموع الطلب
+            // 2. عدد البالغين في الغرفة >= عدد البالغين المطلوبين
+            $rooms = (clone $baseQuery)
+                ->where('adults_count', '>=', $adultsCount)
+                ->whereRaw('(adults_count + children_count) >= ?', [$totalGuests])
+                ->filterByCalculatedPrice()
+                ->paginate($request->per_page ?? 15);
+        }
 
         return $this->responseOk(message: __('lang.rooms'), data: RoomSimpleResource::collection($rooms));
     }
@@ -53,8 +78,8 @@ class RoomController extends Controller
         if (! $calculate_booking_price['success']) {
             return $this->responseError(message: $calculate_booking_price['error']);
         }
-	    $room = new RoomResource(resource: $room);
-	    $data = array_merge($calculate_booking_price, ['room' => $room]);
+        $room = new RoomResource(resource: $room);
+        $data = array_merge($calculate_booking_price, ['room' => $room]);
         return $this->responseOk(message: __('lang.calculate_booking_room_price'), data: $data);
     }
 }

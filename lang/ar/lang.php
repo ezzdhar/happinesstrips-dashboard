@@ -755,6 +755,7 @@ return [
 	'children' => 'الأطفال',
 	'charged_as_adults' => 'يُحسبون كبالغين',
 	'charged_as_adult' => 'يُحسب كبالغ',
+	'overflow_child' => 'طفل زائد عن السعة',
 	'child_price' => 'سعر الطفل',
 	'years' => 'سنوات',
 	'unknown' => 'غير معروف',

@@ -91,6 +91,10 @@ trait CalculatesHotelBookingPrice
 
 	/**
 	 * حساب أسعار الأطفال بناءً على سياسة الغرفة
+	 * المنطق الجديد:
+	 * - الأطفال >= adult_age يُحاسبون كبالغين
+	 * - الأطفال الزائدون عن children_count للغرفة يُحاسبون كبالغين (الأكبر سناً أولاً)
+	 * - باقي الأطفال يُحاسبون حسب سياسة الغرفة
 	 */
 	protected function calculateChildrenPricing(float $adultPricePerPerson, array $childrenAges): array
 	{
@@ -98,51 +102,94 @@ trait CalculatesHotelBookingPrice
 		$total = 0;
 		$adultAge = $this->adult_age ?? 12;
 		$policies = $this->childrenPolicies ?? collect();
+		$roomChildrenCapacity = $this->children_count ?? 0;
 
-		foreach ($childrenAges as $index => $age) {
-			$age = (int) $age;
-			$childNumber = $index + 1;
-			$category = '';
-			$percentage = 0;
-			$price = 0;
+		// ترتيب الأطفال مع الاحتفاظ بالـ index الأصلي
+		$childrenWithIndex = collect($childrenAges)
+			->map(fn($age, $index) => ['age' => (int)$age, 'original_index' => $index])
+			->values();
 
-			if ($age >= $adultAge) {
+		// تصنيف الأطفال:
+		// 1. الأطفال >= adult_age → بالغين مباشرة
+		// 2. الأطفال < adult_age → يتم ترتيبهم والزائدين يُحاسبون كبالغين
+		$adultAgeChildren = $childrenWithIndex->filter(fn($c) => $c['age'] >= $adultAge);
+		$underAgeChildren = $childrenWithIndex->filter(fn($c) => $c['age'] < $adultAge);
+
+		// ترتيب الأطفال الأقل من adult_age تنازلياً (الأكبر سناً أولاً)
+		$sortedUnderAge = $underAgeChildren->sortByDesc('age')->values();
+
+		// توزيع الأطفال: الأصغر سناً يحصلون على أماكن الأطفال
+		$childrenAsChildren = $sortedUnderAge->slice(-$roomChildrenCapacity)->values();
+		$childrenAsAdults = $sortedUnderAge->slice(0, max(0, $sortedUnderAge->count() - $roomChildrenCapacity))->values();
+
+		// معالجة الأطفال >= adult_age كبالغين
+		foreach ($adultAgeChildren as $child) {
+			$breakdown[] = [
+				'child_number' => $child['original_index'] + 1,
+				'age' => $child['age'],
+				'category' => 'adult',
+				'category_label' => $this->getChildCategoryLabel('adult', $child['age']),
+				'percentage' => 100,
+				'price' => round($adultPricePerPerson, 2),
+			];
+			$total += $adultPricePerPerson;
+		}
+
+		// معالجة الأطفال الزائدين كبالغين
+		foreach ($childrenAsAdults as $child) {
+			$breakdown[] = [
+				'child_number' => $child['original_index'] + 1,
+				'age' => $child['age'],
+				'category' => 'adult',
+				'category_label' => __('lang.charged_as_adult') . ' (' . __('lang.overflow_child') . ')',
+				'percentage' => 100,
+				'price' => round($adultPricePerPerson, 2),
+			];
+			$total += $adultPricePerPerson;
+		}
+
+		// معالجة الأطفال العاديين حسب سياسة الغرفة
+		// نرتب حسب العمر تصاعدياً ونعطيهم child_number 1, 2, 3...
+		$sortedChildrenAsChildren = $childrenAsChildren->sortBy('age')->values();
+
+		foreach ($sortedChildrenAsChildren as $policyIndex => $child) {
+			$age = $child['age'];
+			$childPolicyNumber = $policyIndex + 1; // الترتيب في السياسة (1, 2, 3...)
+
+			$childPolicy = $policies
+				->where('child_number', $childPolicyNumber)
+				->first(fn($policy) => $age >= $policy->from_age && $age <= $policy->to_age);
+
+			if ($childPolicy) {
+				$percentage = $childPolicy->price_percentage ?? 0;
+
+				if ($percentage == 0) {
+					$category = 'free';
+					$price = 0;
+				} else {
+					$category = 'child';
+					$price = ($adultPricePerPerson * $percentage) / 100;
+				}
+			} else {
+				// لا توجد سياسة → يُحاسب كبالغ
 				$category = 'adult';
 				$percentage = 100;
 				$price = $adultPricePerPerson;
-			} else {
-				$childPolicy = $policies
-					->where('child_number', $childNumber)
-					->first(fn($policy) => $age >= $policy->from_age && $age <= $policy->to_age);
-
-				if ($childPolicy) {
-					$percentage = $childPolicy->price_percentage ?? 0;
-
-					if ($percentage == 0) {
-						$category = 'free';
-						$price = 0;
-					} else {
-						$category = 'child';
-						$price = ($adultPricePerPerson * $percentage) / 100;
-					}
-				} else {
-					$category = 'adult';
-					$percentage = 100;
-					$price = $adultPricePerPerson;
-				}
 			}
 
 			$breakdown[] = [
-				'child_number' => $childNumber,
+				'child_number' => $child['original_index'] + 1,
 				'age' => $age,
 				'category' => $category,
 				'category_label' => $this->getChildCategoryLabel($category, $age),
 				'percentage' => $percentage,
 				'price' => round($price, 2),
 			];
-
 			$total += $price;
 		}
+
+		// ترتيب حسب child_number الأصلي
+		usort($breakdown, fn($a, $b) => $a['child_number'] <=> $b['child_number']);
 
 		return [
 			'breakdown' => $breakdown,

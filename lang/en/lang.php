@@ -755,6 +755,7 @@ return [
 	'children' => 'Children',
 	'charged_as_adults' => 'Charged as Adults',
 	'charged_as_adult' => 'Charged as Adult',
+	'overflow_child' => 'Overflow Child',
 	'child_price' => 'Child Price',
 	'years' => 'Years',
 	'unknown' => 'Unknown',

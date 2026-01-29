@@ -105,36 +105,38 @@ class Room extends Model
 		// تحويل التواريخ للصيغة القياسية
 		$startDate = Carbon::parse(request()->start_date)->format('Y-m-d');
 		$endDate = Carbon::parse(request()->end_date)->format('Y-m-d');
+		$currency = strtolower(request()->attributes->get('currency', 'egp'));
 
-		return $query->whereRaw("
-        (
-            SELECT COALESCE(SUM(
-                GREATEST(0, DATEDIFF(
-                    -- تحديد نهاية التقاطع (الأصغر بين نهاية الفترة ونهاية الحجز)
-                    LEAST(periods.p_end, ?), 
-                    -- تحديد بداية التقاطع (الأكبر بين بداية الفترة وبداية الحجز)
-                    GREATEST(periods.p_start, ?)
-                ))
-            ), 0)
-            FROM JSON_TABLE(price_periods, '$[*]' COLUMNS(
-                p_start DATE PATH '$.start_date',
-                p_end DATE PATH '$.end_date'
-            )) as periods
-            -- تحسين للأداء: نفحص فقط الفترات التي تتقاطع مبدئياً
-            WHERE periods.p_start < ? 
-            AND periods.p_end > ?
-        ) >= DATEDIFF(?, ?) -- مقارنة المجموع بالفترة المطلوبة
-    ", [
-			// للـ Sum (حساب التقاطع)
-			$endDate,
-			$startDate,
-			// للـ Where الداخلي (تحسين الأداء)
-			$endDate,
-			$startDate,
-			// للمقارنة النهائية (حساب عدد ليالي الحجز)
-			$endDate,
-			$startDate,
-		]);
+		// استخدام جدول room_price_periods بدلاً من JSON column
+		return $query->whereExists(function ($subQuery) use ($startDate, $endDate, $currency) {
+			$subQuery->selectRaw('1')
+				->from('room_price_periods')
+				->whereColumn('room_price_periods.room_id', 'rooms.id')
+				->where('room_price_periods.currency', $currency)
+				->whereRaw("
+					(
+						SELECT COALESCE(SUM(
+							GREATEST(0, DATEDIFF(
+								LEAST(rpp.end_date, ?),
+								GREATEST(rpp.start_date, ?)
+							))
+						), 0)
+						FROM room_price_periods rpp
+						WHERE rpp.room_id = rooms.id
+						AND rpp.currency = ?
+						AND rpp.start_date < ?
+						AND rpp.end_date > ?
+					) >= DATEDIFF(?, ?)
+				", [
+					$endDate,
+					$startDate,
+					$currency,
+					$endDate,
+					$startDate,
+					$endDate,
+					$startDate,
+				]);
+		});
 	}
 
 	public function scopeFilterByCalculatedPrice($query)
