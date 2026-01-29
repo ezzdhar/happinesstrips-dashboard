@@ -20,11 +20,20 @@ class RoomSimpleResource extends JsonResource
             'children_count' => $this->children_count,
             'currency' => $currency,
             'amenities' => AmenityResource::collection($this->whenLoaded('amenities')),
+            'adult_age' => (int) $this->adult_age,
+            'children_policies' => $this->childrenPolicies->map(function ($policy) {
+                return [
+                    'child_number' => (int) $policy->child_number,
+                    'from_age' => (int) $policy->from_age,
+                    'to_age' => (int) $policy->to_age,
+                    'price_percentage' => (float) $policy->price_percentage,
+                ];
+            })->values()->toArray(),
             'main_image' => FileService::get($this->files->first()->path),
-	        'is_featured' => $this->is_featured ? true : false,
-	        'price' => $this->price,
-	        'price_before_discount' => (float) $this->price_before_discount,
-	        'discount_percentage' =>(float) $this->discount_percentage,
+            'is_featured' => $this->is_featured ? true : false,
+            'price' => $this->price,
+            'price_before_discount' => (float) $this->price_before_discount,
+            'discount_percentage' => (float) $this->discount_percentage,
         ];
     }
 }

@@ -97,6 +97,15 @@ class Hotel extends Model
             'room_name' => $cheapestRoom->name,
             'adults_count' => $cheapestRoom->adults_count,
             'children_count' => $cheapestRoom->children_count,
+            'adult_age' => (int) $cheapestRoom->adult_age,
+            'children_policies' => $cheapestRoom->childrenPolicies->map(function ($policy) {
+                return [
+                    'child_number' => (int) $policy->child_number,
+                    'from_age' => (int) $policy->from_age,
+                    'to_age' => (int) $policy->to_age,
+                    'price_percentage' => (float) $policy->price_percentage,
+                ];
+            })->values()->toArray(),
             'start_date' => $startDate,
             'end_date' => $endDate,
             'nights_count' => $cheapestCalculation['nights_count'],
@@ -121,6 +130,7 @@ class Hotel extends Model
 
         $rooms = $this->rooms()->where('status', Status::Active)->when($is_featured, function (Builder $query) use ($is_featured) {
             $isFeatured = filter_var($is_featured, FILTER_VALIDATE_BOOLEAN);
+
             return $query->where('is_featured', $isFeatured ? 1 : 0);
         })->get();
 
@@ -147,8 +157,8 @@ class Hotel extends Model
                 'currency' => strtoupper($currency),
                 'start_date' => null,
                 'end_date' => null,
-                'price_before_discount' => null,
-                'discount_percentage' => null,
+                'price_before_discount' => 0,
+                'discount_percentage' => 0,
             ];
         }
 
@@ -187,6 +197,15 @@ class Hotel extends Model
             'room_name' => $cheapestRoom->name,
             'adults_count' => $cheapestRoom->adults_count,
             'children_count' => $cheapestRoom->children_count,
+            'adult_age' => (int) $cheapestRoom->adult_age,
+            'children_policies' => $cheapestRoom->childrenPolicies->map(function ($policy) {
+                return [
+                    'child_number' => (int) $policy->child_number,
+                    'from_age' => (int) $policy->from_age,
+                    'to_age' => (int) $policy->to_age,
+                    'price_percentage' => (float) $policy->price_percentage,
+                ];
+            })->values()->toArray(),
             'start_date' => $nextDateInPeriod,
             'end_date' => $nextDateInPeriod ? Carbon::parse($nextDateInPeriod)->addDay()->toDateString() : null,
             'price_period_start' => $periodStart?->format('Y-m-d'),

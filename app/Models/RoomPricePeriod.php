@@ -15,6 +15,10 @@ class RoomPricePeriod extends Model
         'price',
     ];
 
+    public $incrementing = true;
+
+    protected $primaryKey = 'id';
+
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',

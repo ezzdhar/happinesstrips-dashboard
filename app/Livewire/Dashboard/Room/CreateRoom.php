@@ -232,8 +232,13 @@ class CreateRoom extends Component
             });
 
             return to_route('rooms')->with('success', __('lang.added_successfully', ['attribute' => __('lang.room')]));
-        } finally {
+        } catch (\Illuminate\Validation\ValidationException $e) {
             $this->isProcessing = false;
+            foreach ($e->errors() as $field => $messages) {
+                foreach ($messages as $message) {
+                    flash()->error($message);
+                }
+            }
         }
     }
 
