@@ -42,11 +42,19 @@ class CreateRoomBookingRequest extends FormRequest
 			if (!$room) {
 				return;
 			}
-			if ((int)$this->adults_count > $room->adults_count) {
-				$validator->errors()->add('adults_count', __('lang.adults_count_exceeds_room_capacity', ['capacity' => $room->adults_count]));
-			}
-			if ((int)$this->children_count > $room->children_count) {
-				$validator->errors()->add('children_count', __('lang.children_count_exceeds_room_capacity', ['capacity' => $room->children_count]));
+
+			$requestedAdults = (int)$this->adults_count;
+			$requestedChildren = (int)$this->children_count;
+			$totalRequested = $requestedAdults + $requestedChildren;
+			$roomCapacity = $room->adults_count + $room->children_count;
+
+			// التحقق من أن مجموع الأفراد <= مجموع سعة الغرفة
+			// الأطفال الزائدين عن سعة الأطفال سيُحاسبون كبالغين
+			if ($totalRequested > $roomCapacity) {
+				$validator->errors()->add('adults_count', __('lang.total_guests_exceeds_room_capacity', [
+					'capacity' => $roomCapacity,
+					'requested' => $totalRequested
+				]));
 			}
 
 			// تحقق من تغطية نطاق التواريخ

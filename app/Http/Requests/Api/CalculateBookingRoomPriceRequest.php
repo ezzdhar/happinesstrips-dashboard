@@ -29,12 +29,19 @@ class CalculateBookingRoomPriceRequest extends FormRequest
 				return;
 			}
 
-			if ((int)$this->input('adults_count') > $room->adults_count) {
-				$validator->errors()->add('adults_count', __('lang.adults_count_exceeds_room_capacity', ['capacity' => $room->adults_count]));
-			}
+			$requestedAdults = (int)$this->input('adults_count');
+			$childrenAges = $this->input('children_ages', []);
+			$requestedChildren = is_array($childrenAges) ? count($childrenAges) : 0;
+			$totalRequested = $requestedAdults + $requestedChildren;
+			$roomCapacity = $room->adults_count + $room->children_count;
 
-			if ((int)$this->input('children_count', 0) > $room->children_count) {
-				$validator->errors()->add('children_count', __('lang.children_count_exceeds_room_capacity', ['capacity' => $room->children_count]));
+			// التحقق من أن مجموع الأفراد <= مجموع سعة الغرفة
+			// الأطفال الزائدين عن سعة الأطفال سيُحاسبون كبالغين
+			if ($totalRequested > $roomCapacity) {
+				$validator->errors()->add('adults_count', __('lang.total_guests_exceeds_room_capacity', [
+					'capacity' => $roomCapacity,
+					'requested' => $totalRequested
+				]));
 			}
 
 			// تحقق من تغطية نطاق التواريخ
