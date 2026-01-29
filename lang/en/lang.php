@@ -880,6 +880,7 @@ return [
 	'adults_count_exceeds_room_capacity' => 'Adults count exceeds room capacity of :capacity',
 	'children_count_exceeds_room_capacity' => 'Children count exceeds room capacity of :capacity',
 	'total_guests_exceeds_room_capacity' => 'Total guests (:requested) exceeds room capacity (:capacity)',
+	'total_guests_exceeded_maximum' => 'Total guests exceeded maximum capacity (:max)',
 	'custom_hotel_bookings' => 'Custom Hotel Bookings',
 	'hotel_details' => 'Hotel Details',
 	'travelers_count_mismatch' => 'Travelers count mismatch. Expected :expected but provided :provided',

@@ -27,9 +27,8 @@ class RoomController extends Controller
         $baseQuery = Room::query()
             ->filter($request->name)
             ->hotelId($request->hotel_id)
-            ->when($request->is_featured, function (Builder $query) use ($request) {
-                $isFeatured = filter_var($request->is_featured, FILTER_VALIDATE_BOOLEAN);
-                return $query->where('is_featured', $isFeatured ? 1 : 0);
+            ->when(filter_var($request->is_featured, FILTER_VALIDATE_BOOLEAN) == 1, function (Builder $query) {
+                return $query->where('is_featured', 1);
             })
             ->isAvailableRangeCovered()
             ->with(['amenities', 'childrenPolicies']);

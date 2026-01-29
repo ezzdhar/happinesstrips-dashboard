@@ -179,9 +179,15 @@ class UpdateBookingHotel extends Component
 
 	public function addChild(): void
 	{
-		if ($this->selected_room && $this->selected_room->children_count <= count($this->children_ages)) {
-			flash()->error(__('lang.children_count_exceeded_maximum', ['max' => $this->selected_room->children_count]));
-			return;
+		if ($this->selected_room) {
+			// التحقق من أن مجموع الأفراد لا يتجاوز سعة الغرفة الإجمالية
+			$totalCapacity = $this->selected_room->adults_count + $this->selected_room->children_count;
+			$currentTotal = $this->adults_count + count($this->children_ages);
+
+			if ($currentTotal >= $totalCapacity) {
+				flash()->error(__('lang.total_guests_exceeded_maximum', ['max' => $totalCapacity]));
+				return;
+			}
 		}
 		$this->children_ages[] = 0;
 		$this->calculatePrice();
