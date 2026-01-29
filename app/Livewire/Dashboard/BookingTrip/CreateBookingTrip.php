@@ -325,7 +325,6 @@ class CreateBookingTrip extends Component
 			'travelers.*.age' => 'required|integer|min:1',
 			'travelers.*.id_type' => 'required|in:passport,national_id',
 			'travelers.*.id_number' => 'required|string',
-			'travelers.*.type' => 'required|in:adult,child',
 		];
 	}
 
@@ -341,18 +340,16 @@ class CreateBookingTrip extends Component
 				'adults_count' => $this->adults_count,
 				'children_ages' => $this->children_ages,
 				'currency' => $this->currency,
-//				'status' => $this->status,
+				//				'status' => $this->status,
 				'notes' => $this->notes,
 				'travelers' => $this->travelers,
 			];
 			$booking = $tripBookingService->createBooking($data);
 			flash()->success(__('lang.created_successfully', ['attribute' => __('lang.booking')]));
 			$this->redirectIntended(default: route('bookings.trips.show', $booking->id));
-
 		} catch (\Exception $e) {
 			flash()->error($e->getMessage());
 		}
-
 	}
 
 	public function render(): View

@@ -29,7 +29,6 @@ class CreateRoomBookingRequest extends FormRequest
 			'travelers.*.age' => 'required|integer|min:1',
 			'travelers.*.id_type' => 'required|in:passport,national_id',
 			'travelers.*.id_number' => 'required|string',
-			'travelers.*.type' => 'required|in:adult,child',
 		];
 	}
 	public function withValidator(Validator $validator)

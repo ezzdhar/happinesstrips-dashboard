@@ -247,7 +247,6 @@ class CreateBookingHotel extends Component
 			'travelers.*.age' => 'required|integer|min:1',
 			'travelers.*.id_type' => 'required|in:passport,national_id',
 			'travelers.*.id_number' => 'required|string',
-			'travelers.*.type' => 'required|in:adult,child',
 		];
 	}
 
@@ -270,7 +269,6 @@ class CreateBookingHotel extends Component
 			$booking = $bookingService->createBooking($data);
 			flash()->success(__('lang.created_successfully', ['attribute' => __('lang.booking')]));
 			$this->redirectIntended(default: route('bookings.hotels.show', $booking->id));
-
 		} catch (\Exception $e) {
 			flash()->error($e->getMessage());
 		}

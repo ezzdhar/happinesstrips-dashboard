@@ -304,7 +304,6 @@ class UpdateBookingHotel extends Component
 			'travelers.*.age' => 'required|integer|min:1',
 			'travelers.*.id_type' => 'required|in:passport,national_id',
 			'travelers.*.id_number' => 'required|string',
-			'travelers.*.type' => 'required|in:adult,child',
 		];
 	}
 
@@ -330,8 +329,7 @@ class UpdateBookingHotel extends Component
 			$bookingService->updateBooking($this->booking, $data);
 
 			flash()->success(__('lang.updated_successfully', ['attribute' => __('lang.booking')]));
-			$this->redirectIntended(default: route('bookings.hotels.show',$this->booking->id));
-
+			$this->redirectIntended(default: route('bookings.hotels.show', $this->booking->id));
 		} catch (\Exception $e) {
 			flash()->error($e->getMessage());
 		}

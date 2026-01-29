@@ -123,7 +123,7 @@ class UpdateBookingTrip extends Component
                 'link' => route('bookings.trips'),
             ],
             [
-                'label' => __('lang.update_trip_booking').' - '.$this->booking->booking_number,
+                'label' => __('lang.update_trip_booking') . ' - ' . $this->booking->booking_number,
             ],
         ];
     }
@@ -285,7 +285,6 @@ class UpdateBookingTrip extends Component
             'travelers.*.age' => 'required|integer|min:1',
             'travelers.*.id_type' => 'required|in:passport,national_id',
             'travelers.*.id_number' => 'required|string',
-            'travelers.*.type' => 'required|in:adult,child',
         ];
     }
 
