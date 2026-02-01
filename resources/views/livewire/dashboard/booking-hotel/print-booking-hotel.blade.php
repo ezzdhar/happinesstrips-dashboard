@@ -459,8 +459,8 @@
                         <span
                             style="font-size: 11px; font-weight: bold; color: #166534;">{{ __('lang.grand_total') }}:</span>
                         <span
-                            style="font-size: 14px; font-weight: bold; color: #15803d;">{{ number_format($pricing['grand_total'], 2) }}
-                            {{ $pricing['currency'] ?? $booking->currency }}</span>
+                            style="font-size: 14px; font-weight: bold; color: #15803d;">{{ number_format($booking->total_price, 2) }}
+                            {{ strtoupper($booking->currency) }}</span>
                     </div>
                 </div>
             </div>

@@ -200,8 +200,8 @@
         <div class="bg-success/10 p-4 rounded-lg mt-4">
             <div class="flex justify-between items-center">
                 <span class="text-lg font-bold">{{ __('lang.grand_total') }}:</span>
-                <span class="text-2xl font-bold text-success">{{ number_format($pricing['grand_total'], 2) }}
-                    {{ $pricing['currency'] ?? $booking->currency }}</span>
+                <span class="text-2xl font-bold text-success">{{ number_format($booking->total_price, 2) }}
+                    {{ strtoupper($booking->currency) }}</span>
             </div>
         </div>
     </div>
