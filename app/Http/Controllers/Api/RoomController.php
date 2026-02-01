@@ -33,29 +33,16 @@ class RoomController extends Controller
             ->isAvailableRangeCovered()
             ->with(['amenities', 'childrenPolicies']);
 
-        // أولاً: البحث عن تطابق تام (نفس عدد البالغين + عدد أطفال كافي)
-        $exactMatchQuery = clone $baseQuery;
-        $exactMatchQuery->where('adults_count', $adultsCount)
-            ->where('children_count', '>=', $childrenCount);
-
-        $exactMatchCount = $exactMatchQuery->count();
-
-        if ($exactMatchCount > 0) {
-            // يوجد تطابق تام - استخدام هذه الغرف
-            $rooms = $exactMatchQuery
-                ->filterByCalculatedPrice()
-                ->paginate($request->per_page ?? 15);
-        } else {
-            // لم يوجد تطابق تام - البحث عن غرف بسعة كافية
-            // الشروط:
-            // 1. مجموع (البالغين + الأطفال) للغرفة >= مجموع الطلب
-            // 2. عدد البالغين في الغرفة >= عدد البالغين المطلوبين
-            $rooms = (clone $baseQuery)
-                ->where('adults_count', '>=', $adultsCount)
-                ->whereRaw('(adults_count + children_count) >= ?', [$totalGuests])
-                ->filterByCalculatedPrice()
-                ->paginate($request->per_page ?? 15);
-        }
+        // البحث عن غرف بسعة كافية (المنطق المرن)
+        // الشروط:
+        // 1. عدد البالغين في الغرفة >= عدد البالغين المطلوبين
+        // 2. مجموع (البالغين + الأطفال) للغرفة >= مجموع الطلب (بالغين + أطفال)
+        // هذا يسمح بترحيل الأطفال إلى أماكن البالغين الشاغرة
+        $rooms = $baseQuery
+            ->where('adults_count', '>=', $adultsCount)
+            ->whereRaw('(adults_count + children_count) >= ?', [$totalGuests])
+            ->filterByCalculatedPrice()
+            ->paginate($request->per_page ?? 15);
 
         return $this->responseOk(message: __('lang.rooms'), data: RoomSimpleResource::collection($rooms));
     }
