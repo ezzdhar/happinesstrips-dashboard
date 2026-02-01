@@ -57,7 +57,8 @@ class Hotel extends Model
         $availableRooms = $this->rooms()
             ->where('status', Status::Active)
             ->where('adults_count', '>=', $adultsCount)
-            ->when($childrenCount > 0, fn($q) => $q->where('children_count', '>=', $childrenCount))
+            // Flexible Capacity: Total capacity must accommodate total guests
+            ->whereRaw('(adults_count + children_count) >= ?', [$adultsCount + $childrenCount])
             ->when($is_featured, function (Builder $query) use ($is_featured) {
                 $isFeatured = filter_var($is_featured, FILTER_VALIDATE_BOOLEAN);
 
