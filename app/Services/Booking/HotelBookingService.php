@@ -84,7 +84,6 @@ class HotelBookingService
 						'age' => $travelerData['age'],
 						'id_type' => $travelerData['id_type'],
 						'id_number' => $travelerData['id_number'],
-						'type' => $travelerData['type'],
 					]);
 				}
 
@@ -238,7 +237,6 @@ class HotelBookingService
 						'age' => $travelerData['age'],
 						'id_type' => $travelerData['id_type'],
 						'id_number' => $travelerData['id_number'],
-						'type' => $travelerData['type'],
 					]);
 				}
 
