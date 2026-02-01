@@ -93,11 +93,13 @@ trait CalculatesHotelBookingPrice
 	 * حساب أسعار الأطفال بناءً على سياسة الغرفة
 	 * المنطق الجديد:
 	 * - الأطفال >= adult_age يُحاسبون كبالغين
-	 * - الأطفال الزائدون عن children_count للغرفة يُحاسبون كبالغين (الأكبر سناً أولاً)
+	 * - الأطفال الزائدون عن children_count للغرفة يُحاسبون كبالغين (Bottom-Up: الأطفال الأصغر يحصلون على أماكن الأطفال والأكبر يرحلون)
 	 * - باقي الأطفال يُحاسبون حسب سياسة الغرفة
 	 */
 	protected function calculateChildrenPricing(float $adultPricePerPerson, array $childrenAges): array
 	{
+		$breakdown = [];
+		$total = 0;
 		$adultAge = $this->adult_age ?? 12;
 		$policies = $this->childrenPolicies ?? collect();
 		$roomChildrenCapacity = $this->children_count ?? 0;
@@ -108,89 +110,27 @@ trait CalculatesHotelBookingPrice
 
 		$adultAgeChildren = $childrenWithIndex->filter(fn($c) => $c['age'] > $adultAge);
 		$underAgeChildren = $childrenWithIndex->filter(fn($c) => $c['age'] <= $adultAge);
+
+		// ترتيب الأطفال الأقل من adult_age تنازلياً (الأكبر سناً أولاً)
 		$sortedUnderAge = $underAgeChildren->sortByDesc('age')->values();
 
-		// Helper to calculate price for a given set of children
-		$calculate = function ($asChildren, $asAdults) use ($policies, $adultPricePerPerson) {
-			$breakdown = [];
-			$total = 0;
+		// توزيع الأطفال حسب القاعدة: "الطفل اللي سنه أكبر يتم ترحيله للبالغين"
+		// هذا يعني أن الأطفال الأصغر سناً لهم الأولوية في أماكن الأطفال (Bottom-Up)
+		if ($roomChildrenCapacity > 0 && $sortedUnderAge->isNotEmpty()) {
+			// نأخذ آخر N عناصر (الأصغر سناً) ليكونوا أطفالاً
+			$takeCount = min($roomChildrenCapacity, $sortedUnderAge->count());
+			$childrenAsChildren = $sortedUnderAge->slice(-$takeCount)->values();
 
-			// As Adults
-			foreach ($asAdults as $child) {
-				$price = round($adultPricePerPerson, 2);
-				$breakdown[] = [
-					'child_number' => $child['original_index'] + 1,
-					'age' => $child['age'],
-					'category' => 'adult',
-					'category_label' => __('lang.charged_as_adult') . ' (' . __('lang.overflow_child') . ')',
-					'percentage' => 100,
-					'price' => $price,
-				];
-				$total += $price;
-			}
-
-			// As Children (Sorted by age ascending for policy matching: Child 1, Child 2...)
-			// Or should we match Child 1 to the oldest inside the "As Children" group?
-			// Usually: Child 1 policy applies to the first child slot. The slot is usually filled by age priority.
-			// If we selected specific children to be "children", we should sort them to map to Child 1, Child 2 policies?
-			// Let's assume Child 1 policy applies to the oldest among the "children group", and Child 2 to the next.
-			// So we sort $asChildren descending before applying policies.
-			$sortedAsChildren = $asChildren->sortByDesc('age')->values();
-
-			foreach ($sortedAsChildren as $index => $child) {
-				$age = $child['age'];
-				$childPolicyNumber = $index + 1;
-				$childPolicy = $policies
-					->where('child_number', $childPolicyNumber)
-					->first(fn($policy) => $age >= $policy->from_age && $age <= $policy->to_age);
-
-				if ($childPolicy) {
-					$percentage = $childPolicy->price_percentage ?? 0;
-					$price = ($percentage == 0) ? 0 : ($adultPricePerPerson * $percentage) / 100;
-					$category = ($percentage == 0) ? 'free' : 'child';
-				} else {
-					$percentage = 100;
-					$price = $adultPricePerPerson;
-					$category = 'adult';
-				}
-
-				$breakdown[] = [
-					'child_number' => $child['original_index'] + 1,
-					'age' => $age,
-					'category' => $category,
-					'category_label' => $this->getChildCategoryLabel($category, $age),
-					'percentage' => (float)$percentage,
-					'price' => round($price, 2),
-				];
-				$total += $price;
-			}
-			return ['breakdown' => $breakdown, 'total' => $total];
-		};
-
-		// Scenario 1: Top-Down (Oldest get children slots)
-		$s1_Children = $sortedUnderAge->slice(0, $roomChildrenCapacity);
-		$s1_Adults = $sortedUnderAge->slice($roomChildrenCapacity);
-		$scenario1 = $calculate($s1_Children, $s1_Adults);
-
-		// Scenario 2: Bottom-Up (Youngest get children slots)
-		// Only try if distinct from S1
-		if ($sortedUnderAge->count() > $roomChildrenCapacity) {
-			$s2_Children = $sortedUnderAge->slice(-$roomChildrenCapacity);
-			$s2_Adults = $sortedUnderAge->slice(0, $sortedUnderAge->count() - $roomChildrenCapacity);
-			$scenario2 = $calculate($s2_Children, $s2_Adults);
+			// الأكبر سناً (في بداية المصفوفة) يرحلون
+			$childrenAsAdults = $sortedUnderAge->slice(0, $sortedUnderAge->count() - $takeCount)->values();
 		} else {
-			$scenario2 = $scenario1;
+			$childrenAsChildren = collect();
+			$childrenAsAdults = $sortedUnderAge;
 		}
 
-		// Add definitely adults (>= adultAge) to both scenarios totals for fair comparison?
-		// No, they are static. Just add them to the winner.
-
-		// Decide Winner (Less Total is better. If equal, S1 (Top-Down) is preferred standard)
-		$winner = ($scenario2['total'] < $scenario1['total']) ? $scenario2 : $scenario1;
-
-		// Add fixed adults (over age limit)
+		// 1. معالجة الأطفال >= adult_age كبالغين
 		foreach ($adultAgeChildren as $child) {
-			$winner['breakdown'][] = [
+			$breakdown[] = [
 				'child_number' => $child['original_index'] + 1,
 				'age' => $child['age'],
 				'category' => 'adult',
@@ -198,15 +138,66 @@ trait CalculatesHotelBookingPrice
 				'percentage' => 100,
 				'price' => round($adultPricePerPerson, 2),
 			];
-			$winner['total'] += round($adultPricePerPerson, 2);
+			$total += $adultPricePerPerson;
 		}
 
-		// Final Sort by original input index
-		usort($winner['breakdown'], fn($a, $b) => $a['child_number'] <=> $b['child_number']);
+		// 2. معالجة الأطفال المرحلين (الأكبر سناً) كبالغين
+		foreach ($childrenAsAdults as $child) {
+			$breakdown[] = [
+				'child_number' => $child['original_index'] + 1,
+				'age' => $child['age'],
+				'category' => 'adult',
+				'category_label' => __('lang.charged_as_adult') . ' (' . __('lang.overflow_child') . ')',
+				'percentage' => 100,
+				'price' => round($adultPricePerPerson, 2),
+			];
+			$total += $adultPricePerPerson;
+		}
+
+		// 3. معالجة الأطفال المقبولين (الأصغر سناً) حسب السياسات
+		// نرتبهم تنازلياً ليتم مطابقة "الطفل الأول" (في السياسة) مع "أكبر الأطفال المقبولين"
+		$sortedChildrenAsChildren = $childrenAsChildren->sortByDesc('age')->values();
+
+		foreach ($sortedChildrenAsChildren as $policyIndex => $child) {
+			$age = $child['age'];
+			$childPolicyNumber = $policyIndex + 1; // الترتيب في السياسة (1, 2, 3...)
+
+			$childPolicy = $policies
+				->where('child_number', $childPolicyNumber)
+				->first(fn($policy) => $age >= $policy->from_age && $age <= $policy->to_age);
+
+			if ($childPolicy) {
+				$percentage = $childPolicy->price_percentage ?? 0;
+				if ($percentage == 0) {
+					$category = 'free';
+					$price = 0;
+				} else {
+					$category = 'child';
+					$price = ($adultPricePerPerson * $percentage) / 100;
+				}
+			} else {
+				$category = 'adult';
+				$percentage = 100;
+				$price = $adultPricePerPerson;
+			}
+
+			$breakdown[] = [
+				'child_number' => $child['original_index'] + 1,
+				'age' => $age,
+				'category' => $category,
+				'category_label' => $this->getChildCategoryLabel($category, $age),
+				'percentage' => (float)$percentage,
+				'price' => round($price, 2),
+			];
+			$total += $price;
+		}
+
+		// ترتيب نهائي
+		usort($breakdown, fn($a, $b) => $a['child_number'] <=> $b['child_number']);
 
 		return [
-			'breakdown' => $winner['breakdown'],
-			'total' => round($winner['total'], 2),
+			'breakdown' => $breakdown,
+			'total' => round($total, 2),
 		];
 	}
 

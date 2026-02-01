@@ -304,6 +304,26 @@ class UpdateBookingHotel extends Component
 	{
 		$this->validate();
 
+		// التحقق من السعة قبل التحديث
+		$room = Room::find($this->room_id);
+		if (!$room) {
+			flash()->error(__('lang.room_not_found'));
+			return;
+		}
+
+		$totalCapacity = $room->adults_count + $room->children_count;
+		$currentTotal = $this->adults_count + count($this->children_ages);
+
+		if ($this->adults_count > $room->adults_count) {
+			flash()->error(__('lang.adults_count_exceeded_maximum', ['max' => $room->adults_count]));
+			return;
+		}
+
+		if ($currentTotal > $totalCapacity) {
+			flash()->error(__('lang.total_guests_exceeded_maximum', ['max' => $totalCapacity]));
+			return;
+		}
+
 		try {
 			$data = [
 				'user_id' => $this->user_id,
