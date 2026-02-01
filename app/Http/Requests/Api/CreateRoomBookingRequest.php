@@ -10,6 +10,16 @@ use Illuminate\Validation\Validator;
 class CreateRoomBookingRequest extends FormRequest
 {
 	use ApiResponse;
+	public function prepareForValidation()
+	{
+		$childrenAges = $this->children_ages;
+		if (!is_null($childrenAges) && !is_array($childrenAges)) {
+			$this->merge([
+				'children_ages' => [$childrenAges]
+			]);
+		}
+	}
+
 	public function rules(): array
 	{
 		return [
@@ -43,7 +53,22 @@ class CreateRoomBookingRequest extends FormRequest
 			}
 
 			$requestedAdults = (int)$this->adults_count;
-			$requestedChildren = (int)$this->children_count;
+
+			// التحقق الصارم من سعة البالغين
+			if ($requestedAdults > $room->adults_count) {
+				$validator->errors()->add('adults_count', __('lang.adults_count_exceeds_room_capacity', [
+					'capacity' => $room->adults_count,
+					'requested' => $requestedAdults
+				]));
+				return;
+			}
+
+			// Calculate children from array to be sure
+			$childrenAges = $this->input('children_ages', []);
+			$requestedChildren = is_array($childrenAges) ? count($childrenAges) : 0;
+
+			// لا نتحقق من سعة الأطفال بشكل منفصل هنا للسماح بترحيلهم للبالغين
+
 			$totalRequested = $requestedAdults + $requestedChildren;
 			$roomCapacity = $room->adults_count + $room->children_count;
 

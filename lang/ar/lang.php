@@ -47,6 +47,7 @@ return [
 	'job_title_ui_ux_designer_developer' => 'مصمم واجهات المستخدم (UI/UX Designer)',
 	'testimonial_anita_rodriguez' => ':app_name هو أفضل أداة لإنشاء الملفات التعريفية التي استخدمتها على الإطلاق. التصميمات جميلة وسهلة الاستخدام، وأنا أحب كيف يمكنني عرض مشاريعي بشكل جذاب. أنصح به بشدة لأي محترف في مجال التقنية.',
 	'children_count_exceeds_room_capacity' => 'عدد الأطفال المطلوب (:requested) يتجاوز السعة المسموح بها للأطفال في الغرفة (:capacity).',
+	'adults_count_exceeds_room_capacity' => 'عدد البالغين المطلوب (:requested) يتجاوز السعة المسموح بها للبالغين في الغرفة (:capacity).',
 	'example' => 'مثال: ',
 	'your_website_link' => 'رابط موقعك الإلكتروني',
 	'create_account' => 'إنشاء حساب',

@@ -41,14 +41,18 @@ class CalculateBookingRoomPriceRequest extends FormRequest
 			// Ensure children_ages is sent as children_ages[] in query params.
 			$requestedChildren = is_array($childrenAges) ? count($childrenAges) : 0;
 
-			// التحقق من أن عدد الأطفال لا يتجاوز سعة الأطفال للغرفة
-			if ($requestedChildren > $room->children_count) {
-				$validator->errors()->add('children_ages', __('lang.children_count_exceeds_room_capacity', [
-					'capacity' => $room->children_count,
-					'requested' => $requestedChildren
+			// 1. التحقق الصارم من سعة البالغين (لا يمكن للبالغين أخذ أماكن الأطفال)
+			if ($requestedAdults > $room->adults_count) {
+				$validator->errors()->add('adults_count', __('lang.adults_count_exceeds_room_capacity', [
+					'capacity' => $room->adults_count,
+					'requested' => $requestedAdults
 				]));
 				return;
 			}
+
+			// 2. التحقق المرن: الأطفال يمكنهم أخذ أماكن البالغين الشاغرة
+			// الشرط الوحيد: المجموع الكلي <= السعة الكلية
+			// تم التحقق منه لاحقاً في totalRequested > roomCapacity
 			$totalRequested = $requestedAdults + $requestedChildren;
 			$roomCapacity = $room->adults_count + $room->children_count;
 
