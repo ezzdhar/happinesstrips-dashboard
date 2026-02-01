@@ -36,6 +36,9 @@ class CalculateBookingRoomPriceRequest extends FormRequest
 
 			$requestedAdults = (int)$this->input('adults_count');
 			$childrenAges = $this->input('children_ages', []);
+			// NOTE: children_count is automatically calculated from count($childrenAges). 
+			// No need to send children_count in the request.
+			// Ensure children_ages is sent as children_ages[] in query params.
 			$requestedChildren = is_array($childrenAges) ? count($childrenAges) : 0;
 
 			// التحقق من أن عدد الأطفال لا يتجاوز سعة الأطفال للغرفة
