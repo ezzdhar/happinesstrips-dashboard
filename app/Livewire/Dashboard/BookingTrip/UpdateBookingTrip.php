@@ -107,7 +107,6 @@ class UpdateBookingTrip extends Component
                 'age' => $traveler->age,
                 'id_type' => $traveler->id_type,
                 'id_number' => $traveler->id_number,
-                'type' => $traveler->type,
             ];
         }
 

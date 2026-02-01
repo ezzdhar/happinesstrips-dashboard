@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -255,9 +256,9 @@
         [dir="rtl"] table td {
             text-align: right;
         }
-
     </style>
 </head>
+
 <body>
     <div class="print-container">
         <!-- Header -->
@@ -314,15 +315,18 @@
                 </div>
 
                 <div class="info-item">
-                    <div class="info-label">{{ __('lang.children') }} {{ config('booking.child_age_threshold', 12) }}+</div>
+                    <div class="info-label">{{ __('lang.children') }} {{ config('booking.child_age_threshold', 12) }}+
+                    </div>
                     <div class="info-value">{{ $booking->children_count }}</div>
                 </div>
 
-                @if(($booking->free_children_count ?? 0) > 0)
+                @if (($booking->free_children_count ?? 0) > 0)
                     <div class="info-item">
-                        <div class="info-label">{{ __('lang.children') }} <{{ config('booking.child_age_threshold', 12) }}</div>
-                        <div class="info-value" style="color: #16a34a;">{{ $booking->free_children_count }} ({{ __('lang.free') }})</div>
-                    </div>
+                        <div class="info-label">{{ __('lang.children') }}
+                            <{{ config('booking.child_age_threshold', 12) }}< /div>
+                                <div class="info-value" style="color: #16a34a;">{{ $booking->free_children_count }}
+                                    ({{ __('lang.free') }})</div>
+                        </div>
                 @endif
 
                 <div class="info-item">
@@ -332,11 +336,12 @@
 
                 <div class="info-item">
                     <div class="info-label">{{ __('lang.total_price') }}</div>
-                    <div class="info-value highlight">{{ $booking->total_price }} {{ strtoupper($booking->currency) }}</div>
+                    <div class="info-value highlight">{{ $booking->total_price }} {{ strtoupper($booking->currency) }}
+                    </div>
                 </div>
             </div>
 
-            @if($booking->notes)
+            @if ($booking->notes)
                 <div class="info-item" style="margin-top: 6px; grid-column: 1 / -1;">
                     <div class="info-label">{{ __('lang.notes') }}</div>
                     <div class="info-value">{{ $booking->notes }}</div>
@@ -345,7 +350,7 @@
         </div>
 
         <!-- Trip Information -->
-        @if($booking->trip)
+        @if ($booking->trip)
             <div class="section">
                 <h2 class="section-title">{{ __('lang.trip_information') }}</h2>
                 <div class="trip-box">
@@ -358,13 +363,14 @@
                         <div class="info-item" style="background: white;">
                             <div class="info-label">{{ __('lang.trip_type') }}</div>
                             <div class="info-value">
-                                <span style="padding: 2px 8px; background: {{ $booking->trip->type->value === 'fixed' ? '#d1fae5' : '#fef3c7' }}; color: {{ $booking->trip->type->value === 'fixed' ? '#065f46' : '#92400e' }}; border-radius: 10px; font-size: 8px; font-weight: bold;">
+                                <span
+                                    style="padding: 2px 8px; background: {{ $booking->trip->type->value === 'fixed' ? '#d1fae5' : '#fef3c7' }}; color: {{ $booking->trip->type->value === 'fixed' ? '#065f46' : '#92400e' }}; border-radius: 10px; font-size: 8px; font-weight: bold;">
                                     {{ __('lang.' . $booking->trip->type->value) }}
                                 </span>
                             </div>
                         </div>
 
-                        @if($booking->trip->type->value === 'flexible')
+                        @if ($booking->trip->type->value === 'flexible')
                             <div class="info-item" style="background: white;">
                                 <div class="info-label">{{ __('lang.price_per_night') }}</div>
                                 <div class="info-value">
@@ -376,15 +382,16 @@
                         <div class="info-item" style="background: white;">
                             <div class="info-label">{{ __('lang.calculation') }}</div>
                             <div class="info-value" style="font-family: monospace;">
-                                {{ $booking->adults_count + $booking->children_count }} × {{ number_format($booking->price, 2) }}
-                                @if($booking->trip->type->value === 'flexible')
+                                {{ $booking->adults_count + $booking->children_count }} ×
+                                {{ number_format($booking->price, 2) }}
+                                @if ($booking->trip->type->value === 'flexible')
                                     × {{ $booking->nights_count }}
                                 @endif
                             </div>
                         </div>
                     </div>
 
-                    @if($booking->trip->description)
+                    @if ($booking->trip->description)
                         <div class="info-item" style="margin-top: 6px; background: white; grid-column: 1 / -1;">
                             <div class="info-label">{{ __('lang.description') }}</div>
                             <div class="info-value">{{ $booking->trip->description }}</div>
@@ -395,7 +402,7 @@
         @endif
 
         <!-- Travelers Information -->
-        @if($booking->travelers->count() > 0)
+        @if ($booking->travelers->count() > 0)
             <div class="section">
                 <h2 class="section-title">{{ __('lang.travelers') }} ({{ $booking->travelers->count() }})</h2>
                 <table>
@@ -408,11 +415,10 @@
                             <th style="text-align: center;">{{ __('lang.age') }}</th>
                             <th>{{ __('lang.id_type') }}</th>
                             <th>{{ __('lang.id_number') }}</th>
-                            <th style="text-align: center;">{{ __('lang.type') }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($booking->travelers as $traveler)
+                        @foreach ($booking->travelers as $traveler)
                             <tr>
                                 <td style="text-align: center; font-weight: 600;">{{ $loop->iteration }}</td>
                                 <td>{{ $traveler->full_name }}</td>
@@ -421,11 +427,6 @@
                                 <td style="text-align: center;">{{ $traveler->age }}</td>
                                 <td>{{ __('lang.' . $traveler->id_type) }}</td>
                                 <td>{{ $traveler->id_number }}</td>
-                                <td style="text-align: center;">
-                                    <span style="padding: 3px 10px; background: {{ $traveler->type == 'adult' ? '#dbeafe' : '#fce7f3' }}; color: {{ $traveler->type == 'adult' ? '#1e40af' : '#9f1239' }}; border-radius: 12px; font-size: 10px; font-weight: 600;">
-                                        {{ __('lang.' . $traveler->type) }}
-                                    </span>
-                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -442,8 +443,10 @@
     </div>
 
     <script>
-        window.onload = function() { window.print(); }
+        window.onload = function() {
+            window.print();
+        }
     </script>
 </body>
-</html>
 
+</html>

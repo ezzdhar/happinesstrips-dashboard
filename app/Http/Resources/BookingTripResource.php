@@ -95,8 +95,6 @@ class BookingTripResource extends JsonResource
 					'age' => $traveler->age,
 					'id_type' => __('lang.' . $traveler->id_type),
 					'id_number' => $traveler->id_number,
-					'type' => $traveler->type,
-					'type_label' => __('lang.' . $traveler->type),
 				];
 			}),
 		];

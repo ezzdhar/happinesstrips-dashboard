@@ -239,7 +239,6 @@ return [
         'travelers.*.age' => 'العمر',
         'travelers.*.id_type' => 'نوع الهوية',
         'travelers.*.id_number' => 'رقم الهوية',
-        'travelers.*.type' => 'نوع المسافر',
         'hotel_id' => 'الفندق',
         'children_ages.*' => 'عمر الأطفال',
         'facilities_ar' => 'المرافق بالعربية',

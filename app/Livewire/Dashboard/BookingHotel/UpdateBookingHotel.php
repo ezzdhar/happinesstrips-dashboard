@@ -53,9 +53,8 @@ class UpdateBookingHotel extends Component
 		$this->currency = strtolower($booking->currency);
 		$this->adults_count = $booking->adults_count;
 
-		// استخراج أعمار الأطفال من المسافرين الحاليين
-		// نفترض أن نوع المسافر 'child' هو المحدد
-		$this->children_ages = $booking->travelers->where('type', 'child')->pluck('age')->toArray();
+		// استخراج أعمار الأطفال من المسافرين الحاليين (الأطفال هم من أعمارهم أقل من 12)
+		$this->children_ages = $booking->travelers->where('age', '<', 12)->pluck('age')->toArray();
 
 		// تحميل بيانات الفندق والغرفة
 		if ($booking->bookingHotel) {
@@ -75,7 +74,6 @@ class UpdateBookingHotel extends Component
 				'age' => $traveler->age,
 				'id_type' => $traveler->id_type,
 				'id_number' => $traveler->id_number,
-				'type' => $traveler->type,
 			];
 		}
 

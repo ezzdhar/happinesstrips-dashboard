@@ -165,7 +165,6 @@ class HotelBookingService
 						'id_type' => $travelerData['id_type'],
 						'id_number' => $travelerData['id_number'],
 						'id_number' => $travelerData['id_number'],
-						'type' => $travelerData['type'] ?? ($travelerData['age'] >= 12 ? 'adult' : 'child'),
 					];
 
 					if (isset($travelerData['id']) && $travelerData['id']) {
