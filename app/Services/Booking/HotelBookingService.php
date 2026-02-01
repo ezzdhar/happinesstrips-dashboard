@@ -84,7 +84,7 @@ class HotelBookingService
 						'age' => $travelerData['age'],
 						'id_type' => $travelerData['id_type'],
 						'id_number' => $travelerData['id_number'],
-						'type' => $travelerData['type'] ?? ($travelerData['age'] >= ($room->adult_age ?? 12) ? 'adult' : 'child'),
+						'type' => $travelerData['type'] ?? ($travelerData['age'] > ($room->adult_age ?? 12) ? 'adult' : 'child'),
 					]);
 				}
 
@@ -164,7 +164,7 @@ class HotelBookingService
 						'age' => $travelerData['age'],
 						'id_type' => $travelerData['id_type'],
 						'id_number' => $travelerData['id_number'],
-						'type' => $travelerData['type'] ?? ($travelerData['age'] >= ($room->adult_age ?? 12) ? 'adult' : 'child'),
+						'type' => $travelerData['type'] ?? ($travelerData['age'] > ($room->adult_age ?? 12) ? 'adult' : 'child'),
 					];
 
 					if (isset($travelerData['id']) && $travelerData['id']) {
@@ -238,7 +238,7 @@ class HotelBookingService
 						'age' => $travelerData['age'],
 						'id_type' => $travelerData['id_type'],
 						'id_number' => $travelerData['id_number'],
-						'type' => $travelerData['type'] ?? ($travelerData['age'] >= 12 ? 'adult' : 'child'),
+						'type' => $travelerData['type'] ?? ($travelerData['age'] > 12 ? 'adult' : 'child'),
 					]);
 				}
 

@@ -46,6 +46,7 @@ return [
 	'testimonial_michael_chen' => ':app_name made creating my profile extremely easy. I love how I can customize everything to reflect my personality. Now my profile truly represents my skills and experience.',
 	'job_title_ui_ux_designer_developer' => 'UI/UX Designer',
 	'testimonial_anita_rodriguez' => ':app_name is the best profile builder I have ever used. The designs are beautiful and easy to use, and I love how I can showcase my projects attractively. Highly recommended for any tech professional.',
+	'children_count_exceeds_room_capacity' => 'The requested number of children (:requested) exceeds the room children capacity (:capacity).',
 	'example' => 'Example: ',
 	'your_website_link' => 'Your website link',
 	'create_account' => 'Create Account',

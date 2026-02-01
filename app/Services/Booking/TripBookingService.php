@@ -79,7 +79,7 @@ class TripBookingService
 						'age' => $travelerData['age'],
 						'id_type' => $travelerData['id_type'],
 						'id_number' => $travelerData['id_number'],
-						'type' => $travelerData['type'] ?? ($travelerData['age'] >= 12 ? 'adult' : 'child'),
+						'type' => $travelerData['type'] ?? ($travelerData['age'] > 12 ? 'adult' : 'child'),
 					]);
 				}
 				return $booking;
