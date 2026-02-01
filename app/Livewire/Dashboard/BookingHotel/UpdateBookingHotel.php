@@ -74,6 +74,7 @@ class UpdateBookingHotel extends Component
 				'age' => $traveler->age,
 				'id_type' => $traveler->id_type,
 				'id_number' => $traveler->id_number,
+				'type' => $traveler->type,
 			];
 		}
 
@@ -264,7 +265,7 @@ class UpdateBookingHotel extends Component
 			'age' => '',
 			'id_type' => 'passport',
 			'id_number' => '',
-			// 'type' => 'adult', // Removed
+			'type' => 'adult',
 		];
 	}
 

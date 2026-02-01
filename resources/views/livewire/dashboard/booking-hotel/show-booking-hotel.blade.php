@@ -222,6 +222,7 @@
                         <th class="text-center">{{ __('lang.age') }}</th>
                         <th>{{ __('lang.id_type') }}</th>
                         <th>{{ __('lang.id_number') }}</th>
+                        <th class="text-center">{{ __('lang.type') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -234,6 +235,10 @@
                             <td class="text-center">{{ $traveler->age }}</td>
                             <td>{{ __('lang.' . $traveler->id_type) }}</td>
                             <td>{{ $traveler->id_number }}</td>
+                            <td class="text-center">
+                                <x-badge :value="__('lang.' . $traveler->type)"
+                                    class="{{ $traveler->type == 'adult' ? 'badge-primary' : 'badge-secondary' }}" />
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

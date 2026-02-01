@@ -107,6 +107,7 @@ class UpdateBookingTrip extends Component
                 'age' => $traveler->age,
                 'id_type' => $traveler->id_type,
                 'id_number' => $traveler->id_number,
+                'type' => $traveler->type,
             ];
         }
 
@@ -308,7 +309,9 @@ class UpdateBookingTrip extends Component
                     'nationality' => $travelerData['nationality'],
                     'age' => $travelerData['age'],
                     'id_type' => $travelerData['id_type'],
-                    'id_number' => $travelerData['id_number'],                ]);
+                    'id_number' => $travelerData['id_number'],
+                    'type' => $travelerData['type'],
+                ]);
                 $existingTravelerIds[] = $travelerData['id'];
             } else {
                 $newTraveler = BookingTraveler::create([
@@ -319,7 +322,9 @@ class UpdateBookingTrip extends Component
                     'nationality' => $travelerData['nationality'],
                     'age' => $travelerData['age'],
                     'id_type' => $travelerData['id_type'],
-                    'id_number' => $travelerData['id_number'],                ]);
+                    'id_number' => $travelerData['id_number'],
+                    'type' => $travelerData['type'],
+                ]);
                 $existingTravelerIds[] = $newTraveler->id;
             }
         }

@@ -264,6 +264,7 @@ return [
         'travelers.*.age' => 'traveler age',
         'travelers.*.id_type' => 'traveler id_type',
         'travelers.*.id_number' => 'traveler id_number',
+        'travelers.*.type' => 'traveler type',
     ],
 
 ];

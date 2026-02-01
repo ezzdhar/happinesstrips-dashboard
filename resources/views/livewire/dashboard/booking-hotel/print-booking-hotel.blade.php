@@ -480,6 +480,7 @@
                             <th style="text-align: center;">{{ __('lang.age') }}</th>
                             <th>{{ __('lang.id_type') }}</th>
                             <th>{{ __('lang.id_number') }}</th>
+                            <th style="text-align: center;">{{ __('lang.type') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -492,6 +493,12 @@
                                 <td style="text-align: center;">{{ $traveler->age }}</td>
                                 <td>{{ __('lang.' . $traveler->id_type) }}</td>
                                 <td>{{ $traveler->id_number }}</td>
+                                <td style="text-align: center;">
+                                    <span
+                                        style="padding: 3px 10px; background: {{ $traveler->type == 'adult' ? '#dbeafe' : '#fce7f3' }}; color: {{ $traveler->type == 'adult' ? '#1e40af' : '#9f1239' }}; border-radius: 12px; font-size: 10px; font-weight: 600;">
+                                        {{ __('lang.' . $traveler->type) }}
+                                    </span>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
