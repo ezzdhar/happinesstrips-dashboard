@@ -67,7 +67,6 @@ class BookingHotelResource extends JsonResource
 				// نص طريقة الحساب (Calculation Info)
 				'calculation_note' => $this->getCalculationNote($pricing),
 			],
-
 			// --- 3. معلومات الفندق والغرفة (Hotel Info) ---
 			'hotel_information' => $hotel ? [
 				'hotel_id' => $hotel->id,
