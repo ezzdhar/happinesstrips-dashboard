@@ -21,9 +21,10 @@ class RoomResource extends JsonResource
             'discount_percentage' => (float) $this->discount_percentage,
             'adults_count' => $this->adults_count,
             'children_count' => $this->children_count,
-            'includes' => $this->includes,
+            // 'includes' => $this->includes,
             'currency' => $currency,
             'amenities' => AmenityResource::collection($this->whenLoaded('amenities')),
+            'includes' => AmenityResource::collection($this->whenLoaded('amenities')),
             'adult_age' => (int) $this->adult_age,
             'children_policies' => $this->childrenPolicies->map(function ($policy) {
                 return [

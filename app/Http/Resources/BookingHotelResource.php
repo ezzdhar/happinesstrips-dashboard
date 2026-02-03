@@ -78,7 +78,7 @@ class BookingHotelResource extends JsonResource
 
 				// تفاصيل الغرفة
 				'room_name' => $room->name ?? null,
-				'room_includes' => AmenityResource::collection($this->whenLoaded('amenities')),
+				'room_includes' => AmenityResource::collection($room->amenities),
 				'room_capacity' => [
 					'adults' => $room->adults_count ?? 0,
 					'children' => $room->children_count ?? 0,
