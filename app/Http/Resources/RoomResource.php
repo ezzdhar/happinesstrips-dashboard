@@ -23,8 +23,8 @@ class RoomResource extends JsonResource
             'children_count' => $this->children_count,
             // 'includes' => $this->includes,
             'currency' => $currency,
-            'amenities' => AmenityResource::collection($this->whenLoaded('amenities')),
-            'includes' => AmenityResource::collection($this->whenLoaded('amenities')),
+            'amenities' => AmenityResource::collection($this->amenities),
+            'includes' => AmenityResource::collection($this->amenities),
             'adult_age' => (int) $this->adult_age,
             'children_policies' => $this->childrenPolicies->map(function ($policy) {
                 return [
