@@ -171,7 +171,7 @@ class CreateTrip extends Component
             'price_usd' => 'required|numeric|min:0',
             'city_id' => 'required|exists:cities,id',
             'duration_from' => 'required|date|after_or_equal:to_day',
-            'duration_to' => 'nullable|required_if:type,fixed|date|before_or_equal:duration_from',
+            'duration_to' => 'nullable|required_if:type,fixed|date|after_or_equal:duration_from',
             'nights_count' => 'nullable|integer|min:1',
             'first_child_price_percentage' => 'required|numeric|min:0|max:100',
             'second_child_price_percentage' => 'required|numeric|min:0|max:100',
