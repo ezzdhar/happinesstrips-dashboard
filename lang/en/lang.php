@@ -942,4 +942,5 @@ return [
 	'or' => 'or',
 	'copy_room' => 'Copy Room',
 	'copy_of' => 'Copy of',
+	'booking_under_cancellation' => 'booking under cancellation',
 ];

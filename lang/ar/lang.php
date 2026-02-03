@@ -948,4 +948,5 @@ return [
 	'name_en' => 'الاسم باللغة الإنجليزية',
 	'copy_room' => 'نسخ الغرفة',
 	'copy_of' => 'نسخة من',
+	'booking_under_cancellation' => 'طلب الإلغاء قيد المراجعة',
 ];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CreateRoomBookingRequest;
 use App\Http\Requests\Api\CreateRoomCustomBookingRequest;
@@ -35,8 +36,17 @@ class HotelBookingController extends Controller
 		if ($booking->user_id != auth()->id()) {
 			return $this->responseError(message: __('lang.unauthorized'));
 		}
-		 $booking->load(['bookingHotel.hotel','bookingHotel.room', 'user', 'travelers']);
+		$booking->load(['bookingHotel.hotel', 'bookingHotel.room', 'user', 'travelers']);
 		return $this->responseOk(message: __('lang.booking_details'), data: new BookingHotelResource($booking));
+	}
+	//cancelBooking
+	public function cancelBooking(Booking $booking)
+	{
+		if ($booking->user_id != auth()->id()) {
+			return $this->responseError(message: __('lang.unauthorized'));
+		}
+		$booking->update(['status' => Status::UnderCancellation]);
+		return $this->responseOk(message: __('lang.booking_under_cancellation'));
 	}
 
 	public function createBooking(CreateRoomBookingRequest $request, HotelBookingService $bookingService)
@@ -64,6 +74,4 @@ class HotelBookingController extends Controller
 			return $this->responseError(message: $e->getMessage());
 		}
 	}
-
-
 }

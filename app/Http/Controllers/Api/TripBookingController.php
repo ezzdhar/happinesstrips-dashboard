@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Status;
 use App\Enums\TripType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\TripRatingRequest;
@@ -45,6 +46,14 @@ class TripBookingController extends Controller
 		return $this->responseOk(message: __('lang.booking_details'), data: new BookingTripResource($booking));
 	}
 
+	public function cancelBooking(Booking $booking)
+	{
+		if ($booking->user_id != auth()->id()) {
+			return $this->responseError(message: __('lang.unauthorized'));
+		}
+		$booking->update(['status' => Status::UnderCancellation]);
+		return $this->responseOk(message: __('lang.booking_under_cancellation'));
+	}
 
 	public function createBooking(CreateTripBookingRequest $request, TripBookingService $tripBookingService)
 	{
@@ -63,6 +72,4 @@ class TripBookingController extends Controller
 			return $this->responseError(message: $e->getMessage());
 		}
 	}
-
-
 }

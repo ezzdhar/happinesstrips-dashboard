@@ -28,7 +28,7 @@ Route::controller(GuestController::class)->group(function () {
 	Route::post('/login', 'login');
 	Route::post('/social-login', 'socialLogin');
 	Route::post('/send/code', 'sendCode');
-	Route::post('/verify-code', 'verifyCode');	
+	Route::post('/verify-code', 'verifyCode');
 	Route::post('/reset/password', 'resetPassword');
 });
 
@@ -91,6 +91,7 @@ Route::middleware('auth:sanctum')->group(function () {
 		Route::prefix('hotels')->controller(HotelBookingController::class)->group(function () {
 			Route::get('/', 'myBooking');
 			Route::get('/details/{booking}', 'bookingDetails');
+			Route::get('/cancel/{booking}', 'cancelBooking');
 			Route::post('/create', 'createBooking');
 			Route::post('/create/custom', 'createCustomBooking');
 		});
@@ -99,6 +100,7 @@ Route::middleware('auth:sanctum')->group(function () {
 		Route::prefix('trips')->controller(TripBookingController::class)->group(function () {
 			Route::get('/', 'myBooking');
 			Route::get('/details/{booking}', 'bookingDetails');
+			Route::get('/cancel/{booking}', 'cancelBooking');
 			Route::post('/create', 'createBooking');
 		});
 		Route::post('/rating', BookingRatingController::class);
