@@ -692,7 +692,7 @@ return [
 	'total_price' => 'Total Price',
 	'currency' => 'Currency',
 	'under_payment' => 'Under Payment',
-	'under_cancellation' => 'Under Cancellation',
+	'under_cancellation' => 'Pending Cancellation',
 	'cancelled' => 'Cancelled',
 	'confirmed' => 'Confirmed',
 	'eur' => 'EUR',
