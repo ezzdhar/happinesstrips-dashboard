@@ -62,6 +62,7 @@ class UpdateTrip extends Component
 	public $type;
 
 	public $status;
+	public $rating;
 
 	public $first_child_price_percentage = 0;
 
@@ -138,6 +139,7 @@ class UpdateTrip extends Component
 		$this->free_child_age = $this->trip->free_child_age;
 		$this->adult_age = $this->trip->adult_age;
 		$this->selected_hotels = $this->trip->hotels->pluck('id')->toArray();
+		$this->rating = $this->trip->rating;
 
 		// Load sub categories
 		if ($this->main_category_id) {
@@ -234,6 +236,7 @@ class UpdateTrip extends Component
 			'selected_hotels' => 'nullable|array',
 			'selected_hotels.*' => 'exists:hotels,id',
 			'images.*' => 'nullable|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
+			'rating' => 'nullable|numeric|min:0|max:5',
 		];
 	}
 
@@ -242,6 +245,7 @@ class UpdateTrip extends Component
 		$this->validate();
 
 		$this->trip->update([
+			'rating' => $this->rating,
 			'main_category_id' => $this->main_category_id,
 			'sub_category_id' => $this->sub_category_id,
 			'name' => [

@@ -30,7 +30,8 @@ class CreateTrip extends Component
 
     public $name_en;
 
-    public $price_egp;
+	public $price_egp;
+	public $rating;
 
     public $price_usd;
 
@@ -190,6 +191,7 @@ class CreateTrip extends Component
             'selected_hotels' => 'nullable|array',
             'selected_hotels.*' => 'exists:hotels,id',
             'images.*' => 'required|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
+	        'rating' => 'nullable|numeric|min:0|max:5',
         ];
     }
 
@@ -198,6 +200,7 @@ class CreateTrip extends Component
         $this->validate();
 
         $trip = Trip::create([
+			'rating' => $this->rating,
             'main_category_id' => $this->main_category_id,
             'sub_category_id' => $this->sub_category_id,
             'name' => [
