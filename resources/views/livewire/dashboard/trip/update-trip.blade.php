@@ -41,7 +41,7 @@
                             ['id' => TripType::Fixed, 'name' => __('lang.fixed')],
                             ['id' => TripType::Flexible, 'name' => __('lang.flexible')],
                         ]" />
-                    <x-input type="number" step="0.01" min="0" max="5" label="{{ __('lang.rating') }}" wire:model="rating"
+                    <x-input required type="number" step="0.01" min="0" max="5" label="{{ __('lang.rating') }}" wire:model="rating"
                              placeholder="0.00" icon="o-star" />
                     <x-checkbox label="{{ __('lang.is_featured') }}" wire:model.live="is_featured" />
                     @if ($is_featured)

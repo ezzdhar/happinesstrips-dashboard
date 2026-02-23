@@ -191,7 +191,7 @@ class CreateTrip extends Component
             'selected_hotels' => 'nullable|array',
             'selected_hotels.*' => 'exists:hotels,id',
             'images.*' => 'required|image|max:5000|mimes:jpg,jpeg,png,gif,webp,svg',
-	        'rating' => 'nullable|numeric|min:0|max:5',
+	        'rating' => 'required|numeric|min:0|max:5',
         ];
     }
 
