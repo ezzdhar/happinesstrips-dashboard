@@ -30,8 +30,8 @@ class UpdateCity extends Component
     public function rules(): array
     {
         return [
-            'name_ar' => 'required|string|max:255',
-            'name_en' => 'required|string|max:255',
+            'name_ar' => 'required|string|max:255|unique:cities,name->ar,' . $this->city->id,
+            'name_en' => 'required|string|max:255|unique:cities,name->en,' . $this->city->id,
 	        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
