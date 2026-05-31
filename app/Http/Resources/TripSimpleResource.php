@@ -25,6 +25,7 @@ class TripSimpleResource extends JsonResource
             'main_image' => FileService::get($this->files->first()->path),
             'currency' => $currency,
 		    'is_featured' => $this->is_featured ? true : false,
+			'is_favorite' => auth('sanctum')->check() ? $this->favorites()->where('user_id', auth('sanctum')->id())->exists() : false,
 	        'price' => (float) $this->price[$currency],
 	        'price_before_discount' => (float) $this->price_before_discount[$currency],
 	        'discount_percentage' =>(float) $this->discount_percentage,

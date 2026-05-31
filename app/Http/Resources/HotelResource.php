@@ -31,6 +31,7 @@ class HotelResource extends JsonResource
 				return FileService::get($image->path);
 			}),
 			'is_featured' => $is_featured,
+			'is_favorite' => auth('sanctum')->check() ? $this->favorites()->where('user_id', auth('sanctum')->id())->exists() : false,
 			'cheapest_room' => $this->getCheapestRoomForToday($currency, $is_featured),
 		];
 	}
