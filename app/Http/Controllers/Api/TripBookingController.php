@@ -23,7 +23,10 @@ class TripBookingController extends Controller
 
 	public function myBooking(Request $request)
 	{
-		$bookings = Booking::where('user_id', auth()->id())->where('type', 'trip')->with(['bookingTrip'])
+		$bookings = Booking::where('user_id', auth()->id())
+			->where('type', 'trip')
+			->whereHas('trip')
+			->with(['bookingTrip'])
 			->when($request->status, fn(Builder $query, $status) => $query->status($status))
 			->when($request->main_category_id, fn(Builder $query, $main_category) => $query->where('main_category_id', $main_category))
 			->when($request->sub_category_id, fn(Builder $query, $sub_category) => $query->where('sub_category_id', $sub_category))
