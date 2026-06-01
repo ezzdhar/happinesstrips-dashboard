@@ -14,7 +14,7 @@ class BookingSimpleHotelResource extends JsonResource
 			'id' => $this->id,
 			'type' => $this->type,
 			'is_special' => $this->is_special,
-			'name'=> $this->bookingHotel->room->name ?? $this->bookingHotel->hotel->name,
+			'name'=> $this->bookingHotel->room_id ? $this->bookingHotel->room->name : $this->bookingHotel->hotel->name,
 			'booking_number' => $this->booking_number,
 			'total_price' => $this->total_price,
 			'currency' => $this->currency,
@@ -26,4 +26,4 @@ class BookingSimpleHotelResource extends JsonResource
 			'main_image' => FileService::get($this->bookingHotel->hotel->files->first()->path),
 		];
 	}
-}
+} 

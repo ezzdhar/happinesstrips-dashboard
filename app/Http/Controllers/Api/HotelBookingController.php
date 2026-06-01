@@ -24,6 +24,10 @@ class HotelBookingController extends Controller
 		$bookings = Booking::where('user_id', auth()->id())
 			->where('type', 'hotel')
 			->whereHas('bookingHotel.hotel')
+			->where(function (Builder $query) {
+				$query->where('is_special', 1)
+					->orWhereHas('bookingHotel.room');
+			})
 			->with(['bookingHotel'])
 			->when($request->status, fn(Builder $query, $status) => $query->status($status))
 			->when($request->is_special, fn(Builder $query, $is_special) => $query->where('is_special', 1))

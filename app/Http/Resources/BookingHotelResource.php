@@ -76,11 +76,11 @@ class BookingHotelResource extends JsonResource
                 'address' => $hotel->address,
                 'main_image' => $hotel->files->first() ? FileService::get($hotel->files->first()->path) : null,
                 // تفاصيل الغرفة
-                'room_name' => $room->name ?? null,
-                'room_includes' => AmenityResource::collection($room->amenities),
+                'room_name' => $bookingHotel->room_id ? $room->name : null,
+                'room_includes' => collect($bookingHotel->room_id ? AmenityResource::collection($room->amenities) : []),
                 'room_capacity' => [
-                    'adults' => $room->adults_count ?? 0,
-                    'children' => $room->children_count ?? 0,
+                    'adults' => $bookingHotel->room_id ? ($room->adults_count ?? 0) : 0,
+                    'children' => $bookingHotel->room_id ? ($room->children_count ?? 0) : 0,
                 ],
             ] : null,
 
