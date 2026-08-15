@@ -16,6 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         apiPrefix: '/api/v1',
+        then: function () {
+            if (app()->isLocal() && app()->hasDebugModeEnabled()) {
+                Route::middleware('web')
+                    ->group(base_path('routes/development.php'));
+            }
+        }
     )
     ->withMiddleware(function (Middleware $middleware) {
 	    $middleware->api(prepend: [LanguageMiddleware::class, AppCurrencyMiddleware::class]);
