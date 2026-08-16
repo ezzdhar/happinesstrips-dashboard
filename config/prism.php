@@ -61,6 +61,6 @@ return [
             ],
         ],
     ],
-	'prism_provider' => env('PRISM_PROVIDER', 'gemini'),
-	'prism_provider_model' => env('PRISM_PROVIDER_MODEL', 'gemini-3.5-flash'),
+	'prism_provider' => env('PRISM_PROVIDER', 'groq'),
+	'prism_provider_model' => env('PRISM_PROVIDER_MODEL', 'llama-3.3-70b-versatile'),
 ];

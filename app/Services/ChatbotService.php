@@ -76,7 +76,7 @@ class ChatbotService
 
 					// نطلب من الـ AI تحليل سبب الفشل
 					$recoveryResponse = Prism::text()
-						->using(Provider::Gemini, 'gemini-2.0-flash')
+						->using(Provider::Groq, config('prism.prism_provider_model'))
 						->withSystemPrompt("أنت مساعد ذكي. فشل البحث في قاعدة البيانات أو لم يتم العثور على نتائج. حلل السبب واشرح للمستخدم.\nتلميح: ربما التواريخ غير متاحة أو الفلاتر ضيقة جداً.\nسياق النتائج: $errorContext")
 						->withPrompt("سؤال المستخدم: $userMessage\nالرد السابق: $finalMessage\n\nصغ رداً جديداً يوضح المشكلة ويقترح الحل:")
 						->asText();
