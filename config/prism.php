@@ -62,5 +62,5 @@ return [
         ],
     ],
 	'prism_provider' => env('PRISM_PROVIDER', 'groq'),
-	'prism_provider_model' => env('PRISM_PROVIDER_MODEL', 'llama-3.3-70b-versatile'),
+	'prism_provider_model' => env('PRISM_PROVIDER_MODEL', 'openai/gpt-oss-120b'),
 ];
