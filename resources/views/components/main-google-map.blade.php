@@ -17,31 +17,12 @@
 
 @once
 <script>
-    // تهيئة متغيرات Google Maps العامة
-    window.googleMapsCallbacks = window.googleMapsCallbacks || [];
-    window.googleMapsApiLoaded = false;
-
-    window.initGoogleMapsApi = function() {
-        window.googleMapsApiLoaded = true;
-        window.googleMapsCallbacks.forEach(callback => {
-            try {
-                callback();
-            } catch(e) {
-                console.error('Google Maps callback error:', e);
-            }
-        });
-        window.googleMapsCallbacks = [];
-    };
-
-    // تحميل Google Maps API إذا لم يكن محملاً
     if (!document.querySelector('script[src*="maps.googleapis.com"]')) {
         const script = document.createElement('script');
-        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places,geocoding&loading=async';
+        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&loading=async';
         script.async = true;
         script.defer = true;
         document.head.appendChild(script);
-    } else if (typeof google !== 'undefined' && google.maps) {
-        window.googleMapsApiLoaded = true;
     }
 </script>
 @endonce
@@ -59,7 +40,7 @@
         maxRetries: 50,
 
         // الدالة الرئيسية لتهيئة الخريطة
-        initGoogleMap() {
+        async initGoogleMap() {
             // التحقق من تحميل Google Maps API
             if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
                 this.initRetries++;
@@ -69,19 +50,19 @@
                     return;
                 }
 
-                // إضافة callback لتنفيذه عند تحميل API
-                window.googleMapsCallbacks = window.googleMapsCallbacks || [];
-                window.googleMapsCallbacks.push(() => {
-                    this.initMap();
-                });
-
-                // محاولة مرة أخرى بعد 100ms
                 setTimeout(() => this.initGoogleMap(), 100);
                 return;
             }
 
-            window.googleMapsCallbacks.forEach(cb => { try { cb(); } catch(e) { console.error(e); } });
-            window.googleMapsCallbacks = [];
+            try {
+                await google.maps.importLibrary('maps');
+                await google.maps.importLibrary('places');
+                await google.maps.importLibrary('geocoding');
+            } catch(e) {
+                console.error('Error loading Google Maps libraries:', e);
+                return;
+            }
+
             this.initMap();
         },
 
