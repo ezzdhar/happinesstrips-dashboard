@@ -34,9 +34,13 @@ class ChatbotService
 
 			$systemPrompt = view('prompts.chatbot-system-v2')->render() . "\n\n" . $staticDataContext;
 
+			// اكتشاف لغة المستخدم: إذا كتب بالعربية نستخدم العربية وإلا نستخدم الإنجليزية
+			$lang = $this->detectLanguage($userMessage);
+			$langInstruction = $lang === 'en' ? "Please reply in English.\n" : "الرد باللغة العربية فقط.\n";
+
 			// إضافة التاريخ الحالي للبرومبت ليتمكن الـ AI من حساب "غداً" بدقة
 			$today = Carbon::now()->format('Y-m-d');
-			$enhancedPrompt = $historyText . "\nتاريخ اليوم: $today\nالمستخدم: " . $userMessage;
+			$enhancedPrompt = $langInstruction . $historyText . "\nتاريخ اليوم: $today\nالمستخدم: " . $userMessage;
 
 			$prism_provider = config('prism.prism_provider');
 			$prism_provider_model = config('prism.prism_provider_model');
@@ -340,6 +344,17 @@ class ChatbotService
 			$text .= "User: {$msg['user_message']}\nBot: " . Str::limit($msg['bot_response'], 100) . "\n";
 		}
 		return $text;
+	}
+
+	/**
+	 * اكتشاف لغة النص البسيط: إذا وجدنا أحرف عربية نرجع 'ar'، وإلا 'en'
+	 */
+	protected function detectLanguage(string $text): string
+	{
+		if (preg_match('/\p{Arabic}/u', $text)) {
+			return 'ar';
+		}
+		return 'en';
 	}
 
 	public function getConversationHistoryForContext(string $chat_session): array
