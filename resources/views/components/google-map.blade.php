@@ -277,8 +277,8 @@
 
         {{-- حقول العرض --}}
         <div class="space-y-4">
-            <x-input readonly label="{{__('lang.latitude')}}" wire:model.live="{{ $latitudeProperty }}"/>
-            <x-input readonly label="{{__('lang.longitude')}}" wire:model.live="{{ $longitudeProperty }}"/>
+            <x-input label="{{__('lang.latitude')}}" wire:model.live="{{ $latitudeProperty }}"/>
+            <x-input label="{{__('lang.longitude')}}" wire:model.live="{{ $longitudeProperty }}"/>
             <x-textarea label="{{ __('lang.address').' ('.__('lang.ar').')' }}" wire:model="{{ $addressArProperty }}" placeholder="{{ __('lang.address').' ('.__('lang.ar').')' }}" rows="3"/>
             <x-textarea label="{{ __('lang.address').' ('.__('lang.en').')' }}" wire:model="{{ $addressEnProperty }}" placeholder="{{ __('lang.address').' ('.__('lang.en').')' }}" rows="3"/>
         </div>
