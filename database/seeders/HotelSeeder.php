@@ -14,12 +14,11 @@ class HotelSeeder extends Seeder
 {
     public function run(): void
     {
-        $users = User::role('hotel')->get();
-        $cities = City::get();
+        $users = User::query()->role('hotel')->get();
+        $cities = City::query()->get();
 
         $hotels = [
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -44,15 +43,8 @@ class HotelSeeder extends Seeder
                 'phone_key' => '+20',
                 'phone' => '0123456789',
                 'status' => Status::Active,
-                'free_child_age' => 4,
-                'adult_age' => 12,
-                'first_child_price_percentage' => 50,
-                'second_child_price_percentage' => 30,
-                'third_child_price_percentage' => 20,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -77,15 +69,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'شاطئ خاص، غوص، سنوركلينج، سبا، مطاعم متعددة',
                     'en' => 'Private beach, Diving, Snorkeling, Spa, Multiple restaurants',
                 ],
-                'free_child_age' => 3,
-                'adult_age' => 12,
-                'first_child_price_percentage' => 40,
-                'second_child_price_percentage' => 25,
-                'third_child_price_percentage' => 15,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -110,15 +95,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'إطلالة على النيل، مطعم، بار، حمام سباحة على السطح',
                     'en' => 'Nile view, Restaurant, Bar, Rooftop pool',
                 ],
-                'free_child_age' => 5,
-                'adult_age' => 14,
-                'first_child_price_percentage' => 60,
-                'second_child_price_percentage' => 40,
-                'third_child_price_percentage' => 25,
-                'additional_child_price_percentage' => 15,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -143,15 +121,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'مسبح لا متناهي، سبا فاخر، مطاعم عالمية، قاعات مؤتمرات',
                     'en' => 'Infinity pool, Luxury spa, International restaurants, Conference halls',
                 ],
-                'free_child_age' => 4,
-                'adult_age' => 12,
-                'first_child_price_percentage' => 50,
-                'second_child_price_percentage' => 30,
-                'third_child_price_percentage' => 20,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -176,15 +147,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'ملعب جولف، مرسى، رياضات مائية، نادي للأطفال، مطاعم فاخرة',
                     'en' => 'Golf course, Marina, Water sports, Kids club, Fine dining',
                 ],
-                'free_child_age' => 5,
-                'adult_age' => 13,
-                'first_child_price_percentage' => 45,
-                'second_child_price_percentage' => 30,
-                'third_child_price_percentage' => 20,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -209,15 +173,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'شاطئ خاص، مطعم بحري، سبا، واي فاي مجاني',
                     'en' => 'Private beach, Seafood restaurant, Spa, Free WiFi',
                 ],
-                'free_child_age' => 3,
-                'adult_age' => 12,
-                'first_child_price_percentage' => 40,
-                'second_child_price_percentage' => 25,
-                'third_child_price_percentage' => 15,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -242,15 +199,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'شامل كل شيء، نادي للأطفال، مسابح متعددة، ترفيه مسائي',
                     'en' => 'All-inclusive, Kids club, Multiple pools, Evening entertainment',
                 ],
-                'free_child_age' => 4,
-                'adult_age' => 12,
-                'first_child_price_percentage' => 50,
-                'second_child_price_percentage' => 35,
-                'third_child_price_percentage' => 25,
-                'additional_child_price_percentage' => 15,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -275,15 +225,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'إطلالة على النيل، مطعم نوبي، جولات سياحية، تراس على السطح',
                     'en' => 'Nile view, Nubian restaurant, Tour arrangements, Rooftop terrace',
                 ],
-                'free_child_age' => 5,
-                'adult_age' => 14,
-                'first_child_price_percentage' => 55,
-                'second_child_price_percentage' => 35,
-                'third_child_price_percentage' => 20,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -308,15 +251,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'مركز غوص، شاطئ رملي، مطعم بدوي، رحلات سفاري',
                     'en' => 'Diving center, Sandy beach, Bedouin restaurant, Safari trips',
                 ],
-                'free_child_age' => 3,
-                'adult_age' => 12,
-                'first_child_price_percentage' => 35,
-                'second_child_price_percentage' => 25,
-                'third_child_price_percentage' => 15,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -341,15 +277,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'مركز غوص معتمد، رياضات مائية، سبا، مطاعم متنوعة',
                     'en' => 'Certified diving center, Water sports, Spa, Diverse restaurants',
                 ],
-                'free_child_age' => 4,
-                'adult_age' => 13,
-                'first_child_price_percentage' => 45,
-                'second_child_price_percentage' => 30,
-                'third_child_price_percentage' => 20,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -374,15 +303,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'رحلات سفاري، تخييم صحراوي، مطعم تقليدي، مرشدين سياحيين',
                     'en' => 'Safari trips, Desert camping, Traditional restaurant, Tour guides',
                 ],
-                'free_child_age' => 6,
-                'adult_age' => 14,
-                'first_child_price_percentage' => 50,
-                'second_child_price_percentage' => 30,
-                'third_child_price_percentage' => 20,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -407,15 +329,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'كازينو، ملاعب تنس، مسابح متعددة، نادي صحي',
                     'en' => 'Casino, Tennis courts, Multiple pools, Health club',
                 ],
-                'free_child_age' => 4,
-                'adult_age' => 12,
-                'first_child_price_percentage' => 50,
-                'second_child_price_percentage' => 30,
-                'third_child_price_percentage' => 20,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -440,15 +355,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'حمامات طبيعية، رحلات صحراوية، مطعم عضوي، سبا طبيعي',
                     'en' => 'Natural baths, Desert tours, Organic restaurant, Natural spa',
                 ],
-                'free_child_age' => 5,
-                'adult_age' => 13,
-                'first_child_price_percentage' => 40,
-                'second_child_price_percentage' => 25,
-                'third_child_price_percentage' => 15,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -473,15 +381,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'أكواخ بدوية، مطعم على الشاطئ، رحلات جبلية، كرة طائرة شاطئية',
                     'en' => 'Bedouin huts, Beachfront restaurant, Mountain trips, Beach volleyball',
                 ],
-                'free_child_age' => 3,
-                'adult_age' => 12,
-                'first_child_price_percentage' => 30,
-                'second_child_price_percentage' => 20,
-                'third_child_price_percentage' => 15,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -506,15 +407,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'شاطئ رملي، مسابح للأطفال، ملاعب رياضية، مطاعم متنوعة',
                     'en' => 'Sandy beach, Kids pools, Sports fields, Diverse restaurants',
                 ],
-                'free_child_age' => 4,
-                'adult_age' => 12,
-                'first_child_price_percentage' => 45,
-                'second_child_price_percentage' => 30,
-                'third_child_price_percentage' => 20,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -539,15 +433,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'صيد سمك، قوارب، رحلات لوادي الحيتان، مطعم سمك',
                     'en' => 'Fishing, Boats, Wadi El-Hitan trips, Fish restaurant',
                 ],
-                'free_child_age' => 5,
-                'adult_age' => 13,
-                'first_child_price_percentage' => 40,
-                'second_child_price_percentage' => 25,
-                'third_child_price_percentage' => 15,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -572,15 +459,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'شاطئ خاص، رياضات شاطئية، بار على الشاطئ، ترفيه ليلي',
                     'en' => 'Private beach, Beach sports, Beach bar, Night entertainment',
                 ],
-                'free_child_age' => 3,
-                'adult_age' => 12,
-                'first_child_price_percentage' => 40,
-                'second_child_price_percentage' => 25,
-                'third_child_price_percentage' => 15,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -605,15 +485,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'مركز رياضات مائية، شاطئ رملي، مطعم بحري، تأجير معدات',
                     'en' => 'Water sports center, Sandy beach, Seafood restaurant, Equipment rental',
                 ],
-                'free_child_age' => 4,
-                'adult_age' => 13,
-                'first_child_price_percentage' => 45,
-                'second_child_price_percentage' => 30,
-                'third_child_price_percentage' => 20,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -638,15 +511,8 @@ class HotelSeeder extends Seeder
                     'ar' => 'تراس على السطح، مقهى تقليدي، جولات سياحية، واي فاي مجاني',
                     'en' => 'Rooftop terrace, Traditional café, Guided tours, Free WiFi',
                 ],
-                'free_child_age' => 4,
-                'adult_age' => 12,
-                'first_child_price_percentage' => 50,
-                'second_child_price_percentage' => 30,
-                'third_child_price_percentage' => 20,
-                'additional_child_price_percentage' => 10,
             ],
             [
-                'user_id' => $users->random()->id,
                 'city_id' => $cities->random()->id,
                 'email' => fake()->unique()->safeEmail(),
                 'name' => [
@@ -671,12 +537,6 @@ class HotelSeeder extends Seeder
                     'ar' => 'حدائق واسعة، حمام سباحة تاريخي، مطاعم راقية، رحلات نيلية',
                     'en' => 'Spacious gardens, Historic pool, Fine dining, Nile cruises',
                 ],
-                'free_child_age' => 5,
-                'adult_age' => 14,
-                'first_child_price_percentage' => 55,
-                'second_child_price_percentage' => 35,
-                'third_child_price_percentage' => 25,
-                'additional_child_price_percentage' => 15,
             ],
         ];
 
