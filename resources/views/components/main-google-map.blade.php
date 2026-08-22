@@ -36,7 +36,7 @@
     // تحميل Google Maps API إذا لم يكن محملاً
     if (!document.querySelector('script[src*="maps.googleapis.com"]')) {
         const script = document.createElement('script');
-        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places,geocoding&callback=initGoogleMapsApi';
+        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places,geocoding&loading=async&callback=initGoogleMapsApi';
         script.async = true;
         script.defer = true;
         document.head.appendChild(script);
