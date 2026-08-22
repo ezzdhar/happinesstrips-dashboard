@@ -27,6 +27,6 @@ if (! function_exists('formatDate')) {
 if (! function_exists('randomOtpCode')) {
     function randomOtpCode(): string
     {
-        return 123456;
+        return random_int(100000, 999999);;
     }
 }
